@@ -9,7 +9,7 @@
 ## Config
 Must config items：`deviceId`, `packageName`.When connecting to IOS devices, you must configure the `webDriverAgent` 、`platform`.
 
-**flybird_config.json**
+**flybirds_config.json**
 
 - `packageName` 
 

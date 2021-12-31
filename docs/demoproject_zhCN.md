@@ -11,7 +11,7 @@
 
 必须配置项：`deviceId` `packageName`。连接IOS设备时，必须额外配置`webDriverAgent`、`platform`。
 
-**flybird_config.json**
+**flybirds_config.json**
 
 - `packageName` 
 

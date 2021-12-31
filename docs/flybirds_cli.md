@@ -1,15 +1,15 @@
-# Flybird CLI
+# Flybirds CLI
 
 
 
-## **Flybird  CLI**
+## **Flybirds  CLI**
 
-**Flybird  CLI** is a command line application to run simple programs created with **Flybird**, with completion in your terminal 🚀.
+**Flybirds  CLI** is a command line application to run simple programs created with **Flybirds**, with completion in your terminal 🚀.
 
-You use **Flybird  CLI** in your terminal, to run your scripts. Like in:
+You use **Flybirds  CLI** in your terminal, to run your scripts. Like in:
 
 ```bash
-flybird run
+flybirds run
 ```
 
 
@@ -18,21 +18,21 @@ flybird run
 
 ### Install
 
-To use **Flybird  CLI**, you need to install **flybird** first.
+To use **Flybirds  CLI**, you need to install **flybirds** first.
 
 ```bash
-pip install flybird
+pip install flybirds
 ---> 100%
-Successfully installed flybird
+Successfully installed flybirds
 ```
 
-That creates a `flybird` command you can call in your terminal, much like `python`, `git`, or `echo`.
+That creates a `flybirds` command you can call in your terminal, much like `python`, `git`, or `echo`.
 
 ```bash
-flybird --help
-Usage: flybird [OPTIONS] COMMAND [ARGS]...
+flybirds --help
+Usage: flybirds [OPTIONS] COMMAND [ARGS]...
 
-  Welcome to flybird. Type "--help" for more information.
+  Welcome to flybirds. Type "--help" for more information.
 
 ```
 
@@ -53,9 +53,9 @@ You can specify one of the following **CLI commands**:
 
 #### **Options**
 
-You can enter the following at the terminal to see what **Flybird** supports when running your project.
+You can enter the following at the terminal to see what **Flybirds** supports when running your project.
 ```bash
-flybird run --help
+flybirds run --help
 ```
 
 - **--path, -P    TEXT(Optional)**
@@ -65,7 +65,7 @@ flybird run --help
 ​	For example:
 
 ```bash
-flybird run -P ./features/test/demo.feature
+flybirds run -P ./features/test/demo.feature
 ```
 - **--tag, -T    TEXT(Optional)**
 
@@ -74,7 +74,7 @@ flybird run -P ./features/test/demo.feature
 ​	For example:
 
 ```bash
-flybird run -T tag1,tag2,-tag3,tag4
+flybirds run -T tag1,tag2,-tag3,tag4
 ```
 - **--format, -F    TEXT(Optional)**
 
@@ -85,7 +85,7 @@ flybird run -T tag1,tag2,-tag3,tag4
 
 ```bash
 #default 
-flyird run --format=json
+flybirds run --format=json
 ```
 
 -   **--report, -R   TEXT(Optional)**
@@ -96,10 +96,10 @@ flyird run --format=json
 
 ```bash
 #mac Custom report address
-flybird run --report report/curent/report.json
+flybirds run --report report/curent/report.json
 
 #windows Custom report address
-flybird run --report report\curent\report.json
+flybirds run --report report\curent\report.json
 ```
 
 - **--define, -D   TEXT(Optional)**
@@ -111,7 +111,7 @@ Function 1: Overwrite the configuration in the **`config`** file, such as:
 ```bash 
  # The device and uniqueTag used at runtime are the values specified in the command, and the values configured in the configuration file will not be read
  
-flybird run --define deviceId=*** --define uniqueTag=***
+flybirds run --define deviceId=*** --define uniqueTag=***
 ```
 
 Function 2: Pass in custom parameters for use in custom scripts in the **`pscript`** directory. Use the global parameter **`global_resource`** to get it.
@@ -124,7 +124,7 @@ For example:
 
 ```bash
 #Don't rerun the failure scene
-flybird run --no-rerun 
+flybirds run --no-rerun 
 ```
 
 

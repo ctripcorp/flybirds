@@ -1,15 +1,15 @@
-# Flybird | [English Version](https://github.com/ctripcorp/flybird/blob/main/docs/readme_en.md)
+# Flybirds | [English Version](https://github.com/ctripcorp/flybirds/blob/main/docs/readme_en.md)
 
 > 行为驱动开发（Behavior-driven development，缩写BDD），是一种软件过程的思想或者方法，是一种敏捷软件开发的技术.
 
-Flybird是基于BDD模式的前端UI自动化测试框架,提供了一系列开箱即用的工具和完善的文档。
+Flybirds是基于BDD模式的前端UI自动化测试框架,提供了一系列开箱即用的工具和完善的文档。
 - 基于Behave，实现BDD中“自然语言测试用例文档”和“自动化测试代码”关联需要用到支持BDD工具。
 - 基于Airtest，实现BDD中“测试用例能在自动化测试平台上执行”需要用到UI自动化测试框架。
  
 
 ## 特性
 
-使用Flybird你能够完成大部分的手机端自动化操作，以下是一些帮助入门的特性描述：
+使用Flybirds你能够完成大部分的手机端自动化操作，以下是一些帮助入门的特性描述：
 - 基于BDD模式，类自然语言语法
 - 支持自动化APP操作、表单提交、UI元素校验、键盘输入、Deeplink跳转等
 - 默认支持英文、中文两种语言，支持更多语言扩展
@@ -26,9 +26,9 @@ Flybird是基于BDD模式的前端UI自动化测试框架,提供了一系列开�
 
 ### 1. 环境搭建
 
-#### 使用`pip`安装flybird框架，过程中会自动安装所需的 [依赖包](https://github.com/ctripcorp/flybird/blob/main/docs/relate_zhCN.md)
+#### 使用`pip`安装flybirds框架，过程中会自动安装所需的 [依赖包](https://github.com/ctripcorp/flybirds/blob/main/docs/relate_zhCN.md)
 ```bash
-pip install flybird
+pip install flybirds
 ```
 在Mac/Linux系统下，需要手动赋予adb可执行权限
 
@@ -44,7 +44,7 @@ chmod +x adb
 ```
 #### 使用脚手架创建项目
 ```bash
-flybird create 
+flybirds create 
 ```
 
 创建过程中会提示输入以下信息
@@ -85,7 +85,7 @@ flybird create
 3. 运行测试，默认运行features目录下所有文件
 
 ```bash
-flybird run 
+flybirds run 
 ```
 
 - 演示feature中包含了主要的自动化语法，为了让演示正常运行，建议不要修改配置项`packageName`和`packagePath`。如无需演示，可自行修改
@@ -101,19 +101,19 @@ flybird run
 
 ### 3. <span id="dp">项目结构</span>
 
-- [项目结构&配置参数](https://github.com/ctripcorp/flybird/blob/main/docs/demoproject_zhCN.md)
+- [项目结构&配置参数](https://github.com/ctripcorp/flybirds/blob/main/docs/demoproject_zhCN.md)
 
 
 ### 4. <span id="fw">Feature编写</span>
 
-- [Behave语法](https://github.com/ctripcorp/flybird/blob/main/docs/behaves_zhCN.md)
-- [公共语句说明](https://github.com/ctripcorp/flybird/blob/main/docs/casedsl_zhCN.md)
-- [页面元素](https://github.com/ctripcorp/flybird/blob/main/docs/pageelement_zhCN.md)
-- [业务Feature语句扩展](https://github.com/ctripcorp/flybird/blob/main/docs/featureextend_zhCN.md)
+- [Behave语法](https://github.com/ctripcorp/flybirds/blob/main/docs/behaves_zhCN.md)
+- [公共语句说明](https://github.com/ctripcorp/flybirds/blob/main/docs/casedsl_zhCN.md)
+- [页面元素](https://github.com/ctripcorp/flybirds/blob/main/docs/pageelement_zhCN.md)
+- [业务Feature语句扩展](https://github.com/ctripcorp/flybirds/blob/main/docs/featureextend_zhCN.md)
 
 ### 5. <span id="fc">项目脚手架</span>
 
-- [脚手架参数说明](https://github.com/ctripcorp/flybird/blob/main/docs/flybird_cli_zhCN.md)
+- [脚手架参数说明](https://github.com/ctripcorp/flybirds/blob/main/docs/flybirds_cli_zhCN.md)
 
 
 ## 贡献
@@ -127,7 +127,7 @@ flybird run
 
 ## 欢迎 fork 和反馈
 
-如有建议或意见，欢迎在 github [issues](https://github.com/ctripcorp/flybird/issues) 区提问
+如有建议或意见，欢迎在 github [issues](https://github.com/ctripcorp/flybirds/issues) 区提问
 
 
 ## 协议
@@ -137,7 +137,7 @@ flybird run
 
 ## 致谢
 
-感谢以下仓库让Flybird变得更好：
+感谢以下仓库让Flybirds变得更好：
 - [airtest](https://github.com/AirtestProject)
 - [behave](https://github.com/behave)
 - [multiple-cucumber-html-reporter](https://github.com/wswebcreation/multiple-cucumber-html-reporter)

@@ -1,15 +1,15 @@
-# Flybird  CLI
+# Flybirds  CLI
 
 
 
-## **Flybird  CLI**
+## **Flybirds  CLI**
 
-**Flybird  CLI** 是一个命令行应用程序，可以在终端运行使用**Flybird**创建的简单程序 🚀.
+**Flybirds  CLI** 是一个命令行应用程序，可以在终端运行使用**Flybirds**创建的简单程序 🚀.
 
-您可以在终端中使用 **Flybird  CLI** 来运行脚本, 如下:
+您可以在终端中使用 **Flybirds  CLI** 来运行脚本, 如下:
 
 ```bash
-flybird run
+flybirds run
 ```
 
 
@@ -18,21 +18,21 @@ flybird run
 
 ### 安装
 
-要使用 **Flybird  CLI**，您需要先安装 **flybird**.
+要使用 **Flybirds  CLI**，您需要先安装 **flybirds**.
 
 ```bash
-pip install flybird
+pip install flybirds
 ---> 100%
-Successfully installed flybird
+Successfully installed flybirds
 ```
 
-这就会创建一个你可以在终端调用的 `flybird` 命令，就像 `python`, `git`, 或`echo`.
+这就会创建一个你可以在终端调用的 `flybirds` 命令，就像 `python`, `git`, 或`echo`.
 
 ```bash
-flybird --help
-Usage: flybird [OPTIONS] COMMAND [ARGS]...
+flybirds --help
+Usage: flybirds [OPTIONS] COMMAND [ARGS]...
 
-  Welcome to flybird. Type "--help" for more information.
+  Welcome to flybirds. Type "--help" for more information.
 
 ```
 
@@ -53,9 +53,9 @@ Usage: flybird [OPTIONS] COMMAND [ARGS]...
 
 #### 操作
 
-可以在终端输入以下内容来查看**flybird**运行项目时支持的操作
+可以在终端输入以下内容来查看**flybirds**运行项目时支持的操作
 ```bash
-flybird run --help
+flybirds run --help
 ```
 
 
@@ -66,13 +66,13 @@ flybird run --help
 示例:
 
 ```bash
-flybird run -P ./features/test/demo.feature
+flybirds run -P ./features/test/demo.feature
 ```
 - **--tag, -T    TEXT(可选)**
 
 ​	运行有特定tag的场景，多个用逗号隔开，‘-’开头表示不运行包含此tag的场景
 ```bash
-flybird run -T tag1,tag2,-tag3,tag4
+flybirds run -T tag1,tag2,-tag3,tag4
 ```
 - **--format, -F    TEXT(可选)**
 
@@ -82,7 +82,7 @@ flybird run -T tag1,tag2,-tag3,tag4
 
 ```bash
 #默认
-flyird run --format=json
+flybirds run --format=json
 ```
 
 -   **--report, -R   TEXT(可选)**
@@ -93,10 +93,10 @@ flyird run --format=json
 
 ```bash
 #mac 自定义生成报告地址
-flybird run --report report/curent/report.json
+flybirds run --report report/curent/report.json
 
 #windows 自定义生成报告地址
-flybird run --report report\curent\report.json
+flybirds run --report report\curent\report.json
 ```
 
 - **--define, -D   TEXT(可选)**
@@ -107,7 +107,7 @@ flybird run --report report\curent\report.json
 
 ```bash 
  # 运行时使用的设备和uniqueTag为命令中指定的值，不会取配置文件中配置的值
-flybird run --define deviceId=*** --define uniqueTag=***
+flybirds run --define deviceId=*** --define uniqueTag=***
 ```
 
 作用2: 传入自定义参数以便在`pscript`目录下的自定义脚本中使用，使用全局参数 `global_resource` 获取.
@@ -120,7 +120,7 @@ flybird run --define deviceId=*** --define uniqueTag=***
 
 ```bash
 #失败场景不重跑
-flybird run --no-rerun 
+flybirds run --no-rerun 
 ```
 
 

@@ -1,15 +1,15 @@
-# Flybird | [中文版](https://github.com/ctripcorp/flybird/blob/main/README.md)
+# Flybirds | [中文版](https://github.com/ctripcorp/flybirds/blob/main/README.md)
 
 > Behavior-driven development (BDD) is an idea or method of software process and a technology for agile software development.
 
-Flybird is a front-end UI automation test framework based on BDD mode, providing a series of out-of-the-box tools and complete documentation.
+Flybirds is a front-end UI automation test framework based on BDD mode, providing a series of out-of-the-box tools and complete documentation.
 - Based on Behave, supporting BDD tools are required to associate Natural Language Test Case Documentation with Automated Test Code in BDD.
 - Based on Airtest, UI automated test framework is needed to implement "test cases can be executed on automated test platform" in BDD.
 
 
 ### What can I do?
 
-With Flybird you can do most of the mobile automation, here are some features to help you get started:
+With Flybirds you can do most of the mobile automation, here are some features to help you get started:
 - Based on BDD pattern, similar natural language syntax
 - Support automatic app operation, form submission, UI element verification, keyboard input, deeplink jump, etc. on the Android side. The IOS side is in progress
 - English and Chinese are supported by default. Support more languages ​​extensions
@@ -27,10 +27,10 @@ With Flybird you can do most of the mobile automation, here are some features to
 
 ### 1. Install
 
-#### use `pip` to install flybird，required pip install [dependency package](https://github.com/ctripcorp/flybird/blob/main/docs/relate.md) will be automatically installed
+#### use `pip` to install flybirds，required pip install [dependency package](https://github.com/ctripcorp/flybirds/blob/main/docs/relate.md) will be automatically installed
 
 ```bash
-pip install flybird
+pip install flybirds
 ```
 
 On MacOS/Linux platform, you need to grant adb execute permission.
@@ -49,7 +49,7 @@ chmod +x adb
 #### use cli to create project
 
 ```bash
-flybird create 
+flybirds create 
 ```
 
 You will be prompted to input the following information during project creation
@@ -89,11 +89,11 @@ To help you use, demo features will be generated in the test directory when the 
 3. Run test，all feature files in the features directory by default
 
 ```bash
-flybird run  # run test
+flybirds run  # run test
 ```
 
 - The presentation contains the main automation syntax. In order to make the presentation run normally, it is recommended not to modify the configuration items `packagename` and `packagepath`. If you do not need a presentation, you can modify it yourself
-- For more description of the cli ： [Flybird cli](#fc)
+- For more description of the cli ： [flybirds cli](#fc)
 - For more description of the project ： [Project atructure](#dp)    
 - For more description of the feature writing ： [Feature writing](#fw)
 
@@ -103,20 +103,20 @@ flybird run  # run test
 
 ### 3. <span id="dp">Project structure</span>
 
-- [Demo project details](https://github.com/ctripcorp/flybird/blob/main/docs/demoproject.md)
+- [Demo project details](https://github.com/ctripcorp/flybirds/blob/main/docs/demoproject.md)
 
 
 ### 4. <span id="fw">Feature writing</span>
 
-- [Behave syntax](https://github.com/ctripcorp/flybird/blob/main/docs/behaves.md)
-- [Common statement description](https://github.com/ctripcorp/flybird/blob/main/docs/casedsl.md)
-- [Page element](https://github.com/ctripcorp/flybird/blob/main/docs/pageelement.md)
-- [Business feature statement extension](https://github.com/ctripcorp/flybird/blob/main/docs/featureextend.md)
+- [Behave syntax](https://github.com/ctripcorp/flybirds/blob/main/docs/behaves.md)
+- [Common statement description](https://github.com/ctripcorp/flybirds/blob/main/docs/casedsl.md)
+- [Page element](https://github.com/ctripcorp/flybirds/blob/main/docs/pageelement.md)
+- [Business feature statement extension](https://github.com/ctripcorp/flybirds/blob/main/docs/featureextend.md)
 
 
-### 5. <span id="fc">Flybird cli</span>
+### 5. <span id="fc">flybirds cli</span>
 
-- [cli details](https://github.com/ctripcorp/flybird/blob/main/docs/flybird_cli.md)
+- [cli details](https://github.com/ctripcorp/flybirds/blob/main/docs/flybirds_cli.md)
 
 
 
@@ -131,7 +131,7 @@ flybird run  # run test
 
 ## Welcome to fork and feedback
 
-If you have any suggestion, welcome to GitHub to raise [issues](https://github.com/ctripcorp/flybird/issues).
+If you have any suggestion, welcome to GitHub to raise [issues](https://github.com/ctripcorp/flybirds/issues).
 
 
 ## License
