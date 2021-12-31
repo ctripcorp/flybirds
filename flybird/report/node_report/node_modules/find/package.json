@@ -1,0 +1,36 @@
+{
+  "name": "find",
+  "version": "0.3.0",
+  "description": "Find files or directories by name",
+  "url": "https://github.com/yuanchuan/find",
+  "author": "yuanchuan <yuanchuan23@gmail.com> (http://yuanchuan.name)",
+  "main": "./index.js",
+  "dependencies": {
+    "traverse-chain": "~0.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^6.0.2",
+    "tmp": "^0.0.33"
+  },
+  "keywords": [
+    "find",
+    "findfile",
+    "search",
+    "files"
+  ],
+  "license": "MIT",
+  "repository": {
+    "url": "git://github.com/yuanchuan/find.git",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/yuanchuan/find/issues"
+  },
+  "homepage": "https://github.com/yuanchuan/find#readme",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
+}

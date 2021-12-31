@@ -1,0 +1,50 @@
+{
+  "app_info": {
+    "packageName": "%{{packageName}}",
+    "packagePath": "",
+    "overwriteInstallation": false,
+    "uniqueTag": "",
+    "homeSchemaUrl": null,
+    "loginSchemaUrl": null,
+    "logoutSchemaUrl": null,
+    "defaultUser": null,
+    "defaultPassword": null
+  },
+  "device_info": {
+    "deviceId": "%{{deviceId}}",
+    "platform": "%{{platform}}",
+    "webDriverAgent": "%{{webDriverAgent}}"
+  },
+  "flow_behave": {
+    "beforeRunPage": "restartApp",
+    "scenarioFailPage": "restartApp",
+    "scenarioSuccessPage": "None",
+    "beforeRunLogin": false,
+    "failScreenRecord": true,
+    "scenarioScreenRecordTime": 120,
+    "failRerun": false,
+    "maxFailRerunCount": 1.0,
+    "maxRetryCount": 1
+  },
+  "frame_info": {
+    "waitEleTimeout": 35,
+    "waitEleDisappear": 10,
+    "clickVerifyTimeout": 15,
+    "useSwipeDuration": false,
+    "swipeDuration": 6,
+    "usePocoInput": true,
+    "afterInputWait": 1,
+    "useSearchSwipeDuration": false,
+    "searchSwipeDuration": 1,
+    "swipeSearchCount": 5,
+    "swipeSearchDistance": 0.3,
+    "pageRenderTimeout": 65,
+    "appStartTime": 6,
+    "swipeReadyTime": 3,
+    "verifyPosNotChangeCount": 5,
+    "screenRecordTime": 90,
+    "useSnap": true
+  },
+  "report": {},
+  "log": {}
+}
