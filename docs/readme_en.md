@@ -80,9 +80,9 @@ To help you use, demo features will be generated in the test directory when the 
    - windows: install [itunes](https://support.apple.com/downloads/itunes)
 
 2. Download and install test package
-    - Android：project will automatically download and install the test package through `packagepath` in config(Please make sure that the phone is turned on "Allow installation from unknown sources"). It can also be downloaded and installed manually.[Download](https://github.com/ctripcorp/flybird/blob/main/pkg/Ctrip_android.apk)
+    - Android：project will automatically download and install the test package through `packagepath` in config(Please make sure that the phone is turned on "Allow installation from unknown sources"). It can also be downloaded and installed manually.[Download](https://download2.ctrip.com/html5/Ctrip_V8.43.0_SIT4-100053_Product_9725895.apk)
     - iOS：
-      1. download from below address and install manually: [Download](https://github.com/ctripcorp/flybird/blob/main/pkg/Ctrip_ios.ipa)
+      1. download from below address and install manually: [Download](https://download2.ctrip.com/html5/Ctrip_V8.43.0_SIT4-092310_Product_9725506.ipa)
       2. use cmd or shell to start wdaproxy manually ```shell tidevice --udid 
        $udid wdaproxy -B $web_driver_angnt_bundle_id -p $port```
 

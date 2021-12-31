@@ -1,7 +1,7 @@
 {
   "app_info": {
     "packageName": "%{{packageName}}",
-    "packagePath": "",
+    "packagePath": "https://download2.ctrip.com/html5/Ctrip_V8.43.0_SIT4-100053_Product_9725895.apk",
     "overwriteInstallation": false,
     "uniqueTag": "",
     "homeSchemaUrl": null,

@@ -75,9 +75,9 @@ flybird create
 
 
 2. 下载安装测试包
-    - Android：框架会通过`config`中配置的`packagePath`自动下载测试包并安装（请确保手机已经打开”允许安装未知来源“ ）。也可手动下载安装：[下载地址](https://github.com/ctripcorp/flybird/blob/main/pkg/Ctrip_android.apk)
+    - Android：框架会通过`config`中配置的`packagePath`自动下载测试包并安装（请确保手机已经打开”允许安装未知来源“ ）。也可手动下载安装：[下载地址](https://download2.ctrip.com/html5/Ctrip_V8.43.0_SIT4-100053_Product_9725895.apk)
     - iOS:
-       1. 请手动下载演示APP进行安装：[下载地址](https://github.com/ctripcorp/flybird/blob/main/pkg/Ctrip_ios.ipa)
+       1. 请手动下载演示APP进行安装：[下载地址](https://download2.ctrip.com/html5/Ctrip_V8.43.0_SIT4-092310_Product_9725506.ipa)
        2. 开启wdaproxy： ```shell tidevice --udid 
        $udid wdaproxy -B $web_driver_angnt_bundle_id -p $port```
 
