@@ -17,10 +17,10 @@ def parse_requirements(filename):
 req = parse_requirements("requirements.txt")
 
 setup(
-    name="flybird",
+    name="flybirds",
     version="0.1.1",
     author="trip_flight",
-    author_email="flybird_support@trip.com",
+    author_email="flybirds_support@trip.com",
     description="BDD-driven natural language automated testing framework",
     long_description="BDD-driven natural language automated testing "
                      "framework, present by Trip Flight",
@@ -39,9 +39,9 @@ setup(
     install_requires=req,
     entry_points="""
     [console_scripts]
-    flybird = flybird.launcher:main
+    flybirds = flybirds.launcher:main
     """,
-    url="https://github.com/ctripcorp/flybird",
+    url="https://github.com/ctripcorp/flybirds",
     classifiers=[
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",

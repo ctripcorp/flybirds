@@ -5,7 +5,7 @@ test_fail_feature_create unit test
 from unittest import TestCase
 from unittest import main
 
-from flybird.report import fail_feature_create
+from flybirds.report import fail_feature_create
 
 
 class FailFeatureCreateTest(TestCase):

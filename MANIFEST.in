@@ -1,8 +1,8 @@
-recursive-include flybird/template *
-include flybird/report/node_report/*
-include flybird/report/node_report/*/*.*
-include flybird/report/node_report/*/*/*.*
-include flybird/report/node_report/*/*/*/*.*
-include flybird/report/node_report/*/*/*/*/*.*
-include flybird/report/node_report/*/*/*/*/*/*.*
-include flybird/report/node_report/*/*/*/*/*/*/*.*
+recursive-include flybirds/template *
+include flybirds/report/node_report/*
+include flybirds/report/node_report/*/*.*
+include flybirds/report/node_report/*/*/*.*
+include flybirds/report/node_report/*/*/*/*.*
+include flybirds/report/node_report/*/*/*/*/*.*
+include flybirds/report/node_report/*/*/*/*/*/*.*
+include flybirds/report/node_report/*/*/*/*/*/*/*.*

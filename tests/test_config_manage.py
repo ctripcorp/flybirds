@@ -5,7 +5,7 @@ config_manage unit test
 from unittest import TestCase
 from unittest import main
 
-from flybird.core.config_manage import FrameConfig, ConfigManage
+from flybirds.core.config_manage import FrameConfig, ConfigManage
 
 
 class FrameConfigTest(TestCase):

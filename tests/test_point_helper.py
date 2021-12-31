@@ -5,7 +5,7 @@
 from unittest import TestCase
 from unittest import main
 
-from flybird.utils import point_helper
+from flybirds.utils import point_helper
 
 
 class PointHelperTest(TestCase):

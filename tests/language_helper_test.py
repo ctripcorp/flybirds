@@ -1,6 +1,6 @@
 from unittest import TestCase
 from unittest import main
-from flybird.utils import language_helper
+from flybirds.utils import language_helper
 
 
 class LanguageHelperTest(TestCase):

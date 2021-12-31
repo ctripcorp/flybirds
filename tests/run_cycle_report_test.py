@@ -1,6 +1,6 @@
 from unittest import TestCase
 from unittest import main
-from flybird.core.launch_cycle.run_manage import RunManage
+from flybirds.core.launch_cycle.run_manage import RunManage
 
 
 class Report(TestCase):
