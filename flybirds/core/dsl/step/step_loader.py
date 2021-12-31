@@ -21,10 +21,10 @@ def inject_behave():
     """
     change behave func
     """
-    log.info("change behave json format feature to flybird feature")
+    log.info("change behave json format feature to flybirds feature")
     JSONFormatter.feature = feature_wreap
     log.info(
-        "change behave add_step_definition to flybird add_step_definition"
+        "change behave add_step_definition to flybirds add_step_definition"
     )
     if (StepRegistry.add_step_definition.__module__ == "behave.step_registry"
             or StepRegistry.add_step_definition.__name__

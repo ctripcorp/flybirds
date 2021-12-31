@@ -52,6 +52,6 @@ def uninstall_app(package_name, wait_time=None):
     :return: None
     :platforms: Android
     :Example:
-        >>> uninstall_app("com.flyBird.music")
+        >>> uninstall_app("com.flyBirds.music")
     """
     g_context.app.uninstall_app(package_name, wait_time)

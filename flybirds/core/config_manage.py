@@ -51,10 +51,10 @@ class ConfigManage:
 
 def get_config(config, name):
     """
-    load flybird config
+    load flybirds config
     """
     if config is None:
-        path = os.path.join(os.getcwd(), "config", "flybird_config.json")
+        path = os.path.join(os.getcwd(), "config", "flybirds_config.json")
         if os.path.exists(path):
             c_f = file_helper.get_json_from_file(path)
             if c_f.__contains__(name):
@@ -452,7 +452,7 @@ class RunConfig:
     """
 
     def __init__(self, user_data):
-        is_rerun = user_data.get("flybirdAutoRerun", None)
+        is_rerun = user_data.get("flybirdsAutoRerun", None)
         if is_rerun is not None and is_rerun.lower() == "yes":
             self.is_rerun = True
         else:
