@@ -4,6 +4,7 @@
 .venv/
 .vscode/
 flybird.egg-info
+flybird.egg-info
 build
 dist
 jenkins
