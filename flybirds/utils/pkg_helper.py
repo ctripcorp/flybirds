@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 """
 py ns load
 """
 import importlib
 import pkgutil
+import pkg_resources
 
 
 def load_pkg_by_ns(pkg_ns):
@@ -16,3 +18,23 @@ def load_pkg_by_ns(pkg_ns):
             __import__(module_name)
         except ImportError as e:
             raise e
+
+
+def find_package(pkg_query):
+    if pkg_query is not None and pkg_query != "":
+        working_set = pkg_resources.WorkingSet()
+        pkg_list = []
+        lst = [d for d in working_set]
+        for item in lst:
+            if pkg_query in item.project_name:
+                pkg_list.append(item)
+        if pkg_list is not None and len(pkg_list) > 0:
+            pkg_root_list = []
+            for item in pkg_list:
+                pkg_root_list.append(
+                    item.project_name.replace("-", "_"))
+            return pkg_root_list
+        else:
+            return None
+    else:
+        return None
