@@ -2,8 +2,8 @@
 """
 file helper
 """
-import os
 import json
+import os
 
 
 def store_json_to_file_path(data, path, write_type):
@@ -116,3 +116,49 @@ def array_to_file(file_path, str_array):
         finally:
             if f:
                 f.close()
+
+
+def get_files_from_dir(file_path):
+    """
+    Recursively get all files from the directory
+    """
+    files = []
+    for main_dir, dirs, file_name_list in os.walk(file_path):
+        for file in file_name_list:
+            file_path = os.path.join(main_dir, file)
+            files.append(file_path)
+    return files
+
+
+def get_paths_from_dir(file_path, dir_name):
+    """
+    Recursively get all file paths from the directory
+    """
+    paths = []
+    for main_dir, dirs, file_name_list in os.walk(file_path):
+        if dir_name is not None and main_dir.find(dir_name) != -1:
+            paths.append(main_dir)
+    return paths
+
+
+def replace_file_content(file_path, key, value):
+    """
+    replace file content
+    """
+    new_file = ""
+    with open(file_path, "r", encoding="utf-8") as f:
+        new_file = f.read()
+    new_file = new_file.replace(f"%{{{{{key}}}}}", f"{value}")
+    # write file
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(new_file)
+
+
+def update(filename, text):
+    content = ""
+    with open(filename, "r", encoding="utf-8") as f:
+        content = f.read()
+    content = content + '\n' + text
+    # write file
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(content)
