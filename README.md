@@ -28,7 +28,7 @@ Flybirds是基于BDD模式的前端UI自动化测试框架,提供了一系列开
 
 #### 使用`pip`安装flybirds框架，过程中会自动安装所需的 [依赖包](https://github.com/ctripcorp/flybirds/blob/main/docs/relate_zhCN.md)
 ```bash
-pip install flybirds
+pip3 install flybirds
 ```
 在Mac/Linux系统下，需要手动赋予adb可执行权限
 
