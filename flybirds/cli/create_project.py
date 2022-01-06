@@ -11,7 +11,7 @@ import typer
 
 import flybirds.template as template
 import flybirds.utils.flybirds_log as log
-from flybirds.utils.file_helper import get_files_from_dir, get_paths_from_dir, \
+from flybirds.utils.file_helper import get_files_from_dir, get_paths_from_dir,\
     replace_file_content, update
 from flybirds.utils.pkg_helper import find_package
 
@@ -285,7 +285,6 @@ def write_import_steps(pkg_list, demo_pro_path, site_path):
         import_str += pkg_import_str.strip(',') + "\n"
 
     # write the extension steps that need to be imported into the file
-    content = ""
     steps_file = os.path.join(os.path.normpath(demo_pro_path),
                               'features/steps/steps.py')
     update(steps_file, import_str)
