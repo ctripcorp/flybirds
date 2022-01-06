@@ -81,9 +81,9 @@ def create_demo():
             f"You can find it at: {demo_path}",
             fg=typer.colors.MAGENTA,
         )
-    except Exception:
+    except Exception as e:
         typer.secho(
-            f"Error!! create project {project_name} has error",
+            f"Error!! create project {project_name} has error, errMsg: {e}",
             fg=typer.colors.MAGENTA,
             err=True,
         )
