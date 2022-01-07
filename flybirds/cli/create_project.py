@@ -5,15 +5,15 @@ This module is used to create cli project.
 import os
 import platform
 import shutil
-import site
 
 import typer
 
 import flybirds.template as template
 import flybirds.utils.flybirds_log as log
-from flybirds.utils.file_helper import get_files_from_dir, get_paths_from_dir,\
+from flybirds.utils.file_helper import get_files_from_dir, \
+    get_paths_from_dir, \
     replace_file_content, update
-from flybirds.utils.pkg_helper import find_package
+from flybirds.utils.pkg_helper import find_package_base_path
 
 
 def create_demo():
@@ -189,20 +189,14 @@ def add_extend_pkg(demo_path):
     Add expansion pack
     """
     pkg_query = "-flybirds-plugin"
-    pkg_list = find_package(pkg_query)
+    pkg_list = find_package_base_path(pkg_query)
     if pkg_list is None or len(pkg_list) <= 0:
         log.info("[create_project][add_extend_pkg] has no extend packs need to"
                  "be added.")
         return
 
-    site_path = site.getsitepackages()[1]
-    if site_path is None:
-        log.warn("[create_project][add_extend_pkg] can not get sitePackages"
-                 " path.")
-        return
-
-    copy_extend_files(pkg_list, demo_path, site_path)
-    write_import_steps(pkg_list, demo_path, site_path)
+    copy_extend_files(pkg_list, demo_path, "")
+    write_import_steps(pkg_list, demo_path, "")
 
 
 def copy_extend_files(pkg_list, demo_pro_path, site_path):
@@ -215,7 +209,7 @@ def copy_extend_files(pkg_list, demo_pro_path, site_path):
     for pkg in pkg_list:
         # features src path
         extend_path = os.path.normpath(
-            os.path.join(site_path, pkg + r'\template'))
+            os.path.join(pkg.get("path"), pkg.get("name") + r'\template'))
 
         if extend_path is None or not os.path.exists(extend_path):
             log.info(
@@ -264,7 +258,7 @@ def write_import_steps(pkg_list, demo_pro_path, site_path):
     # str that need to be imported
     for pkg in pkg_list:
         step_path = os.path.normpath(
-            os.path.join(site_path, pkg + r'\dsl\step'))
+            os.path.join(pkg.get("path"), pkg.get("name") + r'\dsl\step'))
 
         if step_path is None or not os.path.exists(step_path):
             log.info(
@@ -275,7 +269,7 @@ def write_import_steps(pkg_list, demo_pro_path, site_path):
         step_files = os.listdir(step_path)
         pkg_import_str = ''
         if step_files is not None and len(step_files) > 0:
-            pkg_import_str = f'from {pkg}.dsl.step import'
+            pkg_import_str = f'from {pkg.get("name")}.dsl.step import'
         for file in step_files:
             stem, suffix = os.path.splitext(file)
             if '__init__' == stem or '__pycache__' == stem:

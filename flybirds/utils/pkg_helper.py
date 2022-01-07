@@ -3,6 +3,7 @@
 py ns load
 """
 import importlib
+import os
 import pkgutil
 import pkg_resources
 
@@ -33,6 +34,29 @@ def find_package(pkg_query):
             for item in pkg_list:
                 pkg_root_list.append(
                     item.project_name.replace("-", "_"))
+            return pkg_root_list
+        else:
+            return None
+    else:
+        return None
+
+
+def find_package_base_path(pkg_query):
+    if pkg_query is not None and pkg_query != "":
+        working_set = pkg_resources.WorkingSet()
+        pkg_list = []
+        lst = [d for d in working_set]
+        for item in lst:
+            if pkg_query in item.project_name:
+                pkg_list.append(item)
+        if pkg_list is not None and len(pkg_list) > 0:
+            pkg_root_list = []
+            for item in pkg_list:
+                new_item = {
+                    "name": item.project_name.replace("-", "_"),
+                    "path": os.path.dirname(item.location)
+                }
+                pkg_root_list.append(new_item)
             return pkg_root_list
         else:
             return None
