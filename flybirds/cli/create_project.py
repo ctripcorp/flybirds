@@ -195,21 +195,20 @@ def add_extend_pkg(demo_path):
                  "be added.")
         return
 
-    copy_extend_files(pkg_list, demo_path, "")
-    write_import_steps(pkg_list, demo_path, "")
+    copy_extend_files(pkg_list, demo_path)
 
 
-def copy_extend_files(pkg_list, demo_pro_path, site_path):
+def copy_extend_files(pkg_list, demo_pro_path):
     """
     Add extend features and config files
     """
-    if demo_pro_path is None or site_path is None:
+    if demo_pro_path is None:
         return
 
     for pkg in pkg_list:
         # features src path
         extend_path = os.path.normpath(
-            os.path.join(pkg.get("path"), pkg.get("name") + r'\template'))
+            os.path.join(pkg.get("path"), pkg.get("name"), 'template'))
 
         if extend_path is None or not os.path.exists(extend_path):
             log.info(
@@ -258,7 +257,7 @@ def write_import_steps(pkg_list, demo_pro_path, site_path):
     # str that need to be imported
     for pkg in pkg_list:
         step_path = os.path.normpath(
-            os.path.join(pkg.get("path"), pkg.get("name") + r'\dsl\step'))
+            os.path.join(pkg.get("path"), pkg.get("name"), 'dsl', 'step'))
 
         if step_path is None or not os.path.exists(step_path):
             log.info(
