@@ -52,10 +52,17 @@ def find_package_base_path(pkg_query):
         if pkg_list is not None and len(pkg_list) > 0:
             pkg_root_list = []
             for item in pkg_list:
-                new_item = {
-                    "name": item.project_name.replace("-", "_"),
-                    "path": os.path.dirname(item.location)
-                }
+                if os.path.isfile(item.module_path):
+                    new_item = {
+                        "name": item.project_name.replace("-", "_"),
+                        "path": os.path.dirname(item.module_path)
+                    }
+                else:
+                    new_item = {
+                        "name": item.project_name.replace("-", "_"),
+                        "path": item.module_path
+                    }
+
                 pkg_root_list.append(new_item)
             return pkg_root_list
         else:
