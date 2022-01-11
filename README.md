@@ -119,7 +119,8 @@ flybirds run -P features/test/ios # 运行所有ios feature
 - [脚手架参数说明](https://github.com/ctripcorp/flybirds/blob/main/docs/flybirds_cli_zhCN.md)
 
 
-#### 更多项目介绍,请看[携程机票BDD-UI-Testing框架Flybirds](https://flybirds.readthedocs.io/zh_CN/latest/)
+### 6. 更多项目介绍
+- [携程机票BDD-UI-Testing框架Flybirds](https://flybirds.readthedocs.io/zh_CN/latest/)
 
 ## 贡献
 
