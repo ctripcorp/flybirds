@@ -89,7 +89,10 @@ To help you use, demo features will be generated in the test directory when the 
 3. Run test，all feature files in the features directory by default
 
 ```bash
-flybirds run  # run test
+cd {PATH_TO_PROJECT_FOLDER}
+flybirds run  # run all features 
+flybirds run -P features/test/android  # run all android features
+flybirds run -P features/test/ios # run all ios features
 ```
 
 - The presentation contains the main automation syntax. In order to make the presentation run normally, it is recommended not to modify the configuration items `packagename` and `packagepath`. If you do not need a presentation, you can modify it yourself

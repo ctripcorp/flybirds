@@ -82,10 +82,13 @@ flybirds create
        $udid wdaproxy -B $web_driver_angnt_bundle_id -p $port```
 
 
-3. 运行测试，默认运行features目录下所有文件
+3. 运行测试，默认运行features目录下所有feature
 
 ```bash
-flybirds run 
+cd {PATH_TO_PROJECT_FOLDER}
+flybirds run  # 运行所有feature
+flybirds run -P features/test/android  # 运行所有android feature
+flybirds run -P features/test/ios # 运行所有ios feature
 ```
 
 - 演示feature中包含了主要的自动化语法，为了让演示正常运行，建议不要修改配置项`packageName`和`packagePath`。如无需演示，可自行修改
