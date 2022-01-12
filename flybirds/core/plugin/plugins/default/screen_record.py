@@ -38,7 +38,7 @@ class ScreenRecord:
             self.recording_file = "/sdcard/test.mp4"
             self.output_file = "screen.mp4"
         else:
-            self.recording_file = "/sdcard/flybird.mp4"
+            self.recording_file = "/sdcard/flybirds.mp4"
 
     def reset(self):
         """
@@ -113,7 +113,7 @@ class ScreenRecord:
             if ":" in device_id:
                 cmd = "{} -s {} shell screenrecord --bugreport " \
                       "--size {}x{} --time-limit {} --bit-rate {} " \
-                      "--verbose sdcard/flybird.mp4".format(airtest_adb_path,
+                      "--verbose sdcard/flybirds.mp4".format(airtest_adb_path,
                                                             device_id,
                                                             screen_size[0],
                                                             screen_size[1],
@@ -124,7 +124,7 @@ class ScreenRecord:
                       "--time-limit {} " \
                       "--bit-rate {}" \
                       " --verbose " \
-                      "sdcard/flybird.mp4".format(airtest_adb_path, device_id,
+                      "sdcard/flybirds.mp4".format(airtest_adb_path, device_id,
                                                   screen_size[0],
                                                   screen_size[1], timeout,
                                                   bit_rate)
@@ -142,7 +142,7 @@ class ScreenRecord:
                         err.decode(encoding="UTF-8")
                     )
             except Exception as e:
-                message = "Recording start /sdcard/flybird.mp4 , " \
+                message = "Recording start /sdcard/flybirds.mp4 , " \
                           f"innerError:{str(e)}"
             log.debug("start_record message: {}".format(message))
             time.sleep(1)

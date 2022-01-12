@@ -1,5 +1,5 @@
  # language: en
- Feature: flybird test feature-android swipe
+ Feature: flybirds test feature-android swipe
 
    Scenario: test swipe--Element swipe
      When start app[com.ctrip.inner.wireless]
