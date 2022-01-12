@@ -8,5 +8,3 @@ import flybirds.core.dsl.step.device
 
 # import custom step statements
 import pscript.dsl.step.custom_test
-
-# here import extend step statements
