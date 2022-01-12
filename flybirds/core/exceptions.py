@@ -6,7 +6,7 @@ flybirds common error
 
 class FlybirdNotFoundException(Exception):
     """
-    not find flybird
+    not find flybirds
     """
 
     def __init__(self, message, select_dic, error=None):

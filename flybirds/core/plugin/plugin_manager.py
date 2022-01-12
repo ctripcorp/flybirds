@@ -5,23 +5,24 @@ plugin load mannger
 import os
 import sys
 from imp import find_module, load_module, acquire_lock, release_lock
+
+import flybirds.utils.flybirds_log as log
 from flybirds.core.global_context import GlobalContext
 from flybirds.core.plugin.plugin_proxy import PluginProxy
-import flybirds.utils.flybirds_log as log
 
 
 def append_prex(name, sub_pkg):
     """
     append default pkg
     """
-    return "flybird.core.plugin.plugins." + sub_pkg + "." + name
+    return "flybirds.core.plugin.plugins." + sub_pkg + "." + name
 
 
 def append_event_prex(name, sub_pkg):
     """
     append default pkg
     """
-    return "flybird.core.plugin." + sub_pkg + "." + name
+    return "flybirds.core.plugin." + sub_pkg + "." + name
 
 
 def append_config_prex(name, parent_pkg):
