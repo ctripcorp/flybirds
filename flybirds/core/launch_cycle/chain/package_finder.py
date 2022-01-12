@@ -3,10 +3,9 @@
 package search
 """
 import os
-
-import pkg_resources
 from flybirds.utils.flybirds_log import logger
 from flybirds.core.launch_cycle.run_manage import RunManage
+from flybirds.utils.pkg_helper import find_package
 
 
 class PackageFinder:
@@ -21,19 +20,14 @@ class PackageFinder:
     def find_package(context):
         if context.__contains__("pkg_query") and context.get(
                 "pkg_query") is not None and context.get("pkg_query") != "":
-            working_set = pkg_resources.WorkingSet()
-            pkg_list = []
-            lst = [d for d in working_set]
-            for item in lst:
-                if context.get("pkg_query") in item.project_name:
-                    pkg_list.append(item)
+            pkg_list = find_package(context.get("pkg_query"))
             return pkg_list
         else:
             return None
 
     @staticmethod
     def can(context):
-        return False
+        return True
 
     @staticmethod
     def run(context):
@@ -43,12 +37,7 @@ class PackageFinder:
             context["pkg_query"] = pkg_query
             pkg_list = PackageFinder.find_package(context)
             if pkg_list is not None and len(pkg_list) > 0:
-                pkg_root_list = []
-                for item in pkg_list:
-                    logger.info(f"set package env :{str(item.project_name)}")
-                    pkg_root_list.append(
-                        item.project_name.replace("-", "_"))
-                os.environ["extend_pkg_list"] = ",".join(pkg_root_list)
+                os.environ["extend_pkg_list"] = ",".join(pkg_list)
         except Exception as find_error:
             logger.info(f"find pack error :{str(find_error)}")
 

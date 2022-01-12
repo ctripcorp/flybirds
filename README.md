@@ -28,7 +28,7 @@ Flybirds是基于BDD模式的前端UI自动化测试框架,提供了一系列开
 
 #### 使用`pip`安装flybirds框架，过程中会自动安装所需的 [依赖包](https://github.com/ctripcorp/flybirds/blob/main/docs/relate_zhCN.md)
 ```bash
-pip install flybirds
+pip3 install flybirds
 ```
 在Mac/Linux系统下，需要手动赋予adb可执行权限
 
@@ -82,10 +82,13 @@ flybirds create
        $udid wdaproxy -B $web_driver_angnt_bundle_id -p $port```
 
 
-3. 运行测试，默认运行features目录下所有文件
+3. 运行测试，默认运行features目录下所有feature
 
 ```bash
-flybirds run 
+cd {PATH_TO_PROJECT_FOLDER}
+flybirds run  # 运行所有feature
+flybirds run -P features/test/android  # 运行所有android feature
+flybirds run -P features/test/ios # 运行所有ios feature
 ```
 
 - 演示feature中包含了主要的自动化语法，为了让演示正常运行，建议不要修改配置项`packageName`和`packagePath`。如无需演示，可自行修改
@@ -115,6 +118,9 @@ flybirds run
 
 - [脚手架参数说明](https://github.com/ctripcorp/flybirds/blob/main/docs/flybirds_cli_zhCN.md)
 
+
+### 6. 更多项目介绍
+- [携程机票BDD-UI-Testing框架Flybirds](https://flybirds.readthedocs.io/zh_CN/latest/)
 
 ## 贡献
 

@@ -9,6 +9,11 @@ import shutil
 import typer
 
 import flybirds.template as template
+import flybirds.utils.flybirds_log as log
+from flybirds.utils.file_helper import get_files_from_dir, \
+    get_paths_from_dir, \
+    replace_file_content, update
+from flybirds.utils.pkg_helper import find_package_base_path
 
 
 def create_demo():
@@ -66,7 +71,7 @@ def create_demo():
 
     try:
         typer.echo(f"Cloning into '{project_name}'...")
-        total = 600
+        total = 700
         with typer.progressbar(length=total, label="Processing") as progress:
             demo_path = copy_from_template(progress, project_name,
                                            test_platform, device_id,
@@ -76,9 +81,9 @@ def create_demo():
             f"You can find it at: {demo_path}",
             fg=typer.colors.MAGENTA,
         )
-    except Exception:
+    except Exception as e:
         typer.secho(
-            f"Error!! create project {project_name} has error",
+            f"Error!! create project {project_name} has error, errMsg: {e}",
             fg=typer.colors.MAGENTA,
             err=True,
         )
@@ -100,6 +105,14 @@ def copy_from_template(progress, project_name, test_platform, device_id=None,
         # target_path is existed
         shutil.rmtree(target_path)
     shutil.copytree(src_path, target_path)
+    progress.update(100)
+
+    try:
+        # process extend pkg
+        add_extend_pkg(target_path)
+    except Exception as e:
+        log.error(f"[create_project][add_extend_pkg] has error, msg: {e}")
+
     progress.update(100)
 
     # delete file
@@ -144,31 +157,6 @@ def copy_from_template(progress, project_name, test_platform, device_id=None,
     return target_path
 
 
-def get_files_from_dir(dir):
-    """
-    Recursively get all files from the directory
-    """
-    files = []
-    for main_dir, dirs, file_name_list in os.walk(dir):
-        for file in file_name_list:
-            file_path = os.path.join(main_dir, file)
-            files.append(file_path)
-    return files
-
-
-def replace_file_content(file_path, key, value):
-    """
-    replace file content
-    """
-    new_file = ""
-    with open(file_path, "r", encoding="utf-8") as f:
-        new_file = f.read()
-    new_file = new_file.replace(f"%{{{{{key}}}}}", f"{value}")
-    # write file
-    with open(file_path, "w", encoding="utf-8") as f:
-        f.write(new_file)
-
-
 def run_project(progress, target_path):
     """
     install packages
@@ -194,3 +182,102 @@ def activate_venv():
         return "./venv/Scripts/activate"
     else:
         return "source venv/bin/activate"
+
+
+def add_extend_pkg(demo_path):
+    """
+    Add expansion pack
+    """
+    pkg_query = "-flybirds-plugin"
+    pkg_list = find_package_base_path(pkg_query)
+    if pkg_list is None or len(pkg_list) <= 0:
+        log.info("[create_project][add_extend_pkg] has no extend packs need to"
+                 "be added.")
+        return
+
+    copy_extend_files(pkg_list, demo_path)
+
+
+def copy_extend_files(pkg_list, demo_pro_path):
+    """
+    Add extend features and config files
+    """
+    if demo_pro_path is None:
+        return
+
+    for pkg in pkg_list:
+        # features src path
+        extend_path = os.path.normpath(
+            os.path.join(pkg.get("path"), pkg.get("name"), 'template'))
+
+        if extend_path is None or not os.path.exists(extend_path):
+            log.info(
+                "[create_project][copy_extend_files]extend_path is none or not"
+                "existed.")
+            continue
+
+        feat_path = os.path.join(os.path.normpath(extend_path), 'features')
+        config_path = os.path.join(os.path.normpath(extend_path), 'config')
+
+        # add extend features
+        if feat_path is not None and os.path.exists(feat_path):
+            feat_files = get_files_from_dir(feat_path)
+
+            # features target path
+            demo_an_paths = get_paths_from_dir(demo_pro_path, 'android')
+            demo_ios_paths = get_paths_from_dir(demo_pro_path, 'ios')
+
+            for an_path in demo_an_paths:
+                for file in feat_files:
+                    shutil.copy(file, an_path)
+
+            for ios_path in demo_ios_paths:
+                for file in feat_files:
+                    shutil.copy(file, ios_path)
+
+        # add extend config
+        if config_path is not None and os.path.exists(config_path):
+            # config target path
+            demo_config_path = os.path.join(os.path.normpath(demo_pro_path),
+                                            'config')
+            if os.path.isdir(demo_config_path):
+                # target_path is existed
+                shutil.rmtree(demo_config_path)
+            shutil.copytree(config_path, demo_config_path)
+
+
+def write_import_steps(pkg_list, demo_pro_path, site_path):
+    """
+    Write the steps that needs to be imported
+    """
+    if site_path is None:
+        return
+
+    import_str = ''
+    # str that need to be imported
+    for pkg in pkg_list:
+        step_path = os.path.normpath(
+            os.path.join(pkg.get("path"), pkg.get("name"), 'dsl', 'step'))
+
+        if step_path is None or not os.path.exists(step_path):
+            log.info(
+                "[create_project][write_import_steps] extend_step path is none"
+                "or not existed.")
+            continue
+
+        step_files = os.listdir(step_path)
+        pkg_import_str = ''
+        if step_files is not None and len(step_files) > 0:
+            pkg_import_str = f'from {pkg.get("name")}.dsl.step import'
+        for file in step_files:
+            stem, suffix = os.path.splitext(file)
+            if '__init__' == stem or '__pycache__' == stem:
+                continue
+            pkg_import_str += " " + stem + ","
+
+        import_str += pkg_import_str.strip(',') + "\n"
+
+    # write the extension steps that need to be imported into the file
+    steps_file = os.path.join(os.path.normpath(demo_pro_path),
+                              'features/steps/steps.py')
+    update(steps_file, import_str)
