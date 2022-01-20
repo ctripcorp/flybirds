@@ -133,7 +133,7 @@ flybirds run -P features/test/ios # 运行所有ios feature
 
 ## 欢迎 fork 和反馈
 
-如有建议或意见，欢迎在 github [issues](https://github.com/ctripcorp/flybirds/issues) 区提问
+如有建议或意见，欢迎在 GitHub [issues](https://github.com/ctripcorp/flybirds/issues) 区提问
 
 
 ## 协议
