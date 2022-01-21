@@ -4,7 +4,7 @@
 
 # Flybirds | [English Version](https://github.com/ctripcorp/flybirds/blob/main/docs/readme_en.md)
 
-> 行为驱动开发（Behavior-driven development，缩写BDD），是一种软件过程的思想或者方法，是一种敏捷软件开发的技术.
+> 基于自然语言的UI自动化框架
 
 Flybirds是基于BDD模式的前端UI自动化测试框架,提供了一系列开箱即用的工具和完善的文档。
 - 基于Behave，实现BDD中“自然语言测试用例文档”和“自动化测试代码”关联需要用到支持BDD工具。
