@@ -6,7 +6,7 @@
 
 > 基于自然语言的UI自动化框架
 
-- [文档](https://flybirds.readthedocs.io/zh_CN/latest/)
+- [项目介绍](https://flybirds.readthedocs.io/zh_CN/latest/)
 
 ## Preview
 
@@ -128,9 +128,6 @@ flybirds run -P features/test/ios # 运行所有ios feature
 
 - [脚手架参数说明](https://github.com/ctripcorp/flybirds/blob/main/docs/flybirds_cli_zhCN.md)
 
-
-### 6. 更多项目介绍
-- [携程机票BDD-UI-Testing框架Flybirds](https://flybirds.readthedocs.io/zh_CN/latest/)
 
 ## 贡献
 
