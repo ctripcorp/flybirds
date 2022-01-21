@@ -6,7 +6,7 @@
 
 > 基于自然语言的UI自动化框架
 
-- [项目介绍](https://flybirds.readthedocs.io/zh_CN/latest/)
+- [项目介绍](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html)
 
 ## Preview
 
