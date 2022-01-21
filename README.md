@@ -6,6 +6,14 @@
 
 > 基于自然语言的UI自动化框架
 
+- [文档](https://flybirds.readthedocs.io/zh_CN/latest/)
+
+## Preview
+
+![](./docs/feature_zhCN.png)
+
+## 快速开始
+
 Flybirds是基于BDD模式的前端UI自动化测试框架,提供了一系列开箱即用的工具和完善的文档。
 - 基于Behave，实现BDD中“自然语言测试用例文档”和“自动化测试代码”关联需要用到支持BDD工具。
 - 基于Airtest，实现BDD中“测试用例能在自动化测试平台上执行”需要用到UI自动化测试框架。
@@ -25,8 +33,6 @@ Flybirds是基于BDD模式的前端UI自动化测试框架,提供了一系列开
 
 - python(3.7-3.9)
 - nodejs(12+)
-
-## 快速开始
 
 ### 1. 环境搭建
 
