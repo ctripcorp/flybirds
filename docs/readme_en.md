@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="250" src="logo.png" alt="logo" />
+</p>
+
 # Flybirds | [中文版](https://github.com/ctripcorp/flybirds/blob/main/README.md)
 
 > Behavior-driven development (BDD) is an idea or method of software process and a technology for agile software development.

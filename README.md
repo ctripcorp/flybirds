@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="250" src="./docs/logo.png" alt="logo" />
+</p>
+
 # Flybirds | [English Version](https://github.com/ctripcorp/flybirds/blob/main/docs/readme_en.md)
 
 > 行为驱动开发（Behavior-driven development，缩写BDD），是一种软件过程的思想或者方法，是一种敏捷软件开发的技术.
