@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="250" src="./docs/logo.png" alt="logo" />
+  <img width="450" src="./docs/logo.png" alt="logo" />
 </p>
 
 # Flybirds | [English Version](https://github.com/ctripcorp/flybirds/blob/main/docs/readme_en.md)
