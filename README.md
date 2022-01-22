@@ -4,7 +4,7 @@
 
 # Flybirds | [English Version](https://github.com/ctripcorp/flybirds/blob/main/docs/readme_en.md)
 
-> 基于自然语言的UI自动化框架
+> 基于自然语言的BDD UI测试框架
 
 - [项目介绍](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html)
 
