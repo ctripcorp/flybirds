@@ -8,7 +8,7 @@
 
 - [项目介绍](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html)
 
-## Preview
+## 预览
 
 ![](./docs/feature_zhCN.png)
 
