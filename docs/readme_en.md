@@ -1,6 +1,16 @@
+<p align="center">
+  <img width="350" src="logo.png" alt="logo" />
+</p>
+
 # Flybirds | [中文版](https://github.com/ctripcorp/flybirds/blob/main/README.md)
 
-> Behavior-driven development (BDD) is an idea or method of software process and a technology for agile software development.
+> Make UI automation in natural language.
+
+## Preview
+
+![](feature_en.png)
+
+## Quickly start
 
 Flybirds is a front-end UI automation test framework based on BDD mode, providing a series of out-of-the-box tools and complete documentation.
 - Based on Behave, supporting BDD tools are required to associate Natural Language Test Case Documentation with Automated Test Code in BDD.
@@ -23,7 +33,6 @@ With Flybirds you can do most of the mobile automation, here are some features t
 - python(3.7-3.9)
 - nodejs(12+)
 
-## Quickly start
 
 ### 1. Install
 
