@@ -74,23 +74,6 @@ def check_workspace_args(feature_path):
     if os.path.isdir(config_dir) is False:
         raise Exception(f"no config directory {config_dir}")
 
-    if feature_path is not None:
-        temp_path = os.path.normpath(feature_path)
-        if os.path.isabs(temp_path) is False:
-            temp_path = os.path.abspath(temp_path)
-
-        if os.path.isfile(temp_path) is False and os.path.isdir(
-                temp_path) is False:
-            raise Exception(f"cannot find path:{temp_path}")
-        if os.path.isdir(temp_path):
-            features_dir = os.listdir(temp_path)
-            for k in range(len(features_dir)):
-                features_dir[k] = os.path.splitext(features_dir[k])[1]
-            Str = '.feature'
-            if Str not in features_dir:
-                raise Exception(f"not have any features under directory"
-                                f" {temp_path}")
-
 
 def parse_args(
         feature_path, tag, report_format, report_path, define, rerun, es,
