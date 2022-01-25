@@ -59,6 +59,8 @@ def get_config(config, name):
             c_f = file_helper.get_json_from_file(path)
             if c_f.__contains__(name):
                 return c_f.get(name)
+        else:
+            raise Exception(f"not find path: {path}")
     elif config.__contains__(name):
         return config.get(name)
 

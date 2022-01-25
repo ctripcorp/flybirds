@@ -70,6 +70,9 @@ class RunManage:
                 cmd_str = context.get("cmd_str")
                 need_rerun_args = context.get("need_rerun_args")
                 report_dir_path = context.get("report_dir_path")
+                # cwd_pth = os.getcwd()
+                # if os.environ.get('base_dir') is not None:
+                #     cwd_pth = os.environ.get('base_dir')
 
                 behave_process = subprocess.Popen(
                     cmd_str, cwd=os.getcwd(), shell=True, stdout=None
@@ -77,6 +80,13 @@ class RunManage:
 
                 behave_process.wait()
                 behave_process.communicate()
+
+                # if os.environ.get('base_dir') is not None:
+                #     if report_dir_path is not None and os.path.isabs( \
+                #             report_dir_path) is \
+                #             False:
+                #         report_dir_path = os.path.join(
+                #             os.environ.get('base_dir'), report_dir_path)
 
                 # Determine whether the failed scenario needs to be re-run
                 rerun_launch(need_rerun_args, report_dir_path, run_args)

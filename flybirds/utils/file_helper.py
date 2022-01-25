@@ -77,6 +77,9 @@ def clear_dirs(path):
     """
     Clear all files and folders under a folder
     """
+    # cwd_pth = os.getcwd()
+    # if os.environ.get('base_dir') is not None:
+    #     cwd_pth = os.environ.get('base_dir')
     path = os.path.join(os.getcwd(), path)
     if os.path.exists(path):
         ls = os.listdir(path)

@@ -22,6 +22,80 @@ def default_report_path():
     return report_path
 
 
+def check_workspace_args_bk(feature_path):
+    change_base_dir = None
+    base_dir = os.getcwd()
+    config_dir = os.path.join(base_dir, "config")
+
+    if feature_path is not None and feature_path != 'features':
+        temp_path = os.path.normpath(feature_path)
+        if os.path.isabs(temp_path) is False:
+            temp_path = os.path.abspath(temp_path)
+
+        if os.path.isfile(temp_path) is False and os.path.isdir(
+                temp_path) is False:
+            raise Exception(f"cannot find path:{temp_path}")
+
+        path_array = temp_path.split(os.sep)
+        if path_array is not None and path_array.index("features") >= 1:
+            index = path_array.index("features")
+            config_path = path_array[0]
+            if path_array[0].find(":") >= 0:
+                config_path = os.path.join(config_path, os.sep)
+            for p in path_array[1:index]:
+                config_path = os.path.join(config_path, p)
+
+            change_base_dir = config_path
+        else:
+            raise Exception(
+                f"cannot find features dir under path: {feature_path}")
+
+    if os.path.isdir(config_dir) is False:
+        if change_base_dir is not None:
+            config_path = os.path.join(change_base_dir, "config")
+            if os.path.isdir(config_path) is False:
+                raise Exception(f"no config directory {config_path}")
+            else:
+                if change_base_dir != base_dir:
+                    raise Exception(f"no config directory {config_path}")
+                    # os.environ['base_dir'] = change_base_dir
+        else:
+            raise Exception(f"cannot find config path in {base_dir}")
+    else:
+        if change_base_dir is not None and change_base_dir != \
+                base_dir:
+            os.environ['base_feature_dir'] = change_base_dir
+
+
+def check_workspace_args(feature_path):
+    base_dir = os.getcwd()
+    config_dir = os.path.join(base_dir, "config")
+
+    if feature_path is not None:
+        temp_path = os.path.normpath(feature_path)
+        if os.path.isabs(temp_path) is False:
+            temp_path = os.path.abspath(temp_path)
+
+        if os.path.isfile(temp_path) is False and os.path.isdir(
+                temp_path) is False:
+            raise Exception(f"cannot find path:{temp_path}")
+
+        path_array = temp_path.split(os.sep)
+        if path_array is not None and path_array.index("features") >= 1:
+            index = path_array.index("features")
+            config_path = path_array[0]
+            if path_array[0].find(":") >= 0:
+                config_path = os.path.join(config_path, os.sep)
+            for p in path_array[1:index]:
+                config_path = os.path.join(config_path, p)
+        else:
+            raise Exception(
+                f"cannot find features dir under path: {feature_path}")
+
+    if os.path.isdir(config_dir) is False:
+        raise Exception(f"no config directory {config_dir}")
+
+
 def parse_args(
         feature_path, tag, report_format, report_path, define, rerun, es,
         to_html, run_at
@@ -34,6 +108,9 @@ def parse_args(
         f"flybirds cmd info: {feature_path} {tag} {report_format} {report_path}"
         f" {define} {rerun} {es} {to_html} {run_at}"
     )
+
+    check_workspace_args(feature_path)
+
     use_define = []
     tags = []
     need_rerun = False
