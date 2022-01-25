@@ -388,7 +388,7 @@ def copy_behave_need_file(rerun_root_dir):
     copy step.py and environment.py and other behave files to feature path
     """
 
-    cwd_pth = os.getcwd()
+    # cwd_pth = os.getcwd()
     # if os.environ.get('base_dir') is not None:
     #     cwd_pth = os.environ.get('base_dir')
     # elif os.environ.get('base_feature_dir') is not None:
@@ -396,15 +396,15 @@ def copy_behave_need_file(rerun_root_dir):
     file_helper.create_dirs(os.path.join(rerun_root_dir, "steps"))
     file_helper.clear_dirs(os.path.join(rerun_root_dir, "steps"))
     shutil.copy(
-        os.path.join(cwd_pth, "features", "steps", "steps.py"),
+        os.path.join(os.getcwd(), "features", "steps", "steps.py"),
         os.path.join(rerun_root_dir, "steps", "steps.py"),
     )
     shutil.copy(
-        os.path.join(cwd_pth, "features", "environment.py"),
+        os.path.join(os.getcwd(), "features", "environment.py"),
         os.path.join(rerun_root_dir, "environment.py"),
     )
     shutil.copy(
-        os.path.join(cwd_pth, "features", "__init__.py"),
+        os.path.join(os.getcwd(), "features", "__init__.py"),
         os.path.join(rerun_root_dir, "__init__.py"),
     )
 
