@@ -1,6 +1,18 @@
+<p align="center">
+  <img width="350" src="./docs/logo.png" alt="logo" />
+</p>
+
 # Flybirds | [English Version](https://github.com/ctripcorp/flybirds/blob/main/docs/readme_en.md)
 
-> 行为驱动开发（Behavior-driven development，缩写BDD），是一种软件过程的思想或者方法，是一种敏捷软件开发的技术.
+> 基于自然语言的BDD UI测试框架
+
+- [项目介绍](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html)
+
+## 预览
+
+![](./docs/feature_zhCN.png)
+
+## 快速开始
 
 Flybirds是基于BDD模式的前端UI自动化测试框架,提供了一系列开箱即用的工具和完善的文档。
 - 基于Behave，实现BDD中“自然语言测试用例文档”和“自动化测试代码”关联需要用到支持BDD工具。
@@ -21,8 +33,6 @@ Flybirds是基于BDD模式的前端UI自动化测试框架,提供了一系列开
 
 - python(3.7-3.9)
 - nodejs(12+)
-
-## 快速开始
 
 ### 1. 环境搭建
 
@@ -118,9 +128,6 @@ flybirds run -P features/test/ios # 运行所有ios feature
 
 - [脚手架参数说明](https://github.com/ctripcorp/flybirds/blob/main/docs/flybirds_cli_zhCN.md)
 
-
-### 6. 更多项目介绍
-- [携程机票BDD-UI-Testing框架Flybirds](https://flybirds.readthedocs.io/zh_CN/latest/)
 
 ## 贡献
 
