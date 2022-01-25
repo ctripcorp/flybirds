@@ -30,6 +30,10 @@ class CucumberGen:
         cmd_str = f"node {gen_path} {report_path} {report_path}"
         logger.info(f"report cmd:{cmd_str}")
 
+        # cwd_pth = os.getcwd()
+        # if os.environ.get('base_dir') is not None:
+        #     cwd_pth = os.environ.get('base_dir')
+
         report_process = subprocess.Popen(
             cmd_str, cwd=os.getcwd(), shell=True, stdout=None
         )

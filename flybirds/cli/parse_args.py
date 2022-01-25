@@ -22,6 +22,14 @@ def default_report_path():
     return report_path
 
 
+def check_workspace_args(feature_path):
+    base_dir = os.getcwd()
+    config_dir = os.path.join(base_dir, "config")
+
+    if os.path.isdir(config_dir) is False:
+        raise Exception(f"not find config directory in {base_dir}")
+
+
 def parse_args(
         feature_path, tag, report_format, report_path, define, rerun, es,
         to_html, run_at
@@ -34,6 +42,9 @@ def parse_args(
         f"flybirds cmd info: {feature_path} {tag} {report_format} {report_path}"
         f" {define} {rerun} {es} {to_html} {run_at}"
     )
+
+    check_workspace_args(feature_path)
+
     use_define = []
     tags = []
     need_rerun = False
