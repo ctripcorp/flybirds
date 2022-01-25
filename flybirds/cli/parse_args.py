@@ -72,7 +72,7 @@ def check_workspace_args(feature_path):
     config_dir = os.path.join(base_dir, "config")
 
     if os.path.isdir(config_dir) is False:
-        raise Exception(f"no config directory {config_dir}")
+        raise Exception(f"not find config directory in {base_dir}")
 
 
 def parse_args(
