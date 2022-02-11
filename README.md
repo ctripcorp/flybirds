@@ -4,6 +4,10 @@
 
 # Flybirds | [English Version](https://github.com/ctripcorp/flybirds/blob/main/docs/readme_en.md)
 
+[![downloads](https://pepy.tech/badge/flybirds)](https://pepy.tech/project/flybirds)
+[![pypi version](https://img.shields.io/pypi/v/flybirds.svg)](https://pypi.python.org/pypi/flybirds)
+[![pyversions](https://img.shields.io/pypi/pyversions/flybirds.svg)](https://pypi.python.org/pypi/flybirds)
+
 > 基于自然语言的BDD UI测试框架
 
 - [项目介绍](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html)
