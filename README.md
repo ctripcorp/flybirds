@@ -5,6 +5,8 @@
 # Flybirds | [English Version](https://github.com/ctripcorp/flybirds/blob/main/docs/readme_en.md)
 
 [![downloads](https://pepy.tech/badge/flybirds)](https://pepy.tech/project/flybirds)
+[![Downloads/month](https://pepy.tech/badge/flybirds/month)](https://pepy.tech/project/flybirds)
+[![Downloads/week](https://pepy.tech/badge/flybirds/week)](https://pepy.tech/project/flybirds)
 [![pypi version](https://img.shields.io/pypi/v/flybirds.svg)](https://pypi.python.org/pypi/flybirds)
 [![pyversions](https://img.shields.io/pypi/pyversions/flybirds.svg)](https://pypi.python.org/pypi/flybirds)
 
