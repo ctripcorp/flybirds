@@ -28,6 +28,9 @@ def create_demo():
     test_platform = typer.prompt(
         "Please input your test platform?(Android/IOS)"
     )
+    if test_platform is None or test_platform not in ['android', 'ios']:
+        test_platform = 'android'
+    test_platform = test_platform.strip().lower()
     device_id = "127.0.0.1:8200"
     package_name = "ctrip.android.view"
     web_driver_agent = "com.fd.test.WebDriverAgentLib.xctrunner"
