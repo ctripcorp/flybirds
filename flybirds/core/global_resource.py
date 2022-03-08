@@ -27,7 +27,8 @@ def init_glb():
         "run_info": None,
         "web_driver_agent": None,
         "playwright": None,
-        "browser": None
+        "browser": None,
+        "plugin_page": None
     }
 
 

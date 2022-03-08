@@ -5,8 +5,7 @@ web screen imp
 import os
 import time
 
-from playwright.sync_api import sync_playwright
-
+import flybirds.core.global_resource as gr
 import flybirds.utils.file_helper as file_helper
 import flybirds.utils.flybirds_log as log
 import flybirds.utils.uuid_helper as uuid_helper
@@ -23,14 +22,11 @@ class Screen:
     @classmethod
     def screen_shot(cls, context):
         log.info('web screenshot.')
-
-        with sync_playwright() as play_wright:
-            step_index = context.cur_step_index - 1
-            cls.screen_link_to_behave(play_wright, context.scenario,
-                                      step_index, "screen_")
+        step_index = context.cur_step_index - 1
+        cls.screen_link_to_behave(context.scenario, step_index, "screen_")
 
     @staticmethod
-    def screen_link_to_behave(play_wright, scenario, step_index, tag=None):
+    def screen_link_to_behave(scenario, step_index, tag=None):
         """
         screenshot address and linked to the <scr> tag
         The label information is placed in the description of the scene,
@@ -74,17 +70,11 @@ class Screen:
             log.info(f"screen_shot_dir path :{screen_shot_dir}")
             log.info(f"current_screen_dir path :{current_screen_dir}")
             path = os.path.join(current_screen_dir, file_name)
-            Screen.web_screenshot(play_wright, path)
-            # page.screenshot(path=f'{path}.png')
+            Screen.web_screenshot(path)
 
     @staticmethod
-    def web_screenshot(play_wright, path):
-        browser_type = play_wright.firefox
-        browser = browser_type.launch(headless=False)
-        page = browser.new_page()
-        page.goto("https://www.baidu.com/")
-        # 等待页面加载完全后截图
-        print(page.title())
-        page.wait_for_selector("text=百度一下")
-        page.screenshot(path=f'{path}')
-        browser.close()
+    def web_screenshot(path):
+        page_obj = gr.get_value("plugin_page")
+        if page_obj is None or (not hasattr(page_obj, 'page')):
+            log.error('[web_screenshot] get page object has error!')
+        page_obj.page.screenshot(path=f'{path}')

@@ -40,10 +40,16 @@ class OnBefore:
         try:
             log.info('[web] OnBefore run hook!')
             OnBefore.init_ui_driver(context)
+            # get the global object used to plugin page
+            plugin_page = GlobalContext.page()
+            gr.set_value("plugin_page", plugin_page)
+            context.plugin_page = plugin_page
+
             # get the global object used to record the screen
             screen_record = GlobalContext.screen_record()
             gr.set_value("screenRecord", screen_record)
             context.screen_record = screen_record
+
             log.info("screen recording context initialization completed")
             if not screen_record.support:
                 log.info("the device does not support screen recording")

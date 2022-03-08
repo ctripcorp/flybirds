@@ -5,6 +5,7 @@ web screen record
 import os
 import time
 
+import flybirds.core.global_resource as gr
 import flybirds.utils.file_helper as file_helper
 import flybirds.utils.flybirds_log as log
 import flybirds.utils.uuid_helper as uuid_helper
@@ -24,8 +25,14 @@ class ScreenRecordInfo:
         # 0 Just created 1 Reset state 2 Start recording
         self.status = 0
 
+    @classmethod
+    def screen_record(cls, context):
+        log.info('web screenRecord.')
+        step_index = context.cur_step_index - 1
+        cls.record_link(context.scenario, step_index)
+
     @staticmethod
-    def record_link(play_wright, scenario, step_index):
+    def record_link(scenario, step_index):
         """
         Associate screenshots to report
         """
@@ -70,27 +77,18 @@ class ScreenRecordInfo:
             scenario.description.append(data)
             src_path = os.path.join(current_screen_dir, file_name)
             log.info(f'web record_link src_path: {src_path}')
-            ScreenRecordInfo.web_record(play_wright, src_path)
+            ScreenRecordInfo.web_record(src_path)
 
     @staticmethod
-    def web_record(play_wright, src_path):
-        browser_type = play_wright.firefox
-        browser = browser_type.launch(headless=True)
+    def web_record(src_path):
+        page_obj = gr.get_value("plugin_page")
+        if page_obj is None or (not hasattr(page_obj, 'page')):
+            log.error('[web_record] get page object has error!')
 
-        context = browser.new_context(record_video_dir='videos')
-        page = context.new_page()
-
-        page.goto("https://www.baidu.com/", wait_until='networkidle')
-        page.click('#kw')
-        page.fill('#kw', '12306')
-        page.wait_for_timeout(1000)
-        page.click('#su')
-
-        video = page.video
+        video = page_obj.page.video
         path = video.path()
-        print(f'web_record path: {path}')
+        log.info(f'web_record path: {path}')
 
-        context.close()
+        page_obj.context.close()
         # 将视频另存为
         video.save_as(src_path)
-        browser.close()

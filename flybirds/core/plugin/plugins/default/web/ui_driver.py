@@ -24,15 +24,11 @@ class UIDriver:
 
     @staticmethod
     def init_browser(browser_type='firefox', config_dict={"headless": False}):
-        # browser_type_str
-        play_wright = None
-        browser = None
         try:
             play_wright = sync_playwright().start()
             gr.set_value("playwright", play_wright)
             GlobalContext.ui_driver_instance = play_wright
 
-            # browser_type = play_wright.firefox
             browser_type = getattr(play_wright, browser_type)
             browser = browser_type.launch(headless=config_dict["headless"])
             log.info(f"Init browser success! browser_type:[{browser_type}]")
@@ -41,14 +37,16 @@ class UIDriver:
             return play_wright, browser
         except Exception as e:
             log.error('Init browser has error! Error msg is:', str(e))
-        # finally: TODO
-        #     if play_wright and browser:
-        #         UIDriver.close_browser()
 
     @staticmethod
     def close_browser():
         play_wright = gr.get_value('playwright')
         browser = gr.get_value('browser')
-        if play_wright and browser:
+        page_obj = gr.get_value('plugin_page')
+
+        if page_obj and hasattr(page_obj, 'context'):
+            page_obj.context.close()
+        if browser:
             browser.close()
+        if play_wright:
             play_wright.stop()
