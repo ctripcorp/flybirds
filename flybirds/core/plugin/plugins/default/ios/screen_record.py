@@ -7,7 +7,7 @@ from flybirds.core import global_resource as gr
 __open__ = ["ScreenRecordInfo"]
 
 
-class ScreenRecordInfo():
+class ScreenRecordInfo:
     name = "ios_screen_record"
     instantiation_timing = "plugin"
 

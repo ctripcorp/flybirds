@@ -25,7 +25,9 @@ def init_glb():
         "deviceid": None,
         "platform": None,
         "run_info": None,
-        "web_driver_agent": None
+        "web_driver_agent": None,
+        "playwright": None,
+        "browser": None
     }
 
 

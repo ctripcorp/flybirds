@@ -1,3 +1,4 @@
+playwright>=1.19.0
 pocoui>=1.0.85
 airtest>=1.2.3
 setuptools~=47.1.0

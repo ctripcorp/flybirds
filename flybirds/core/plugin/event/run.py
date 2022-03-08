@@ -20,7 +20,11 @@ class OnBefore:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def can(context):
-        return True
+        if gr.get_platform() is not None \
+                and (gr.get_platform().lower() != "web"):
+            return True
+        else:
+            return False
 
     @staticmethod
     def init_ui_driver(context):
@@ -120,7 +124,11 @@ class OnScreenRecordRelease:
 
     @staticmethod
     def can(context):
-        return True
+        if gr.get_platform() is not None \
+                and (gr.get_platform().lower() != "web"):
+            return True
+        else:
+            return False
 
     @staticmethod
     def run(context):

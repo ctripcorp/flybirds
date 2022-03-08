@@ -2,9 +2,9 @@
 """
 uuid helper
 """
-import uuid
-import time
 import random
+import time
+import uuid
 
 
 def create_uuid():
@@ -28,3 +28,7 @@ def create_short_timestamp_uuid():
     """
     short_uuid = create_short_uuid()
     return "{}{}".format(short_uuid, time.time())
+
+
+def report_name():
+    return f"report_{create_short_uuid()}.json"
