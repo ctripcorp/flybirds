@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import operator
 import os
 import subprocess
 import traceback
-import operator
 
-from flybirds.utils import flybirds_log as log
 from flybirds.report.fail_feature_create import rerun_launch
+from flybirds.utils import flybirds_log as log
 from flybirds.utils.pkg_helper import load_pkg_by_ns
 
 
@@ -54,6 +54,10 @@ class RunManage:
         RunManage.load_pkg()
         RunManage.process("before_run_processor", context)
         RunManage.exe(context)
+        # TODO 需要在所有进程/线程执行完后，生成报告
+        # 只有生成报告一件事，执行node命令：
+        # node F:\devTools\Python-3.7\lib\site-packages\flybirds-0.1.5-py3.7.egg\flybirds\report\node_report\report.js report\00afac4b-7361-4054-83bb-7b65ca127a65 report\00afac4b-7361
+        # -4054-83bb-7b65ca127a65
         RunManage.process("after_run_processor", context)
 
     @staticmethod

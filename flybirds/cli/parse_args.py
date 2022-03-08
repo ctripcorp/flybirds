@@ -16,6 +16,8 @@ def default_report_path():
     """
     Generate the default report directory
     """
+    # TODO report_path拼接一个随机号：report{}{}{}report_{uuid}.json
+    # cucumber 会自动根据多个json 生成 测试报告
     report_path = "report{}{}{}report.json".format(
         os.sep, uuid_helper.create_uuid(), os.sep
     )
