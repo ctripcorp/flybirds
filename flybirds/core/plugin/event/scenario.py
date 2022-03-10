@@ -39,6 +39,8 @@ def scenario_init(context, scenario):
                         scenario.feature.language
                     )
             ) or step.name.strip().startswith(
+                lge.parse_glb_str("start recording", scenario.feature.language)
+            ) or step.name.strip().startswith(
                 lge.parse_glb_str("stop record", scenario.feature.language)
             ):
                 no_screen_record_step = False
@@ -74,6 +76,8 @@ def scenario_fail(context, scenario):
     for step in scenario.all_steps:
         if step.name.strip().startswith(
                 lge.parse_glb_str("start record", scenario.feature.language)
+        ) or step.name.strip().startswith(
+            lge.parse_glb_str("start recording", scenario.feature.language)
         ):
             need_copy_record += 1
         elif step.name.strip().startswith(
