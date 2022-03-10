@@ -3,6 +3,7 @@
 Screen record.
 """
 import flybirds.core.global_resource as gr
+from flybirds.core.plugin.plugins.default.screen_record import link_record
 
 
 def start_screen_record_timeout(context, param):
@@ -20,5 +21,9 @@ def start_screen_record(context):
 def stop_screen_record(context):
     screen_record = gr.get_value("screenRecord")
     screen_record.stop_record()
+    screen_record_link(context)
+
+
+def screen_record_link(context):
     step_index = context.cur_step_index - 1
-    screen_record.link_record(context.scenario, step_index)
+    link_record(context.scenario, step_index)

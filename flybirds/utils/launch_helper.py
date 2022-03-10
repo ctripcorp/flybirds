@@ -3,11 +3,13 @@
 """
 lunch help
 """
-import flybirds.core.global_resource as gr
-import flybirds.utils.flybirds_log as log
+import time
+
 import flybirds.core.driver.app as app
 import flybirds.core.driver.element as ake
-import time
+import flybirds.core.global_resource as gr
+import flybirds.utils.flybirds_log as log
+from flybirds.core.global_context import GlobalContext as g_context
 
 
 def login():
@@ -32,6 +34,11 @@ def app_start(page_name):
     """
     device start at init
     """
+    cur_platform = g_context.platform
+    if cur_platform.strip().lower() == "web":
+        log.info('[app_start] cur_platform is web, skip restart.')
+        return
+
     device_id = gr.get_device_id()
     package_name = gr.get_app_package_name()
     page_value = gr.get_flow_behave_value(page_name, None)
@@ -87,7 +94,7 @@ def get_hook_file(filename):
     """
     project_script = gr.get_value("projectScript")
     if hasattr(project_script, "dsl_hook") and hasattr(
-        project_script.dsl_hook, filename
+            project_script.dsl_hook, filename
     ):
         file_extend = getattr(project_script.dsl_hook, filename)
         return file_extend

@@ -8,19 +8,18 @@ import flybirds.core.global_resource as gr
 import flybirds.utils.language_helper as lge
 from flybirds.core.driver import screen
 from flybirds.core.global_context import GlobalContext
+from flybirds.core.plugin.plugins.default.screen_record import link_record
 from flybirds.utils import flybirds_log as log
 from flybirds.utils import launch_helper
 
 
 def scenario_init(context, scenario):
-
     """
     init description and screen record
     """
     # initialize the description
     # the information added to the description will
     # take effect in this scenario
-    log.info('scenario_init ')
     scenario.description.append("initialization description_")
     # Initialize the sequence of steps to be executed
     # which is required for subsequent associated screenshots
@@ -30,81 +29,82 @@ def scenario_init(context, scenario):
     # associated in the report when it fails
     context.scenario_screen_record = False
     # Restart the app before running
-    # launch_helper.app_start("before_run_page")
-    # if gr.get_flow_behave_value("fail_screen_record", True):
-    #     no_screen_record_step = True
-    #     for step in scenario.all_steps:
-    #         if step.name.strip().startswith(
-    #                 lge.parse_glb_str(
-    #                     "start record",
-    #                     scenario.feature.language
-    #                 )
-    #         ) or step.name.strip().startswith(
-    #             lge.parse_glb_str("stop record", scenario.feature.language)
-    #         ):
-    #             no_screen_record_step = False
-    #             break
-    #     if no_screen_record_step:
-    #         try:
-    #             screen_record = gr.get_value("screenRecord")
-    #             timeout = gr.get_flow_behave_value(
-    #                 "scenario_screen_record_time", 120
-    #             )
-    #             screen_record.start_record(timeout)
-    #             context.scenario_screen_record = True
-    #         except Exception as scenario_error:
-    #             log.error(
-    #                 f"Running scene: An error occurred when starting to "
-    #                 f"record the screen before {scenario.name}"
-    #                 f", error: {str(scenario_error)}"
-    #             )
+    launch_helper.app_start("before_run_page")
+    if gr.get_flow_behave_value("fail_screen_record", True):
+        no_screen_record_step = True
+        for step in scenario.all_steps:
+            if step.name.strip().startswith(
+                    lge.parse_glb_str(
+                        "start record",
+                        scenario.feature.language
+                    )
+            ) or step.name.strip().startswith(
+                lge.parse_glb_str("stop record", scenario.feature.language)
+            ):
+                no_screen_record_step = False
+                break
+        if no_screen_record_step:
+            try:
+                screen_record = gr.get_value("screenRecord")
+                if hasattr(screen_record, 'start_record'):
+                    timeout = gr.get_flow_behave_value(
+                        "scenario_screen_record_time", 120
+                    )
+                    screen_record.start_record(timeout)
+                context.scenario_screen_record = True
+            except Exception as scenario_error:
+                log.error(
+                    f"Running scene: An error occurred when starting to "
+                    f"record the screen before {scenario.name}"
+                    f", error: {str(scenario_error)}"
+                )
 
 
 def scenario_fail(context, scenario):
     """
     scenario fail handler
     """
-    log.info('scenario_fail ')
     log.info(
-        f"feature:{scenario.feature.name} scenario:{scenario.name}"
-        f" failed to run"
+        f"[scenario_fail] feature:{scenario.feature.name}, "
+        f"scenario:{scenario.name} failed to run"
     )
     need_copy_record = 0
 
     # the scene fails to output a log and take a screenshot
     for step in scenario.all_steps:
-        log.info(f'scenario_fail :{step}')
-        # if step.name.strip().startswith(
-        #         lge.parse_glb_str("start record", scenario.feature.language)
-        # ):
-        #     need_copy_record += 1
-        # elif step.name.strip().startswith(
-        #         lge.parse_glb_str("stop record", scenario.feature.language)
-        # ):
-        #     need_copy_record -= 1
-        # if step.status == "failed":
-        #     info_log = f"step:{step.name}"
-        #     log.info(info_log)
-        #     log.error(step.error_message)
-        #     log.info("failed screenshot")
-        #     screen.screen_link_to_behave(
-        #         scenario, context.cur_step_index - 1, "fail_"
-        #     )
-        #     break
+        if step.name.strip().startswith(
+                lge.parse_glb_str("start record", scenario.feature.language)
+        ):
+            need_copy_record += 1
+        elif step.name.strip().startswith(
+                lge.parse_glb_str("stop record", scenario.feature.language)
+        ):
+            need_copy_record -= 1
+        if step.status == "failed":
+            info_log = f"[scenario_fail] step:{step.name}"
+            log.info(info_log)
+            log.error(f'[scenario_fail] step error msg:{step.error_message}')
+            log.info("[scenario_fail] start to do failed screenshot")
+            screen.screen_link_to_behave(
+                scenario, context.cur_step_index - 1, "fail_"
+            )
+            break
 
     # save screen recording
-    # if need_copy_record >= 1 or context.scenario_screen_record:
-    #     screen_record = gr.get_value("screenRecord")
-    #     screen_record.stop_record()
-    #     screen_record.link_record(scenario, context.cur_step_index - 1)
-    #
-    # # the processing of the current page after the scene fails
-    # launch_helper.app_start("scenario_fail_page")
-    # scenario_screen_record_str = str(context.scenario_screen_record)
-    # log.info(
-    #     f"scenario_fail, need_copy_record: {str(need_copy_record)},"
-    #     f" context.scenario_screen_record: {scenario_screen_record_str}"
-    # )
+    cur_platform = GlobalContext.platform
+    if need_copy_record >= 1 or context.scenario_screen_record \
+            or cur_platform.strip().lower() == "web":
+        screen_record = gr.get_value("screenRecord")
+        screen_record.stop_record()
+        link_record(scenario, context.cur_step_index - 1)
+
+    # the processing of the current page after the scene fails
+    launch_helper.app_start("scenario_fail_page")
+    scenario_screen_record_str = str(context.scenario_screen_record)
+    log.info(
+        f"scenario_fail, need_copy_record: {str(need_copy_record)},"
+        f" context.scenario_screen_record: {scenario_screen_record_str}"
+    )
 
 
 def scenario_success(context, scenario):
@@ -113,12 +113,10 @@ def scenario_success(context, scenario):
     """
     # adjustment of the currently displayed page after the scene is successful
     if context.scenario_screen_record:
-        log.info('scenario_success ')
-        # screen_record = gr.get_value("screenRecord")
-        # screen_record.stop_record()
+        screen_record = gr.get_value("screenRecord")
+        screen_record.stop_record()
 
-    # launch_helper.app_start("scenario_success_page")
-    log.info('scenario_success_page')
+    launch_helper.app_start("scenario_success_page")
 
 
 class OnBefore:  # pylint: disable=too-few-public-methods
@@ -131,13 +129,7 @@ class OnBefore:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def can(context, scenario):
-        # TODO 需要在增加web scenario 逻辑后修改
-        if gr.get_platform() is not None \
-                and (gr.get_platform().lower() == "web"):
-            return True
-
-        else:
-            return False
+        return True
 
     @staticmethod
     def run(context, scenario):
@@ -147,7 +139,7 @@ class OnBefore:  # pylint: disable=too-few-public-methods
         try:
             f_name = scenario.feature.name
             log.info(
-                f"running feature:{f_name} scenario:{scenario.name},"
+                f"running feature:{f_name}, scenario:{scenario.name},"
                 f" location: {scenario.feature.location}"
             )
             scenario_init(context, scenario)
@@ -175,12 +167,7 @@ class OnAfter:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def can(context, scenario):
-        # TODO 需要在增加web scenario 逻辑后修改
-        if gr.get_platform() is not None \
-                and (gr.get_platform().lower() == "web"):
-            return False
-        else:
-            return True
+        return True
 
     @staticmethod
     def run(context, scenario):

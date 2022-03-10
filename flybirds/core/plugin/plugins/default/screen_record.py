@@ -6,13 +6,14 @@ import datetime
 import os
 import time
 
+from airtest.core.android.adb import ADB
+
 import flybirds.core.global_resource as gr
 import flybirds.utils.file_helper as file_helper
 import flybirds.utils.flybirds_log as log
 import flybirds.utils.snippet as cmd_helper
 import flybirds.utils.uuid_helper as uuid_helper
 from flybirds.core.exceptions import ScreenRecordException
-from airtest.core.android.adb import ADB
 
 airtest_adb_path = ADB.builtin_adb_path()
 
@@ -204,53 +205,10 @@ class ScreenRecord:
             )
             return message
 
-    def link_record(self, scenario, step_index):
-        """
-        Associate screenshots to report
-        """
-        log.info(
-            "link_record support: {}, step_index: {},"
-            " len(scenario.steps): {}, if: {}".format(
-                str(self.support),
-                str(step_index),
-                str(len(scenario.steps)),
-                str(len(scenario.steps) > step_index >= 0),
-            )
-        )
-        if not self.support:
-            data = "embeddingsTags, stepIndex={}, " \
-                   "<label>the device does not " \
-                   "support screen recording</label>".format(step_index)
-            scenario.description.append(data)
-            return
-        feature_name = file_helper.valid_file_name(scenario.feature.name)
-        scenario_name = file_helper.valid_file_name(scenario.name)
-        if len(scenario.steps) > step_index >= 0:
-            file_name = (
-                    scenario_name
-                    + uuid_helper.create_short_uuid()
-                    + str(int(round(time.time() * 1000)))
-                    + ".mp4"
-            )
-            screen_shot_dir = gr.get_screen_save_dir()
-            current_screen_dir = os.path.join(screen_shot_dir, feature_name)
-            file_helper.create_dirs_path_object(current_screen_dir)
-
-            src_path = "../screenshot/{}/{}".format(feature_name, file_name)
-            data = (
-                'embeddingsTags, stepIndex={}, <video controls width="375">'
-                '<source src="{}" type="video/mp4"></video>'.format(
-                    step_index, src_path
-                )
-            )
-            scenario.description.append(data)
-            self.copy_record(str(os.path.join(current_screen_dir, file_name)))
-
     def copy_record(self, save_path):
         """
         Copy the screen recording from the mobile phone to the current client
         """
-
         device_id = gr.get_device_id()
         cmd = "{} -s {} pull {} {}".format(airtest_adb_path,
                                            device_id, self.recording_file,
@@ -314,3 +272,53 @@ class ScreenRecord:
         if int(proc_code) == 0:
             log.info("clear record success")
         proc.terminate()
+
+
+def link_record(scenario, step_index):
+    """
+    Associate screenshots to report
+    """
+    screen_record = gr.get_value("screenRecord")
+    log.info(
+        "link_record support: {}, step_index: {},"
+        " len(scenario.steps): {}, if: {}".format(
+            str(screen_record.support),
+            str(step_index),
+            str(len(scenario.steps)),
+            str(len(scenario.steps) > step_index >= 0),
+        )
+    )
+    if not screen_record.support:
+        data = "embeddingsTags, stepIndex={}, " \
+               "<label>the device does not " \
+               "support screen recording</label>".format(step_index)
+        scenario.description.append(data)
+        return
+    feature_name = file_helper.valid_file_name(scenario.feature.name)
+    scenario_name = file_helper.valid_file_name(scenario.name)
+    if len(scenario.steps) > step_index >= 0:
+        file_name = (
+                scenario_name
+                + uuid_helper.create_short_uuid()
+                + str(int(round(time.time() * 1000)))
+                + ".mp4"
+        )
+        screen_shot_dir = gr.get_screen_save_dir()
+        if not (screen_shot_dir is None):
+            current_screen_dir = os.path.join(screen_shot_dir, feature_name)
+        else:
+            current_screen_dir = os.path.join(feature_name)
+        file_helper.create_dirs_path_object(current_screen_dir)
+
+        src_path = "../screenshot/{}/{}".format(feature_name, file_name)
+        data = (
+            'embeddingsTags, stepIndex={}, <video controls width="375">'
+            '<source src="{}" type="video/mp4"></video>'.format(
+                step_index, src_path
+            )
+        )
+        scenario.description.append(data)
+        src_path = os.path.join(current_screen_dir, file_name)
+        log.info(
+            f'default screen_record [link_record] src_path: {src_path}')
+        screen_record.copy_record(src_path)

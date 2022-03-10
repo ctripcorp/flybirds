@@ -99,3 +99,22 @@ def return_value(value, def_value=None):
     if value is not None:
         return value
     return def_value
+
+
+def is_number(s):
+    """
+    Determine if the parameter is a number
+    """
+    try:
+        float(s)
+        return True
+    except ValueError:
+        log.error(f"param {s} is not a number!")
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        log.error(f"param {s} cannot turn to a number!")
+    return False
+

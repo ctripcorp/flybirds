@@ -8,8 +8,8 @@ import time
 import traceback
 
 import flybirds.core.global_resource as gr
-import flybirds.core.plugin.plugins.default.screen as use_screen
 import flybirds.utils.flybirds_log as log
+from flybirds.core.plugin.plugins.default.screen import BaseScreen
 
 
 def sleep(context, param):
@@ -18,7 +18,7 @@ def sleep(context, param):
 
 def screenshot(context):
     step_index = context.cur_step_index - 1
-    use_screen.screen_link_to_behave(context.scenario, step_index, "screen_")
+    BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_")
 
 
 def prev_fail_scenario_relevance(context, param1, param2):

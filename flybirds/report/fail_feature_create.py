@@ -102,7 +102,7 @@ def rerun_launch(need_rerun_args, report_dir_path, run_args):
                     (
                         f"Number of failed retries{run_count}, start to "
                         f"generate feature files that failed to rerun, "
-                        f"report root directory{report_dir_path}"
+                        f"report root directory {report_dir_path}"
                     )
                 )
                 rerun_dir_path = report_dir_path

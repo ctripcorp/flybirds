@@ -13,7 +13,6 @@ def step_init(context, step):
     adjust the order of the current steps for use in associated screenshots
     """
     # adjust the order of the current steps for use in associated screenshots
-    log.info('step_init start!!')
     context.cur_step_index += 1
 
 
@@ -34,7 +33,6 @@ class OnBefore:  # pylint: disable=too-few-public-methods
         """
         exe before step
         """
-        log.info('step OnBefore run start!!')
         log.info(step)
         step_init(context, step)
         log.info(f"run step:{step.name}")
@@ -42,7 +40,6 @@ class OnBefore:  # pylint: disable=too-few-public-methods
         before_step_extend = launch_helper.get_hook_file("before_step_extend")
         if before_step_extend is not None:
             before_step_extend(context, step)
-        log.info('step OnBefore run end!!')
 
 
 class OnAfter:  # pylint: disable=too-few-public-methods
