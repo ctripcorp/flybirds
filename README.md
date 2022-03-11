@@ -12,7 +12,7 @@
 
 > 基于自然语言的BDD UI测试框架
 
-- [项目介绍](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html)
+- [框架介绍&使用说明](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html)
 
 ## 预览
 
