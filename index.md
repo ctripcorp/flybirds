@@ -1,3 +1,10 @@
+# 携程机票BDD-UI-Testing框架Flybirds
+
+## 背景
+携程机票从2018年年中正式引入BDD，至今已3年多，成为内部首选的敏捷开发技术。
+
+**Flybirds** 是一套基于BDD模式的前端UI自动化测试框架，提供了一系列开箱即用的工具和完善的文档，现在逐步稳定，成为机票内部首选的BDD-UI-Testing测试框架。
+
 ## Welcome to GitHub Pages
 
 You can use the [editor on GitHub](https://github.com/ctripcorp/flybirds/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
