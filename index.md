@@ -3,7 +3,7 @@ Flybirds
 
 ![architecture](https://raw.githubusercontent.com/wiki/ctripcorp/flybirds/images/architecture.png)
 
-Flybirds ([仓库](https://github.com/ctripcorp/flybirds)) 是一套基于BDD模式的前端UI自动化测试框架，提供了一系列开箱即用的工具和完善的文档。
+Flybirds是一套基于BDD模式的前端UI自动化测试框架，提供了一系列开箱即用的工具和完善的文档。
 
 使用Flybirds你能够完成大部分的手机端自动化操作
 
