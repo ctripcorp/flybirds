@@ -12,7 +12,7 @@ Flybirds ([仓库](https://github.com/ctripcorp/flybirds)) 是一套基于BDD模
 * 默认支持英文、中文两种语言，支持更多语言扩展
 * 插件式设计，支持用户自定义自动化扩展
 * 提供cli脚手架，快速搭建项目
-* 提供html报告
+* 提供html报告 
 
 ## 环境要求
 
