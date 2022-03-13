@@ -21,7 +21,7 @@ Flybirds是一套基于BDD模式的前端UI自动化测试框架，提供了一�
 
 ## 环境搭建
 
-1. **使用`pip`安装flybirds框架，过程中会自动安装所需的 [依赖包](https://github.com/ctripcorp/flybirds/blob/main/docs/relate_zhCN.md)**
+* **使用`pip`安装flybirds框架，过程中会自动安装所需的 [依赖包](https://github.com/ctripcorp/flybirds/blob/main/docs/relate_zhCN.md)**
 
 ```bash
 pip3 install flybirds
@@ -39,7 +39,7 @@ cd {your_python_path}/site-packages/airtest/core/android/static/adb/linux
 chmod +x adb
 ```
 
-2. **使用脚手架创建项目**
+* **使用脚手架创建项目**
 
 ```bash
 flybirds create 
