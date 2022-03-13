@@ -38,6 +38,7 @@ chmod +x adb
 cd {your_python_path}/site-packages/airtest/core/android/static/adb/linux
 chmod +x adb
 ```
+
 2. **使用脚手架创建项目**
 
 ```bash
