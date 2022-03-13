@@ -16,7 +16,7 @@
 
 ## 预览
 
-![](./docs/feature_zhCN.png)
+![clip](https://raw.githubusercontent.com/wiki/ctripcorp/flybirds/images/tripflybirds.gif)
 
 ## 快速开始
 
