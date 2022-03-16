@@ -50,6 +50,10 @@ class OnBefore:
             gr.set_value("screenRecord", screen_record)
             context.screen_record = screen_record
 
+            plugin_ele = GlobalContext.element()
+            gr.set_value("plugin_ele", plugin_ele)
+            context.plugin_ele = plugin_ele
+
             log.info("screen recording context initialization completed")
             if not screen_record.support:
                 log.info("the device does not support screen recording")

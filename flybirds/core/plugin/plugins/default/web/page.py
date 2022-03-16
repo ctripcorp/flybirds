@@ -18,7 +18,7 @@ class Page:
     instantiation_timing = "plugin"
 
     def __init__(self):
-        page, context = Page.init_page()
+        page, context = self.init_page()
         self.page = page
         self.context = context
 
@@ -26,6 +26,8 @@ class Page:
     def init_page():
         browser = gr.get_value('browser')
         context = browser.new_context(record_video_dir="videos")
+        # TODO 从配置文件读取timeout
+        context.set_default_timeout(30 * 1000)
         page = context.new_page()
         return page, context
 
@@ -33,8 +35,10 @@ class Page:
         param_dict = dsl_helper.params_to_dic(param, "urlKey")
         url_key = param_dict["urlKey"]
         schema_url_value = gr.get_page_schema_url(url_key)
+        self.page.goto(schema_url_value, wait_until='networkidle')
 
-        self.page.goto(schema_url_value)
+    def return_pre_page(self, context):
+        self.page.go_back()
 
     def sleep(self, context, param):
         if is_number(param):
