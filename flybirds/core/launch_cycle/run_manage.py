@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import operator
-import os
-import subprocess
 import traceback
 
-from flybirds.report.fail_feature_create import rerun_launch
+import flybirds.core.cmd_parallel as parallel
 from flybirds.utils import flybirds_log as log
 from flybirds.utils.pkg_helper import load_pkg_by_ns
 
@@ -70,31 +68,22 @@ class RunManage:
 
             # noinspection PyBroadException
             try:
-                run_args = context.get("run_args")
-                cmd_str = context.get("cmd_str")
-                need_rerun_args = context.get("need_rerun_args")
-                report_dir_path = context.get("report_dir_path")
-                # cwd_pth = os.getcwd()
-                # if os.environ.get('base_dir') is not None:
-                #     cwd_pth = os.environ.get('base_dir')
+                # run_args = context.get("run_args")
+                # cmd_str = context.get("cmd_str")
+                # need_rerun_args = context.get("need_rerun_args")
+                # report_dir_path = context.get("report_dir_path")
+                # #
+                # #  TODO
+                # behave_process = subprocess.Popen(
+                #     cmd_str, cwd=os.getcwd(), shell=True, stdout=None
+                # )
+                # behave_process.wait()
+                # behave_process.communicate()
+                # rerun_launch(need_rerun_args, report_dir_path, run_args)
 
-                behave_process = subprocess.Popen(
-                    cmd_str, cwd=os.getcwd(), shell=True, stdout=None
-                )
-
-                behave_process.wait()
-                behave_process.communicate()
-
-                # if os.environ.get('base_dir') is not None:
-                #     if report_dir_path is not None and os.path.isabs( \
-                #             report_dir_path) is \
-                #             False:
-                #         report_dir_path = os.path.join(
-                #             os.environ.get('base_dir'), report_dir_path)
-
-                # Determine whether the failed scenario needs to be re-run
-                rerun_launch(need_rerun_args, report_dir_path, run_args)
-
+                # # TODO
+                parallel.parallel_runner(context)
+                # rerun_launch(need_rerun_args, report_dir_path, run_args)
             except Exception:
                 log.error(
                     f"behave task execute error: {traceback.format_exc()}")

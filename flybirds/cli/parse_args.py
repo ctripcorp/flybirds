@@ -16,8 +16,6 @@ def default_report_path():
     """
     Generate the default report directory
     """
-    # TODO report_path拼接一个随机号：report{}{}{}report_{uuid}.json
-    # cucumber 会自动根据多个json 生成 测试报告
     report_path = "report{}{}{}report.json".format(
         os.sep, uuid_helper.create_uuid(), os.sep
     )
@@ -34,7 +32,7 @@ def check_workspace_args(feature_path):
 
 def parse_args(
         feature_path, tag, report_format, report_path, define, rerun, es,
-        to_html, run_at
+        to_html, run_at, processes
 ):
     """
     process args
@@ -96,6 +94,7 @@ def parse_args(
         )
 
     # process tag
+    behave_tag_array = []
     if not (tag is None):
         # tag deal
         tags.append(tag)
@@ -136,5 +135,8 @@ def parse_args(
         "env_config": es,
         "report_format": report_format,
         "html": to_html,
-        "run_at": run_at
+        "run_at": run_at,
+        "processes": processes,
+        "feature_path": feature_path,
+        "parsed_tags": behave_tag_array
     }

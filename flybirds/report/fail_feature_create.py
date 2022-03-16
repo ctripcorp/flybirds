@@ -70,7 +70,7 @@ class FailScenarioInfo:
             self.description = description
 
 
-def rerun_launch(need_rerun_args, report_dir_path, run_args):
+def rerun_launch(need_rerun_args, report_dir_path, run_args, file_name):
     """
     start to rerun
     """
@@ -183,6 +183,13 @@ def rerun_launch(need_rerun_args, report_dir_path, run_args):
             f"Start processing the json report under the directory "
             f"{report_dir_path}"
         )
+
+    # TODO 待删除
+    file_path = os.path.join(report_dir_path, file_name)
+    log.info(f'[rerun_launch] file_path:{file_path}')
+    report_json = file_helper.get_json_from_file_path(file_path)
+    log.info(
+        f'[rerun_launch]({os.getpid()})report_json:\n\n\n{report_json}\n\n\n')
     # if rerun_report_dir_path is not None:
     json_format_deal.parse_json_data(report_dir_path, rerun_report_dir_path)
 
@@ -199,8 +206,9 @@ def create_rerun(report_dir, rerun_dir, run_count, max_fail_count=1.0):
     fail_count = 0
 
     rerun_root_dir = f"{rerun_dir}{os.sep}rerun{run_count}"
-    if not file_helper.create_dirs(rerun_root_dir):
-        file_helper.clear_dirs(rerun_root_dir)
+    file_helper.create_dirs(rerun_root_dir)
+    # if not file_helper.create_dirs(rerun_root_dir):
+    #     file_helper.clear_dirs(rerun_root_dir)
 
     fail_scenario_static = FailScenarioSum()
 
@@ -394,19 +402,25 @@ def copy_behave_need_file(rerun_root_dir):
     # elif os.environ.get('base_feature_dir') is not None:
     #     cwd_pth = os.environ.get('base_feature_dir')
     file_helper.create_dirs(os.path.join(rerun_root_dir, "steps"))
-    file_helper.clear_dirs(os.path.join(rerun_root_dir, "steps"))
-    shutil.copy(
-        os.path.join(os.getcwd(), "features", "steps", "steps.py"),
-        os.path.join(rerun_root_dir, "steps", "steps.py"),
-    )
-    shutil.copy(
-        os.path.join(os.getcwd(), "features", "environment.py"),
-        os.path.join(rerun_root_dir, "environment.py"),
-    )
-    shutil.copy(
-        os.path.join(os.getcwd(), "features", "__init__.py"),
-        os.path.join(rerun_root_dir, "__init__.py"),
-    )
+    # file_helper.clear_dirs(os.path.join(rerun_root_dir, "steps"))
+    steps_path = os.path.join(os.getcwd(), "features", "steps", "steps.py")
+    if os.path.exists(steps_path):
+        shutil.copy(
+            os.path.join(os.getcwd(), "features", "steps", "steps.py"),
+            os.path.join(rerun_root_dir, "steps", "steps.py"),
+        )
+    env_path = os.path.join(os.getcwd(), "features", "environment.py")
+    if os.path.exists(env_path):
+        shutil.copy(
+            os.path.join(os.getcwd(), "features", "environment.py"),
+            os.path.join(rerun_root_dir, "environment.py"),
+        )
+    init_path = os.path.join(os.getcwd(), "features", "__init__.py")
+    if os.path.exists(init_path):
+        shutil.copy(
+            os.path.join(os.getcwd(), "features", "__init__.py"),
+            os.path.join(rerun_root_dir, "__init__.py"),
+        )
 
 
 def set_rerun_info(user_data, gr):

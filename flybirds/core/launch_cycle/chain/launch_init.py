@@ -40,6 +40,10 @@ class LaunchInit:
             context["need_rerun_args"] = run_args.get("need_rerun")
             context["report_dir_path"] = run_args.get("report_dir_path")
             context["no_args"] = False
+            context["processes"] = run_args.get("processes")
+            context["feature_path"] = run_args.get("feature_path")
+            context["parsed_tags"] = run_args.get("parsed_tags")
+
             is_html = run_args.get("html")
             run_at = run_args.get("run_at")
 

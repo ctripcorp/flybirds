@@ -62,6 +62,10 @@ def runner(
         ),
         run_at: str = typer.Option(
             "local", "--run-at", help="Run environment, extended parameters"
+        ),
+        processes: int = typer.Option(
+            4, "--processes", '-p',
+            help="Maximum number of processes. Default = 4"
         )
 ):
     """
@@ -70,7 +74,7 @@ def runner(
     # process args
     run_args = parse_args(
         feature_path, tag, report_format, report_path, define, rerun, es,
-        to_html, run_at
+        to_html, run_at, processes
     )
     log.info("============last run_args: {}".format(str(run_args)))
     run_script(run_args)

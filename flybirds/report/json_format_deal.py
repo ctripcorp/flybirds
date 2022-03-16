@@ -6,6 +6,8 @@ import os
 import re
 import shutil
 import traceback
+from json import JSONDecodeError
+
 from flybirds.utils import file_helper
 from flybirds.utils import flybirds_log as log
 
@@ -21,6 +23,8 @@ def parse_json_data(report_dir, rerun_report_dir=None):
 
     if rerun_report_dir is not None:
         rerun_features = get_rerun_feature(rerun_report_dir)
+        log.info(f'[parse_json_data]({os.getpid()})rerun_features:\n\n\n'
+                 f'{rerun_features}\n\n\n')
         log.info(
             "parse_json_data move_rerun_screen, report_dir_path: "
             f"{report_dir}, rerun_report_dir_path: {rerun_report_dir}"
@@ -36,7 +40,13 @@ def parse_json_data(report_dir, rerun_report_dir=None):
             # noinspection PyBroadException
             try:
                 file_path = os.path.join(report_dir, file_item)
+                log.info(
+                    f'[parse_json_data] process({os.getpid()}), file_path:{file_path}')
                 report_json = file_helper.get_json_from_file_path(file_path)
+
+                log.info(
+                    f'[parse_json_data]({os.getpid()})report_json:'
+                    f'\n\n\n{report_json}\n\n\n')
                 if isinstance(report_json, list):
                     cur_json = []
                     cur_features = []
@@ -55,6 +65,8 @@ def parse_json_data(report_dir, rerun_report_dir=None):
                     file_helper.store_json_to_file_path(
                         cur_json, file_path, "w"
                     )
+            except JSONDecodeError:
+                log.warn('[parse_json_data] has error: Invalid json.')
             except Exception:
                 log.warn(
                     f"error processing image address in {file_item}",
@@ -131,7 +143,7 @@ def get_rerun_feature(report_dir):
                 try:
                     file_path = os.path.join(report_dir, file_item)
                     report_json = file_helper.get_json_from_file_path(
-                        file_path
+                        file_path, 'get_rerun_feature'
                     )
                     if isinstance(report_json, list) and len(report_json) > 0:
                         result.extend(report_json)
