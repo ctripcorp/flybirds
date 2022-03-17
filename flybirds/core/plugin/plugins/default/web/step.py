@@ -92,20 +92,22 @@ class Step:
         ele.ele_text_include(context, param_1, param_2)
 
     @classmethod
-    def wait_text_exist(cls, context, param_1, param_2):
+    def wait_text_exist(cls, context, param):
         """
         存在\[([\s\S]*)\]的文案
         """
         # element
-        pass
+        ele = gr.get_value("plugin_ele")
+        ele.find_text(context, param)
 
     @classmethod
-    def text_not_exist(cls, context, param_1, param_2):
+    def text_not_exist(cls, context, param):
         """
         bu存在\[([\s\S]*)\]的文案
         """
         # element
-        pass
+        ele = gr.get_value("plugin_ele")
+        ele.find_no_text(context, param)
 
     @classmethod
     def ele_text_equal(cls, context, param_1, param_2):
@@ -113,7 +115,8 @@ class Step:
         /^\[([\s\S]*)\]的文案为\[([\s\S]*)\]$/,
         """
         # element
-        pass
+        ele = gr.get_value("plugin_ele")
+        ele.ele_text_equal(context, param_1, param_2)
 
     @classmethod
     def exist_ele(cls, context, param):
@@ -121,7 +124,8 @@ class Step:
         /^存在元素[p]$/,
         """
         # element
-        pass
+        ele = gr.get_value("plugin_ele")
+        ele.get_ele_locator(context, param)
 
     @classmethod
     def wait_ele_exit(cls, context, param):
@@ -129,7 +133,8 @@ class Step:
       存在[{param}]的元素
         """
         # element
-        pass
+        ele = gr.get_value("plugin_ele")
+        ele.get_ele_locator(context, param)
 
     @classmethod
     def ele_not_exit(cls, context, param):
@@ -137,7 +142,8 @@ class Step:
       不存在[{param}]的元素
         """
         # element
-        pass
+        ele = gr.get_value("plugin_ele")
+        ele.ele_not_exist(context, param)
 
     @classmethod
     def wait_ele_appear(cls, context, param):
@@ -145,23 +151,24 @@ class Step:
        页面渲染完成出现元素
         """
         # element
-        pass
+        ele = gr.get_value("plugin_ele")
+        ele.wait_for_ele(context, param)
 
     @classmethod
     def ele_input(cls, context, param_1, param_2):
         """
        在[{param1}]中输入[{param2}]
         """
-        # element
-        pass
+        ele = gr.get_value("plugin_ele")
+        ele.ele_input_text(context, param_1, param_2)
 
     @classmethod
     def ele_clear_input(cls, context, param_1, param_2):
         """
        在[{param1}]中清空并输入
         """
-        # element
-        pass
+        ele = gr.get_value("plugin_ele")
+        ele.clear_and_input(context, param_1, param_2)
 
     @classmethod
     def ele_swipe(cls, context, param_1, param_2, param_3):

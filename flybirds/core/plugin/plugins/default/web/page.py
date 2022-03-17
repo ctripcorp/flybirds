@@ -35,7 +35,7 @@ class Page:
         param_dict = dsl_helper.params_to_dic(param, "urlKey")
         url_key = param_dict["urlKey"]
         schema_url_value = gr.get_page_schema_url(url_key)
-        self.page.goto(schema_url_value, wait_until='networkidle')
+        self.page.goto(schema_url_value)
 
     def return_pre_page(self, context):
         self.page.go_back()

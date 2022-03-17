@@ -86,9 +86,9 @@ def get_params(context, *args):
     items = []
     for (val, param_name) in args:
         if val is not None:
-            items.append(val)
+            items.append(replace_str(val))
         elif hasattr(context, param_name):
-            items.append(getattr(context, param_name))
+            items.append(replace_str(getattr(context, param_name)))
     return items
 
 
@@ -118,3 +118,6 @@ def is_number(s):
         log.error(f"param {s} cannot turn to a number!")
     return False
 
+
+def replace_str(u_text):
+    return u_text.strip().replace(u"\u200b", "")
