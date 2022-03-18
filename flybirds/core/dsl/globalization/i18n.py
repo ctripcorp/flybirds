@@ -128,6 +128,7 @@ step_language = {
         "from {param1} find[{param2}]element": ["向{param1}查找[{param2}]的元素"],
 
         "unblock the current page": ["解除当前页面限制"],
+        "current page is [param]": ["当前页面是[param]"],
         "current page is not last page": ["当前页面已不是上一个指定页面"],
         "from [param1] select [param2] ": ["在[param1]中选择[param2]"],
     },

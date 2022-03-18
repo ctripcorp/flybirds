@@ -6,6 +6,8 @@ web step implements class
 import flybirds.core.global_resource as gr
 import flybirds.core.plugin.plugins.default.step.common as step_common
 import flybirds.utils.flybirds_log as log
+from flybirds.core.plugin.plugins.default.step.app \
+    import to_app_home, app_login, app_logout
 from flybirds.core.plugin.plugins.default.step.record import \
     stop_screen_record
 
@@ -36,21 +38,6 @@ class Step:
         page.sleep(context, param)
 
     @classmethod
-    def full_screen_swipe(cls, context, param_1, param_2):
-        """
-      全屏向{param1}滑动[{param2}]
-        """
-        # page
-        pass
-
-    @classmethod
-    def unblock_page(cls, context):
-        """
-            解除当前页面限制
-        """
-        return True
-
-    @classmethod
     def screenshot(cls, context):
         log.info('web Step screenshot.')
         step_common.screenshot(context)
@@ -68,21 +55,43 @@ class Step:
         stop_screen_record(context)
 
     @classmethod
-    def click_ele(cls, context, param):
+    def unblock_page(cls, context):
+        """
+            解除当前页面限制
+        """
+        return True
+
+    @classmethod
+    def cur_page_is(cls, context, param):
+        """
+        当前页面是[param]
+        """
         page = gr.get_value("plugin_page")
-        page.click_ele(context, param)
+        page.cur_page_equal(context, param)
+
+    @classmethod
+    def has_page_changed(cls, context):
+        """
+        当前页面已不是上一个指定页面
+        """
+        return True
+
+    # ################ element step  ##############
+    @classmethod
+    def click_ele(cls, context, param):
+        ele = gr.get_value("plugin_ele")
+        ele.ele_click(context, param)
 
     @classmethod
     def click_text(cls, context, param):
-        page = gr.get_value("plugin_page")
-        page.click_text(context, param)
+        ele = gr.get_value("plugin_ele")
+        ele.ele_click(context, param)
 
     @classmethod
     def click_coordinates(cls, context, x, y):
-        page = gr.get_value("plugin_page")
-        page.click_coordinates(context, x, y)
+        ele = gr.get_value("plugin_ele")
+        ele.click_coordinates(context, x, y)
 
-    # ################ element step  ##############
     @classmethod
     def ele_text_container(cls, context, param_1, param_2):
         """
@@ -175,37 +184,41 @@ class Step:
         """
         [{param1}]向{param2}滑动[{param3}]
         """
-        # element
-        pass
+        ele = gr.get_value("plugin_ele")
+        ele.ele_slide(context, param_1, param_2, param_3)
+
+    @classmethod
+    def full_screen_swipe(cls, context, param_1, param_2):
+        """
+       全屏向{param1}滑动[{param2}]
+        """
+        ele = gr.get_value("plugin_ele")
+        ele.full_screen_slide(context, param_1, param_2)
 
     @classmethod
     def ele_select(cls, context, param_1, param_2):
         """
         在[param1]中选择[param2]
         """
-        # element
-        pass
+        ele = gr.get_value("plugin_ele")
+        ele.ele_select(context, param_1, param_2)
 
     @classmethod
     def full_screen_swipe_to_ele_aaa(cls, context, param_1, param_2):
         """
         向{param1}查找[{param2}]的元素
         """
-        # element
-        pass
+        ele = gr.get_value("plugin_ele")
+        ele.find_full_screen_slide(context, param_1, param_2)
 
     @classmethod
-    def has_page_changed(cls, context):
-        """
-        当前页面已不是上一个指定页面
-        """
-        # common
-        return True
+    def to_app_home(cls, context):
+        to_app_home(context)
 
     @classmethod
-    def app_login(cls, context, param_1, param_2):
-        """
-        登录账号[{param1}]密码[{param2}]
-        """
-        # common
-        pass
+    def app_login(cls, context, param1, param2):
+        app_login(context, param1, param2)
+
+    @classmethod
+    def app_logout(cls, context):
+        app_logout(context)

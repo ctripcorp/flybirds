@@ -121,3 +121,11 @@ def is_number(s):
 
 def replace_str(u_text):
     return u_text.strip().replace(u"\u200b", "")
+
+
+def handle_str(un_handle_str):
+    res = re.match(r"([\S\s]+),\s*[0-9_]+\s*", un_handle_str)
+    if res is not None:
+        return res.group(1)
+    else:
+        return un_handle_str

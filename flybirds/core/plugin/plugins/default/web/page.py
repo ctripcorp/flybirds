@@ -3,6 +3,7 @@
 # @Author : hyx
 # @File : page.py
 # @desc : web page implement
+import flybirds.core.global_resource as global_resource
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 from flybirds.utils import dsl_helper
@@ -47,11 +48,9 @@ class Page:
             log.warn(f"default wait for timeout!")
             self.page.wait_for_timeout(3 * 1000)
 
-    def click_ele(self, context, param):
-        self.page.locator(param).click(timeout=15000)
-
-    def click_text(self, context, param):
-        self.page.locator(param).click(timeout=15000)
-
-    def click_coordinates(self, context, x, y):
-        self.page.mouse.click(x, y)
+    def cur_page_equal(self, context, param):
+        cur_url = self.page.url
+        if param.startswith(("http", "https")):
+            return param == cur_url
+        schema_url = global_resource.get_page_schema_url(param)
+        return schema_url == cur_url

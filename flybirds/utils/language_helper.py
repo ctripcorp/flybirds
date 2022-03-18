@@ -50,3 +50,14 @@ def get_language_list():
             lg_list.append(name)
 
     return lg_list
+
+
+def get_glb_key(kw, language):
+    """
+    get glb dict key by keyword
+    """
+    if globalization.__contains__(language):
+        l_dict = globalization[language]
+        if l_dict is not None:
+            return [k for k, v in l_dict.items() if v == kw]
+    return None

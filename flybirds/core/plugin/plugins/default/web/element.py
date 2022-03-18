@@ -9,6 +9,47 @@ import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 import flybirds.utils.verify_helper as verify_helper
 from flybirds.core.exceptions import FlybirdVerifyException
+from flybirds.core.global_context import GlobalContext as g_Context
+from flybirds.utils import language_helper as lan
+from flybirds.utils.dsl_helper import handle_str, params_to_dic
+
+
+def direct_left(x, y, diff):
+    to_x = x - diff
+    to_y = y
+    return to_x, to_y
+
+
+def direct_right(x, y, diff):
+    to_x = x + diff
+    to_y = y
+    return to_x, to_y
+
+
+def direct_up(x, y, diff):
+    to_x = x
+    to_y = y - diff
+    return to_x, to_y
+
+
+def direct_down(x, y, diff):
+    to_x = x
+    to_y = y + diff
+    return to_x, to_y
+
+
+def direct_default(x, y, diff):
+    to_x = x
+    to_y = y - diff if y - diff > 0 else 0
+    return to_x, to_y
+
+
+direct_dict = {
+    'left': direct_left,
+    'right': direct_right,
+    'up': direct_up,
+    'down': direct_down
+}
 
 
 class Element:
@@ -24,8 +65,13 @@ class Element:
         self.page = page_obj.page
 
     def get_ele_locator(self, param):
-        params_array = param.split(",")
-        selector_str = params_array[0]
+        if param is None:
+            message = f"[get_ele_locator] the param[{param}] is None."
+            raise FlybirdVerifyException(message)
+
+        param_temp = handle_str(param)
+        param_dict = params_to_dic(param_temp)
+        selector_str = param_dict["selector"]
         selector = self.page.query_selector(selector_str)
         if selector is None:
             message = f"The element [{param}] does not exist."
@@ -43,6 +89,16 @@ class Element:
             return e_text
         except FlybirdVerifyException as e:
             raise e
+
+    def ele_click(self, context, param):
+        try:
+            locator = self.get_ele_locator(param)
+            locator(param).click(timeout=15000)
+        except FlybirdVerifyException as e:
+            raise e
+
+    def click_coordinates(self, context, x, y):
+        self.page.mouse.click(x, y)
 
     def ele_text_include(self, context, param_1, param_2):
         try:
@@ -107,3 +163,54 @@ class Element:
             return self.page.wait_for_timeout(100)
         except FlybirdVerifyException as e:
             raise e
+
+    def ele_slide(self, context, param_1, param_2, param_3):
+        try:
+            locator = self.get_ele_locator(param_1)
+            box = locator.bounding_box()
+            x = box["x"] + box["width"] / 2
+            y = box["y"] + box["height"] / 2
+            # get scroll direction
+            language = g_Context.get_current_language()
+            direct = lan.get_glb_key(param_2, language)
+
+            fun = direct_dict.get(direct, direct_default)
+            to_x, to_y = fun(x, y, param_3)
+
+            self.page.evaluate(f"window.scrollTo({to_x}, {to_y})")
+        except FlybirdVerifyException as e:
+            raise e
+
+    def full_screen_slide(self, context, param_1, param_2):
+        try:
+            # get scroll direction
+            language = g_Context.get_current_language()
+            direct = lan.get_glb_key(param_1, language)
+
+            fun = direct_dict.get(direct, direct_default)
+            to_x, to_y = fun(0, 0, param_2)
+
+            self.page.evaluate(f"window.scrollBy({to_x}, {to_y})")
+        except FlybirdVerifyException as e:
+            raise e
+
+    def ele_select(self, context, selector, option_str):
+        locator = None
+        try:
+            locator = self.get_ele_locator(selector)
+            # select by text
+            op = locator.select_option(label=option_str)
+            log.info(f'[ele_select] select option[{option_str}] success.')
+        except FlybirdVerifyException as fe:
+            raise fe
+        except Exception as e:
+            # select by value
+            log.warn(f'[ele_select] retry select option[{option_str}].')
+            locator.select_option(option_str)
+
+    def find_full_screen_slide(self, context, param1, param2):
+        try:
+            locator = self.get_ele_locator(param2)
+            locator.scroll_into_view_if_needed()
+        except FlybirdVerifyException as fe:
+            raise fe
