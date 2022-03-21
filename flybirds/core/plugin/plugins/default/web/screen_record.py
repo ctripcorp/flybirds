@@ -38,7 +38,7 @@ class ScreenRecordInfo:
 
         video = page_obj.page.video
         path = video.path()
-        log.info(f'[web copy_record]web_record path: {path}')
+        log.info(f'[web copy_record] web_record path: {path}')
         # Save video as
         video.save_as(src_path)
         video.delete()

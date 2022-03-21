@@ -225,3 +225,14 @@ def get_run_info():
     get run base info
     """
     return _global_dict["run_info"]
+
+
+def get_web_info_value(key, def_value=None):
+    """
+    get a value in the web_info configuration
+    """
+    if hasattr(_global_dict["configManage"].web_info, key):
+        value = getattr(_global_dict["configManage"].web_info, key)
+        if value is not None:
+            return value
+    return def_value

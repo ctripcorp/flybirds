@@ -2,6 +2,7 @@
 """
 flybirds common error
 """
+import flybirds.core.global_resource as gr
 
 
 class FlybirdNotFoundException(Exception):
@@ -97,3 +98,28 @@ class ScreenRecordException(Exception):
 
     def __str__(self):
         return str(self.message)
+
+
+class FlybirdsVerifyEleException(Exception):
+    """
+    timeout error
+    """
+
+    def __init__(self, message=None, selector=None):
+        super().__init__()
+        if message is not None:
+            self.message = message
+        elif selector is not None:
+            self.message = self.print_message(selector)
+
+    def __str__(self):
+        return str(self.message)
+
+    @staticmethod
+    def print_message(param):
+        default_timeout = gr.get_web_info_value("web_time_out", 30)
+        message = f'Timeout {default_timeout * 1000}ms exceeded.\n'
+        message += '=' * 20 + ' logs ' + '=' * 20
+        message += f'\nwaiting for selector "{param}"\n'
+        message += '=' * 46
+        return message

@@ -31,6 +31,10 @@ class ConfigManage:
         log.info(
             "Device configuration information", str(self.device_info.__dict__)
         )
+        self.web_info = WebConfig(user_data, None)
+        log.info(
+            "Web configuration information", str(self.web_info.__dict__)
+        )
         self.frame_info = FrameConfig(user_data, None)
         log.info(
             "Frame parameter configuration information",
@@ -154,6 +158,36 @@ class DeviceConfig:
             self.platform = user_data.get("platform", platform)
             self.web_driver_agent = device_driver
             self.screen_size = None
+
+
+class WebConfig:
+    """
+    Read configuration information about the web test
+    """
+
+    def __init__(self, user_data, config):
+        web_info = get_config(config, "web_info")
+        if web_info is None:
+            log.warn(f'[web_info] configuration of web_info is none.')
+            # default value
+            self.headless = True
+            self.browser = 'chromium'
+            self.web_time_out = 30
+            return
+
+        headless = user_data.get("headless", web_info["headless"])
+        browser = user_data.get("browser", web_info["browser"])
+        web_time_out = user_data.get("webTimeout", web_info["webTimeout"])
+        if headless is None:
+            headless = True
+        self.headless = headless
+        if browser is None:
+            browser = 'chromium'
+        self.browser = browser
+        if web_time_out is None:
+            # default webTimeout is 30s
+            web_time_out = 30
+        self.web_time_out = web_time_out
 
 
 class FlowBehave:

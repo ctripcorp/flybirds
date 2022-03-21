@@ -17,20 +17,17 @@ class UIDriver:
 
     name = "web_ui_driver"
 
-    # def __init__(self):
-    #     play_wright, browser = self.init_browser()
-    #     self.play_wright = play_wright
-    #     self.browser = browser
-
     @staticmethod
-    def init_browser(browser_type='firefox', config_dict={"headless": False}):
+    def init_browser():
         try:
             play_wright = sync_playwright().start()
             gr.set_value("playwright", play_wright)
             GlobalContext.ui_driver_instance = play_wright
 
-            browser_type = getattr(play_wright, browser_type)
-            browser = browser_type.launch(headless=config_dict["headless"])
+            browser_val = gr.get_web_info_value("browser", 'chromium')
+            browser_type = getattr(play_wright, browser_val)
+            headless = gr.get_web_info_value("headless", True)
+            browser = browser_type.launch(headless=headless)
             log.info(f"Init browser success! browser_type:[{browser_type}]")
             gr.set_value("browser", browser)
 
