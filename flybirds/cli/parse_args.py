@@ -123,7 +123,7 @@ def parse_args(
         cmd_array.extend(use_define)
 
     cmd_array.append(
-        "--no-color --no-capture --no-capture-stderr --no-skipped"
+        "--no-color --no-capture --no-capture-stderr"
     )
     cmd_str = " ".join(cmd_array)
     log.info("the assembled behave execution command: {}".format(cmd_str))
