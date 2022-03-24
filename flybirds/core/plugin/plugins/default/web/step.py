@@ -134,7 +134,7 @@ class Step:
         """
         # element
         ele = gr.get_value("plugin_ele")
-        ele.get_ele_locator(context, param)
+        ele.get_ele_locator(param)
 
     @classmethod
     def wait_ele_exit(cls, context, param):
@@ -143,7 +143,7 @@ class Step:
         """
         # element
         ele = gr.get_value("plugin_ele")
-        ele.get_ele_locator(context, param)
+        ele.get_ele_locator(param)
 
     @classmethod
     def ele_not_exit(cls, context, param):

@@ -28,7 +28,7 @@ class Page:
         browser = gr.get_value('browser')
         context = browser.new_context(record_video_dir="videos")
         default_timeout = gr.get_web_info_value("web_time_out", 30)
-        context.set_default_timeout(int(default_timeout) * 1000)
+        context.set_default_timeout(float(default_timeout) * 1000)
         page = context.new_page()
         return page, context
 

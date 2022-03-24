@@ -1,7 +1,7 @@
 import json
 import logging
+import multiprocessing
 import os
-import sys
 from datetime import datetime
 from functools import partial
 from multiprocessing import Pool
@@ -13,27 +13,25 @@ from flybirds.report.fail_feature_create import rerun_launch
 from flybirds.utils.uuid_helper import report_name
 
 
-# TODO
+def create_logger(filename: str):
+    """
+    create m_logger to dump execution time and duration of features into a logfile
+    :return:
+    """
+    m_logger = multiprocessing.get_logger()
+    m_logger.setLevel(logging.INFO)
+    formatter = logging.Formatter(
+        '%(asctime)s;%(levelname)s;%(processName)s;%(message)s')
+    handler = logging.FileHandler(filename=filename)
+    handler.setFormatter(formatter)
 
-# def create_logger(filename: str):
-#     """
-#     create m_logger to dump execution time and duration of features into a logfile
-#     :return:
-#     """
-#     m_logger = multiprocessing.get_logger()
-#     m_logger.setLevel(logging.INFO)
-#     formatter = logging.Formatter(
-#         '%(asctime)s;%(levelname)s;%(processName)s;%(message)s')
-#     handler = logging.FileHandler(filename=filename)
-#     handler.setFormatter(formatter)
-#
-#     # to avoid duplicated messages in the output
-#     if not len(m_logger.handlers):
-#         m_logger.addHandler(handler)
-#     return m_logger
-#
-#
-# logger = create_logger('multiprocessing_features.log')
+    # to avoid duplicated messages in the output
+    if not len(m_logger.handlers):
+        m_logger.addHandler(handler)
+    return m_logger
+
+
+logger = create_logger('multiprocessing_features.log')
 
 
 def execute_parallel_feature(feature, behave_cmd, feature_path, context):
@@ -42,6 +40,7 @@ def execute_parallel_feature(feature, behave_cmd, feature_path, context):
     :param feature: feature to run
     :param behave_cmd: behave parameters with respective values
     :param feature_path: behave parameters with respective values
+    :param context: behave parameters with respective values
     :type feature: str
     """
     feature_start_time = datetime.now()
@@ -70,11 +69,11 @@ def execute_parallel_feature(feature, behave_cmd, feature_path, context):
     logging.info('{0:50}: {1}!!'.format(feature, status))
     feature_end_time = datetime.now()
     end_timer = timer()
-    # logger.info(f'{feature.split("/")[-1].split(".")[0]};'
-    #             f'{feature_start_time};'
-    #             f'{feature_end_time};'
-    #             f'{end_timer - start_timer};'
-    #             f'{status}')
+    logger.info(f'{feature.split("/")[-1].split(".")[0]};'
+                f'{feature_start_time};'
+                f'{feature_end_time};'
+                f'{end_timer - start_timer};'
+                f'{status}')
 
     # rerun
     run_args = context.get("run_args")
@@ -100,6 +99,7 @@ def parallel_runner(context):
     processes = context.get("processes")
     parsed_tags = context.get("parsed_tags")
 
+    log.info(f'processes: {processes}')
     log.info(f'parsed_tags: {parsed_tags}')
     if parsed_tags and len(parsed_tags) > 0:
         # -k, --no-skipped
@@ -108,6 +108,7 @@ def parallel_runner(context):
     else:
         cmd = f'behave {feature_path} -d -k -f json --no-summary'
     log.info(f'log main cmd str: {cmd}')
+
     """
     main cmd str: behave features -d -k -f json --no-summary
     main cmd str: behave features/test/features1.features --tags @example --tags ~@skip -d -k -f json --no-summary
@@ -116,16 +117,16 @@ def parallel_runner(context):
     """
     parsed_output = dry_run_parsed_cmd(cmd)
     if not parsed_output:
-        log.warn(f'No json output from executed behave dry run command')
-        sys.exit(
+        log.warn(
             f'No json output from executed behave dry run command. Command: {cmd}\nNothing to execute')
+        return
     features = list({feature['location'].split(':')[0]
                      for feature in parsed_output
                      })
+    log.info(f'features to execute in parallel: {features}')
+
     pool = Pool(processes) if len(features) >= processes else Pool(
         len(features))
-
-    log.info(f'features to execute in parallel: {features}')
     results = pool.map(
         partial(execute_parallel_feature, behave_cmd=behave_cmd,
                 feature_path=feature_path, context=context), features)
