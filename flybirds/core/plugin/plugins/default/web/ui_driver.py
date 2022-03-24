@@ -24,7 +24,7 @@ class UIDriver:
             gr.set_value("playwright", play_wright)
             GlobalContext.ui_driver_instance = play_wright
 
-            browser_val = gr.get_web_info_value("browser", 'chromium')
+            browser_val = gr.get_web_info_value("browser_type", 'chromium')
             browser_type = getattr(play_wright, browser_val)
             headless = gr.get_web_info_value("headless", True)
             browser = browser_type.launch(headless=headless)

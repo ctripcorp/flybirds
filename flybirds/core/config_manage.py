@@ -171,19 +171,19 @@ class WebConfig:
             log.warn(f'[web_info] configuration of web_info is none.')
             # default value
             self.headless = True
-            self.browser = 'chromium'
+            self.browser_type = 'chromium'
             self.web_time_out = 30
             return
 
         headless = user_data.get("headless", web_info["headless"])
-        browser = user_data.get("browser", web_info["browser"])
+        browser_type = user_data.get("browserType", web_info["browserType"])
         web_time_out = user_data.get("webTimeout", web_info["webTimeout"])
         if headless is None:
             headless = True
         self.headless = headless
-        if browser is None:
-            browser = 'chromium'
-        self.browser = browser
+        if browser_type is None:
+            browser_type = 'chromium'
+        self.browser_type = browser_type
         if web_time_out is None:
             # default webTimeout is 30s
             web_time_out = 30

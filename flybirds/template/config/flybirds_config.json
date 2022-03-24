@@ -14,7 +14,7 @@
   },
   "web_info": {
     "headless": true,
-    "browser": "chromium",
+    "browserType": "chromium",
     "webTimeout": 30
   },
   "flow_behave": {
