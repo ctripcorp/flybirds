@@ -178,11 +178,18 @@ class OnAfter:  # pylint: disable=too-few-public-methods
         exe scenario after
         """
         try:
-            log.info('[web scenario] OnAfter!')
+            log.info('[web_scenario_OnAfter] start!')
             if scenario.status == "failed":
                 scenario_fail(context, scenario)
             else:
                 scenario_success(context, scenario)
+
+            cur_platform = GlobalContext.platform
+            if cur_platform.strip().lower() == "web":
+                log.info('[web_scenario_OnAfter] reset page、ele、screenRecord')
+                gr.set_value("plugin_page", None)
+                gr.set_value("screenRecord", None)
+                gr.set_value("plugin_ele", None)
         except Exception:
             traceback.print_exc()
 
