@@ -117,7 +117,7 @@ class FlybirdsVerifyEleException(Exception):
 
     @staticmethod
     def print_message(param):
-        default_timeout = gr.get_web_info_value("web_time_out", 30)
+        default_timeout = gr.get_frame_config_value("wait_ele_timeout", 30)
         message = f'Timeout {default_timeout * 1000}ms exceeded.\n'
         message += '=' * 20 + ' logs ' + '=' * 20
         message += f'\nwaiting for selector "{param}"\n'

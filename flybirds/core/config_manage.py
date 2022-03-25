@@ -172,22 +172,23 @@ class WebConfig:
             # default value
             self.headless = True
             self.browser_type = 'chromium'
-            self.web_time_out = 30
+            self.default_time_out = 30
             return
 
         headless = user_data.get("headless", web_info["headless"])
         browser_type = user_data.get("browserType", web_info["browserType"])
-        web_time_out = user_data.get("webTimeout", web_info["webTimeout"])
+        default_time_out = user_data.get("defaultTimeout",
+                                         web_info["defaultTimeout"])
         if headless is None:
             headless = True
         self.headless = headless
         if browser_type is None:
             browser_type = 'chromium'
         self.browser_type = browser_type
-        if web_time_out is None:
+        if default_time_out is None:
             # default webTimeout is 30s
-            web_time_out = 30
-        self.web_time_out = web_time_out
+            default_time_out = 30
+        self.default_time_out = default_time_out
 
 
 class FlowBehave:

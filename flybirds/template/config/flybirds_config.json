@@ -15,7 +15,7 @@
   "web_info": {
     "headless": true,
     "browserType": "chromium",
-    "webTimeout": 30
+    "defaultTimeout": 30
   },
   "flow_behave": {
     "beforeRunPage": "restartApp",

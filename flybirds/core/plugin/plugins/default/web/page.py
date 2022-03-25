@@ -27,9 +27,15 @@ class Page:
     def init_page():
         browser = gr.get_value('browser')
         context = browser.new_context(record_video_dir="videos")
-        default_timeout = gr.get_web_info_value("web_time_out", 30)
+        default_timeout = gr.get_web_info_value("default_time_out", 30)
         context.set_default_timeout(float(default_timeout) * 1000)
         page = context.new_page()
+
+        ele_wait_time = gr.get_frame_config_value("wait_ele_timeout", 30)
+        page_render_timeout = gr.get_frame_config_value("page_render_timeout",
+                                                        30)
+        page.set_default_timeout(float(ele_wait_time) * 1000)
+        page.set_default_navigation_timeout(float(page_render_timeout) * 1000)
         return page, context
 
     def navigate(self, context, param):
