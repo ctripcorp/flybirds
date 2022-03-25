@@ -75,6 +75,11 @@ class Element:
         selector_str = param_dict["selector"]
         selector = self.page.query_selector(selector_str)
         if selector is None:
+            if '=' not in selector_str:
+                selector_str = 'text=' + selector_str
+                selector = self.page.query_selector(selector_str)
+                if selector is None:
+                    raise FlybirdsVerifyEleException(selector=param)
             raise FlybirdsVerifyEleException(selector=param)
         return self.page.locator(selector_str)
 
@@ -131,8 +136,13 @@ class Element:
             raise FlybirdVerifyException(message)
 
     def wait_for_ele(self, context, param):
-        params_array = param.split(",")
-        selector_str = params_array[0]
+        if param is None:
+            message = f"[wait_for_ele] the param[{param}] is None."
+            raise FlybirdsVerifyEleException(message=message)
+
+        param_temp = handle_str(param)
+        param_dict = params_to_dic(param_temp)
+        selector_str = param_dict["selector"]
         self.page.wait_for_selector(selector_str, state='visible')
 
     def ele_input_text(self, context, param_1, param_2):
