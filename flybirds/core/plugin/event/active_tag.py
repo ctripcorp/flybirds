@@ -2,12 +2,13 @@
 # @Time : 2022/3/22 17:12
 # @Author : hyx
 # @File : active_tag.py
-# @desc : active_tag 
+# @desc : active_tag
 
 from behave.tag_matcher import ActiveTagMatcher, setup_active_tag_values
 
 import flybirds.core.global_resource as gr
 from flybirds.core.global_context import GlobalContext
+from flybirds.utils import feature_tag
 from flybirds.utils import flybirds_log as log
 
 
@@ -17,16 +18,29 @@ def active_tag_init():
      # NOTE:
          active_tag_value_provider provides category values for active tags.
      """
+    # get custom active_tag
     tag_provider_module = gr.get_value("projectScript").tag_provider
     tag_value_provider = getattr(tag_provider_module,
                                  "ACTIVE_TAG_VALUE_PROVIDER")
+    if tag_value_provider is None:
+        tag_value_provider = {}
     log.info(f'tag_value_provider :{tag_value_provider}')
-    active_tag_value_provider = tag_value_provider.copy() \
-        if tag_value_provider is not None else {}
+
+    # get default active_tag
+    default_active_tag = feature_tag.DEFAULT_ACTIVE_TAG_VALUE_PROVIDER.copy()
+    if default_active_tag is None:
+        default_active_tag = {}
+    active_tag_value_provider = merge(default_active_tag, tag_value_provider)
+    log.info(f'active_tag_value_provider :{active_tag_value_provider}')
 
     active_tag_matcher = ActiveTagMatcher(active_tag_value_provider)
     gr.set_value("active_tag_matcher", active_tag_matcher)
     return active_tag_value_provider
+
+
+def merge(dict1, dict2):
+    res = {**dict1, **dict2}
+    return res
 
 
 class OnBeforeAll:
