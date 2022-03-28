@@ -8,6 +8,7 @@ import os
 
 import flybirds.utils.flybirds_log as log
 import flybirds.utils.uuid_helper as uuid_helper
+from flybirds.core.exceptions import FlybirdVerifyException
 from flybirds.core.tag_expression import TagExpression
 from flybirds.utils import file_helper
 
@@ -121,6 +122,7 @@ def parse_args(
 
     if len(use_define) > 0:
         cmd_array.extend(use_define)
+        has_user_tag_exist(use_define)
 
     cmd_array.append(
         "--no-color --no-capture --no-capture-stderr"
@@ -140,3 +142,15 @@ def parse_args(
         "feature_path": feature_path,
         "parsed_tags": behave_tag_array
     }
+
+
+def has_user_tag_exist(arr):
+    new_arr = []
+    for item in arr:
+        if not ('=' in item):
+            continue
+        key = item.split("=", 1)[0]
+        if key in new_arr:
+            message = f"the tag [{key}] already exist,please chang other one."
+            raise FlybirdVerifyException(message)
+        new_arr.append(item.split("=", 1)[0])

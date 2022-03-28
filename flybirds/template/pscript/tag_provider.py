@@ -7,7 +7,7 @@ import os
 
 import six
 
-from flybirds.utils.feature_tag import bool_to_string
+from flybirds.core.feature_tag import bool_to_string
 
 # -----------------------------------------------------------------------------
 # Custom: ACTIVE-TAGS

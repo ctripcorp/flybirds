@@ -4,12 +4,13 @@ it is triggered when behave before all
 """
 import base64
 import traceback
-from flybirds.core.config_manage import ConfigManage, AppEnvConfig
-from flybirds.core.script_config import ScriptImportManage
-from flybirds.report.fail_feature_create import set_rerun_info
+
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
+from flybirds.core.config_manage import ConfigManage, AppEnvConfig
 from flybirds.core.global_context import GlobalContext
+from flybirds.core.script_config import ScriptImportManage
+from flybirds.report.fail_feature_create import set_rerun_info
 
 
 class OnConfigLoad:  # pylint: disable=too-few-public-methods

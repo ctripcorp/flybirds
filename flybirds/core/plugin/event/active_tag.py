@@ -7,8 +7,8 @@
 from behave.tag_matcher import ActiveTagMatcher, setup_active_tag_values
 
 import flybirds.core.global_resource as gr
+from flybirds.core import feature_tag
 from flybirds.core.global_context import GlobalContext
-from flybirds.utils import feature_tag
 from flybirds.utils import flybirds_log as log
 
 
