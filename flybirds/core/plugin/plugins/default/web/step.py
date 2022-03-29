@@ -85,7 +85,7 @@ class Step:
     @classmethod
     def click_text(cls, context, param):
         ele = gr.get_value("plugin_ele")
-        ele.ele_click(context, param)
+        ele.click_text(context, param)
 
     @classmethod
     def click_coordinates(cls, context, x, y):
@@ -210,6 +210,36 @@ class Step:
         """
         ele = gr.get_value("plugin_ele")
         ele.find_full_screen_slide(context, param_1, param_2)
+
+    @classmethod
+    def ele_attr_equal(cls, context, param1, param2, param3):
+        # 元素[{param1}]的属性[{param2}]为{param3}
+        ele = gr.get_value("plugin_ele")
+        ele.is_ele_attr_equal(context, param1, param2, param3)
+
+    @classmethod
+    def text_attr_equal(cls, context, param1, param2, param3):
+        # 文案[{param1}]的属性[{param2}]为{param3}
+        ele = gr.get_value("plugin_ele")
+        ele.is_ele_attr_equal(context, param1, param2, param3)
+
+    @classmethod
+    def find_child_from_parent(cls, context, param1, param2):
+        # /^存在\[([\s\S\[\]]*)\]的\[([\s\S\[\]]*)\](?:的元素)?$/
+        ele = gr.get_value("plugin_ele")
+        ele.is_parent_exist_child(context, param1, param2)
+
+    @classmethod
+    def find_text_from_parent(cls, context, param1, param2, param3):
+        # /^\[([\s\S]*?)\]的\[([\s\S]*?)\]的文案为\[([\s\S]*)\]$/,
+        ele = gr.get_value("plugin_ele")
+        ele.find_text_from_parent(context, param1, param2, param3)
+
+    @classmethod
+    def swipe_to_ele(cls, context, param1, param2, param3):
+        # 在[{param1}]中向{param2}查找[{param3}]的元素
+        ele = gr.get_value("plugin_ele")
+        ele.is_parent_exist_child(context, param1, param3)
 
     @classmethod
     def to_app_home(cls, context):

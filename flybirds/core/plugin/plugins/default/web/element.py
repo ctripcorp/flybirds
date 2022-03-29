@@ -65,23 +65,27 @@ class Element:
             log.error('[web Element init] get page object has error!')
         self.page = page_obj.page
 
-    def get_ele_locator(self, param):
-        if param is None:
-            message = f"[get_ele_locator] the param[{param}] is None."
+    def get_ele_locator(self, selector):
+        selector_node, selector_str = self.get_ele_handle(selector)
+        return self.page.locator(selector_str)
+
+    def get_ele_handle(self, selector):
+        if selector is None:
+            message = f"[get_ele_locator] the param[{selector}] is None."
             raise FlybirdsVerifyEleException(message=message)
 
-        param_temp = handle_str(param)
+        param_temp = handle_str(selector)
         param_dict = params_to_dic(param_temp)
         selector_str = param_dict["selector"]
-        selector = self.page.query_selector(selector_str)
-        if selector is None:
-            if '=' not in selector_str:
+        selector_node = self.page.query_selector(selector_str)
+        if selector_node is None:
+            if 'text=' not in selector_str:
                 selector_str = 'text=' + selector_str
-                selector = self.page.query_selector(selector_str)
-                if selector is None:
-                    raise FlybirdsVerifyEleException(selector=param)
-            raise FlybirdsVerifyEleException(selector=param)
-        return self.page.locator(selector_str)
+                selector_node = self.page.query_selector(selector_str)
+                if selector_node is None:
+                    raise FlybirdsVerifyEleException(selector=selector_str)
+            raise FlybirdsVerifyEleException(selector=selector_str)
+        return selector_node, selector_str
 
     def get_ele_text(self, param):
         locator = self.get_ele_locator(param)
@@ -93,6 +97,12 @@ class Element:
         return e_text
 
     def ele_click(self, context, param):
+        locator = self.get_ele_locator(param)
+        locator.click()
+
+    def click_text(self, context, param):
+        if 'text=' not in param:
+            param = "text=" + param
         locator = self.get_ele_locator(param)
         locator.click()
 
@@ -197,3 +207,56 @@ class Element:
     def find_full_screen_slide(self, context, param1, param2):
         locator = self.get_ele_locator(param2)
         locator.scroll_into_view_if_needed()
+
+    def get_ele_attr(self, selector, attr_name, params_deal_module=None,
+                     deal_method=None):
+        locator = self.get_ele_locator(selector)
+        ele_attr = locator.get_attribute(attr_name)
+        if deal_method is not None:
+            deal_method = getattr(params_deal_module, deal_method)
+            ele_attr = deal_method(ele_attr)
+        return ele_attr
+
+    def is_ele_attr_equal(self, context, selector, attr_name, target_val):
+        param2_dict = params_to_dic(attr_name, "attrName")
+        target_attr = param2_dict["attrName"]
+
+        deal_method = None
+        params_deal_module = None
+        if "dealMethod" in param2_dict.keys():
+            deal_method = param2_dict["dealMethod"]
+            params_deal_module = gr.get_value("projectScript").params_deal
+
+        ele_attr = self.get_ele_attr(selector, target_attr, params_deal_module,
+                                     deal_method)
+        verify_helper.attr_equal(target_val, ele_attr)
+
+    def is_text_attr_equal(self, context, text_selector, attr_name,
+                           target_val):
+        if 'text=' not in text_selector:
+            text_selector = "text=" + text_selector
+        self.is_ele_attr_equal(context, text_selector, attr_name, target_val)
+
+    def is_parent_exist_child(self, context, parent_selector, child_selector):
+        parent_node, p_selector_str = self.get_ele_handle(parent_selector)
+        child_temp = handle_str(child_selector)
+        child_dict = params_to_dic(child_temp)
+        child_str = child_dict["selector"]
+        child_node = parent_node.query_selector(child_str)
+        if child_node is None:
+            if 'text=' not in child_str:
+                child_str = 'text=' + child_str
+                child_node = parent_node.query_selector(child_str)
+                if child_node is None:
+                    raise FlybirdsVerifyEleException(selector=child_str)
+            raise FlybirdsVerifyEleException(selector=child_str)
+        return child_node
+
+    def find_text_from_parent(self, context, parent_selector, child_selector,
+                              target_text):
+        child_node = self.is_parent_exist_child(context, parent_selector,
+                                                child_selector)
+        e_text = child_node.inner_text()
+        if e_text is None or e_text.strip() == '':
+            e_text = child_node.get_attribute('value')
+        verify_helper.text_equal(target_text, e_text)

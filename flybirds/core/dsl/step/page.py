@@ -36,3 +36,19 @@ def app_login(context, param1=None, param2=None):
 @step("logout")
 def app_logout(context):
     g_Context.step.app_logout(context)
+
+
+@step("unblock the current page")
+def unblock_page(context):
+    g_Context.step.unblock_page(context)
+
+
+@step("current page is [{param}]")
+def cur_page_is(context, param=None):
+    (param_1,) = get_params(context, (param, "param"))
+    g_Context.step.cur_page_is(context, param_1)
+
+
+@step("current page is not last page")
+def has_page_changed(context):
+    g_Context.step.has_page_changed(context)

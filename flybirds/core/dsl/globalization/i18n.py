@@ -99,7 +99,8 @@ step_language = {
         "click text[{param}]": ["点击文案[{param}]"],
         "click position[{x},{y}]": ["点击屏幕位置[{x},{y}]"],
         "in[{param1}]input[{param2}]": ["在[{param1}]中输入[{param2}]"],
-        "clear in[{param1}]and input[{param2}]": ["[{param2}]"],
+        "clear [{param1}] and input[{param2}]": [
+            "在[{param1}]中清空并输入[{param2}]"],
         "element[{param1}]position not change in[{param2}]seconds": [
             "元素[{param1}]位置[{param2}]秒内未变动"
         ],
@@ -128,8 +129,13 @@ step_language = {
         "from {param1} find[{param2}]element": ["向{param1}查找[{param2}]的元素"],
 
         "unblock the current page": ["解除当前页面限制"],
-        "current page is [param]": ["当前页面是[param]"],
+        "current page is [{param}]": ["当前页面是[{param}]"],
         "current page is not last page": ["当前页面已不是上一个指定页面"],
-        "from [param1] select [param2] ": ["在[param1]中选择[param2]"],
+        "from [{param1}] select [{param2}]": ["在[{param1}]中选择[{param2}]"],
+        "exist [{param1}] subNode [{param2}] element": [
+            "存在[{param1}]的[{param2]的元素"],
+        "the text of element [{param1}] subNode [{param2}] is [{param3}]": [
+            "[{param1}]的[{param2}]文案为[{param3}]"
+        ]
     },
 }

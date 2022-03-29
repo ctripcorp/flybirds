@@ -152,3 +152,35 @@ def full_screen_swipe_to_ele_aaa(context, param1=None, param2=None):
         context, (param1, "param1"), (param2, "param2")
     )
     g_Context.step.full_screen_swipe_to_ele_aaa(context, param_1, param_2)
+
+
+@step("clear [{param1}] and input[{param2}]")
+def ele_clear_input(context, param1=None, param2=None):
+    param_1, param_2 = get_params(
+        context, (param1, "param1"), (param2, "param2")
+    )
+    g_Context.step.ele_clear_input(context, param_1, param_2)
+
+
+@step("from [{param1}] select [{param2}]")
+def ele_select(context, param1=None, param2=None):
+    param_1, param_2 = get_params(
+        context, (param1, "param1"), (param2, "param2")
+    )
+    g_Context.step.ele_select(context, param_1, param_2)
+
+
+@step("exist [{param1}] subNode [{param2}] element")
+def find_child_from_parent(context, param1=None, param2=None):
+    param_1, param_2 = get_params(
+        context, (param1, "param1"), (param2, "param2")
+    )
+    g_Context.step.find_child_from_parent(context, param_1, param_2)
+
+
+@step("the text of element [{param1}] subNode [{param2}] is [{param3}]")
+def find_text_from_parent(context, param1=None, param2=None, param3=None):
+    param_1, param_2, param_3 = get_params(
+        context, (param1, "param1"), (param2, "param2"), (param3, "param3")
+    )
+    g_Context.step.find_text_from_parent(context, param_1, param_2, param_3)
