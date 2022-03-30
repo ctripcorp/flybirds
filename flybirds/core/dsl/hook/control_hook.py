@@ -4,6 +4,7 @@ behave hook and our plugin load from here
 """
 import flybirds.utils.flybirds_log as log
 from flybirds.core.global_context import GlobalContext
+from flybirds.core.plugin.life_cycle import load
 
 __import__("flybirds.core.plugin.life_cycle")
 
@@ -12,8 +13,11 @@ def before_all(context):
     """
     behave hook before running
     """
-    # plugin load
     log.info('################## [web] before_all start! ##################')
+    # start load
+    log.info(f'[web] before_all context: {context.config.userdata}')
+    load(context)
+    # plugin load
     GlobalContext.process("config_processor", context)
     GlobalContext.process("before_run_processor", context)
 

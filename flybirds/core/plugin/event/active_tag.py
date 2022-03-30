@@ -3,13 +3,42 @@
 # @Author : hyx
 # @File : active_tag.py
 # @desc : active_tag
+import sys
 
+import six
 from behave.tag_matcher import ActiveTagMatcher, setup_active_tag_values
 
 import flybirds.core.global_resource as gr
-from flybirds.core import feature_tag
 from flybirds.core.global_context import GlobalContext
 from flybirds.utils import flybirds_log as log
+
+
+def bool_to_string(value):
+    """Converts a boolean active-tag value into its normalized
+    string representation.
+
+    :param value:  Boolean value to use (or value converted into bool).
+    :returns: Boolean value converted into a normalized string.
+    """
+    return str(bool(value)).lower()
+
+
+# -----------------------------------------------------------------------------
+# DEFAULT SUPPORTED: ACTIVE-TAGS
+# -----------------------------------------------------------------------------
+def default_active_tag_value_provider():
+    platform = GlobalContext.platform if GlobalContext.platform is not None \
+                   else 'android',
+    browser_type = gr.get_web_info_value("browser_type", 'chromium')
+    log.info(f'default_active_tag_provider :{platform} {browser_type}')
+    return {
+        "python2": bool_to_string(six.PY2),
+        "python3": bool_to_string(six.PY3),
+        "os": sys.platform.lower(),
+        "platform": platform,
+        "deviceType": 'ivd',
+        "browserType": browser_type,
+    }
 
 
 def active_tag_init():
@@ -27,7 +56,7 @@ def active_tag_init():
     log.info(f'tag_value_provider :{tag_value_provider}')
 
     # get default active_tag
-    default_active_tag = feature_tag.DEFAULT_ACTIVE_TAG_VALUE_PROVIDER.copy()
+    default_active_tag = default_active_tag_value_provider().copy()
     if default_active_tag is None:
         default_active_tag = {}
     active_tag_value_provider = merge(default_active_tag, tag_value_provider)
