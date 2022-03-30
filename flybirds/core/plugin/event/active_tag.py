@@ -48,18 +48,18 @@ def active_tag_init():
          active_tag_value_provider provides category values for active tags.
      """
     # get custom active_tag
-    tag_provider_module = gr.get_value("projectScript").tag_provider
-    tag_value_provider = getattr(tag_provider_module,
-                                 "ACTIVE_TAG_VALUE_PROVIDER")
-    if tag_value_provider is None:
-        tag_value_provider = {}
-    log.info(f'tag_value_provider :{tag_value_provider}')
+    # tag_provider_module = gr.get_value("projectScript").tag_provider
+    # tag_value_provider = getattr(tag_provider_module,
+    #                              "ACTIVE_TAG_VALUE_PROVIDER")
+    # if tag_value_provider is None:
+    #     tag_value_provider = {}
+    # log.info(f'tag_value_provider :{tag_value_provider}')
 
     # get default active_tag
     default_active_tag = default_active_tag_value_provider().copy()
     if default_active_tag is None:
         default_active_tag = {}
-    active_tag_value_provider = merge(default_active_tag, tag_value_provider)
+    active_tag_value_provider = default_active_tag
     log.info(f'active_tag_value_provider :{active_tag_value_provider}')
 
     active_tag_matcher = ActiveTagMatcher(active_tag_value_provider)
