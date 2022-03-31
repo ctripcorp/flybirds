@@ -129,3 +129,8 @@ def handle_str(un_handle_str):
         return res.group(1)
     else:
         return un_handle_str
+
+
+def str2bool(v):
+    return v.lower() in ['true', '1', 't', 'y', 'yes', 'yeah', 'yup',
+                         'certainly', 'uh-huh']

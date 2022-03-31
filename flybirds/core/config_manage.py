@@ -7,7 +7,7 @@ import os
 
 from flybirds.utils import file_helper
 from flybirds.utils import flybirds_log as log
-from flybirds.utils.dsl_helper import return_value
+from flybirds.utils.dsl_helper import return_value, str2bool
 
 
 class ConfigManage:
@@ -181,6 +181,8 @@ class WebConfig:
                                          web_info["defaultTimeout"])
         if headless is None:
             headless = True
+        if isinstance(headless, str):
+            headless = str2bool(headless)
         self.headless = headless
         if browser_type is None:
             browser_type = 'chromium'

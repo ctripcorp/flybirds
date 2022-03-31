@@ -28,7 +28,7 @@ def bool_to_string(value):
 # -----------------------------------------------------------------------------
 def default_active_tag_value_provider():
     platform = GlobalContext.platform if GlobalContext.platform is not None \
-                   else 'android',
+        else 'android'
     browser_type = gr.get_web_info_value("browser_type", 'chromium')
     log.info(f'default_active_tag_provider :{platform} {browser_type}')
     return {
