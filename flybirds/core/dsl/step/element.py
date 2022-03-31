@@ -92,6 +92,14 @@ def wait_text_disappear(context, param=None):
     g_Context.step.wait_text_disappear(context, param_1)
 
 
+@step("exist [{param1}] subNode [{param2}] element")
+def find_child_from_parent(context, param1=None, param2=None):
+    param_1, param_2 = get_params(
+        context, (param1, "param1"), (param2, "param2")
+    )
+    g_Context.step.find_child_from_parent(context, param_1, param_2)
+
+
 @step("exist[{param}]element")
 def wait_ele_exit(context, param=None):
     (param_1,) = get_params(context, (param, "param"))
@@ -168,14 +176,6 @@ def ele_select(context, param1=None, param2=None):
         context, (param1, "param1"), (param2, "param2")
     )
     g_Context.step.ele_select(context, param_1, param_2)
-
-
-@step("exist [{param1}] subNode [{param2}] element")
-def find_child_from_parent(context, param1=None, param2=None):
-    param_1, param_2 = get_params(
-        context, (param1, "param1"), (param2, "param2")
-    )
-    g_Context.step.find_child_from_parent(context, param_1, param_2)
 
 
 @step("the text of element [{param1}] subNode [{param2}] is [{param3}]")
