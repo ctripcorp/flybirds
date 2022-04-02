@@ -106,7 +106,7 @@ flybirds create
 - [multiple-cucumber-html-reporter](https://github.com/wswebcreation/multiple-cucumber-html-reporter)
 
 
-## Stargazers over time
+## 项目 Star 增长趋势
 
 [![Stargazers over time](https://starchart.cc/ctripcorp/flybirds.svg)](https://starchart.cc/ctripcorp/flybirds)
 
