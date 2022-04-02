@@ -4,12 +4,16 @@ fail scenario create rerun
 """
 import json
 import os
+import random
 import re
 import shutil
-import subprocess
+from functools import partial
+from multiprocessing import Pool
 
 from flybirds.core.config_manage import FlowBehave
 from flybirds.report import json_format_deal
+from flybirds.report.parallel_runner import get_features_num, \
+    execute_parallel_feature
 from flybirds.report.rerun_params import get_rerun_params
 from flybirds.utils import file_helper
 from flybirds.utils import flybirds_log as log
@@ -40,6 +44,7 @@ class FailScenarioSum:
         scenario_value = FailScenarioInfo(
             feature_name, scenario_name, description
         )
+        # fail_relevance message
         self.fail_scenarios[scenario_key] = json.dumps(scenario_value.__dict__)
         return scenario_key
 
@@ -70,7 +75,7 @@ class FailScenarioInfo:
             self.description = description
 
 
-def rerun_launch(need_rerun_args, report_dir_path, run_args, file_name):
+def rerun_launch(need_rerun_args, report_dir_path, run_args, processes):
     """
     start to rerun
     """
@@ -88,6 +93,7 @@ def rerun_launch(need_rerun_args, report_dir_path, run_args, file_name):
         max_retry_count = flow_behave_config.max_retry_count
         run_count = 1
         rerun_dir_path = report_dir_path
+        # create files under rerun1 except for the 'result'
         count_satisfy = create_rerun(
             report_dir_path,
             rerun_dir_path,
@@ -96,6 +102,8 @@ def rerun_launch(need_rerun_args, report_dir_path, run_args, file_name):
         )
         # The number of failures is not higher than the limited value and
         # needs to be re-run
+
+        # execute the rerun cmd, and copy the results to report dir
         if count_satisfy:
             while max_retry_count > 0:
                 log.info(
@@ -123,6 +131,7 @@ def rerun_launch(need_rerun_args, report_dir_path, run_args, file_name):
                         f"{max_retry_count}, run_count: {run_count}"
                     )
                     if count_satisfy:
+                        # 1.get behave rerun_cmd_str,rerun_report_dir_path
                         rerun_params = get_rerun_params(
                             run_count,
                             rerun_feature_path,
@@ -135,17 +144,10 @@ def rerun_launch(need_rerun_args, report_dir_path, run_args, file_name):
                             "rerun_report_dir_path"
                         )
                         if rerun_cmd_str is not None:
-                            # cwd_pth = os.getcwd()
-                            # if os.environ.get('base_dir') is not None:
-                            #     cwd_pth = os.environ.get('base_dir')
-                            rerun_behave_process = subprocess.Popen(
-                                rerun_cmd_str,
-                                cwd=os.getcwd(),
-                                shell=True,
-                                stdout=None,
-                            )
-                            rerun_behave_process.wait()
-                            rerun_behave_process.communicate()
+                            # 2. execute rerun_cmd_str
+                            parallel_rerun(
+                                rerun_cmd_str, rerun_feature_path,
+                                processes)
                             # Re-run of the failed scenario ends
                             # Number of reruns -1, actual number of runs +1
                             max_retry_count = max_retry_count - 1
@@ -156,6 +158,7 @@ def rerun_launch(need_rerun_args, report_dir_path, run_args, file_name):
                                 f"{report_dir_path}, rerun_report_dir_path:"
                                 f" {rerun_report_dir_path}"
                             )
+                            # 3. copy the execution results to report dir
                             json_format_deal.copy_rerun_screen(
                                 report_dir_path, rerun_report_dir_path
                             )
@@ -179,18 +182,10 @@ def rerun_launch(need_rerun_args, report_dir_path, run_args, file_name):
                 f"Do you need to rerun the task: {count_satisfy}, the failed "
                 f"retry task was not executed"
             )
-        log.info(
-            f"Start processing the json report under the directory "
-            f"{report_dir_path}"
-        )
-
-    # TODO 待删除
-    file_path = os.path.join(report_dir_path, file_name)
-    log.info(f'[rerun_launch] file_path:{file_path}')
-    report_json = file_helper.get_json_from_file_path(file_path)
     log.info(
-        f'[rerun_launch]({os.getpid()})report_json:\n\n\n{report_json}\n\n\n')
-    # if rerun_report_dir_path is not None:
+        f"Start processing the json report. report_dir_path: "
+        f"[{report_dir_path}],rerun_report_dir_path:[{rerun_report_dir_path}]"
+    )
     json_format_deal.parse_json_data(report_dir_path, rerun_report_dir_path)
 
 
@@ -217,7 +212,6 @@ def create_rerun(report_dir, rerun_dir, run_count, max_fail_count=1.0):
 
     # Second level file index
     # rerun_feature_second_index = 1
-
     sum_count, fail_count, fail_scenario_static, rerun_root_dir = \
         process_loop_block(report_dir, rerun_feature_index, sum_count,
                            fail_count,
@@ -248,8 +242,9 @@ def create_rerun(report_dir, rerun_dir, run_count, max_fail_count=1.0):
             fail_count > max_fail_count,
         )
         result = False
-
+    # 2. write fail_relevance.json file
     fail_scenario_static.serialize_to_file(rerun_root_dir)
+    # 3. copy environment.py and so on
     copy_behave_need_file(rerun_root_dir)
     return result
 
@@ -257,6 +252,11 @@ def create_rerun(report_dir, rerun_dir, run_count, max_fail_count=1.0):
 def process_loop_block(report_dir, rerun_feature_index, sum_count, fail_count,
                        exist_scenario_name, fail_scenario_static, run_count,
                        rerun_root_dir):
+    """
+    iterate through all json in the report_dir
+    1.find  the cases that need to be rerun and write them to the feature file
+    2.modify failed status to rerun status,and re-write json file
+    """
     for file_item in os.listdir(report_dir):
         if re.search(r"\.json", str(file_item)) is not None:
             # noinspection PyBroadException
@@ -264,6 +264,7 @@ def process_loop_block(report_dir, rerun_feature_index, sum_count, fail_count,
                 file_path = os.path.join(report_dir, file_item)
                 report_json = file_helper.get_json_from_file_path(file_path)
                 if isinstance(report_json, list):
+                    # 1. to find need to be rerun case
                     for feature in report_json:
                         cur_feature_array = get_init_feature_array(
                             rerun_feature_index, feature.get("language")
@@ -301,9 +302,9 @@ def process_loop_block(report_dir, rerun_feature_index, sum_count, fail_count,
                                     rerun_scenario_name = scenario["name"]
                                     while (
                                             rerun_scenario_name
-                                            in exist_scenario_name
-                                    ):
-                                        rerun_scenario_name += str(range(9))
+                                            in exist_scenario_name):
+                                        rerun_scenario_name += str(
+                                            random.randint(0, 10))
                                     exist_scenario_name.append(
                                         rerun_scenario_name
                                     )
@@ -366,6 +367,7 @@ def process_loop_block(report_dir, rerun_feature_index, sum_count, fail_count,
                                         cur_feature_array,
                                     )
 
+                    # 2.re-write json file
                     file_helper.store_json_to_file_path(
                         report_json, file_path, "w"
                     )
@@ -459,3 +461,23 @@ def set_rerun_info(user_data, gr):
             gr.set_value("rerunFailInfo", last_fail_scenario_info_obj)
 
     log.info(f"user data，count:{len(user_data)}")
+
+
+def parallel_rerun(rerun_cmd_str: str, rerun_feature_path, processes):
+    log.info(f'parallel_rerun start!')
+    log.info(f'[parallel_rerun] processes num: {processes}')
+    log.info(f'[parallel_rerun] rerun_feature_path: {rerun_feature_path}')
+    log.info(f'[parallel_rerun] rerun_cmd_str: \n\n{rerun_cmd_str}\n\n')
+
+    dry_cmd = f'behave {rerun_feature_path} -d -k -f json --no-summary'
+    features = get_features_num(dry_cmd)
+    log.info(f'[parallel_rerun] features num: {len(features)}')
+
+    pool = Pool(processes) if len(features) >= processes else Pool(
+        len(features))
+    results = pool.map(
+        partial(execute_parallel_feature, behave_cmd=rerun_cmd_str,
+                feature_path=rerun_feature_path), features)
+    pool.close()
+    pool.join()
+    log.info(f'[parallel_rerun] result: {results}')

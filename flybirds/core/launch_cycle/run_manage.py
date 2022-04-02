@@ -3,7 +3,8 @@
 import operator
 import traceback
 
-import flybirds.core.cmd_parallel as parallel
+import flybirds.report.parallel_runner as parallel
+from flybirds.report.fail_feature_create import rerun_launch
 from flybirds.utils import flybirds_log as log
 from flybirds.utils.pkg_helper import load_pkg_by_ns
 
@@ -64,22 +65,14 @@ class RunManage:
 
             # noinspection PyBroadException
             try:
-                # run_args = context.get("run_args")
-                # cmd_str = context.get("cmd_str")
-                # need_rerun_args = context.get("need_rerun_args")
-                # report_dir_path = context.get("report_dir_path")
-                # #
-                # #  TODO
-                # behave_process = subprocess.Popen(
-                #     cmd_str, cwd=os.getcwd(), shell=True, stdout=None
-                # )
-                # behave_process.wait()
-                # behave_process.communicate()
-                # rerun_launch(need_rerun_args, report_dir_path, run_args)
+                run_args = context.get("run_args")
+                need_rerun_args = context.get("need_rerun_args")
+                report_dir_path = context.get("report_dir_path")
+                processes = context.get("processes")
 
-                # # TODO
                 parallel.parallel_runner(context)
-                # rerun_launch(need_rerun_args, report_dir_path, run_args)
+                rerun_launch(need_rerun_args, report_dir_path, run_args,
+                             processes)
             except Exception:
                 log.error(
                     f"behave task execute error: {traceback.format_exc()}")

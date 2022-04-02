@@ -22,15 +22,14 @@ def parse_json_data(report_dir, rerun_report_dir=None):
     not_aggregation = False
 
     if rerun_report_dir is not None:
+        # get the array of all rerun json under the rerun_report_dir
         rerun_features = get_rerun_feature(rerun_report_dir)
-        log.info(f'[parse_json_data]({os.getpid()})rerun_features:\n\n\n'
-                 f'{rerun_features}\n\n\n')
         log.info(
             "parse_json_data move_rerun_screen, report_dir_path: "
             f"{report_dir}, rerun_report_dir_path: {rerun_report_dir}"
         )
         # move_rerun_screen(report_dir, rerun_report_dir)
-        copy_rerun_screen(report_dir, rerun_report_dir)
+        # copy_rerun_screen(report_dir, rerun_report_dir)
 
     if isinstance(rerun_features, list) and len(rerun_features) > 0:
         not_aggregation = True
@@ -40,13 +39,7 @@ def parse_json_data(report_dir, rerun_report_dir=None):
             # noinspection PyBroadException
             try:
                 file_path = os.path.join(report_dir, file_item)
-                log.info(
-                    f'[parse_json_data] process({os.getpid()}), file_path:{file_path}')
                 report_json = file_helper.get_json_from_file_path(file_path)
-
-                log.info(
-                    f'[parse_json_data]({os.getpid()})report_json:'
-                    f'\n\n\n{report_json}\n\n\n')
                 if isinstance(report_json, list):
                     cur_json = []
                     cur_features = []
@@ -76,7 +69,7 @@ def parse_json_data(report_dir, rerun_report_dir=None):
 
 def parse_feature(feature, rerun_report_dir):
     """
-    parse feature
+    parse feature: exclude the data with status=rerun
     """
     if isinstance(feature["elements"], list):
         cur_scenarios = []
@@ -143,7 +136,7 @@ def get_rerun_feature(report_dir):
                 try:
                     file_path = os.path.join(report_dir, file_item)
                     report_json = file_helper.get_json_from_file_path(
-                        file_path, 'get_rerun_feature'
+                        file_path
                     )
                     if isinstance(report_json, list) and len(report_json) > 0:
                         result.extend(report_json)
@@ -154,7 +147,7 @@ def get_rerun_feature(report_dir):
                     )
     except Exception as e:
         log.warn(
-            "An error occurred when the mobile phone re-run "
+            "An error occurred when re-run "
             f"the feature result: {str(e)}",
             traceback.format_exc(),
         )
