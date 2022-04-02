@@ -13,8 +13,8 @@
     "webDriverAgent": "%{{webDriverAgent}}"
   },
   "web_info": {
-    "headless": true,
-    "browserType": "chromium",
+    "headless": "%{{headless}}",
+    "browserType": "%{{browserType}}",
     "defaultTimeout": 30
   },
   "flow_behave": {
