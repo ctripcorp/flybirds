@@ -104,3 +104,9 @@ flybirds create
 - [airtest](https://github.com/AirtestProject)
 - [behave](https://github.com/behave)
 - [multiple-cucumber-html-reporter](https://github.com/wswebcreation/multiple-cucumber-html-reporter)
+
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/ctripcorp/flybirds.svg)](https://starchart.cc/ctripcorp/flybirds)
+
