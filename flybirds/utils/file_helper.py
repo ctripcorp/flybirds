@@ -168,3 +168,13 @@ def update(filename, text):
     # write file
     with open(filename, "w", encoding="utf-8") as f:
         f.write(content)
+
+
+def update_json_data(json_path, key, value):
+    with open(json_path, "r") as jsonFile:
+        data = json.load(jsonFile)
+    key_arr = key.split('.')
+    data[key_arr[0]][key_arr[1]] = value
+
+    with open(json_path, "w") as jsonFile:
+        json.dump(data, jsonFile, indent=2, separators=(',', ': '))

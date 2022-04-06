@@ -13,7 +13,7 @@
     "webDriverAgent": "%{{webDriverAgent}}"
   },
   "web_info": {
-    "headless": "%{{headless}}",
+    "headless": true,
     "browserType": "%{{browserType}}",
     "defaultTimeout": 30
   },

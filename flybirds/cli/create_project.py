@@ -12,7 +12,7 @@ import flybirds.template as template
 import flybirds.utils.flybirds_log as log
 from flybirds.utils.file_helper import get_files_from_dir, \
     get_paths_from_dir, \
-    replace_file_content, update
+    replace_file_content, update, update_json_data
 from flybirds.utils.pkg_helper import find_package_base_path
 
 
@@ -195,12 +195,11 @@ def copy_from_template(progress, user_dict):
     progress.update(100)
 
     # modify headless
-    # todo true字符串问题
     headless = user_dict.get('headless')
     if headless is not None:
-        replace_file_content(
+        update_json_data(
             os.path.join(target_path, "config/flybirds_config.json"),
-            "headless",
+            "web_info.headless",
             headless,
         )
     progress.update(100)
