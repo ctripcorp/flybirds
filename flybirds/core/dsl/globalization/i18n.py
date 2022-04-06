@@ -133,7 +133,7 @@ step_language = {
         "current page is not last page": ["当前页面已不是上一个指定页面"],
         "from [{param1}] select [{param2}]": ["在[{param1}]中选择[{param2}]"],
         "exist [{param1}] subNode [{param2}] element": [
-            "存在[{param1}]的[{param2]的元素"],
+            "存在[{param1}]的[{param2}]的元素"],
         "the text of element [{param1}] subNode [{param2}] is [{param3}]": [
             "[{param1}]的[{param2}]文案为[{param3}]"
         ]

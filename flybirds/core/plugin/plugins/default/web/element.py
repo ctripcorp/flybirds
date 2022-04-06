@@ -79,6 +79,9 @@ class Element:
         selector_str = param_dict["selector"]
         selector_node = self.page.query_selector(selector_str)
         if selector_node is None:
+            log.warn(
+                '[get_ele_handle] has not find element by[{selector_str}],now '
+                'try to find by text.')
             if 'text=' not in selector_str:
                 selector_str = 'text=' + selector_str
                 selector_node = self.page.query_selector(selector_str)
@@ -107,7 +110,7 @@ class Element:
         locator.click()
 
     def click_coordinates(self, context, x, y):
-        self.page.mouse.click(x, y)
+        self.page.mouse.click(float(x), float(y))
 
     def ele_text_include(self, context, param_1, param_2):
         e_text = self.get_ele_text(param_1)
@@ -176,7 +179,7 @@ class Element:
         direct = lan.get_glb_key(param_2, language)
 
         fun = direct_dict.get(direct, direct_default)
-        to_x, to_y = fun(x, y, param_3)
+        to_x, to_y = fun(x, y, float(param_3))
 
         self.page.evaluate(f"window.scrollTo({to_x}, {to_y})")
 
@@ -186,7 +189,7 @@ class Element:
         direct = lan.get_glb_key(param_1, language)
 
         fun = direct_dict.get(direct, direct_default)
-        to_x, to_y = fun(0, 0, param_2)
+        to_x, to_y = fun(0, 0, float(param_2))
 
         self.page.evaluate(f"window.scrollBy({to_x}, {to_y})")
 

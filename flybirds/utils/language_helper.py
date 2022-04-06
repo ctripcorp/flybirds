@@ -3,6 +3,7 @@
 language help
 """
 from behave.i18n import languages
+
 from flybirds.core.dsl.globalization.i18n import globalization
 from flybirds.core.dsl.globalization.i18n import step_language
 
@@ -59,5 +60,7 @@ def get_glb_key(kw, language):
     if globalization.__contains__(language):
         l_dict = globalization[language]
         if l_dict is not None:
-            return [k for k, v in l_dict.items() if v == kw]
+            for k, v in l_dict.items():
+                if v == kw:
+                    return k
     return None
