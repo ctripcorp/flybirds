@@ -160,11 +160,13 @@ class Element:
 
     def ele_input_text(self, context, param_1, param_2):
         locator = self.get_ele_locator(param_1)
+        locator.click()
         locator.fill(param_2)
         return self.page.wait_for_timeout(100)
 
     def clear_and_input(self, context, param_1, param_2):
         locator = self.get_ele_locator(param_1)
+        locator.click()
         locator.fill('')
         locator.fill(param_2)
         return self.page.wait_for_timeout(100)

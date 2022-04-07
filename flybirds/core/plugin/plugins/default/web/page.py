@@ -6,6 +6,7 @@
 import flybirds.core.global_resource as global_resource
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
+import flybirds.utils.verify_helper as verify_helper
 from flybirds.utils import dsl_helper
 from flybirds.utils.dsl_helper import is_number
 
@@ -55,8 +56,10 @@ class Page:
             self.page.wait_for_timeout(3 * 1000)
 
     def cur_page_equal(self, context, param):
-        cur_url = self.page.url
+        cur_url = self.page.url.split('?')[0]
         if param.startswith(("http", "https")):
-            return param == cur_url
-        schema_url = global_resource.get_page_schema_url(param)
-        return schema_url == cur_url
+            target_url = param.split('?')[0]
+        else:
+            schema_url = global_resource.get_page_schema_url(param)
+            target_url = schema_url
+        verify_helper.text_equal(target_url, cur_url)

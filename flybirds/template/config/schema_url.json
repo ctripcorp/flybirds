@@ -1,3 +1,7 @@
 {
-  "memberPage": "/memberpage"
+  "memberPage": "/memberpage",
+  "百度": "https://www.baidu.com/",
+  "携程": "https://www.ctrip.com/",
+  "列表页": "https://spa6.scrape.center/",
+  "列表详情页": "https://spa6.scrape.center/detail/ZWYzNCN0ZXVxMGJ0dWEjKC01N3cxcTVvNS0takA5OHh5Z2ltbHlmeHMqLSFpLTAtbWIx"
 }
