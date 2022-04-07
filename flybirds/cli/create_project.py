@@ -240,8 +240,6 @@ def add_extend_pkg(demo_path):
     pkg_query = "-flybirds-plugin"
     pkg_list = find_package_base_path(pkg_query)
     if pkg_list is None or len(pkg_list) <= 0:
-        log.info("[create_project][add_extend_pkg] has no extend packs need to"
-                 "be added.")
         return
 
     copy_extend_files(pkg_list, demo_path)
