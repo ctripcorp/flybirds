@@ -122,5 +122,5 @@ def get_features_num(cmd: str):
     features = list({feature['location'].split(':')[0]
                      for feature in parsed_output
                      })
-    log.info(f'features need to be executed in parallel: {features}')
+    log.info(f'features num need to be executed in parallel: {len(features)}')
     return features

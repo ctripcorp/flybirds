@@ -47,7 +47,7 @@ def runner(
             None,
             "-D",
             "--define",
-            help="User-defined parameters. e.g. --define screenShotDir=cmVwb.",
+            help="User-defined parameters. e.g. --define headless=false.",
         ),
         rerun: bool = typer.Option(
             True,
