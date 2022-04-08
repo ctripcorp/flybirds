@@ -10,6 +10,7 @@ from flybirds.core.config_manage import DeviceConfig
 from flybirds.core.config_manage import PluginConfig
 from flybirds.core.global_context import GlobalContext
 from flybirds.core.plugin.plugin_manager import DirectoryPluginManager
+from flybirds.utils.dsl_helper import str2bool
 
 
 class PluginManager:  # pylint: disable=too-few-public-methods
@@ -37,6 +38,28 @@ class PluginManager:  # pylint: disable=too-few-public-methods
             )
             for key, value in user_data.items():
                 user_data[key] = str(base64.b64decode(value), "utf-8")
+
+        # check some specific values of the user_data
+        if user_data.get('platform'):
+            platform = user_data.get('platform').strip().lower()
+            if platform not in ['ios', 'android', 'web']:
+                log.warn(f'flybirds is not supports to run on {platform} '
+                         f'platform. It will now run on Android by default.')
+                platform = "android"
+            user_data['platform'] = platform
+
+        if user_data.get('headless'):
+            headless = str2bool(user_data.get('headless').strip())
+            user_data['headless'] = headless
+
+        if user_data.get('browserType'):
+            browser_type = user_data.get('browserType').strip().lower()
+            if browser_type not in ['chromium', 'firefox', 'webkit']:
+                log.warn(
+                    f'flybirds does not support launch {browser_type}. Now '
+                    f'chromium will be launched by default for testing.')
+                browser_type = "chromium"
+            user_data['browserType'] = browser_type
 
         log.info(f'[loader] user_data: {user_data}')
         gr.set_value("userData", user_data)
