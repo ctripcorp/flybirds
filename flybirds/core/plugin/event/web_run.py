@@ -13,7 +13,7 @@ from flybirds.utils import launch_helper
 
 
 class OnBefore:
-    name = "OnBefore"
+    name = "OnWebBefore"
     order = 51
 
     @staticmethod
@@ -76,7 +76,7 @@ class OnAfter:
     after event
     """
 
-    name = "OnAfter"
+    name = "OnWebAfter"
     order = 100
 
     @staticmethod
