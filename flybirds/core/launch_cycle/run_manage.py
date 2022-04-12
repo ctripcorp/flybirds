@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
-
+import base64
 import operator
+import os
 import traceback
+from subprocess import Popen
 
-import flybirds.report.parallel_runner as parallel
+from flybirds.core.config_manage import DeviceConfig
 from flybirds.report.fail_feature_create import rerun_launch
+from flybirds.report.parallel_runner import parallel_run
 from flybirds.utils import flybirds_log as log
 from flybirds.utils.pkg_helper import load_pkg_by_ns
 
@@ -65,14 +68,26 @@ class RunManage:
 
             # noinspection PyBroadException
             try:
+                # parallel.run(context)
+                is_parallel = need_parallel_run(context)
+                if is_parallel:
+                    parallel_run(context)
+                else:
+                    cmd_str = context.get("cmd_str")
+                    behave_process = Popen(
+                        cmd_str, cwd=os.getcwd(), shell=True, stdout=None
+                    )
+                    behave_process.wait()
+                    behave_process.communicate()
+
                 run_args = context.get("run_args")
                 need_rerun_args = context.get("need_rerun_args")
                 report_dir_path = context.get("report_dir_path")
                 processes = context.get("processes")
 
-                parallel.parallel_runner(context)
                 rerun_launch(need_rerun_args, report_dir_path, run_args,
-                             processes)
+                             processes, is_parallel)
+
             except Exception:
                 log.error(
                     f"behave task execute error: {traceback.format_exc()}")
@@ -134,3 +149,18 @@ def run_script(run_args):
         RunManage.run(r_context)
     except Exception:
         log.error(f"behave task run error: {traceback.format_exc()}")
+
+
+def need_parallel_run(context):
+    use_define = context.get("use_define")
+    user_platform = [i for i in use_define if 'platform=' in i]
+    user_data = {}
+    if len(user_platform) > 0:
+        if len(user_platform) > 1:
+            log.error(f'cannot customize multiple platforms.{user_platform}')
+        value = user_platform[0].split("=", 1)[1]
+        user_data['platform'] = str(base64.b64decode(value), "utf-8")
+    platform = DeviceConfig(user_data, None).platform
+    if 'web' == platform.lower():
+        return True
+    return False

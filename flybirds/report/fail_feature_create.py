@@ -9,6 +9,7 @@ import re
 import shutil
 from functools import partial
 from multiprocessing import Pool
+from subprocess import Popen
 
 from flybirds.core.config_manage import FlowBehave
 from flybirds.report import json_format_deal
@@ -75,7 +76,8 @@ class FailScenarioInfo:
             self.description = description
 
 
-def rerun_launch(need_rerun_args, report_dir_path, run_args, processes):
+def rerun_launch(need_rerun_args, report_dir_path, run_args, processes,
+                 is_parallel):
     """
     start to rerun
     """
@@ -145,9 +147,9 @@ def rerun_launch(need_rerun_args, report_dir_path, run_args, processes):
                         )
                         if rerun_cmd_str is not None:
                             # 2. execute rerun_cmd_str
-                            parallel_rerun(
+                            failed_rerun(
                                 rerun_cmd_str, rerun_feature_path,
-                                processes)
+                                processes, is_parallel)
                             # Re-run of the failed scenario ends
                             # Number of reruns -1, actual number of runs +1
                             max_retry_count = max_retry_count - 1
@@ -461,6 +463,21 @@ def set_rerun_info(user_data, gr):
             gr.set_value("rerunFailInfo", last_fail_scenario_info_obj)
 
     log.info(f"user data，count:{len(user_data)}")
+
+
+def failed_rerun(rerun_cmd_str: str, rerun_feature_path, processes,
+                 is_parallel):
+    if is_parallel:
+        parallel_rerun(rerun_cmd_str, rerun_feature_path, processes)
+    else:
+        rerun_behave_process = Popen(
+            rerun_cmd_str,
+            cwd=os.getcwd(),
+            shell=True,
+            stdout=None,
+        )
+        rerun_behave_process.wait()
+        rerun_behave_process.communicate()
 
 
 def parallel_rerun(rerun_cmd_str: str, rerun_feature_path, processes):

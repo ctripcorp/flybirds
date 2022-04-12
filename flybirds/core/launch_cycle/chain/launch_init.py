@@ -43,6 +43,7 @@ class LaunchInit:
             context["processes"] = run_args.get("processes")
             context["feature_path"] = run_args.get("feature_path")
             context["parsed_tags"] = run_args.get("parsed_tags")
+            context["use_define"] = run_args.get("use_define")
 
             is_html = run_args.get("html")
             run_at = run_args.get("run_at")

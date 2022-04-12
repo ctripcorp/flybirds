@@ -64,7 +64,7 @@ def execute_parallel_feature(feature, behave_cmd, feature_path):
     return status
 
 
-def parallel_runner(context):
+def parallel_run(context):
     """
     Parallel Behave Runner
     """
