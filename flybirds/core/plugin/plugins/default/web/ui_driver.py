@@ -22,7 +22,7 @@ class UIDriver:
         try:
             play_wright = sync_playwright().start()
             gr.set_value("playwright", play_wright)
-            GlobalContext.ui_driver_instance = play_wright
+            GlobalContext.web_driver_instance = play_wright
 
             browser_val = gr.get_web_info_value("browser_type", 'chromium')
             browser_type = getattr(play_wright, browser_val)

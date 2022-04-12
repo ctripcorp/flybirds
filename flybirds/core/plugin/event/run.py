@@ -3,11 +3,12 @@
 when behave start run hook will trigger this
 """
 import traceback
-from flybirds.utils import launch_helper
-from flybirds.core.driver import ui_driver
+
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
+from flybirds.core.driver import ui_driver
 from flybirds.core.global_context import GlobalContext
+from flybirds.utils import launch_helper
 
 
 class OnBefore:  # pylint: disable=too-few-public-methods
@@ -171,4 +172,4 @@ class OnRelease:
 var = GlobalContext.join("before_run_processor", OnBefore, 1)
 var2 = GlobalContext.join("after_run_processor", OnScreenRecordRelease, 1)
 var3 = GlobalContext.join("after_run_processor", OnRelease, 1)
-var2 = GlobalContext.join("after_run_processor", OnAfter, 1)
+var4 = GlobalContext.join("after_run_processor", OnAfter, 1)
