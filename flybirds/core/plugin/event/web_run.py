@@ -2,7 +2,7 @@
 # @Time : 2022/2/24 19:27
 # @Author : hyx
 # @File : web_run.py
-# @desc : when behave start run hook will trigger this
+# @desc : web_run
 import traceback
 
 import flybirds.core.global_resource as gr

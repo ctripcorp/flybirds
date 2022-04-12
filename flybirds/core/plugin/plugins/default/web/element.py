@@ -54,7 +54,7 @@ direct_dict = {
 
 
 class Element:
-    """Android Element Class"""
+    """Web Element Class"""
 
     name = "web_element"
     instantiation_timing = "plugin"

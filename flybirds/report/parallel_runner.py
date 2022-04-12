@@ -1,7 +1,6 @@
 import json
 import logging
 import multiprocessing
-import os
 from datetime import datetime
 from functools import partial
 from multiprocessing import Pool
@@ -14,7 +13,8 @@ from flybirds.utils.uuid_helper import report_name
 
 def create_logger(filename: str):
     """
-    create m_logger to dump execution time and duration of features into a logfile
+    create m_logger to dump execution time and duration of features into a
+    log file
     :return:
     """
     m_logger = multiprocessing.get_logger()
@@ -37,17 +37,14 @@ def execute_parallel_feature(feature, behave_cmd, feature_path):
     """
     Runs features in parallel
     :param feature: feature to run
-    :param behave_cmd: behave parameters with respective values
-    :param feature_path: behave parameters with respective values
+    :param behave_cmd: behave cmd string
+    :param feature_path: feature path
     """
     feature_start_time = datetime.now()
     start_timer = timer()
     file_name = report_name()
     cmd = behave_cmd.replace(feature_path, feature, 1).replace('report.json',
                                                                file_name, 1)
-    log.info(
-        f'[execute_parallel_feature] process:({os.getpid()}),cmd str: {cmd}')
-
     p = Popen(cmd, stdout=PIPE, shell=True)
     code = p.wait()
     p.communicate()
@@ -81,14 +78,6 @@ def parallel_run(context):
         cmd = f'behave {feature_path} {" ".join(parsed_tags)} -d -k -f json --no-summary'
     else:
         cmd = f'behave {feature_path} -d -k -f json --no-summary'
-    log.info(f'log main cmd str: {cmd}')
-
-    """
-    main cmd str: behave features -d -k -f json --no-summary
-    main cmd str: behave features/test/features1.features --tags @example --tags ~@skip -d -k -f json --no-summary
-
-    behave features --tags=tag1,tag2,-tag3,tag4 -d -k -f json --no-summary
-    """
     features = get_features_num(cmd)
     pool = Pool(processes) if len(features) >= processes else Pool(
         len(features))

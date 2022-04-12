@@ -8,7 +8,7 @@ def create_poco_object(poco, select_dic={}):
     """
     create page elements corresponding to pocoUi elements
     :param poco:
-    :param select_dic:  构造 pocoObject 的限定条件
+    :param select_dic: Constructing pocoObject's qualifiers
     :return:
     """
     return poco(**select_dic)

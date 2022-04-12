@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-android device core api implement.
+web UI driver core api implement.
 """
 
 from playwright.sync_api import sync_playwright
@@ -13,7 +13,7 @@ __open__ = ["UIDriver"]
 
 
 class UIDriver:
-    """Android Device Class"""
+    """web UI driver Class"""
 
     name = "web_ui_driver"
 

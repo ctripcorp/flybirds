@@ -60,8 +60,6 @@ def active_tag_init():
     if default_active_tag is None:
         default_active_tag = {}
     active_tag_value_provider = default_active_tag
-    log.info(f'active_tag_value_provider :{active_tag_value_provider}')
-
     active_tag_matcher = ActiveTagMatcher(active_tag_value_provider)
     gr.set_value("active_tag_matcher", active_tag_matcher)
     return active_tag_value_provider
@@ -86,13 +84,13 @@ class OnBeforeAll:
     @staticmethod
     def run(context):
         """
-          SETUP ACTIVE-TAG MATCHER (with userdata)
+          SETUP ACTIVE-TAG MATCHER (with user_data)
           USE: behave -D browser=safari ...
         """
         log.info(f'[before_all] user_data:{context.config.userdata}')
         active_tag_value_provider = active_tag_init()
         log.info(
-            f'[before_all] active_tag_value_provider:{active_tag_value_provider}')
+            f'[before_all] active_tag_provider:{active_tag_value_provider}')
         setup_active_tag_values(active_tag_value_provider,
                                 context.config.userdata)
 
@@ -130,7 +128,8 @@ class OnBeforeScenario:
     @staticmethod
     def run(context, scenario):
         log.info(
-            f'[before_scenario] scenario.effective_tags:{scenario.effective_tags}')
+            f'[before_scenario] scenario.effective_tags:'
+            f'{scenario.effective_tags}')
         active_tag_matcher = gr.get_value("active_tag_matcher")
         # -- NOTE: scenario.effective_tags := scenario.tags + feature.tags
         if active_tag_matcher.should_exclude_with(scenario.effective_tags):

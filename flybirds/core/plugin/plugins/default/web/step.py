@@ -56,27 +56,17 @@ class Step:
 
     @classmethod
     def unblock_page(cls, context):
-        """
-            解除当前页面限制
-        """
         return True
 
     @classmethod
     def cur_page_is(cls, context, param):
-        """
-        当前页面是[param]
-        """
         page = gr.get_value("plugin_page")
         page.cur_page_equal(context, param)
 
     @classmethod
     def has_page_changed(cls, context):
-        """
-        当前页面已不是上一个指定页面
-        """
         return True
 
-    # ################ element step  ##############
     @classmethod
     def click_ele(cls, context, param):
         ele = gr.get_value("plugin_ele")
@@ -94,150 +84,102 @@ class Step:
 
     @classmethod
     def ele_text_container(cls, context, param_1, param_2):
-        """
-        "[{param1}]的文案包含[{param2}]
-        """
         ele = gr.get_value("plugin_ele")
         ele.ele_text_include(context, param_1, param_2)
 
     @classmethod
     def wait_text_exist(cls, context, param):
-        """
-        存在\[([\s\S]*)\]的文案
-        """
-        # element
         ele = gr.get_value("plugin_ele")
         ele.find_text(context, param)
 
     @classmethod
     def text_not_exist(cls, context, param):
-        """
-        bu存在\[([\s\S]*)\]的文案
-        """
-        # element
         ele = gr.get_value("plugin_ele")
         ele.find_no_text(context, param)
 
     @classmethod
     def ele_text_equal(cls, context, param_1, param_2):
-        """
-        /^\[([\s\S]*)\]的文案为\[([\s\S]*)\]$/,
-        """
-        # element
         ele = gr.get_value("plugin_ele")
         ele.ele_text_equal(context, param_1, param_2)
 
     @classmethod
     def exist_ele(cls, context, param):
-        """
-        /^存在元素[p]$/,
-        """
-        # element
         ele = gr.get_value("plugin_ele")
         ele.get_ele_locator(param)
 
     @classmethod
     def wait_ele_exit(cls, context, param):
-        """
-      存在[{param}]的元素
-        """
-        # element
         ele = gr.get_value("plugin_ele")
         ele.get_ele_locator(param)
 
     @classmethod
     def ele_not_exit(cls, context, param):
-        """
-      不存在[{param}]的元素
-        """
-        # element
         ele = gr.get_value("plugin_ele")
         ele.ele_not_exist(context, param)
 
     @classmethod
     def wait_ele_appear(cls, context, param):
         """
-       页面渲染完成出现元素
+         page rendering complete appears element[{param}]
         """
-        # element
         ele = gr.get_value("plugin_ele")
         ele.wait_for_ele(context, param)
 
     @classmethod
     def ele_input(cls, context, param_1, param_2):
-        """
-       在[{param1}]中输入[{param2}]
-        """
         ele = gr.get_value("plugin_ele")
         ele.ele_input_text(context, param_1, param_2)
 
     @classmethod
     def ele_clear_input(cls, context, param_1, param_2):
-        """
-       在[{param1}]中清空并输入
-        """
         ele = gr.get_value("plugin_ele")
         ele.clear_and_input(context, param_1, param_2)
 
     @classmethod
     def ele_swipe(cls, context, param_1, param_2, param_3):
-        """
-        [{param1}]向{param2}滑动[{param3}]
-        """
         ele = gr.get_value("plugin_ele")
         ele.ele_slide(context, param_1, param_2, param_3)
 
     @classmethod
     def full_screen_swipe(cls, context, param_1, param_2):
-        """
-       全屏向{param1}滑动[{param2}]
-        """
         ele = gr.get_value("plugin_ele")
         ele.full_screen_slide(context, param_1, param_2)
 
     @classmethod
     def ele_select(cls, context, param_1, param_2):
-        """
-        在[param1]中选择[param2]
-        """
         ele = gr.get_value("plugin_ele")
         ele.ele_select(context, param_1, param_2)
 
     @classmethod
     def full_screen_swipe_to_ele_aaa(cls, context, param_1, param_2):
         """
-        向{param1}查找[{param2}]的元素
+        from {param1} find[{param2}]element
         """
         ele = gr.get_value("plugin_ele")
         ele.find_full_screen_slide(context, param_1, param_2)
 
     @classmethod
     def ele_attr_equal(cls, context, param1, param2, param3):
-        # 元素[{param1}]的属性[{param2}]为{param3}
         ele = gr.get_value("plugin_ele")
         ele.is_ele_attr_equal(context, param1, param2, param3)
 
     @classmethod
     def text_attr_equal(cls, context, param1, param2, param3):
-        # 文案[{param1}]的属性[{param2}]为{param3}
         ele = gr.get_value("plugin_ele")
         ele.is_ele_attr_equal(context, param1, param2, param3)
 
     @classmethod
     def find_child_from_parent(cls, context, param1, param2):
-        # /^存在\[([\s\S\[\]]*)\]的\[([\s\S\[\]]*)\](?:的元素)?$/
         ele = gr.get_value("plugin_ele")
         ele.is_parent_exist_child(context, param1, param2)
 
     @classmethod
     def find_text_from_parent(cls, context, param1, param2, param3):
-        # /^\[([\s\S]*?)\]的\[([\s\S]*?)\]的文案为\[([\s\S]*)\]$/,
         ele = gr.get_value("plugin_ele")
         ele.find_text_from_parent(context, param1, param2, param3)
 
     @classmethod
     def swipe_to_ele(cls, context, param1, param2, param3):
-        # 在[{param1}]中向{param2}查找[{param3}]的元素
         ele = gr.get_value("plugin_ele")
         ele.is_parent_exist_child(context, param1, param3)
 

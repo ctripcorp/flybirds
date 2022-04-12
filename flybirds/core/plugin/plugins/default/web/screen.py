@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-web screen imp
+web screen impl
 """
 
 import flybirds.core.global_resource as gr
@@ -12,7 +12,7 @@ __open__ = ["Screen"]
 
 class Screen(BaseScreen):
     """
-    screen imp
+    web screen impl
     """
     name = "web_screen"
 

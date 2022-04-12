@@ -34,7 +34,7 @@ def init_glb():
 
 def set_value(key, value):
     """
-    pdate or add global attributes
+    update or add global attributes
     """
     global _global_dict
     _global_dict[key] = value
@@ -131,7 +131,7 @@ def get_device_size(def_value=[1080, 1920]):
 
 def get_page_schema_url(page_name):
     """
-    获取指定页面的schema url
+    get the schema url of the page
     """
     if hasattr(_global_dict["configManage"].device_info, "device_id"):
         return _global_dict["configManage"].schema_info.all_schema_url[
@@ -142,7 +142,7 @@ def get_page_schema_url(page_name):
 
 def get_app_package_name(def_value=None):
     """
-    get the schema url of the specified page
+    get the package name of the page
     """
     if hasattr(_global_dict["configManage"].app_info, "package_name"):
         value = _global_dict["configManage"].app_info.package_name
