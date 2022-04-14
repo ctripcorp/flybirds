@@ -49,7 +49,7 @@ You can specify one of the following **CLI commands**:
 - `run`: Run the project.
 
 
-  
+
 
 #### **Options**
 
@@ -65,7 +65,7 @@ flybirds run --help
 ​	For example:
 
 ```bash
-flybirds run -P ./features/test/demo.feature
+flybirds run --path ./features/test/demo.feature
 ```
 - **--tag, -T    TEXT(Optional)**
 
@@ -106,7 +106,7 @@ flybirds run --report report\curent\report.json
 
 ​	Pass in user-defined parameters, this parameter has two functions:
 
-Function 1: Overwrite the configuration in the **`config`** file, such as:
+Function 1: Override the value of the corresponding configuration item in the  **`config`** file, such as:
 
 ```bash 
  # The device and uniqueTag used at runtime are the values specified in the command, and the values configured in the configuration file will not be read
@@ -127,7 +127,27 @@ For example:
 flybirds run --no-rerun 
 ```
 
+- **--html/--no-html  (Optional)**
 
+​	Specify whether to generate html test result report after case execution。The default is 'True', the result test report will be generated automatically after execution.
 
+For example:
+
+```bash
+# Don't generat test reports 
+flybirds run --no-html
+```
+
+- **--processes, -p    INTEGER(Optional)**
+
+  Specifies the maximum number of processes to be opened for parallel execution. The default is 4 .
+
+  **Note:**  This command is only valid when executed on the **web** platform.
+
+For example:
+
+```bash
+flybirds run --path features -p 5
+```
 
 

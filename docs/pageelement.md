@@ -16,5 +16,9 @@ To judge whether the element meets the expected performance, it depends on the s
 Frankly speaking, there must be cases that only manual testing can not be verified by automated testing, but if most of the cases can use automated testing, we can also alleviate the problems we are facing and benefit from it.
 
 # How to inspect Page element
+**Mobile**
 1.  Install IDE editor officially provided by airtest：[Download](https://airtest.netease.com/) 
 2.  [IDE manual](https://airtest.doc.io.netease.com/IDEdocs/3.1getting_started/AirtestIDE_install/)
+
+**Web**
+1. Element selector：[Selectors](https://playwright.dev/python/docs/selectors)

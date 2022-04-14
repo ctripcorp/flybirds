@@ -7,41 +7,50 @@ The "[]" in the statement template needs to add a value, otherwise the statement
 
 ## Common statement template
 
-|  statement template	  | description  |
-|  :----      | :----  |
-| go to url[]     | jump to the specified url address |
-| wait [] seconds     | Wait for a while |
-| element [] appear after page rendering    | check whether the specified element has been rendered when entering a new page |
-| click[]     | click on the element with the specified attribute |
-| click text[]     | Click on the element of the specified text |
-| click position[][]     | click to specify the location on the screen |
-| input [] into []     | input a string in the specified selector |
-| from [] find [] element    | find the element with the specified attribute in the specified direction |
-| slide to [] distance []    | swipe the specified distance in the specified direction on the full screen |
-| [] slide to [] distance []    | slide the specified distance in the specified direction in the specified area |
-| exist text []     | check that the specified string exists in the page|
-| not exist text []      | check that the specified string does not exist in the page |
-| exist element []     | check the presence of elements with specified attributes on the page |
-| not exist element []     | check that there is no element with the specified attribute in the page |
-| element [] disappear     | check that the element with the specified attribute in the page disappears within the specified time |
-| text [] property [] is []  | check that the specified attribute of the specified text in the page is the specified value |
-| element [] property [] is []     | check that the specified attribute of the specified element in the page is the specified value |
-| element [] position not change in []seconds     | check that the position of the specified element on the page has not changed within the specified time |
-| the text of element [] is []  | check that the text of the specified element in the page is equal to the specified value |
-| the text of element [] include []  | check that the text of the specified element in the page contains the specified value |
-| go to home page     | go to home page |
-| screenshot     | save the current screen image |
-| start record      | start recording video |
-| start recording timeout []      | start recording screen and set timeout |
-| stop record      | stop recording video |
-| connect device []    | connect test device |
-| install app[]      | install app |
-| delete app[]      | delete app |
-| start app[]      | start app |
-| retart app      | retart app |
-| logon account[] password []      | login with account and password |
-| logout      | logout |
-|   -----  | ----- |
+| statement template                          | description                                                  | suitable for   |
+| ------------------------------------------- | ------------------------------------------------------------ | -------------- |
+| go to url[]                                 | jump to the specified url address                            | android 、web  |
+| wait [] seconds                             | Wait for a while                                             | ALL            |
+| element [] appear after page rendering      | check whether the specified element has been rendered when entering a new page | ALL            |
+| click[]                                     | click on the element with the specified attribute            | ALL            |
+| click text[]                                | Click on the element of the specified text                   | ALL            |
+| click position[][]                          | click to specify the location on the screen                  | ALL            |
+| input [] into []                            | input a string in the specified selector                     | ALL            |
+| clear [] and input[]                        | clear and input a string in the specified selector           | Web            |
+| from [] find [] element                     | find the element with the specified attribute in the specified direction | ALL            |
+| slide to [] distance []                     | swipe the specified distance in the specified direction on the full screen | ALL            |
+| [] slide to [] distance []                  | slide the specified distance in the specified direction in the specified area | ALL            |
+| exist text []                               | check that the specified string exists in the page           | ALL            |
+| not exist text []                           | check that the specified string does not exist in the page   | ALL            |
+| exist element []                            | check the presence of elements with specified attributes on the page | ALL            |
+| not exist element []                        | check that there is no element with the specified attribute in the page | ALL            |
+| element [] disappear                        | check that the element with the specified attribute in the page disappears within the specified time | App            |
+| text[]disappear                             | check that the specified string in the page disappears from the page within a specified time | App            |
+| text [] property [] is []                   | check that the specified attribute of the specified text in the page is the specified value | ALL            |
+| element [] property [] is []                | check that the specified attribute of the specified element in the page is the specified value | ALL            |
+| element [] position not change in []seconds | check that the position of the specified element on the page has not changed within the specified time | App            |
+| the text of element [] is []                | check that the text of the specified element in the page is equal to the specified value | ALL            |
+| the text of element [] include []           | check that the text of the specified element in the page contains the specified value | ALL            |
+| go to home page                             | go to home page                                              | ALL            |
+| screenshot                                  | save the current screen image                                | ALL            |
+| start record                                | start recording video                                        | App            |
+| start recording timeout []                  | start recording screen and set timeout                       | App            |
+| stop record                                 | stop recording video                                         | ALL            |
+| connect device []                           | connect test device                                          | App            |
+| install app[]                               | install app                                                  | android        |
+| delete app[]                                | delete app                                                   | android        |
+| start app[]                                 | start app                                                    | App            |
+| retart app                                  | retart app                                                   | App            |
+| close app                                   | close app                                                    | App            |
+| logon account[] password []                 | login with account and password                              | ALL            |
+| logout                                      | logout                                                       | ALL            |
+| return to previous page                     | return to previous page                                      | Android 、 web |
+| in[]from [] find [] element                 | Find the element of the specified selector by sliding in the specified direction within the element that refers to the selector | ALL            |
+| from [] select []                           | Select the specified value in the web select element         | web            |
+| exist [] subNode [] element                 | check that  a parent element exists, and a child element exists under that parent element | web            |
+| the text of element [] subNode [] is []     | check that  a parent element exists, and the text of a child element under that parent element is the specified string | web            |
+| -----                                       | -----                                                        | -----          |
+
 
 
 ## Statement template：
