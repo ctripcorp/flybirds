@@ -14,14 +14,15 @@
 
 Flybirds is a front-end UI automation test framework based on BDD mode, providing a series of out-of-the-box tools and complete documentation.
 - Based on Behave, supporting BDD tools are required to associate Natural Language Test Case Documentation with Automated Test Code in BDD.
-- Based on Airtest, UI automated test framework is needed to implement "test cases can be executed on automated test platform" in BDD.
+- Based on Airtest, mobile UI automated test framework is needed to implement "test cases can be executed on automated test platform" in BDD.
+- Based on Playwright, web UI automated test framework is needed to implement "test cases can be executed on automated test platform" in BDD.
 
 
 ### What can I do?
 
 With Flybirds you can do most of the mobile automation, here are some features to help you get started:
 - Based on BDD pattern, similar natural language syntax
-- Support automatic app operation, form submission, UI element verification, keyboard input, deeplink jump, etc. on the Android side. The IOS side is in progress
+- Support automatic web、app operation, form submission, UI element verification, keyboard input, deeplink jump, etc. on the Android side. The IOS side is in progress
 - English and Chinese are supported by default. Support more languages ​​extensions
 - Plug in design, support user-defined automation framework extension
 - Provide cli scaffolding construction to help build projects quickly
@@ -157,4 +158,5 @@ Thanks for all these great works that make this project better.
 
 - [airtest](https://github.com/AirtestProject)
 - [behave](https://github.com/behave)
+- [playwright](https://github.com/microsoft/playwright-python)
 - [multiple-cucumber-html-reporter](https://github.com/wswebcreation/multiple-cucumber-html-reporter)

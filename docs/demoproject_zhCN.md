@@ -9,7 +9,7 @@
 
 ## config目录
 
-必须配置项：`deviceId` `packageName`。连接IOS设备时，必须额外配置`webDriverAgent`、`platform`。
+进行**移动端**测试时，必须配置项：`deviceId` 、`packageName`。在IOS设备上测试时，必须额外配置`webDriverAgent`。
 
 **flybirds_config.json**
 
@@ -43,12 +43,20 @@
 
 - `platform` 
 
-  待连接测试设备的系统，目前支持`Android` 和 `IOS`, 不填时默认为：`Android`
+    项目case执行的平台，目前支持`android` 、`ios` 和 `web`, 不填时默认为：`android`
   
 - `webDriverAgent` 
 
   设备里WebDriverAgent的BundleID，可通过`tidevice applist`命令查看。连接IOS设备时必填。
-  
+
+- `headless` 
+
+	浏览器的运行模式，为 true 时表示浏览器将以**无头**方式运行。`platform=web`时生效。
+
+- `browserType` 
+
+	支持的浏览器类型： `chromium`, `firefox` and `webkit`。`platform=web`时生效。
+
 - `beforeRunPage` 
 
   在开始测试前对app的行为配置，默认时“重启app”保证测试时页面处于大首页，还有startApp(启动app)，stopApp(关闭app)、None(无任何操作), 默认："restartApp"
