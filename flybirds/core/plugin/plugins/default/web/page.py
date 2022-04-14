@@ -52,7 +52,7 @@ class Page:
         if is_number(param):
             self.page.wait_for_timeout(float(param) * 1000)
         else:
-            log.warn(f"default wait for timeout!")
+            log.warn("default wait for timeout!")
             self.page.wait_for_timeout(3 * 1000)
 
     def cur_page_equal(self, context, param):

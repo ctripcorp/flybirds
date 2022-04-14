@@ -37,7 +37,7 @@ def create_demo():
         "Please input your test platform?(Android/IOS/Web)"
     )
     if test_platform is None or test_platform.strip().lower() not in [
-        'android', 'ios', 'web']:
+            'android', 'ios', 'web']:
         test_platform = 'android'
     test_platform = test_platform.strip().lower()
     user_dict['test_platform'] = test_platform
@@ -89,7 +89,7 @@ def create_demo():
             "Please input your test browserType?(chromium/firefox/webkit)"
         )
         if browser_type is None or browser_type.strip().lower() not in [
-            'chromium', 'firefox', 'webkit']:
+                'chromium', 'firefox', 'webkit']:
             browser_type = 'chromium'
         browser_type = browser_type.strip().lower()
         user_dict['browser_type'] = browser_type

@@ -115,10 +115,10 @@ class ScreenRecord:
                 cmd = "{} -s {} shell screenrecord --bugreport " \
                       "--size {}x{} --time-limit {} --bit-rate {} " \
                       "--verbose sdcard/flybirds.mp4".format(airtest_adb_path,
-                                                            device_id,
-                                                            screen_size[0],
-                                                            screen_size[1],
-                                                            timeout, bit_rate)
+                                                             device_id,
+                                                             screen_size[0],
+                                                             screen_size[1],
+                                                             timeout, bit_rate)
             else:
                 cmd = "{} -s {} shell screenrecord" \
                       " --size {}x{} " \
@@ -126,9 +126,9 @@ class ScreenRecord:
                       "--bit-rate {}" \
                       " --verbose " \
                       "sdcard/flybirds.mp4".format(airtest_adb_path, device_id,
-                                                  screen_size[0],
-                                                  screen_size[1], timeout,
-                                                  bit_rate)
+                                                   screen_size[0],
+                                                   screen_size[1], timeout,
+                                                   bit_rate)
 
             proc = cmd_helper.create_sub_process(cmd)
             message = ""

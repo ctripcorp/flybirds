@@ -3,7 +3,8 @@
 Poco manage api
 """
 import flybirds.core.plugin.plugins.default.ui_driver.poco.parse_path as parse
-import flybirds.core.plugin.plugins.default.ui_driver.poco.parse_selector as msd
+import flybirds.core.plugin.plugins.default.ui_driver.poco.parse_selector \
+    as msd
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_selector as pc
 from flybirds.core.global_context import GlobalContext as g_context
 

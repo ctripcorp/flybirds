@@ -6,10 +6,13 @@ import flybirds.core.plugin.plugins.default.step.app as step_app
 import flybirds.core.plugin.plugins.default.step.attr as step_attr
 import flybirds.core.plugin.plugins.default.step.click as step_click
 import flybirds.core.plugin.plugins.default.step.common as step_common
-import flybirds.core.plugin.plugins.default.step.page_show_adjust as step_adjust
+import flybirds.core.plugin.plugins.default.step.page_show_adjust \
+    as step_adjust
 import flybirds.core.plugin.plugins.default.step.record as step_record
 import flybirds.core.plugin.plugins.default.step.swipe as step_swipe
 import flybirds.core.plugin.plugins.default.step.verify as step_verify
+from flybirds.core.plugin.plugins.default.step.app \
+    import (to_app_home, app_login, app_logout)
 from flybirds.core.plugin.plugins.default.step.input import ele_input
 from flybirds.core.plugin.plugins.default.step.position import (
     position_not_change
@@ -116,3 +119,12 @@ class AppBaseStep:
 
     def exist_ele(self, context, param):
         step_verify.exist_ele(context, param)
+
+    def to_app_home(self, context):
+        to_app_home(context)
+
+    def app_login(self, context, param1, param2):
+        app_login(context, param1, param2)
+
+    def app_logout(self, context):
+        app_logout(context)

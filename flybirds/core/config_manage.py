@@ -168,7 +168,7 @@ class WebConfig:
     def __init__(self, user_data, config):
         web_info = get_config(config, "web_info")
         if web_info is None:
-            log.warn(f'[web_info] configuration of web_info is none.')
+            log.warn('[web_info] configuration of web_info is none.')
             # default value
             self.headless = True
             self.browser_type = 'chromium'

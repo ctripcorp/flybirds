@@ -204,7 +204,7 @@ class Element:
             log.info(f'[ele_select] select option[{option_str}] success.')
         except FlybirdsVerifyEleException as fe:
             raise fe
-        except Exception as e:
+        except Exception:
             # select by value
             log.warn(f'[ele_select] retry select option[{option_str}].')
             locator.select_option(option_str)

@@ -2,7 +2,8 @@
 """
 Convert poco object
 """
-import flybirds.core.plugin.plugins.default.ui_driver.poco.parse_selector as msd
+import flybirds.core.plugin.plugins.default.ui_driver.poco.parse_selector \
+    as msd
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_selector as pc
 import flybirds.utils.snippet as snippet
 from flybirds.core.global_context import GlobalContext as g_Context

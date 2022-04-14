@@ -75,7 +75,8 @@ def parallel_run(context):
 
     if parsed_tags and len(parsed_tags) > 0:
         # -k, --no-skipped
-        cmd = f'behave {feature_path} {" ".join(parsed_tags)} -d -k -f json --no-summary'
+        cmd = f'behave {feature_path} {" ".join(parsed_tags)} -d -k -f json ' \
+              f'--no-summary'
     else:
         cmd = f'behave {feature_path} -d -k -f json --no-summary'
     features = get_features_num(cmd)

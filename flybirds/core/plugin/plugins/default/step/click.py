@@ -3,7 +3,8 @@
 Step implement of element click.
 """
 import flybirds.core.global_resource as gr
-import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap as find_snap
+import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap \
+    as find_snap
 import flybirds.utils.dsl_helper as dsl_helper
 from flybirds.core.global_context import GlobalContext as g_Context
 

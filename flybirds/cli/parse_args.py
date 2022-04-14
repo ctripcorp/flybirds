@@ -40,8 +40,8 @@ def parse_args(
     :return:
     """
     log.info(
-        f"flybirds cmd info: {feature_path} {tag} {report_format} {report_path}"
-        f" {define} {rerun} {es} {to_html} {run_at}"
+        f"flybirds cmd info: {feature_path} {tag} {report_format} "
+        f"{report_path} {define} {rerun} {es} {to_html} {run_at}"
     )
 
     check_workspace_args(feature_path)

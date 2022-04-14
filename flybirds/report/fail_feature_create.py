@@ -481,11 +481,7 @@ def failed_rerun(rerun_cmd_str: str, rerun_feature_path, processes,
 
 
 def parallel_rerun(rerun_cmd_str: str, rerun_feature_path, processes):
-    log.info(f'parallel_rerun start!')
-    log.info(f'[parallel_rerun] processes num: {processes}')
-    log.info(f'[parallel_rerun] rerun_feature_path: {rerun_feature_path}')
-    log.info(f'[parallel_rerun] rerun_cmd_str: \n\n{rerun_cmd_str}\n\n')
-
+    log.info('parallel_rerun start!')
     dry_cmd = f'behave {rerun_feature_path} -d -k -f json --no-summary'
     features = get_features_num(dry_cmd)
     log.info(f'[parallel_rerun] features num: {len(features)}')

@@ -65,7 +65,8 @@ def runner(
         ),
         processes: int = typer.Option(
             4, "--processes", '-p',
-            help="Maximum number of processes. Default = 4"
+            help="Maximum number of processes. Default = 4. Effective when  "
+                 "test on web."
         )
 ):
     """

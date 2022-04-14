@@ -50,8 +50,8 @@ class BaseScreen:
         screenshot address and linked to the <scr> tag
         The label information is placed in the description of the scene,
         and the json report is processed after all the runs are finished,
-        and the <scr> information in the description is converted into embeddings
-        information in the step.
+        and the <scr> information in the description is converted into
+        embeddings information in the step.
         """
         feature_name = file_helper.valid_file_name(scenario.feature.name)
         scenario_name = file_helper.valid_file_name(scenario.name)

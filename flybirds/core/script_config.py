@@ -38,4 +38,3 @@ class ScriptImportManage:
         if os.path.exists(tag_provider_path):
             tag_provider_path_import_path = "tag_provider"
             self.tag_provider = __import__(tag_provider_path_import_path)
-
