@@ -16,5 +16,9 @@
 坦诚讲，肯定存在只有手工测试而自动化测试无法验证的用例，但是如果大部分用例能使用自动化测试，我们也能缓解目前所面临的问题并从中受益。
 
 # 怎样查找元素属性
+**移动端**
 1.  安装airtest官方提供的IDE编辑器：[下载地址](https://airtest.netease.com/) 
 2.  [IDE使用帮助](https://airtest.doc.io.netease.com/IDEdocs/3.1getting_started/AirtestIDE_install/)
+
+**web端**
+1. 元素选择器：[Selectors](https://playwright.dev/python/docs/selectors)

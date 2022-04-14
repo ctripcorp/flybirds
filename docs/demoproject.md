@@ -7,7 +7,7 @@
 - report：test report
 
 ## Config
-Must config items：`deviceId`, `packageName`.When connecting to IOS devices, you must configure the `webDriverAgent` 、`platform`.
+When testing on **mobile**, you must configure the items: `deviceId`、`packageName`. When testing on IOS devices, you must additionally configure `webDriverAgent`.
 
 **flybirds_config.json**
 
@@ -41,12 +41,20 @@ Must config items：`deviceId`, `packageName`.When connecting to IOS devices, yo
 
 - `platform` 
 
-  The system to be connected to the test device, currently supports `Android` and `IOS`, if not filled in, the default is: `Android`
+   Project case execution platform. currently supports `android`, `ios` and `web`, default is: `android` when not filled
   
 - `webDriverAgent` 
 
   The BundleID of the WebDriverAgent in the device. Can be viewed through the `tidevice applist` command. Required when connecting to IOS device.
-  
+
+- `headless` 
+
+	The running mode of the browser, `true` means the browser will run in **headless** mode. Effective when `platform=web`.
+
+- `browserType` 
+
+	Supported browser types: `chromium`, `firefox` and `webkit`. Effective when `platform=web`.
+
 - `beforeRunPage` 
 
   Configure the behavior of the app before starting the test. By default, "restart the app" to ensure that the page is on the main homepage during the test, and startApp (start the app), stopApp (close the app), and None (no operation), default: "restartApp"

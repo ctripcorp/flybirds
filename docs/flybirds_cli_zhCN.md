@@ -49,7 +49,7 @@ Usage: flybirds [OPTIONS] COMMAND [ARGS]...
 - `run`: 运行项目.
 
 
-  
+
 
 #### 操作
 
@@ -66,7 +66,7 @@ flybirds run --help
 示例:
 
 ```bash
-flybirds run -P ./features/test/demo.feature
+flybirds run --path ./features/test/demo.feature
 ```
 - **--tag, -T    TEXT(可选)**
 
@@ -103,7 +103,7 @@ flybirds run --report report\curent\report.json
 
 ​	传入用户自定义的参数，此参数有两个作用:
 
-作用1：覆盖`config`配置文件中的配置，比如：
+作用1：覆盖`config`配置文件中的相应配置的值，比如：
 
 ```bash 
  # 运行时使用的设备和uniqueTag为命令中指定的值，不会取配置文件中配置的值
@@ -123,7 +123,26 @@ flybirds run --define deviceId=*** --define uniqueTag=***
 flybirds run --no-rerun 
 ```
 
+- **--html/--no-html  (可选)**
 
+​	指定case 执行完成后是否生成html测试报告，默认是 ‘True’ ,执行完成后自动生成结果测试报告。
 
+示例：
 
+```bash
+#不生成测试报告
+flybirds run --no-html
+```
+
+- **--processes, -p    INTEGER(可选)**
+
+  指定并发执行时开启进程的最大数量。默认是4 。
+
+  **注意：** 此命令只在 **web** 平台执行时有效。
+
+示例：
+
+```bash
+flybirds run --path features -p 5
+```
 
