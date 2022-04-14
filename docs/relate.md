@@ -17,18 +17,19 @@
 
 Each version of Playwright needs specific versions of browser binaries to operate.  When you perform UI automation testing on the web platform, you need to use the **[Playwright CLI](https://playwright.dev/python/docs/cli)** to install these browsers.
 
-Playwright can install supported browsers.
-
 ```bash
-# Running without arguments will install default browsers
+# running without arguments will install default browsers
 playwright install
 ```
 
-You can also install specific browsers by providing an argument:
+```bash
+# install specific browsers by providing an argument
+playwright install webkit
+```
 
 ```bash
-# Install WebKit
-playwright install webkit
+# see all supported browsers
+playwright install --help
 ```
 
 
