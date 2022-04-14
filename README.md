@@ -31,7 +31,7 @@ Flybirds是基于BDD模式的前端UI自动化测试框架,提供了一系列开
 
 使用Flybirds你能够完成大部分的手机端自动化操作，以下是一些帮助入门的特性描述：
 - 基于BDD模式，类自然语言语法
-- 支持Android、iOS、Web 自动化操作, 表单提交、UI元素校验、键盘输入、Deeplink跳转等
+- 支持Android、iOS、Web 自动化操作、表单提交、UI元素校验、键盘输入、Deeplink跳转等
 - 默认支持英文、中文两种语言，支持更多语言扩展
 - 插件式设计，支持用户自定义自动化扩展
 - 提供cli脚手架，快速搭建项目
@@ -48,7 +48,7 @@ Flybirds是基于BDD模式的前端UI自动化测试框架,提供了一系列开
 ```bash
 pip3 install flybirds
 ```
-在Mac/Linux系统下，需要手动赋予adb可执行权限
+在Mac/Linux系统下，需要手动赋予adb可执行权限，Android项目才能正常工作
 
 - for mac
 ```bash
@@ -64,6 +64,21 @@ chmod +x adb
 ## 创建项目
 ```bash
 flybirds create 
+```
+Web项目，需安装浏览器
+```bash
+# 不带参数的运行将安装默认所有浏览器
+playwright install
+```
+
+```bash
+# 通过提供一个参数来安装特定的浏览器
+playwright install webkit
+```
+
+```bash
+# 查看支持安装的浏览器
+playwright install --help
 ```
 
 ## 教程
