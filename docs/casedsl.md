@@ -56,7 +56,7 @@ The "[]" in the statement template needs to add a value, otherwise the statement
 ## Statement template：
 
 **connect device[{param}]**
-- platform: Android
+- platform: Android , IOS
 - description：connect test device
 - example：connect device [10.21.37.123:5555]
 
@@ -76,6 +76,7 @@ The "[]" in the statement template needs to add a value, otherwise the statement
 - example：start app [package name]
 
 **restart app**
+- platform: Android, IOS
 - description：restart app
 
 **go to home page**
@@ -91,7 +92,7 @@ The "[]" in the statement template needs to add a value, otherwise the statement
 - PS：User-defined implementation, implement the logout() method in the pscript/app/operation.py file
 
 **exist text[string{, fuzzyMatch=false, timeout=10}]**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：find specified string exists in the page
 - timeout Search timeout time, priority: default value < “waitEleTimeout” in flybirds_config.json< Specified in the statement
 ```js 
@@ -100,7 +101,7 @@ exist text [flight, timeout=10]
 exist text [.?ght, fuzzyMatch=true]
 ```
 **not exist text[string{, fuzzyMatch=false}]**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：find specified string not exists in the page
 ```js 
 not exist text [flight]
@@ -108,7 +109,7 @@ not exist text [flight, timeout=10]
 not exist text [.?ght, fuzzyMatch=true]
 ```
 **text[string{, fuzzyMatch=false, timeout=10}]disappear**
-- platform: Android, IOS
+- platform: Android, IOS，Web
 - description：specified character string disappears from the page within the specified time
 timeout timeout for waiting to disappear, priority: default value < “waitEleDisappear” in flybirds_config.json< Specified in the statement
 ```js 
@@ -116,7 +117,7 @@ text [flight] disappear
 text [.?ght, fuzzyMatch=true, timeout=20] disappear
 ```
 **exist element [selector{, path=false, multiSelector=false, timeout=10}]**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：check element of the specified selector on the page
 - timeout timeout for waiting to disappear, priority: default value < “waitEleTimeout” in flybirds_config.json < Specified in the statement
 ```js 
@@ -126,7 +127,7 @@ exist element [textMatches=.?eco]
 exist element [textMatches=.?eco and type=android.view.ViewGroup, multiSelector=true, timeout=30]
 ```
 **not exist element[selector{, path=false, multiSelector=false}]**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：check element of the specified selector not on the page
 ```js
 not exist element [center_content_layout]
@@ -135,7 +136,7 @@ not exist element [textMatches=.?eco]
 not exist element [textMatches=.?eco and type=android.view.ViewGroup, multiSelector=true, timeout=30]
 ```
 **element[selector{, path=false, multiSelector=false, timeout=10}]disappear**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：specified selector disappears from the page within the specified time
 - timeout: timeout for waiting to disappear, priority: default value < “waitEleDisappear” in flybirds_config.json < Specified in the statement
 ```js
@@ -143,7 +144,7 @@ element [center_content_layout] disappear
 element [text=flight] disappear
 ```
 **the text of element [selector{, path=false, multiSelector=false, timeout=10}] is [string{, dealMethod=name}]**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：specify the text of the element of the selector as the specified string
 - timeout timeout for waiting to disappear, priority: default value < “waitEleTimeout” in flybirds_config.json < Specified in the statement
 ```js
@@ -152,7 +153,7 @@ the text of element [textMatches=.?economic, timeout=15] is [economic, dealMetho
 the text of element [textMatches=.?economic and visible=True, multiSelector=true, timeout=15] is [economic, dealMethod=trim_prefix]
 ```
 **the text of element [selector{, path=false, multiSelector=false, timeout=10}] include [string{, dealMethod=name}]**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：pecify the text of the element of the selector include the specified string
 - timeout timeout for waiting to disappear, priority: default value < “waitEleTimeout” in flybirds_config.json < Specified in the statement
 ```js
@@ -161,7 +162,7 @@ the text of element [textMatches=.?economic, timeout=15] include [economic, deal
 the text of element [textMatches=.?economic and visible=True, multiSelector=true, timeout=15] include [economic, dealMethod=trim_prefix]
 ```
 **element[selector{, path=false, multiSelector=false, timeout=10}] appear after page rendering**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：when entering a new page, you can determine that the page rendering is complete by specifying the element of the selector to appear on the page
 - timeout timeout for waiting to disappear, priority: default value < “pageRenderTimeout” in flybirds_config.json < Specified in the statement
 ```js
@@ -170,7 +171,7 @@ element [center_content_layout, timeout=15] appear after page rendering
 element [center_content_layout, timeout=40] appear after page rendering
 ```
 **click text[string{, fuzzyMatch=false, timeout=10, verifyEle=null, verifyIsPath=false, verifyIsMultiSelector=false, verifyTimeout=10, verifyAction=null}]**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：click on the string specified on the page
 - timeout: find the timeout of "string", priority: default value < “waitEleTimeout” in flybirds_config.json < specified in the statement
 - verifyEle: if there is partial rendering after clicking, use the relevant information of the element represented by the selector specified by this attribute to determine
@@ -186,7 +187,7 @@ click text [flight, verifyEle=center_content_layout, verifyAction=position]
 click text [flight, verifyEle=text=filterand =textView, verifyIsMultiSelector=true, verifyAction=position]
 ```
 **click[selector{, path=false, multiSelector=false, timeout=10, verifyEle=null, verifyIsPath=false, verifyIsMultiSelector=false, verifyTimeout=10, verifyAction=null}]**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description: click on the element of the specified selector on the page   
 - timeout: find the timeout of "string", priority: default value < “waitEleTimeout” in flybirds_config.json < specified in the statement
 - verifyEle: if there is partial rendering after clicking, use the relevant information of the element represented by the selector specified by this attribute to determine
@@ -206,7 +207,7 @@ click [flight, verifyEle=text=filterand =textView, verifyIsMultiSelector=true, v
 click position [200,100]
 ```
 **text [string{, fuzzyMatch=false, timeout=10}]property [{, dealMethod=name}]is {}**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：the value of the specified attribute of the element corresponding to the specified string in the page is the specified value
 - timeout: find the timeout of "string", priority: default value < “waitEleTimeout” in flybirds_config.json < Specified in the statement
 ```js
@@ -214,7 +215,7 @@ text [economic] property [text] is flight
 text [economic, timeout=15] property [text, dealMethod=trim_last] is fli
 ```
 **element[selector{, path=false, multiSelector=false, timeout=10}]property[property name{, dealMethod=name}]is{property value}**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：the value of the specified attribute of the element of the specified selector on the page is the specified value
 - timeout: find the timeout of "string", priority: default value < “waitEleTimeout” in flybirds_config.json < Specified in the statement
 ```js
@@ -222,7 +223,7 @@ element [text=flight] property [text] is flight
 element [text=flight, timeout=15] property[text, dealMethod=trim_last] is fli
 ```
 **input[selector{, path=false, multiSelector=false, timeout=10}]into[string{, pocoInput=false, afterInputWait=1}]**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：input the specified copy in the element of the specified selector 
 - timeout: find the timeout of "string", priority: default value < “waitEleTimeout” in flybirds_config.json < Specified in the statement
 - pocoInput: Whether to use the input method of poco, the input method of airtest is used by default， Priority: default < “usePocoInput” in flybirds_config.json < Specified in the statement
@@ -233,7 +234,7 @@ input [shanghai] into [inputEleId]
 input [david, pocoInput=true, afterInputWait=5] into [type=InputView]
 ```
 **[selector{, path=false, multiSelector=false, timeout=10}] slide to {up/down/left/right} distance [value{, startX=0.5, startY=0.5, duration=null, readyTime=null}]**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：slide the specified distance in the specified direction in the sliding container of the specified selector
 - timeout: find the timeout of "string", priority: default value < “waitEleTimeout” in flybirds_config.json < Specified in the statement
 - startX: the coordinate value of the X axis of the starting coordinate of the sliding in the container，<=1 represents the percentage，>1 representative pixel
@@ -246,7 +247,7 @@ input [david, pocoInput=true, afterInputWait=5] into [type=InputView]
 [containerEleId] slide to right [100, startX=0.2, startY=0.4, duration=5, readyTime=3]
 ```
 **slide to {up/down/left/right} distance [value{, startX=0.5, startY=0.5, duration=null, readyTime=null}]**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：use the full screen as the container to slide the specified distance in the specified direction
 - startX: the coordinate value of the X axis of the sliding start coordinate in the full screen，<=1 represents the percentage，>1 representative pixel
 - startY: the coordinate value of the Y axis of the sliding start coordinate in the full screen，<=1 represents the percentage，>1 representative pixel
@@ -257,7 +258,7 @@ slide to up distance [0.05]
 slide to down [0.4, readyTime=3, duration=2]
 ```
 **from {up/down/left/right} find [selector{, path=false, multiSelector=false, swipeCount=5, startX=0.5, startY=0.5, distance=0.3, duration=null}]element**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：swipe to the specified direction on the full screen to find the element of the specified selector
 - swipeCount: swipe to find the maximum number of swipes. If the specified element is not found on the page after the sliding operation exceeds this value, it will fail. priority: default < “swipeSearchCount” in flybirds_config.json < Specified in the statement
 - startX: Slide the X-axis coordinate value of the starting coordinate in the full screen, <=1 means percentage, >1 means pixel
@@ -276,23 +277,27 @@ from left find [testId, distance=0.5, duration=2, swipeCount=8] element
 - verifyCount: maximum number of judgments，priority: default <“verifyPosNotChangeCount” in flybirds_config.json < Specified in the statement
 
 **start recording timeout[time]**
-- platform: Android
+- platform: Android，iOS
 - description：start to record the screen, stop recording when the timeout period is not stopped
+
 **start record**
-- platform: Android
+- platform: Android，iOS
 - description： start recording the screen, using the default timeout period (configured in the configuration file)
+
 **stop record**
-- platform: Android
+- platform: Android，iOS，Web
 - description：stop the screen recording and associate the video file to the report
+
 **wait[time]seconds**
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：wait for a while
+
 **screenshot***
-- platform: Android, iOS
+- platform: Android, iOS，Web
 - description：take a screenshot of the current screen and associate it with the report
 
 **go to url[url address]**
-- platform: Android
+- platform: Android，Web
 - description：Jump to the specified page through the schema, and the page name is maintained in the form of "page name: page schemaUrl" in config/schema_url.js
 ```js
 go to url [list page]
