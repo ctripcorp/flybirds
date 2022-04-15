@@ -106,8 +106,8 @@ flybirds run --report report\curent\report.json
 作用1：覆盖`config`配置文件中的相应配置的值，比如：
 
 ```bash 
- # 运行时使用的设备和uniqueTag为命令中指定的值，不会取配置文件中配置的值
-flybirds run --define deviceId=*** --define uniqueTag=***
+# 通过参数切换执行平台Android、iOS、Web
+flybirds run --define platform=web 
 ```
 
 作用2: 传入自定义参数以便在`pscript`目录下的自定义脚本中使用，使用全局参数 `global_resource` 获取.
