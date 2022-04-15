@@ -22,7 +22,7 @@ Flybirds is a front-end UI automation test framework based on BDD mode, providin
 
 With Flybirds you can do most of the mobile automation, here are some features to help you get started:
 - Based on BDD pattern, similar natural language syntax
-- Support automatic web、app operation, form submission, UI element verification, keyboard input, deeplink jump, etc. on the Android side. The IOS side is in progress
+- Support Android、iOS、Web automatic operation, form submission, UI element verification, keyboard input, deeplink jump, etc. on the Android side. The IOS side is in progress
 - English and Chinese are supported by default. Support more languages ​​extensions
 - Plug in design, support user-defined automation framework extension
 - Provide cli scaffolding construction to help build projects quickly

@@ -26,17 +26,19 @@
 
 每个版本的Playwright都需要特定版本的浏览器二进制文件来运行。当你在web端进行UI 自动测试时, 需要使用 **[Playwright CLI](https://playwright.dev/python/docs/cli)** 来安装这些浏览器。
 
-Playwright支持可以安装的浏览器。
-
 ```bash
-# 不带参数的运行将安装默认浏览器
+# 不带参数的运行将安装默认所有浏览器
 playwright install
 ```
 
-你也可以通过提供一个参数来安装特定的浏览器:
-
 ```bash
-# 安装 WebKit
+# 通过提供一个参数来安装特定的浏览器
 playwright install webkit
 ```
+
+```bash
+# 查看支持安装的浏览器
+playwright install --help
+```
+
 
