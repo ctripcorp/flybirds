@@ -55,7 +55,7 @@
 ## 语句模版：
 
 **连接设备[{param}]**
-- 支持平台：Android
+- 支持平台：Android 、 IOS
 - 语义：连接测试设备
 - 例子：连接设备[10.21.37.123:5555]
 
@@ -91,7 +91,7 @@
 - 注：用户自定义实现, 在 pscript/app/operation.py 文件中实现 logout() 方法
 
 **存在[字符串{, fuzzyMatch=false, timeout=10}]的文案**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：页面中存在指定的字符串
 - timeout 查找的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 ```js 
@@ -100,14 +100,14 @@
 存在[.?票, fuzzyMatch=true]的文案
 ```
 **不存在[字符串{, fuzzyMatch=false}]的文案**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：页面中不存在指定的文案
 ```js 
 不存在[机票]的文案
 不存在[.?票, fuzzyMatch=true]的文案
 ```
 **文案[字符串{, fuzzyMatch=false, timeout=10}]消失**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：指定的字符串在规定时间内从页面消失
 timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.json中的“waitEleDisappear” < 语句中指定
 ```js 
@@ -115,7 +115,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 文案[.?票, fuzzyMatch=true, timeout=20]消失
 ```
 **存在[选择器{, path=false, multiSelector=false, timeout=10}]的元素**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：页面中存在指定 选择器 的元素
 - timeout 查找的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 ```js 
@@ -126,7 +126,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 存在[机票→第1个兄弟节点, path=true]的元素
 ```
 **不存在[选择器{, path=false, multiSelector=false}]的元素**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：页面中不存在指定  选择器 的元素
 ```js
 不存在[center_content_layout]的元素
@@ -144,7 +144,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 元素[机票→第1个兄弟节点, path=true, timeout=15]消失
 ```
 **[选择器{, path=false, multiSelector=false, timeout=10}]的文案为[字符串{, dealMethod=name}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：指定 选择器 的元素的文案为指定的字符串
 - timeout 查找的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 ```js
@@ -153,7 +153,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 [textMatches=.?经济舱并且visible=True, multiSelector=true, timeout=15]的文案为[经济舱, dealMethod=trim_prefix]
 ```
 **[选择器{, path=false, multiSelector=false, timeout=10}]的文案包含[字符串{, dealMethod=name}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：指定 选择器 的元素的文案包含指定的字符串
 - timeout 查找的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 ```js
@@ -164,7 +164,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 [textMatches=.?经济舱并且visible=True, multiSelector=true, timeout=15]的文案包含[经济, dealMethod=trim_prefix]
 ```
 **页面渲染完成出现元素[选择器{, path=false, multiSelector=false, timeout=10}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：进入新的页面时通过指定 选择器 的元素出现在页面上来判断页面渲染完成
 - timeout 查找的超时时间，优先级：默认值 < flybirds_config.json中的“pageRenderTimeout” < 语句中指定
 ```js
@@ -175,7 +175,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 页面渲染完成出现元素[center_content_layout, timeout=40]
 ```
 **点击文案[字符串{, fuzzyMatch=false, timeout=10, verifyEle=null, verifyIsPath=false, verifyIsMultiSelector=false, verifyTimeout=10, verifyAction=null}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：点击页面上指定的 字符串
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 - verifyEle  点击后如果有局部渲染，使用该属性指定的选择器代表的元素的相关信息判断
@@ -191,7 +191,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 点击文案[机票, verifyEle=text=筛选并且type=textView, verifyIsMultiSelector=true, verifyAction=position]
 ```
 **点击[选择器{, path=false, multiSelector=false, timeout=10, verifyEle=null, verifyIsPath=false, verifyIsMultiSelector=false, verifyTimeout=10, verifyAction=null}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义: 点击页面上指定 选择器 的元素   
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 - verifyEle  点击后如果有局部渲染，使用该属性指定的选择器代表的元素的相关信息判断
@@ -211,7 +211,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 点击屏幕位置[200,100]
 ```
 **文案[字符串{, fuzzyMatch=false, timeout=10}]的属性[属性名{, dealMethod=name}]为{属性值}**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：页面中指定 字符串对应的元素的指定的属性的值为指定的值
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 ```js
@@ -219,7 +219,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 文案[机票, timeout=15]的属性[text, dealMethod=trim_last]为机
 ```
 **元素[选择器{, path=false, multiSelector=false, timeout=10}]的属性[属性名{, dealMethod=name}]为{属性值}**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：页面中指定 选择器 的元素的指定的 属性的值为指定的 值
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 ```js
@@ -227,7 +227,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 元素[text=机票, timeout=15]的属性[text, dealMethod=trim_last]为机
 ```
 **在[选择器{, path=false, multiSelector=false, timeout=10}]中输入[文案{, pocoInput=false, afterInputWait=1}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：在指定选择器的元素中输入指定的文案 
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 - pocoInput: 是否使用 poco 的输入方法，默认使用的是airtest的输入方法， 优先级：默认值 < flybirds_config.json中的“usePocoInput” < 语句中指定
@@ -237,7 +237,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 在[type=InputView]中输入[用户名, pocoInput=true, afterInputWait=5]
 ```
 **[选择器{, path=false, multiSelector=false, timeout=10}]向{上/下/左/右}滑动[滑动距离{, startX=0.5, startY=0.5, duration=null, readyTime=null}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：在指定 选择器 的滑动容器内向指定 方向 滑动指定 距离
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 - startX: 在容器中滑动起始坐标的X轴的坐标值，<=1 代表百分比，>1代表像素点
@@ -250,7 +250,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 [containerEleId]向上滑动[100, startX=0.2, startY=0.4, duration=5, readyTime=3]
 ```
 **全屏向{上/下/左/右}滑动[滑动距离{, startX=0.5, startY=0.5, duration=null, readyTime=null}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：以全屏为容器向指定 方向 滑动指定 距离
 - startX: 在全屏中滑动起始坐标的X轴的坐标值，<=1 代表百分比，>1代表像素点
 - startY: 在全屏中滑动起始坐标的Y轴的坐标值，<=1 代表百分比，>1代表像素点
@@ -261,7 +261,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 向下滑动[0.4, readyTime=3, duration=2]
 ```
 **在[选择器{, path=false, multiSelector=false, timeout=10}]中向{上/下/左/右}查找[选择器{, path=false, multiSelector=false, swipeCount=5, startX=0.5, startY=0.5, distance=0.3, duration=null}]的元素**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：在指定 选择器 的元素内 向指定方向滑动查找 指定选择器的元素
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 - swipeCount: 滑动查找最大滑动次数，超过这个值的滑动操作后还未在页面中找到指定元素则失败， 优先级：默认值 < flybirds_config.json中的“swipeSearchCount” < 语句中指定
@@ -274,7 +274,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 在[containerId]中向下查找[testId, distance=0.5, duration=2, swipeCount=8]
 ```
 **向{上/下/左/右}查找[选择器{, path=false, multiSelector=false, swipeCount=5, startX=0.5, startY=0.5, distance=0.3, duration=null}]的元素**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：在全屏向指定方向滑动查找 指定选择器的元素
 - swipeCount: 滑动查找最大滑动次数，超过这个值的滑动操作后还未在页面中找到指定元素则失败， 优先级：默认值 < flybirds_config.json中的“swipeSearchCount” < 语句中指定
 - startX: 在全屏中滑动起始坐标的X轴的坐标值，<=1 代表百分比，>1代表像素点
@@ -291,33 +291,32 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 - verifyCount: 最大判断次数，优先级：默认值 < flybirds_config.json中的“verifyPosNotChangeCount” < 语句中指定
 
-
 **开始录屏超时[time]**
-- 支持平台：Android
+- 支持平台：Android、iOS
 - 语义：开始录制屏幕，到超时时间未停止则停止录屏
 
 
 **开始录屏**
-- 支持平台：Android
+- 支持平台：Android、iOS
 - 语义： 开始录制屏幕，使用默认的超时时间（在配置文件中配置）
 
 
 **结束录屏**
-- 支持平台：Android
+- 支持平台：Android、iOS、Web
 - 语义：结束录制屏幕，并将视频文件关联到报告中
 
 
 **等待[time]秒**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：执行暂停指定时间
 
 
 **全屏截图***
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：截取当前屏幕快照并关联到报告中
 
 **跳转到[页面名称]**
-- 支持平台：Android
+- 支持平台：Android、Web
 - 语义：通过schema跳转到指定页面，页面名称在config/schema_url.json 中以  "页面名称: 页面schemaUrl"  的形式维护
 ```js
 跳转到[首页]
