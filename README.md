@@ -86,7 +86,7 @@ playwright install --help
 - [运行演示](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id7)
 - [项目结构](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id6)
 - [自动化操作语法](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#step)
-- [运行前检查](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id14)
+- [运行前检查](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id13)
 - [开始运行](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id15)
 - [配置参数](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id16)
 - [脚手架参数](https://github.com/ctripcorp/flybirds/blob/main/docs/flybirds_cli_zhCN.md)
