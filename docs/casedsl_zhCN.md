@@ -290,18 +290,28 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 - 语义： 指定选择器的元素在指定时间位置未发生变化，目的是判断页面未处于滑动状态
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 - verifyCount: 最大判断次数，优先级：默认值 < flybirds_config.json中的“verifyPosNotChangeCount” < 语句中指定
+
+
 **开始录屏超时[time]**
 - 支持平台：Android
 - 语义：开始录制屏幕，到超时时间未停止则停止录屏
+
+
 **开始录屏**
 - 支持平台：Android
 - 语义： 开始录制屏幕，使用默认的超时时间（在配置文件中配置）
+
+
 **结束录屏**
 - 支持平台：Android
 - 语义：结束录制屏幕，并将视频文件关联到报告中
+
+
 **等待[time]秒**
 - 支持平台：Android、iOS
 - 语义：执行暂停指定时间
+
+
 **全屏截图***
 - 支持平台：Android、iOS
 - 语义：截取当前屏幕快照并关联到报告中
