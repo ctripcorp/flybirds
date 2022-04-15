@@ -8,7 +8,7 @@ Flybirds是一套基于BDD模式的前端UI自动化测试框架，提供了一�
 使用Flybirds你能够完成大部分的手机端自动化操作
 
 * 基于BDD模式，类自然语言语法
-* 支持自动化APP操作、表单提交、UI元素校验、键盘输入、Deeplink跳转等
+* 支持Android、iOS、Web 自动化操作、表单提交、UI元素校验、键盘输入、Deeplink跳转等
 * 默认支持英文、中文两种语言，支持更多语言扩展
 * 插件式设计，支持用户自定义自动化扩展
 * 提供cli脚手架，快速搭建项目
@@ -142,6 +142,51 @@ feature文件，也称为功能文件，有两个目的：文档和自动化测�
 ### step操作步骤
 上面例子中的关键字“当”、“而且”和“那么”部分构成了测试用例的操作步骤，这些操作步骤框架中已经通过python实现。
 
+| 语句模板                         | 语义                                                       | 适用于         |
+| -------------------------------- | ---------------------------------------------------------- | -------------- |
+| 跳转到[]                         | 跳转到指定的url地址                                        | android 、web  |
+| 等待[]秒                         | 等待一段时间                                               | ALL            |
+| 页面渲染完成出现元素[]           | 进入新的页面时检查指定元素是否渲染完成                     | ALL            |
+| 点击[]                           | 点击指定属性的元素                                         | ALL            |
+| 点击文案[]                       | 点击指定文案的元素                                         | ALL            |
+| 点击屏幕位置[][]                 | 点击屏幕指定位置                                           | ALL            |
+| 在 [] 中输入[]                   | 在指定选择器中输入字符串                                   | ALL            |
+| 在[]中清空并输入[]               | 在指定选择器中清空并输入字符串                             | Web            |
+| 向[] 查找[]的元素                | 向指定方向查找指定属性的元素                               | ALL            |
+| 全屏向[] 滑动[]                  | 全屏向指定方向滑动指定距离                                 | ALL            |
+| [] 向[] 滑动[]                   | 在指定区域内向指定方向滑动指定距离                         | ALL            |
+| 存在[]的文案                     | 检查页面中存在指定的字符串                                 | ALL            |
+| 不存在[]的文案                   | 检查页面中不存在指定的字符串                               | ALL            |
+| 存在[]的元素                     | 检查页面中存在指定属性的元素                               | ALL            |
+| 不存在[]的元素                   | 检查页面中不存在指定属性的元素                             | ALL            |
+| 元素[]消失                       | 检查页面中指定属性的元素在指定时间内消失                   | App            |
+| 文案[]消失                       | 检查页面中指定的字符串在规定时间内从页面消失               | App            |
+| 文案[] 的属性[] 为 []            | 检查页面中指定文案的指定属性为指定值                       | ALL            |
+| 元素[] 的属性[] 为 []            | 检查页面中指定元素的指定属性为指定值                       | ALL            |
+| 元素[] 位置[] 秒内未变动         | 检查页面中指定元素的位置在指定时间内未发生变化             | App            |
+| [] 的文案为[]                    | 检查页面中指定元素的文案等于指定值                         | ALL            |
+| [] 的文案包含[]                  | 检查页面中指定元素的文案包含指定值                         | ALL            |
+| 回到首页                         | 回到首页                                                   | ALL            |
+| 全屏截图                         | 保存当前屏幕图像                                           | ALL            |
+| 开始录屏                         | 开始录制视频                                               | App            |
+| 开始录屏超时[]                   | 开始录屏并设置超时时间                                     | App            |
+| 结束录屏                         | 结束录制视频                                               | ALL            |
+| 连接设备[]                       | 连接测试设备                                               | App            |
+| 安装APP[]                        | 安装APP                                                    | android        |
+| 删除APP[]                        | 删除APP                                                    | android        |
+| 启动APP[]                        | 启动APP                                                    | App            |
+| 重启APP                          | 重启APP                                                    | App            |
+| 关闭App                          | 关闭App                                                    | App            |
+| 登录账号[] 密码[]                | 使用账号密码进行登录                                       | ALL            |
+| 退出登录                         | 退出系统登录                                               | ALL            |
+| 返回上一页                       | 返回上一页面                                               | Android 、 web |
+| 在[]中向[]查找[]的元素           | 在指定 选择器 的元素内 向指定方向滑动查找 指定选择器的元素 | ALL            |
+| 在[]中选择[]                     | 在web页面下拉框元素中选择指定值                                    | web            |
+| 存在[父选择器]的[子选择器]的元素 | 存在某个父元素，并且该父元素下存在某个子元素               | web            |
+| [父选择器]的[子选择器]的文案为[] | 存在某个父元素，并且该父元素下某个子元素的文案为指定字符串 | web            |
+| \-----                           | \-----                                                     | \-----         |
+
+
 #### 设备操作
 **连接设备[{param}]**
 - 支持平台：Android
@@ -174,7 +219,7 @@ feature文件，也称为功能文件，有两个目的：文档和自动化测�
 
 #### 元素相关
 **存在[字符串{, fuzzyMatch=false, timeout=10}]的文案**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：页面中存在指定的字符串
 - timeout 查找的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 ```js 
@@ -186,7 +231,7 @@ feature文件，也称为功能文件，有两个目的：文档和自动化测�
 ```
 
 **不存在[字符串{, fuzzyMatch=false}]的文案**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：页面中不存在指定的文案
 ```js 
 不存在[机票]的文案
@@ -205,7 +250,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **存在[选择器{, path=false, multiSelector=false, timeout=10}]的元素**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：页面中存在指定 选择器 的元素
 - timeout 查找的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 ```js 
@@ -218,7 +263,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **不存在[选择器{, path=false, multiSelector=false}]的元素**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：页面中不存在指定  选择器 的元素
 ```js
 不存在[text=经济舱]的元素
@@ -240,7 +285,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **[选择器{, path=false, multiSelector=false, timeout=10}]的文案为[字符串{, dealMethod=name}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：指定 选择器 的元素的文案为指定的字符串
 - timeout 查找的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 ```js
@@ -252,7 +297,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **[选择器{, path=false, multiSelector=false, timeout=10}]的文案包含[字符串{, dealMethod=name}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：指定 选择器 的元素的文案包含指定的字符串
 - timeout 查找的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 ```js
@@ -264,7 +309,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **点击文案[字符串{, fuzzyMatch=false, timeout=10, verifyEle=null, verifyIsPath=false, verifyIsMultiSelector=false, verifyTimeout=10, verifyAction=null}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：点击页面上指定的 字符串
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 - verifyEle  点击后如果有局部渲染，使用该属性指定的选择器代表的元素的相关信息判断
@@ -284,7 +329,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **点击[选择器{, path=false, multiSelector=false, timeout=10, verifyEle=null, verifyIsPath=false, verifyIsMultiSelector=false, verifyTimeout=10, verifyAction=null}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义: 点击页面上指定 选择器 的元素   
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 - verifyEle  点击后如果有局部渲染，使用该属性指定的选择器代表的元素的相关信息判断
@@ -304,7 +349,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **文案[字符串{, fuzzyMatch=false, timeout=10}]的属性[属性名{, dealMethod=name}]为{属性值}**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：页面中指定 字符串对应的元素的指定的属性的值为指定的值
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 ```js
@@ -314,7 +359,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **元素[选择器{, path=false, multiSelector=false, timeout=10}]的属性[属性名{, dealMethod=name}]为{属性值}**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：页面中指定 选择器 的元素的指定的 属性的值为指定的 值
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 ```js
@@ -324,7 +369,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **在[选择器{, path=false, multiSelector=false, timeout=10}]中输入[文案{, pocoInput=false, afterInputWait=1}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：在指定选择器的元素中输入指定的文案 
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 - pocoInput: 是否使用 poco 的输入方法，默认使用的是airtest的输入方法， 优先级：默认值 < flybirds_config.json中的“usePocoInput” < 语句中指定
@@ -352,7 +397,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **在[选择器{, path=false, multiSelector=false, timeout=10}]中向{上/下/左/右}查找[选择器{, path=false, multiSelector=false, swipeCount=5, startX=0.5, startY=0.5, distance=0.3, duration=null}]的元素**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：在指定 选择器 的元素内 向指定方向滑动查找 指定选择器的元素
 - timeout 查找“字符串”的超时时间，优先级：默认值 < flybirds_config.json中的“waitEleTimeout” < 语句中指定
 - swipeCount: 滑动查找最大滑动次数，超过这个值的滑动操作后还未在页面中找到指定元素则失败， 优先级：默认值 < flybirds_config.json中的“swipeSearchCount” < 语句中指定
@@ -367,7 +412,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **向{上/下/左/右}查找[选择器{, path=false, multiSelector=false, swipeCount=5, startX=0.5, startY=0.5, distance=0.3, duration=null}]的元素**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：在全屏向指定方向滑动查找 指定选择器的元素
 - swipeCount: 滑动查找最大滑动次数，超过这个值的滑动操作后还未在页面中找到指定元素则失败， 优先级：默认值 < flybirds_config.json中的“swipeSearchCount” < 语句中指定
 - startX: 在全屏中滑动起始坐标的X轴的坐标值，<=1 代表百分比，>1代表像素点
@@ -382,7 +427,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 
 #### 页面屏幕相关
 **跳转到[页面名称]**
-- 支持平台：Android
+- 支持平台：Android、Web
 - 语义：通过schema跳转到指定页面，页面名称在config/schema_url.json 中以  "页面名称: 页面schemaUrl"  的形式维护
 - 由于不同APP内部定义的schema规则可能不同，可能需要对项目`pscript/app/operation.py` 文件中的`schema_deal_rule()`方法进行自定义，参考[issue](https://github.com/ctripcorp/flybirds/issues/8)
 ```js
@@ -390,7 +435,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **页面渲染完成出现元素[选择器{, path=false, multiSelector=false, timeout=10}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：进入新的页面时通过指定 选择器 的元素出现在页面上来判断页面渲染完成
 - timeout 查找的超时时间，优先级：默认值 < flybirds_config.json中的“pageRenderTimeout” < 语句中指定
 ```js
@@ -402,7 +447,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **全屏向{上/下/左/右}滑动[滑动距离{, startX=0.5, startY=0.5, duration=null, readyTime=null}]**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：以全屏为容器向指定 方向 滑动指定 距离
 - startX: 在全屏中滑动起始坐标的X轴的坐标值，<=1 代表百分比，>1代表像素点
 - startY: 在全屏中滑动起始坐标的Y轴的坐标值，<=1 代表百分比，>1代表像素点
@@ -414,12 +459,10 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **点击屏幕位置[{x},{y}]**
+- 支持平台：Android、iOS、Web
 ```js
 点击屏幕位置[200,100]
 ```
-
-#### 录屏&截图
-> 对执行失败的用例，框架会自动录屏&截图，保存在测试报告中
 
 **开始录屏超时[time]**
 - 支持平台：Android
@@ -443,7 +486,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```
 
 **全屏截图**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：截取当前屏幕快照并关联到报告中
 ```js
 全屏截图
@@ -451,7 +494,7 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 
 #### 其它
 **等待[time]秒**
-- 支持平台：Android、iOS
+- 支持平台：Android、iOS、Web
 - 语义：执行暂停指定时间
 ```js
 等待[2]秒
@@ -514,6 +557,7 @@ flybirds run -T -tag
 
 ## 运行前检查
 
+### Android、iOS
 1. 请确保配置的测试设备能够正常连接
     - Android: 执行命令 `adb devices` , 检查设备列表中是否包含测试设备
     - iOS：以`tidevice`库举例，执行命令 `tidevice list`，检查设备列表中是否包含测试设备  
@@ -537,6 +581,23 @@ flybirds run -T -tag
        2. 开启wdaproxy： ```shell tidevice --udid 
        $udid wdaproxy -B $web_driver_angnt_bundle_id -p $port```
 
+### Web
+Web项目，需安装浏览器
+```bash
+# 不带参数的运行将安装默认所有浏览器
+playwright install
+```
+
+```bash
+# 通过提供一个参数来安装特定的浏览器
+playwright install webkit
+```
+
+```bash
+# 查看支持安装的浏览器
+playwright install --help
+```
+
 ## 运行参数
 
 在终端输入以下内容来查看**flybirds**运行项目时支持的操作
@@ -546,6 +607,13 @@ flybirds run --help
 - **run**
 
   执行features目录下所有的feature文件
+
+  ```bash
+  cd {PATH_TO_PROJECT_FOLDER}
+  flybirds run  # 运行所有feature
+  flybirds run -P features/test/android  # 运行所有android feature
+  flybirds run -P features/test/ios # 运行所有ios feature
+  ```
 
 
 - **--path, -P**
@@ -574,12 +642,59 @@ flybirds run --help
   flybirds run --format=json
   ```
 
+- **--define, -D   TEXT(可选)**
+
+​ 传入用户自定义的参数:
+
+作用：覆盖`config`配置文件中的相应配置的值，比如：
+
+```bash 
+# 通过参数切换执行平台Android、iOS、Web
+flybirds run --define platform=web 
+```
+
+- **--rerun  /--no-rerun (可选)**
+
+​ 指定失败的场景是否需要重新运行，默认是 ‘True’ ,失败后会自动重跑。
+
+示例：
+
+```bash
+#失败场景不重跑
+flybirds run --no-rerun 
+```
+
+- **--html/--no-html  (可选)**
+
+​ 指定case 执行完成后是否生成html测试报告，默认是 ‘True’ ,执行完成后自动生成结果测试报告。
+
+示例：
+
+```bash
+#不生成测试报告
+flybirds run --no-html
+```
+
+- **--processes, -p    INTEGER(可选)**
+
+  指定并发执行时开启进程的最大数量。默认是4 。
+
+  **注意：** 此命令只在 **web** 平台执行时有效。
+
+示例：
+
+```bash
+flybirds run --path features -p 5
+```
+
 ## 配置参数
 **提供了丰富的配置项 ｜ [帮助文档](https://github.com/ctripcorp/flybirds/blob/main/docs/demoproject_zhCN.md)**
 
-必须配置项：deviceId packageName。
+Android必须配置项：deviceId、packageName
 
-连接IOS设备时，需要额外配置webDriverAgent、platform。
+IOS必须配置项：platform、deviceId、packageName、webDriverAgent、
+
+Web必须配置项：platform、browserType、headless
 
 ![image](https://user-images.githubusercontent.com/19287139/155323963-cfa0c600-65c2-4314-97a7-b2d5aa482e3e.png)
 
@@ -609,14 +724,7 @@ flybirds run --help
 
 理论上BDD-UI-Testing 可以适用在所有端，比如：APP、Web、小程序。
 
-框架的插件式设计模式，保留了良好的扩展，当前版本只开放了APP端支持，未来会逐步开放更多，下面是两个例子供大家参考。  
-
-**增加web端扩展**
-1. 在`plugins.default`下添加自己的web包 
-2. 添加web对应的实现。比如`page.py,element.py`，如果需要增加其他的插件实现类，只需要在`GlobalContext`类中添加对应的名称。
-3. 在`plugin.event`下添加自己的web包。
-4. 在`event.web`包下重写或者新增类，比如重写`run`事件可以在`plugin.event.web`下面添加"run.py"，具体实现逻辑可参照已有的`run.py`。
-5. 在项目配置文件"flybirdes_config.json"配置 `device_info.platform`值为"web"。
+框架的插件式设计模式，保留了良好的扩展，当前版本开放了APP和Web端支持，未来会逐步开放更多，下面的例子供大家参考。  
 
 **修改当前APP端扩展**
 - 可通过配置"plugin_info.json"对已有的plugins进行修改(只支持修改不支持新增)，比如你希望对plugins下面`ios.app`进行修改：
