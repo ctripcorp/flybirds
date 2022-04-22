@@ -10,7 +10,7 @@
 [![pypi version](https://img.shields.io/pypi/v/flybirds.svg)](https://pypi.python.org/pypi/flybirds)
 [![pyversions](https://img.shields.io/pypi/pyversions/flybirds.svg)](https://pypi.python.org/pypi/flybirds)
 
-> 基于自然语言的，跨端跨框架 BDD UI 自动化测试方案
+> 基于自然语言的，跨端跨框架 BDD UI自动化测试方案
 
 ## 预览
 
