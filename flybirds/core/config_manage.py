@@ -167,7 +167,7 @@ class WebConfig:
 
     def __init__(self, user_data, config):
         web_info = get_config(config, "web_info")
-        if web_info is None:
+        if user_data is None and web_info is None:
             log.warn('[web_info] configuration of web_info is none.')
             # default value
             self.headless = True

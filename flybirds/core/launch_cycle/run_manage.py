@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import base64
 import operator
 import os
 import traceback
@@ -9,6 +8,7 @@ from flybirds.core.config_manage import DeviceConfig
 from flybirds.report.fail_feature_create import rerun_launch
 from flybirds.report.parallel_runner import parallel_run
 from flybirds.utils import flybirds_log as log
+from flybirds.utils.dsl_helper import get_use_define_param
 from flybirds.utils.pkg_helper import load_pkg_by_ns
 
 
@@ -152,14 +152,7 @@ def run_script(run_args):
 
 
 def need_parallel_run(context):
-    use_define = context.get("use_define")
-    user_platform = [i for i in use_define if 'platform=' in i]
-    user_data = {}
-    if len(user_platform) > 0:
-        if len(user_platform) > 1:
-            log.error(f'cannot customize multiple platforms.{user_platform}')
-        value = user_platform[0].split("=", 1)[1]
-        user_data['platform'] = str(base64.b64decode(value), "utf-8")
+    user_data = get_use_define_param(context, 'platform')
     platform = DeviceConfig(user_data, None).platform
     if 'web' == platform.lower():
         return True

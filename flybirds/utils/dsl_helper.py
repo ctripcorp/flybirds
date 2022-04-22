@@ -2,6 +2,7 @@
 """
 dsl helper
 """
+import base64
 import re
 
 import flybirds.utils.flybirds_log as log
@@ -134,3 +135,17 @@ def handle_str(un_handle_str):
 def str2bool(v):
     return v.lower() in ['true', '1', 't', 'y', 'yes', 'yeah', 'yup',
                          'certainly', 'uh-huh']
+
+
+def get_use_define_param(context, param_name):
+    use_define = context.get("use_define")
+    log.info(f'use_define: {use_define}')
+    params = [i for i in use_define if param_name + '=' in i]
+    user_data = {}
+    if len(params) > 0:
+        if len(params) > 1:
+            log.error(f'Cannot customize multiple parameters with the same '
+                      f'name:{params}')
+        value = params[0].split("=", 1)[1]
+        user_data[param_name] = str(base64.b64decode(value), "utf-8")
+    return user_data
