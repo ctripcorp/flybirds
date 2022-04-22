@@ -1,6 +1,8 @@
+import base64
 import json
 import logging
 import multiprocessing
+from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime
 from functools import partial
 from multiprocessing import Pool
@@ -8,6 +10,8 @@ from subprocess import Popen, PIPE
 from timeit import default_timer as timer
 
 import flybirds.utils.flybirds_log as log
+from flybirds.core.config_manage import WebConfig
+from flybirds.utils.dsl_helper import get_use_define_param
 from flybirds.utils.uuid_helper import report_name
 
 
@@ -33,6 +37,57 @@ def create_logger(filename: str):
 logger = create_logger('multiprocessing_features.log')
 
 
+def parallel_run(context):
+    """
+    Parallel Behave Runner
+    """
+    behave_cmd = context.get("cmd_str")
+    feature_path = context.get("feature_path")
+
+    if behave_cmd is None or feature_path is None:
+        raise Exception("[parallel_runner] parse args has error")
+
+    parsed_tags = context.get("parsed_tags")
+
+    if parsed_tags and len(parsed_tags) > 0:
+        # -k, --no-skipped
+        cmd = f'behave {feature_path} {" ".join(parsed_tags)} -d -k -f json ' \
+              f'--no-summary'
+    else:
+        cmd = f'behave {feature_path} -d -k -f json --no-summary'
+    features = get_features_num(cmd)
+
+    log.info('start thread...')
+    with ThreadPoolExecutor(max_workers=3) as t_pool:
+        browser_types = get_browser_types(context)
+        for b_type in browser_types:
+            t_pool.submit(multiplication, b_type, context, features)
+    log.info('all thread done...')
+
+
+def multiplication(browser_type, context, features):
+    log.info('multiplication start')
+    log.info(f'multiplication browser_type:{browser_type}')
+
+    behave_cmd = context.get("cmd_str")
+    feature_path = context.get("feature_path")
+    processes = context.get("processes")
+
+    cur_browser_type = str(base64.b64encode(browser_type.encode('utf-8')),
+                           'utf-8')
+    behave_cmd = behave_cmd + f'  -D cur_browser={cur_browser_type}'
+    log.info(f'cmd str: {behave_cmd}')
+
+    pool = Pool(processes) if len(features) >= processes else Pool(
+        len(features))
+    results = pool.map(
+        partial(execute_parallel_feature, behave_cmd=behave_cmd,
+                feature_path=feature_path), features)
+    pool.close()
+    pool.join()
+    log.info(f'parallel run result: {results}')
+
+
 def execute_parallel_feature(feature, behave_cmd, feature_path):
     """
     Runs features in parallel
@@ -43,8 +98,11 @@ def execute_parallel_feature(feature, behave_cmd, feature_path):
     feature_start_time = datetime.now()
     start_timer = timer()
     file_name = report_name()
+    # file_name 改成时间戳 name_of_feature.chrome.1495298685509.json
     cmd = behave_cmd.replace(feature_path, feature, 1).replace('report.json',
                                                                file_name, 1)
+    log.info(f'cmd str: {cmd}')
+
     p = Popen(cmd, stdout=PIPE, shell=True)
     code = p.wait()
     p.communicate()
@@ -59,35 +117,6 @@ def execute_parallel_feature(feature, behave_cmd, feature_path):
                 f'{end_timer - start_timer};'
                 f'{status}')
     return status
-
-
-def parallel_run(context):
-    """
-    Parallel Behave Runner
-    """
-    behave_cmd = context.get("cmd_str")
-    feature_path = context.get("feature_path")
-
-    if behave_cmd is None or feature_path is None:
-        raise Exception("[parallel_runner] parse args has error")
-    processes = context.get("processes")
-    parsed_tags = context.get("parsed_tags")
-
-    if parsed_tags and len(parsed_tags) > 0:
-        # -k, --no-skipped
-        cmd = f'behave {feature_path} {" ".join(parsed_tags)} -d -k -f json ' \
-              f'--no-summary'
-    else:
-        cmd = f'behave {feature_path} -d -k -f json --no-summary'
-    features = get_features_num(cmd)
-    pool = Pool(processes) if len(features) >= processes else Pool(
-        len(features))
-    results = pool.map(
-        partial(execute_parallel_feature, behave_cmd=behave_cmd,
-                feature_path=feature_path), features)
-    pool.close()
-    pool.join()
-    log.info(f'parallel run result: {results}')
 
 
 def dry_run_parsed_cmd(cmd: str) -> str:
@@ -114,3 +143,24 @@ def get_features_num(cmd: str):
                      })
     log.info(f'features num need to be executed in parallel: {len(features)}')
     return features
+
+
+def get_browser_types(context):
+    user_data = get_use_define_param(context, 'browserType')
+    browser_type = WebConfig(user_data, None).browser_type
+
+    # check browser_type
+    browser_types = browser_type
+    if isinstance(browser_type, str):
+        browser_types = browser_type.split(',')
+    browser_types = list(set(browser_types))
+    temp = []
+    [temp.append(i) for i in browser_types if
+     i in ['chromium', 'firefox', 'webkit']]
+    # add default value
+    if len(temp) == 0:
+        log.warn(
+            f'flybirds did not find a browser that would launch. Now chromium '
+            f'will be launched by default.')
+        temp.append('chromium')
+    return temp

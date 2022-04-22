@@ -54,15 +54,22 @@ class PluginManager:  # pylint: disable=too-few-public-methods
 
         if user_data.get('browserType'):
             browser_type = user_data.get('browserType').strip().lower()
-            if browser_type not in ['chromium', 'firefox', 'webkit']:
-                log.warn(
-                    f'flybirds does not support launch {browser_type}. Now '
-                    f'chromium will be launched by default for testing.')
-                browser_type = "chromium"
-            user_data['browserType'] = browser_type
+            browser_types = browser_type.split(',')
+            browser_types = list(set(browser_types))
+            temp = []
+            [temp.append(i) for i in browser_types if
+             i in ['chromium', 'firefox', 'webkit']]
+            if len(temp) == 0:
+                temp.append('chromium')
+            user_data['browserType'] = ",".join(temp)
 
         log.info(f'[loader] user_data: {user_data}')
         gr.set_value("userData", user_data)
+
+        cur_browser = "chromium"
+        if user_data.get('cur_browser'):
+            cur_browser = user_data.get('cur_browser')
+        gr.set_value("cur_browser", cur_browser)
 
         p_info = PluginConfig(user_data).plugin_info
         if p_info is not None and p_info.__contains__("active"):
