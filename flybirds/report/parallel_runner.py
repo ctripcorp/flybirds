@@ -82,23 +82,24 @@ def multiplication(browser_type, context, features):
         len(features))
     results = pool.map(
         partial(execute_parallel_feature, behave_cmd=behave_cmd,
-                feature_path=feature_path), features)
+                feature_path=feature_path, browser_type=browser_type),
+        features)
     pool.close()
     pool.join()
     log.info(f'parallel run result: {results}')
 
 
-def execute_parallel_feature(feature, behave_cmd, feature_path):
+def execute_parallel_feature(feature, behave_cmd, feature_path, browser_type):
     """
     Runs features in parallel
     :param feature: feature to run
     :param behave_cmd: behave cmd string
     :param feature_path: feature path
+    :param browser_type: browser_type
     """
     feature_start_time = datetime.now()
     start_timer = timer()
-    file_name = report_name()
-    # file_name 改成时间戳 name_of_feature.chrome.1495298685509.json
+    file_name = report_name(feature, browser_type)
     cmd = behave_cmd.replace(feature_path, feature, 1).replace('report.json',
                                                                file_name, 1)
     log.info(f'cmd str: {cmd}')
