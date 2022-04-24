@@ -80,13 +80,7 @@ class RunManage:
                     behave_process.wait()
                     behave_process.communicate()
 
-                run_args = context.get("run_args")
-                need_rerun_args = context.get("need_rerun_args")
-                report_dir_path = context.get("report_dir_path")
-                processes = context.get("processes")
-
-                rerun_launch(need_rerun_args, report_dir_path, run_args,
-                             processes, is_parallel)
+                rerun_launch(context, is_parallel)
 
             except Exception:
                 log.error(

@@ -2,11 +2,13 @@
 """
 fail scenario create rerun
 """
+import base64
 import json
 import os
 import random
 import re
 import shutil
+from concurrent.futures.thread import ThreadPoolExecutor
 from functools import partial
 from multiprocessing import Pool
 from subprocess import Popen
@@ -14,7 +16,7 @@ from subprocess import Popen
 from flybirds.core.config_manage import FlowBehave
 from flybirds.report import json_format_deal
 from flybirds.report.parallel_runner import get_features_num, \
-    execute_parallel_feature
+    execute_parallel_feature, get_browser_types
 from flybirds.report.rerun_params import get_rerun_params
 from flybirds.utils import file_helper
 from flybirds.utils import flybirds_log as log
@@ -76,11 +78,15 @@ class FailScenarioInfo:
             self.description = description
 
 
-def rerun_launch(need_rerun_args, report_dir_path, run_args, processes,
-                 is_parallel):
+def rerun_launch(context, is_parallel):
     """
     start to rerun
     """
+    # get run args
+    run_args = context.get("run_args")
+    need_rerun_args = context.get("need_rerun_args")
+    report_dir_path = context.get("report_dir_path")
+
     # Determine whether the failed scenario needs to be re-run
     flow_behave_config = FlowBehave({}, None)
     rerun_report_dir_path = None
@@ -149,7 +155,7 @@ def rerun_launch(need_rerun_args, report_dir_path, run_args, processes,
                             # 2. execute rerun_cmd_str
                             failed_rerun(
                                 rerun_cmd_str, rerun_feature_path,
-                                processes, is_parallel)
+                                context, is_parallel)
                             # Re-run of the failed scenario ends
                             # Number of reruns -1, actual number of runs +1
                             max_retry_count = max_retry_count - 1
@@ -465,10 +471,10 @@ def set_rerun_info(user_data, gr):
     log.info(f"user data，count:{len(user_data)}")
 
 
-def failed_rerun(rerun_cmd_str: str, rerun_feature_path, processes,
+def failed_rerun(rerun_cmd_str: str, rerun_feature_path, context,
                  is_parallel):
     if is_parallel:
-        parallel_rerun(rerun_cmd_str, rerun_feature_path, processes)
+        parallel_rerun(rerun_cmd_str, rerun_feature_path, context)
     else:
         rerun_behave_process = Popen(
             rerun_cmd_str,
@@ -480,17 +486,42 @@ def failed_rerun(rerun_cmd_str: str, rerun_feature_path, processes,
         rerun_behave_process.communicate()
 
 
-def parallel_rerun(rerun_cmd_str: str, rerun_feature_path, processes):
+def parallel_rerun(rerun_cmd_str: str, rerun_feature_path, context):
     log.info('parallel_rerun start!')
     dry_cmd = f'behave {rerun_feature_path} -d -k -f json --no-summary'
     features = get_features_num(dry_cmd)
     log.info(f'[parallel_rerun] features num: {len(features)}')
 
+    context['rerun_cmd_str'] = rerun_cmd_str
+    context['rerun_feature_path'] = rerun_feature_path
+
+    log.info('start rerun thread...')
+    with ThreadPoolExecutor(max_workers=3) as t_pool:
+        browser_types = get_browser_types(context)
+        for b_type in browser_types:
+            t_pool.submit(rerun_multiplication, b_type, context, features)
+    log.info('all rerun thread done...')
+
+
+def rerun_multiplication(browser_type, context, features):
+    log.info('rerun_multiplication start')
+    log.info(f'rerun_multiplication browser_type:{browser_type}')
+
+    rerun_cmd_str = context.get("rerun_cmd_str")
+    rerun_feature_path = context.get("rerun_feature_path")
+    processes = context.get("processes")
+
+    cur_browser_type = str(base64.b64encode(browser_type.encode('utf-8')),
+                           'utf-8')
+    rerun_cmd_str = rerun_cmd_str + f'  -D cur_browser={cur_browser_type}'
+    log.info(f'rerun_cmd_str: {rerun_cmd_str}')
+
     pool = Pool(processes) if len(features) >= processes else Pool(
         len(features))
     results = pool.map(
         partial(execute_parallel_feature, behave_cmd=rerun_cmd_str,
-                feature_path=rerun_feature_path), features)
+                feature_path=rerun_feature_path, browser_type=browser_type),
+        features)
     pool.close()
     pool.join()
     log.info(f'[parallel_rerun] result: {results}')
