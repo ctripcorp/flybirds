@@ -194,7 +194,8 @@ def rerun_launch(context, is_parallel):
         f"Start processing the json report. report_dir_path: "
         f"[{report_dir_path}],rerun_report_dir_path:[{rerun_report_dir_path}]"
     )
-    json_format_deal.parse_json_data(report_dir_path, rerun_report_dir_path)
+    json_format_deal.parse_json_data(report_dir_path, rerun_report_dir_path,
+                                     is_parallel)
 
 
 def create_rerun(report_dir, rerun_dir, run_count, max_fail_count=1.0):

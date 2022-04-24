@@ -12,7 +12,7 @@ from flybirds.utils import file_helper
 from flybirds.utils import flybirds_log as log
 
 
-def parse_json_data(report_dir, rerun_report_dir=None):
+def parse_json_data(report_dir, rerun_report_dir=None, is_parallel=False):
     """
     Parse the screenshot address in the behave json report,
     and use it when converting
@@ -23,7 +23,7 @@ def parse_json_data(report_dir, rerun_report_dir=None):
 
     if rerun_report_dir is not None:
         # get the array of all rerun json under the rerun_report_dir
-        rerun_features = get_rerun_feature(rerun_report_dir)
+        rerun_features = get_rerun_feature(rerun_report_dir, is_parallel)
         log.info(
             "parse_json_data move_rerun_screen, report_dir_path: "
             f"{report_dir}, rerun_report_dir_path: {rerun_report_dir}"
@@ -52,6 +52,13 @@ def parse_json_data(report_dir, rerun_report_dir=None):
                                 isinstance(feature["elements"], list)
                                 and len(feature["elements"]) > 0
                         ):
+                            if is_parallel and feature.get('metadata') is None:
+                                browser_name = file_item.split('.')[1]
+                                feature["metadata"] = [
+                                    {"name": "Browser",
+                                     "value": browser_name
+                                     }
+                                ]
                             cur_features.append(feature)
                     cur_json.extend(cur_features)
 
@@ -122,7 +129,7 @@ def parse_feature(feature, rerun_report_dir):
         feature["elements"] = cur_scenarios
 
 
-def get_rerun_feature(report_dir):
+def get_rerun_feature(report_dir, is_parallel):
     """
     Get all the results of rerun after failure
     """
@@ -138,6 +145,15 @@ def get_rerun_feature(report_dir):
                     report_json = file_helper.get_json_from_file_path(
                         file_path
                     )
+                    if isinstance(report_json, list):
+                        for feature in report_json:
+                            if is_parallel and feature.get('metadata') is None:
+                                browser_name = file_item.split('.')[1]
+                                feature["metadata"] = [
+                                    {"name": "Browser",
+                                     "value": browser_name
+                                     }
+                                ]
                     if isinstance(report_json, list) and len(report_json) > 0:
                         result.extend(report_json)
                 except Exception:
