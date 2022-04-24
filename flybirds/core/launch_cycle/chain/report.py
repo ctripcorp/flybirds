@@ -5,8 +5,8 @@ report generate
 import traceback
 
 from flybirds.core.launch_cycle.run_manage import RunManage
-from flybirds.utils.flybirds_log import logger
 from flybirds.report.gen_factory import GenFactory
+from flybirds.utils.flybirds_log import logger
 
 
 class OnGenerate:
@@ -44,9 +44,11 @@ class OnGenerate:
         generate logical
         """
         try:
+            logger.info("start generate report")
             report_path = context["report_dir_path"]
             gen_type = context["report_format"]
-            GenFactory.gen(gen_type, report_path)
+            platform = context["cur_platform"]
+            GenFactory.gen(gen_type, report_path, platform)
         except Exception:
             logger.error(
                 f"report task execute error: {traceback.format_exc()}")

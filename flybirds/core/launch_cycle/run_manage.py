@@ -154,6 +154,7 @@ def run_script(run_args):
 def need_parallel_run(context):
     user_data = get_use_define_param(context, 'platform')
     platform = DeviceConfig(user_data, None).platform
+    context['cur_platform'] = platform
     if 'web' == platform.lower():
         return True
     return False
