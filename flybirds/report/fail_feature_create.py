@@ -16,7 +16,7 @@ from subprocess import Popen
 from flybirds.core.config_manage import FlowBehave
 from flybirds.report import json_format_deal
 from flybirds.report.parallel_runner import get_features_num, \
-    execute_parallel_feature, get_browser_types
+    execute_parallel_feature
 from flybirds.report.rerun_params import get_rerun_params
 from flybirds.utils import file_helper
 from flybirds.utils import flybirds_log as log
@@ -498,7 +498,7 @@ def parallel_rerun(rerun_cmd_str: str, rerun_feature_path, context):
 
     log.info('start rerun thread...')
     with ThreadPoolExecutor(max_workers=3) as t_pool:
-        browser_types = get_browser_types(context)
+        browser_types = context.get('browser_types')
         for b_type in browser_types:
             t_pool.submit(rerun_multiplication, b_type, context, features)
     log.info('all rerun thread done...')

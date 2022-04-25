@@ -164,4 +164,5 @@ def get_browser_types(context):
             f'flybirds did not find a browser that would launch. Now chromium '
             f'will be launched by default.')
         temp.append('chromium')
+    context['browser_types'] = temp
     return temp
