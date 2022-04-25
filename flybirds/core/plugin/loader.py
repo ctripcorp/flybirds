@@ -81,10 +81,7 @@ class PluginManager:  # pylint: disable=too-few-public-methods
             raise Exception(
                 f"not exist this plugin {GlobalContext.active_plugin}"
             )
-        if user_data.get('platform'):
-            GlobalContext.platform = user_data.get('platform')
-        else:
-            GlobalContext.platform = DeviceConfig(user_data, None).platform
+        GlobalContext.platform = DeviceConfig(user_data, None).platform
         log.info(
             f"[loader] run platform: {GlobalContext.platform}")
         plugin_manager = DirectoryPluginManager()
