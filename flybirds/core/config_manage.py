@@ -51,6 +51,7 @@ class ConfigManage:
             "Process control configuration information",
             str(self.flow_behave.__dict__),
         )
+        self.ele_locator_info = EleLocator()
 
 
 def get_config(config, name):
@@ -499,3 +500,18 @@ class RunConfig:
 
         run_at = user_data.get("run_at", "local")
         self.run_at = run_at
+
+
+class EleLocator:
+    """
+    element locator config
+    """
+
+    def __init__(self):
+        ele_locator_path = os.path.join(
+            os.getcwd(), "config", "ele_locator.json"
+        )
+        if not os.path.exists(ele_locator_path):
+            raise Exception(
+                f"[EleLocator] cannot find path: {ele_locator_path}")
+        self.all_ele_locator = file_helper.get_json_from_file(ele_locator_path)

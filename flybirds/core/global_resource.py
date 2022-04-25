@@ -236,3 +236,20 @@ def get_web_info_value(key, def_value=None):
         if value is not None:
             return value
     return def_value
+
+
+def get_ele_locator(key):
+    """
+    Get the configuration value of the element locator for the current
+    runtime platform
+    """
+    platform = get_platform().lower()
+    platform_ele_locators = _global_dict[
+        "configManage"].ele_locator_info.all_ele_locator.get(platform)
+    if platform_ele_locators is None:
+        raise Exception(
+            f"the ele_locator.json has no element locator configuration "
+            f"for {platform}")
+    if platform_ele_locators.get(key) is not None:
+        return platform_ele_locators.get(key)
+    return key

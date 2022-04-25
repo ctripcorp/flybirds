@@ -2,6 +2,7 @@
 """
 app base step class
 """
+import flybirds.core.global_resource as gr
 import flybirds.core.plugin.plugins.default.step.app as step_app
 import flybirds.core.plugin.plugins.default.step.attr as step_attr
 import flybirds.core.plugin.plugins.default.step.click as step_click
@@ -25,13 +26,16 @@ class AppBaseStep:
     name = "app_base_step"
 
     def init_device(self, context, param=None):
-        step_app.init_device(context, param)
+        param1 = gr.get_ele_locator(param)
+        step_app.init_device(context, param1)
 
     def connect_device(self, context, param):
-        step_app.connect_device(context, param)
+        param1 = gr.get_ele_locator(param)
+        step_app.connect_device(context, param1)
 
     def start_app(self, context, param):
-        step_app.start_app(context, param)
+        param1 = gr.get_ele_locator(param)
+        step_app.start_app(context, param1)
 
     def restart_app(self, context):
         step_app.restart_app(context)
@@ -40,16 +44,20 @@ class AppBaseStep:
         step_app.stop_app(context)
 
     def text_attr_equal(self, context, param1, param2, param3):
-        step_attr.text_attr_equal(context, param1, param2, param3)
+        selector = gr.get_ele_locator(param1)
+        step_attr.text_attr_equal(context, selector, param2, param3)
 
     def ele_attr_equal(self, context, param1, param2, param3):
-        step_attr.ele_attr_equal(context, param1, param2, param3)
+        selector = gr.get_ele_locator(param1)
+        step_attr.ele_attr_equal(context, selector, param2, param3)
 
     def click_ele(self, context, param):
-        step_click.click_ele(context, param)
+        selector = gr.get_ele_locator(param)
+        step_click.click_ele(context, selector)
 
     def click_text(self, context, param):
-        step_click.click_text(context, param)
+        selector = gr.get_ele_locator(param)
+        step_click.click_text(context, selector)
 
     def click_coordinates(self, context, x, y):
         step_click.click_coordinates(context, x, y)
@@ -64,16 +72,21 @@ class AppBaseStep:
         step_common.prev_fail_scenario_relevance(context, param1, param2)
 
     def ele_input(self, context, param1, param2):
-        ele_input(context, param1, param2)
+        selector = gr.get_ele_locator(param1)
+        ele_input(context, selector, param2)
 
     def swipe_to_ele(self, context, param1, param2, param3):
-        step_adjust.swipe_to_ele(context, param1, param2, param3)
+        p_selector = gr.get_ele_locator(param1)
+        c_selector = gr.get_ele_locator(param3)
+        step_adjust.swipe_to_ele(context, p_selector, param2, c_selector)
 
     def full_screen_swipe_to_ele_aaa(self, context, param1, param2):
-        step_adjust.full_screen_swipe_to_ele_aaa(context, param1, param2)
+        selector = gr.get_ele_locator(param2)
+        step_adjust.full_screen_swipe_to_ele_aaa(context, param1, selector)
 
     def position_not_change(self, context, param1, param2):
-        position_not_change(context, param1, param2)
+        selector = gr.get_ele_locator(param1)
+        position_not_change(context, selector, param2)
 
     def start_screen_record_timeout(self, context, param):
         step_record.start_screen_record_timeout(context, param)
@@ -85,40 +98,51 @@ class AppBaseStep:
         step_record.stop_screen_record(context)
 
     def ele_swipe(self, context, param1, param2, param3):
-        step_swipe.ele_swipe(context, param1, param2, param3)
+        selector = gr.get_ele_locator(param1)
+        step_swipe.ele_swipe(context, selector, param2, param3)
 
     def full_screen_swipe(self, context, param1, param2):
         step_swipe.full_screen_swipe(context, param1, param2)
 
     def wait_text_exist(self, context, param):
-        step_verify.wait_text_exist(context, param)
+        selector = gr.get_ele_locator(param)
+        step_verify.wait_text_exist(context, selector)
 
     def text_not_exist(self, context, param):
-        step_verify.text_not_exist(context, param)
+        selector = gr.get_ele_locator(param)
+        step_verify.text_not_exist(context, selector)
 
     def wait_text_disappear(self, context, param):
-        step_verify.wait_text_disappear(context, param)
+        selector = gr.get_ele_locator(param)
+        step_verify.wait_text_disappear(context, selector)
 
     def wait_ele_exit(self, context, param):
-        step_verify.wait_ele_exit(context, param)
+        selector = gr.get_ele_locator(param)
+        step_verify.wait_ele_exit(context, selector)
 
     def ele_not_exit(self, context, param):
-        step_verify.ele_not_exit(context, param)
+        selector = gr.get_ele_locator(param)
+        step_verify.ele_not_exit(context, selector)
 
     def wait_ele_disappear(self, context, param):
-        step_verify.wait_ele_disappear(context, param)
+        selector = gr.get_ele_locator(param)
+        step_verify.wait_ele_disappear(context, selector)
 
     def ele_text_equal(self, context, param1, param2):
-        step_verify.ele_text_equal(context, param1, param2)
+        selector = gr.get_ele_locator(param1)
+        step_verify.ele_text_equal(context, selector, param2)
 
     def ele_text_container(self, context, param1, param2):
-        step_verify.ele_text_container(context, param1, param2)
+        selector = gr.get_ele_locator(param1)
+        step_verify.ele_text_container(context, selector, param2)
 
     def wait_ele_appear(self, context, param):
-        step_verify.wait_ele_appear(context, param)
+        selector = gr.get_ele_locator(param)
+        step_verify.wait_ele_appear(context, selector)
 
     def exist_ele(self, context, param):
-        step_verify.exist_ele(context, param)
+        selector = gr.get_ele_locator(param)
+        step_verify.exist_ele(context, selector)
 
     def to_app_home(self, context):
         to_app_home(context)
