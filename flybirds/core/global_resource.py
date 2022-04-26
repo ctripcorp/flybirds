@@ -4,6 +4,8 @@ hold global config
 """
 import logging
 
+import flybirds.utils.flybirds_log as log
+
 _global_dict = {}
 
 
@@ -243,13 +245,18 @@ def get_ele_locator(key):
     Get the configuration value of the element locator for the current
     runtime platform
     """
-    platform = get_platform().lower()
-    platform_ele_locators = _global_dict[
-        "configManage"].ele_locator_info.all_ele_locator.get(platform)
-    if platform_ele_locators is None:
-        raise Exception(
+    ele_locator = _global_dict[
+        "configManage"].ele_locator_info.all_ele_locator.get(key)
+    if ele_locator is None:
+        log.info(
             f"the ele_locator.json has no element locator configuration "
-            f"for {platform}")
-    if platform_ele_locators.get(key) is not None:
-        return platform_ele_locators.get(key)
-    return key
+            f"for [{key}]")
+        return key
+    if isinstance(ele_locator, str):
+        return ele_locator
+    platform = get_platform().lower()
+    if ele_locator.get(platform) is None:
+        raise Exception(
+            f"The [{key}] has no element locator configuration for the"
+            f" [{platform}] platform in ele_locator.json")
+    return ele_locator.get(platform)
