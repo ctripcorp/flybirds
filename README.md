@@ -12,9 +12,9 @@
 
 > 基于自然语言的，跨端跨框架 BDD UI自动化测试方案
 
-## 预览
+## 架构
 
-![clip](https://raw.githubusercontent.com/wiki/ctripcorp/flybirds/images/tripflybirds.gif)
+![Arc](docs/flybirds.png)
 
 ## Enjoying this?
 
