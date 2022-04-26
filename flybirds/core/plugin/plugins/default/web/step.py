@@ -19,8 +19,6 @@ class Step:
 
     name = "web_step"
 
-    # todo init step
-
     @classmethod
     def jump_to_page(cls, context, param):
         log.info(f'web jump_to_page. param: {param}')
