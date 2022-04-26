@@ -16,6 +16,9 @@ def install_app(context, param=None):
 
 @step("delete app[{param}]")
 def uninstall_app(context, param=None):
+    """
+    uninstall app
+    """
     (param_1,) = get_params(context, (param, "param"))
     g_Context.step.uninstall_app(context, param_1)
 
