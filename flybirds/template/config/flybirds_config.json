@@ -14,7 +14,7 @@
   },
   "web_info": {
     "headless": true,
-    "browserType": "%{{browserType}}",
+    "browserType": [],
     "defaultTimeout": 30
   },
   "flow_behave": {

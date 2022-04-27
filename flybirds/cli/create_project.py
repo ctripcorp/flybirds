@@ -33,9 +33,11 @@ def create_demo():
     }
     project_name = typer.prompt("Please input your project name>>")
     user_dict['project_name'] = project_name
-    test_platform = typer.prompt(
-        "Please input your test platform?(Android/IOS/Web)"
-    )
+    platform_start = "PPlease input your test platform? "
+    platform_ending = typer.style("(Android/IOS/Web)", fg=typer.colors.CYAN,
+                                  bold=True)
+    p_message = platform_start + platform_ending
+    test_platform = typer.prompt(p_message)
     if test_platform is None or test_platform.strip().lower() not in [
             'android', 'ios', 'web']:
         test_platform = 'android'
@@ -85,14 +87,26 @@ def create_demo():
                 "You can configure your packageName later in the project's"
                 " flybirds_config.json file.", fg=typer.colors.YELLOW)
     if test_platform == 'web':
-        browser_type = typer.prompt(
-            "Please input your test browserType?(chromium/firefox/webkit)"
-        )
-        if browser_type is None or browser_type.strip().lower() not in [
-                'chromium', 'firefox', 'webkit']:
-            browser_type = 'chromium'
-        browser_type = browser_type.strip().lower()
-        user_dict['browser_type'] = browser_type
+        message_start = "Please enter the number represented by the " \
+                        "browserType you want to test? Multiple browsers are " \
+                        "separated by commas(,)."
+        ending = typer.style("(1:chromium  2:firefox  3:webkit)",
+                             fg=typer.colors.CYAN, bold=True)
+        message = message_start + ending
+        out_index = typer.prompt(message)
+        index_arr = out_index.strip().split(',')
+        browser_dict = {
+            '1': "chromium",
+            '2': "firefox",
+            '3': "webkit"
+        }
+        browser_types = []
+        [browser_types.append(browser_dict.get(i)) for i in index_arr if
+         i in browser_dict.keys()]
+        # add default value
+        if len(browser_types) < 1:
+            browser_types.append('chromium')
+        user_dict['browser_type'] = browser_types
         headless = typer.confirm(
             "Do you want to launch browser in headless mode?")
         user_dict['headless'] = headless
@@ -187,9 +201,9 @@ def copy_from_template(progress, user_dict):
     # modify browserType
     browser_type = user_dict.get('browser_type')
     if browser_type is not None:
-        replace_file_content(
+        update_json_data(
             os.path.join(target_path, "config/flybirds_config.json"),
-            "browserType",
+            "web_info.browserType",
             browser_type,
         )
     progress.update(100)
