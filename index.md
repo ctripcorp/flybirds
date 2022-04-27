@@ -14,7 +14,7 @@ Flybirds是一套基于BDD模式的前端UI自动化测试框架，提供了一�
 * 提供cli脚手架，快速搭建项目
 * 提供html报告 
 
-![architecture](https://raw.githubusercontent.com/wiki/ctripcorp/flybirds/images/architecture.png)
+![architecture](https://flybirds.readthedocs.io/zh_CN/latest/_images/flybirds.png)
 
 ## 环境要求
 

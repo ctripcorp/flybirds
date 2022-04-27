@@ -1,0 +1,52 @@
+{
+  "app_info": {
+    "packageName": "%{{packageName}}",
+    "packagePath": "https://download2.ctrip.com/html5/Ctrip_V8.43.0_SIT4-100053_Product_9725895.apk",
+    "overwriteInstallation": false,
+    "uniqueTag": "",
+    "defaultUser": null,
+    "defaultPassword": null
+  },
+  "device_info": {
+    "deviceId": "%{{deviceId}}",
+    "platform": "%{{platform}}",
+    "webDriverAgent": "%{{webDriverAgent}}"
+  },
+  "web_info": {
+    "headless": true,
+    "browserType": "%{{browserType}}",
+    "defaultTimeout": 30
+  },
+  "flow_behave": {
+    "beforeRunPage": "restartApp",
+    "scenarioFailPage": "restartApp",
+    "scenarioSuccessPage": "None",
+    "beforeRunLogin": false,
+    "failScreenRecord": true,
+    "scenarioScreenRecordTime": 120,
+    "failRerun": false,
+    "maxFailRerunCount": 1.0,
+    "maxRetryCount": 1
+  },
+  "frame_info": {
+    "waitEleTimeout": 35,
+    "waitEleDisappear": 10,
+    "clickVerifyTimeout": 15,
+    "useSwipeDuration": false,
+    "swipeDuration": 6,
+    "usePocoInput": true,
+    "afterInputWait": 1,
+    "useSearchSwipeDuration": false,
+    "searchSwipeDuration": 1,
+    "swipeSearchCount": 5,
+    "swipeSearchDistance": 0.3,
+    "pageRenderTimeout": 65,
+    "appStartTime": 6,
+    "swipeReadyTime": 3,
+    "verifyPosNotChangeCount": 5,
+    "screenRecordTime": 90,
+    "useSnap": true
+  },
+  "report": {},
+  "log": {}
+}

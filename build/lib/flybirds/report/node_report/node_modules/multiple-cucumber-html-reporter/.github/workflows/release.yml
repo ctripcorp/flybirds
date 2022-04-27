@@ -1,0 +1,45 @@
+name: Manual NPM Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseType:
+        description: 'Release type - major, minor or patch'
+        required: true
+        default: 'patch'
+      distTag:
+        description: 'NPM tag (e.g. use "next" to release a test version)'
+        required: true
+        default: 'latest'
+
+env:
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: 'main'
+          fetch-depth: 0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: NPM Setup
+        run: |
+          npm set registry "https://registry.npmjs.org/"
+          npm set //registry.npmjs.org/:_authToken $NPM_TOKEN
+          npm whoami
+      - name: Git Setup
+        run: |
+          git config user.name $GITHUB_ACTOR
+          git config user.email gh-actions-${GITHUB_ACTOR}@github.com
+          git remote add gh-origin https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+      - name: Install Dependencies
+        run: npm ci
+      - name: Release
+        run: npm run release.ci -- ${{github.event.inputs.releaseType}}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

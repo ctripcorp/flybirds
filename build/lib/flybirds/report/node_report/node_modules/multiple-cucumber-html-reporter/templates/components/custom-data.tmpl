@@ -1,0 +1,32 @@
+<% if (suite.customData) { %>
+<div class="x_title">
+    <h2><% if (suite.customData.title) { %><%= suite.customData.title %><% } else { %>Custom data title<% } %></h2>
+    <ul class="nav navbar-right panel_toolbox">
+        <li>
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+        </li>
+    </ul>
+    <div class="clearfix"></div>
+</div>
+<div class="x_content">
+    <div class="dashboard-widget-content">
+        <table class="quick-list">
+            <% if (suite.customData.data) { %>
+                <% suite.customData.data.forEach((row)=>{ %>
+                <tr>
+                    <td class="meta-data-title"><%= row.label %></td>
+                    <td class="meta-data-data"><%= row.value %></td>
+                </tr>
+                <% }); %>
+            <% } else { %>
+            <tr>
+                <td class="meta-data-title">Missing</td>
+                <td class="meta-data-data">No custom data provided</td>
+            </tr>
+            <% } %>
+        </table>
+    </div>
+</div>
+<% } %>

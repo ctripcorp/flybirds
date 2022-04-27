@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: flybirds
+Version: 0.2.0
+Summary: BDD-driven natural language automated testing framework
+Home-page: https://github.com/ctripcorp/flybirds
+Author: trip_flight
+Author-email: flybirds_support@trip.com
+License: MIT license
+Description: BDD-driven natural language automated testing framework, present by Trip Flight
+Keywords: automation,automated-test,bdd,framework,android,ios,behave
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9

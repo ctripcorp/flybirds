@@ -1,0 +1,33 @@
+name: multiple-cucumber-html-reporter
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+defaults:
+  run:
+    working-directory: ./
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+            node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        working-directory: ./
+        run: npm ci
+      - name: Run Unit Tests and generate coverage report
+        working-directory: ./
+        run: npm run unit.test.coverage

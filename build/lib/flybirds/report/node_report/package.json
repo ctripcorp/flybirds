@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "multiple-cucumber-html-reporter": "^1.18.3",
+    "opn": "^6.0.0"
+  }
+}

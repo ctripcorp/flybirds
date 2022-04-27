@@ -1,0 +1,4 @@
+
+    [console_scripts]
+    flybirds = flybirds.launcher:main
+    

@@ -1,0 +1,90 @@
+<div class="x_title">
+    <h2>Metadata</h2>
+    <ul class="nav navbar-right panel_toolbox">
+        <li>
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+        </li>
+    </ul>
+    <div class="clearfix"></div>
+</div>
+<div class="x_content">
+    <div class="dashboard-widget-content">
+        <ul class="quick-list">
+            <li>
+                <span class="meta-data-title">
+                    <i class="fa fa-desktop fa-lg"></i>
+                    <i class="fa fa-mobile fa-lg"></i>
+                </span>
+                <span class="meta-data-data">
+                    <% var deviceType; %>
+                    <% if (['android','ios'].indexOf(metadata.platform.name.toLowerCase()) > -1 ) { %>
+                    <% deviceType = 'mobile'; %>
+                    <% } else if (['windows', 'osx', 'linux', 'ubuntu'].indexOf(metadata.platform.name.toLowerCase()) > -1) { %>
+                    <% deviceType = 'desktop'; %>
+                    <% } else { %>
+                    <% deviceType = 'question-circle not-defined-color'; %>
+                    <% } %>
+                    <i class="fa fa-<%= deviceType %> fa-lg">
+                        <span><%= deviceType %></span>
+                    </i>
+                </span>
+            </li>
+            <li>
+                <span class="meta-data-title">Device</span>
+                <span class="meta-data-data"><%= metadata.device %></span>
+            </li>
+            <li>
+                <span class="meta-data-title">OS</span>
+                <span class="meta-data-data">
+                    <% var platformName; %>
+                    <% if (metadata.platform.name.toLowerCase() === 'ios' || metadata.platform.name.toLowerCase() === 'osx') { %>
+                    <% platformName = 'apple'; %>
+                    <% } else if (metadata.platform.name.toLowerCase() === 'android') { %>
+                    <% platformName = 'android'; %>
+                    <% } else if (metadata.platform.name.toLowerCase() === 'windows') { %>
+                    <% platformName = 'windows'; %>
+                    <% } else if (metadata.platform.name.toLowerCase() === 'ubuntu' || metadata.platform.name.toLowerCase() === 'linux') { %>
+                    <% platformName = 'linux'; %>
+                    <% } else { %>
+                    <% platformName = 'question-circle not-defined-color'; %>
+                    <% } %>
+                    <i class="fa fa-<%= platformName%> fa-lg">
+                        <span><%= platformName %></span>
+                    </i>
+                    <%= metadata.platform.version %>
+                </span>
+            </li>
+            <% if (metadata.app) { %>
+            <li>
+                <span class="meta-data-title">App</span>
+                <span class="meta-data-data">
+                    <%= metadata.app.name %> V: <%= metadata.app.version %>
+                </span>
+            </li>
+            <% } %>
+            <% if (metadata.browser) { %>
+            <li>
+                <span class="meta-data-title">Browser</span>
+                <span class="meta-data-data">
+                    <% var browserIcon; %>
+                    <% if (['firefox', 'safari', 'chrome'].indexOf(metadata.browser.name.toLowerCase()) > -1) { %>
+                    <% browserIcon = metadata.browser.name.toLowerCase(); %>
+                    <% } else if (metadata.browser.name.toLowerCase() === 'edge' || metadata.browser.name.toLowerCase() === 'microsoftedge'){ %>
+                    <% browserIcon= "edge"; %>
+                    <% } else if (metadata.browser.name.toLowerCase() === 'internet explorer'){ %>
+                    <% browserIcon= "internet-explorer"; %>
+                    <% } else { %>
+                    <% browserIcon = 'question-circle not-defined-color'; %>
+                    <% } %>
+                    <i class="fa fa-<%= browserIcon %> fa-lg">
+                        <span><%= metadata.browser.name.toLowerCase() %></span>
+                    </i>
+                    <%= metadata.browser.version %>
+                </span>
+            </li>
+            <% } %>
+        </ul>
+    </div>
+</div>
