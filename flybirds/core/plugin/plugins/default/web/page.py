@@ -27,7 +27,8 @@ class Page:
     @staticmethod
     def init_page():
         browser = gr.get_value('browser')
-        context = browser.new_context(record_video_dir="videos")
+        context = browser.new_context(record_video_dir="videos",
+                                      ignore_https_errors=True)
         default_timeout = gr.get_web_info_value("default_time_out", 30)
         context.set_default_timeout(float(default_timeout) * 1000)
         page = context.new_page()
