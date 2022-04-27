@@ -14,7 +14,7 @@
 
 ## 架构
 
-![Arc](docs/flybirds.png)
+![Arc](https://flybirds.readthedocs.io/zh_CN/latest/_images/flybirds.png)
 
 ## Enjoying this?
 
