@@ -1,0 +1,13 @@
+# generated files
+
+.idea/
+.venv/
+.vscode/
+flybird.egg-info
+flybirds.egg-info
+build
+dist
+jenkins
+**/__pycache__
+.DS_Store
+/venv/
