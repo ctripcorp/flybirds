@@ -3,7 +3,7 @@
 
 
    Scenario: text is the same
-     When go to url[memberPage]
+     When go to url[locatorPage]
      And  page rendering complete appears element[元素4]
      And  in[元素4]input[文案2]
      And  wait[5]seconds

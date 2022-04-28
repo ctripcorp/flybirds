@@ -1,5 +1,6 @@
 {
   "memberPage": "/memberpage",
+  "locatorPage": "https://www.baidu.com/",
   "百度": "https://www.baidu.com/",
   "携程": "https://www.ctrip.com/",
   "列表页": "https://spa6.scrape.center/",
