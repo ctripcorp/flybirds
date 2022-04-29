@@ -33,7 +33,7 @@ def create_demo():
     }
     project_name = typer.prompt("Please input your project name>>")
     user_dict['project_name'] = project_name
-    platform_start = "PPlease input your test platform? "
+    platform_start = "Please input your test platform? "
     platform_ending = typer.style("(Android/IOS/Web)", fg=typer.colors.CYAN,
                                   bold=True)
     p_message = platform_start + platform_ending
