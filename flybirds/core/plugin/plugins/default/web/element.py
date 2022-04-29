@@ -79,10 +79,10 @@ class Element:
         selector_str = param_dict["selector"]
         selector_node = self.page.query_selector(selector_str)
         if selector_node is None:
-            log.warn(
-                '[get_ele_handle] has not find element by[{selector_str}],now '
-                'try to find by text.')
             if 'text=' not in selector_str:
+                log.warn(
+                    f'[get_ele_handle] has not find element by[{selector_str}'
+                    f'], now try to find by text.')
                 selector_str = 'text=' + selector_str
                 selector_node = self.page.query_selector(selector_str)
                 if selector_node is None:
