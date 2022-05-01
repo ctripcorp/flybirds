@@ -29,7 +29,7 @@ def create_demo():
         'package_name': "ctrip.android.view",
         'web_driver_agent': "com.fd.test.WebDriverAgentLib.xctrunner",
         'headless': True,
-        'browser_type': 'chromium'
+        'browser_type': ['chromium']
     }
     project_name = typer.prompt("Please input your project name>>")
     user_dict['project_name'] = project_name
