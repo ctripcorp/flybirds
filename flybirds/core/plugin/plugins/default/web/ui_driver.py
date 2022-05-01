@@ -7,7 +7,6 @@ from playwright.sync_api import sync_playwright
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
-from flybirds.core.global_context import GlobalContext
 
 __open__ = ["UIDriver"]
 
@@ -18,11 +17,10 @@ class UIDriver:
     name = "web_ui_driver"
 
     @staticmethod
-    def init_browser():
+    def init_driver():
         try:
             play_wright = sync_playwright().start()
             gr.set_value("playwright", play_wright)
-            GlobalContext.web_driver_instance = play_wright
 
             browser_val = gr.get_value("cur_browser")
             browser_type = getattr(play_wright, browser_val)
@@ -36,7 +34,7 @@ class UIDriver:
             log.error('Init browser has error! Error msg is:', str(e))
 
     @staticmethod
-    def close_browser():
+    def close_driver():
         play_wright = gr.get_value('playwright')
         browser = gr.get_value('browser')
         page_obj = gr.get_value('plugin_page')

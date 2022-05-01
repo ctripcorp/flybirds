@@ -29,10 +29,10 @@ class OnBefore:
         """
         init browser
         """
-        # get the globally defined poco object
-        play_wright, browser = ui_driver.init_browser()
+        play_wright, browser = ui_driver.init_driver()
         context.play_wright = play_wright
         context.browser = browser
+        GlobalContext.ui_driver_instance = play_wright
         log.info("playwright object initialization completed")
 
     @staticmethod
@@ -58,7 +58,7 @@ class OnBefore:
     @staticmethod
     def run(context):
         try:
-            log.info('[web] OnBefore run hook!')
+            log.info('[web run] OnBefore run event!')
             OnBefore.init_ui_driver(context)
             OnBefore.init_ui_page(context)
 
@@ -89,11 +89,9 @@ class OnAfter:
 
     @staticmethod
     def run(context):
-        log.info('[web] OnAfter run hook!')
-        """
-        close screen record
-        """
-        ui_driver.close_browser()
+        log.info('[web run] OnAfter run event!')
+        # close browser
+        ui_driver.close_driver()
 
         # hook extend by tester
         after_all_extend = launch_helper.get_hook_file("after_all_extend")

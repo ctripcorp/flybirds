@@ -43,7 +43,6 @@ class GlobalContext:
     language = "zh-CN"
     device_driver = None
     ui_driver_instance = None
-    web_driver_instance = None
     active_plugin = "default"
     connector = None
     current_local = local()

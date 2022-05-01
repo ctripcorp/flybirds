@@ -37,7 +37,7 @@ class OnBefore:  # pylint: disable=too-few-public-methods
         if device_id is not None:
 
             # get the globally defined poco object
-            poco_instance = ui_driver.poco_init()
+            poco_instance = ui_driver.init_driver()
             gr.set_value("pocoInstance", poco_instance)
             context.poco_instance = poco_instance
             GlobalContext.ui_driver_instance = poco_instance
@@ -105,9 +105,7 @@ class OnAfter:  # pylint: disable=too-few-public-methods
         """
         close screen record
         """
-        screen_record = gr.get_value("screenRecord")
-        if screen_record is not None and hasattr(screen_record, "destroy"):
-            screen_record.destroy()
+        ui_driver.close_driver()
 
         # hook extend by tester
         after_all_extend = launch_helper.get_hook_file("after_all_extend")
