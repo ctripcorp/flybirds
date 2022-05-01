@@ -135,11 +135,23 @@ def get_page_schema_url(page_name):
     """
     get the schema url of the page
     """
-    if hasattr(_global_dict["configManage"].device_info, "device_id"):
-        return _global_dict["configManage"].schema_info.all_schema_url[
-            page_name
-        ]
-    return page_name
+    all_schema_url = _global_dict["configManage"].schema_info.all_schema_url
+    if all_schema_url is None:
+        log.warn("[get_page_schema_url] cannot find schema_url.json file")
+        return page_name
+    page_url = all_schema_url.get(page_name)
+    if page_url is None:
+        log.warn(f"the schema_url.json has no schema configuration"
+                 f" for [{page_name}]")
+        return page_name
+    if isinstance(page_url, str):
+        return page_url
+    platform = get_platform().lower()
+    if page_url.get(platform) is None:
+        raise Exception(
+            f"The [{page_name}] has no schema configuration for the"
+            f" [{platform}] platform in schema_url.json")
+    return page_url.get(platform)
 
 
 def get_app_package_name(def_value=None):
@@ -245,8 +257,12 @@ def get_ele_locator(key):
     Get the configuration value of the element locator for the current
     runtime platform
     """
-    ele_locator = _global_dict[
-        "configManage"].ele_locator_info.all_ele_locator.get(key)
+    all_locators = _global_dict[
+        "configManage"].ele_locator_info.all_ele_locator
+    if all_locators is None:
+        log.warn("[get_ele_locator] cannot find ele_locator.json file")
+        return key
+    ele_locator = all_locators.get(key)
     if ele_locator is None:
         log.info(
             f"the ele_locator.json has no element locator configuration "

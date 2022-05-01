@@ -470,6 +470,9 @@ class SchemaUrl:
             self.all_schema_url = file_helper.get_json_from_file(
                 schema_url_path
             )
+        else:
+            log.warn(
+                f"[SchemaUrl] cannot find path: {schema_url_path}")
 
 
 class PluginConfig:
@@ -512,6 +515,8 @@ class EleLocator:
             os.getcwd(), "config", "ele_locator.json"
         )
         if not os.path.exists(ele_locator_path):
-            raise Exception(
+            log.warn(
                 f"[EleLocator] cannot find path: {ele_locator_path}")
-        self.all_ele_locator = file_helper.get_json_from_file(ele_locator_path)
+        else:
+            self.all_ele_locator = file_helper.get_json_from_file(
+                ele_locator_path)
