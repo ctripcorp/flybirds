@@ -29,15 +29,15 @@ def bool_to_string(value):
 def default_active_tag_value_provider():
     platform = GlobalContext.platform if GlobalContext.platform is not None \
         else 'android'
-    browser_type = gr.get_web_info_value("browser_type", 'chromium')
-    log.info(f'default_active_tag_provider :{platform} {browser_type}')
+    cur_browser = gr.get_value("cur_browser", 'chromium')
+    log.info(f'default_active_tag_provider :{platform} {cur_browser}')
     return {
         "python2": bool_to_string(six.PY2),
         "python3": bool_to_string(six.PY3),
         "os": sys.platform.lower(),
         "platform": platform,
         "deviceType": 'ivd',
-        "browserType": browser_type,
+        "cur_browser": cur_browser,
     }
 
 
@@ -89,8 +89,8 @@ class OnBeforeAll:
         """
         log.info(f'[active_before_all] user_data:{context.config.userdata}')
         active_tag_value_provider = active_tag_init()
-        log.info(
-            f'[active_before_all] active_tag_provider:{active_tag_value_provider}')
+        log.info(f'[active_before_all] active_tag_provider:'
+                 f'{active_tag_value_provider}')
         setup_active_tag_values(active_tag_value_provider,
                                 context.config.userdata)
 
