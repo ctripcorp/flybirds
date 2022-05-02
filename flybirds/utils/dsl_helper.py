@@ -4,7 +4,9 @@ dsl helper
 """
 import base64
 import re
+from functools import wraps
 
+import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 
 
@@ -149,3 +151,24 @@ def get_use_define_param(context, param_name):
         value = params[0].split("=", 1)[1]
         user_data[param_name] = str(base64.b64decode(value), "utf-8")
     return user_data
+
+
+def ele_wrap(func):
+    @wraps(func)
+    def wrapper_func(*args, **kwargs):
+        context = args[0]
+        for (k, v) in kwargs.items():
+            if v is None:
+                if hasattr(context, k):
+                    v = getattr(context, k)
+                else:
+                    log.warn(f'[ele_wrap] step param:[{k}] is none.')
+                    continue
+            v = replace_str(v)
+            if 'selector' in k:
+                v = gr.get_ele_locator(v)
+            kwargs[k] = v
+        func(*args, **kwargs)
+        # Do something after the function.
+
+    return wrapper_func

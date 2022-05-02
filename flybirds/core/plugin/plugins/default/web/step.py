@@ -21,7 +21,6 @@ class Step:
 
     @classmethod
     def jump_to_page(cls, context, param):
-        log.info(f'web jump_to_page. param: {param}')
         # plugin_page = g_context.page
         # page = plugin_page()
         page = gr.get_value("plugin_page")
@@ -67,14 +66,12 @@ class Step:
         return True
 
     @classmethod
-    def click_ele(cls, context, param):
-        selector = gr.get_ele_locator(param)
+    def click_ele(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.ele_click(context, selector)
 
     @classmethod
-    def click_text(cls, context, param):
-        selector = gr.get_ele_locator(param)
+    def click_text(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.click_text(context, selector)
 
@@ -84,71 +81,60 @@ class Step:
         ele.click_coordinates(context, x, y)
 
     @classmethod
-    def ele_text_container(cls, context, param_1, param_2):
-        selector = gr.get_ele_locator(param_1)
+    def ele_text_container(cls, context, selector, param_2):
         ele = gr.get_value("plugin_ele")
         ele.ele_text_include(context, selector, param_2)
 
     @classmethod
-    def wait_text_exist(cls, context, param):
-        selector = gr.get_ele_locator(param)
+    def wait_text_exist(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.find_text(context, selector)
 
     @classmethod
-    def text_not_exist(cls, context, param):
-        selector = gr.get_ele_locator(param)
+    def text_not_exist(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.find_no_text(context, selector)
 
     @classmethod
-    def ele_text_equal(cls, context, param_1, param_2):
-        selector = gr.get_ele_locator(param_1)
+    def ele_text_equal(cls, context, selector, param_2):
         ele = gr.get_value("plugin_ele")
         ele.ele_text_equal(context, selector, param_2)
 
     @classmethod
-    def exist_ele(cls, context, param):
-        selector = gr.get_ele_locator(param)
+    def exist_ele(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.get_ele_locator(selector)
 
     @classmethod
-    def wait_ele_exit(cls, context, param):
-        selector = gr.get_ele_locator(param)
+    def wait_ele_exit(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.get_ele_locator(selector)
 
     @classmethod
-    def ele_not_exit(cls, context, param):
-        selector = gr.get_ele_locator(param)
+    def ele_not_exit(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.ele_not_exist(context, selector)
 
     @classmethod
-    def wait_ele_appear(cls, context, param):
+    def wait_ele_appear(cls, context, selector):
         """
          page rendering complete appears element[{param}]
         """
-        selector = gr.get_ele_locator(param)
         ele = gr.get_value("plugin_ele")
         ele.wait_for_ele(context, selector)
 
     @classmethod
-    def ele_input(cls, context, param_1, param_2):
-        selector = gr.get_ele_locator(param_1)
+    def ele_input(cls, context, selector, param_2):
         ele = gr.get_value("plugin_ele")
         ele.ele_input_text(context, selector, param_2)
 
     @classmethod
-    def ele_clear_input(cls, context, param_1, param_2):
-        selector = gr.get_ele_locator(param_1)
+    def ele_clear_input(cls, context, selector, param_2):
         ele = gr.get_value("plugin_ele")
         ele.clear_and_input(context, selector, param_2)
 
     @classmethod
-    def ele_swipe(cls, context, param_1, param_2, param_3):
-        selector = gr.get_ele_locator(param_1)
+    def ele_swipe(cls, context, selector, param_2, param_3):
         ele = gr.get_value("plugin_ele")
         ele.ele_slide(context, selector, param_2, param_3)
 
@@ -158,50 +144,40 @@ class Step:
         ele.full_screen_slide(context, param_1, param_2)
 
     @classmethod
-    def ele_select(cls, context, param_1, param_2):
-        selector = gr.get_ele_locator(param_1)
+    def ele_select(cls, context, selector, param_2):
         ele = gr.get_value("plugin_ele")
         ele.ele_select(context, selector, param_2)
 
     @classmethod
-    def full_screen_swipe_to_ele_aaa(cls, context, param_1, param_2):
+    def full_screen_swipe_to_ele_aaa(cls, context, param_1, selector):
         """
         from {param1} find[{param2}]element
         """
-        selector = gr.get_ele_locator(param_2)
         ele = gr.get_value("plugin_ele")
         ele.find_full_screen_slide(context, param_1, selector)
 
     @classmethod
-    def ele_attr_equal(cls, context, param1, param2, param3):
-        selector = gr.get_ele_locator(param1)
+    def ele_attr_equal(cls, context, selector, param2, param3):
         ele = gr.get_value("plugin_ele")
         ele.is_ele_attr_equal(context, selector, param2, param3)
 
     @classmethod
-    def text_attr_equal(cls, context, param1, param2, param3):
-        selector = gr.get_ele_locator(param1)
+    def text_attr_equal(cls, context, selector, param2, param3):
         ele = gr.get_value("plugin_ele")
         ele.is_ele_attr_equal(context, selector, param2, param3)
 
     @classmethod
-    def find_child_from_parent(cls, context, param1, param2):
-        p_selector = gr.get_ele_locator(param1)
-        c_selector = gr.get_ele_locator(param2)
+    def find_child_from_parent(cls, context, p_selector, c_selector):
         ele = gr.get_value("plugin_ele")
         ele.is_parent_exist_child(context, p_selector, c_selector)
 
     @classmethod
-    def find_text_from_parent(cls, context, param1, param2, param3):
-        p_selector = gr.get_ele_locator(param1)
-        c_selector = gr.get_ele_locator(param2)
+    def find_text_from_parent(cls, context, p_selector, c_selector, param3):
         ele = gr.get_value("plugin_ele")
         ele.find_text_from_parent(context, p_selector, c_selector, param3)
 
     @classmethod
-    def swipe_to_ele(cls, context, param1, param2, param3):
-        p_selector = gr.get_ele_locator(param1)
-        c_selector = gr.get_ele_locator(param3)
+    def swipe_to_ele(cls, context, p_selector, param2, c_selector):
         ele = gr.get_value("plugin_ele")
         ele.is_parent_exist_child(context, p_selector, c_selector)
 

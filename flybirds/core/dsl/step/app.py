@@ -5,28 +5,28 @@ This module defines the steps related to the app.
 from behave import step
 
 from flybirds.core.global_context import GlobalContext as g_Context
-from flybirds.utils.dsl_helper import get_params
+from flybirds.utils.dsl_helper import ele_wrap
 
 
-@step("install app[{param}]")
-def install_app(context, param=None):
-    (param_1,) = get_params(context, (param, "param"))
-    g_Context.step.install_app(context, param_1)
+@step("install app[{selector}]")
+@ele_wrap
+def install_app(context, selector=None):
+    g_Context.step.install_app(context, selector)
 
 
-@step("delete app[{param}]")
-def uninstall_app(context, param=None):
+@step("delete app[{selector}]")
+@ele_wrap
+def uninstall_app(context, selector=None):
     """
     uninstall app
     """
-    (param_1,) = get_params(context, (param, "param"))
-    g_Context.step.uninstall_app(context, param_1)
+    g_Context.step.uninstall_app(context, selector)
 
 
-@step("start app[{param}]")
-def start_app(context, param=None):
-    (param_1,) = get_params(context, (param, "param"))
-    g_Context.step.start_app(context, param_1)
+@step("start app[{selector}]")
+@ele_wrap
+def start_app(context, selector=None):
+    g_Context.step.start_app(context, selector)
 
 
 @step("restart app")
