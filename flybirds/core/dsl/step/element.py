@@ -20,9 +20,6 @@ def text_attr_equal(context, selector=None, param2=None, param3=None):
     :param param2: attribute Name
     :param param3: expected Value
     """
-    # param_1, param_2, param_3 = get_params(
-    #     context, (param1, "param1"), (param2, "param2"), (param3, "param3")
-    # )
     g_Context.step.text_attr_equal(context, selector, param2, param3)
 
 
@@ -38,9 +35,6 @@ def ele_attr_equal(context, selector=None, param2=None, param3=None):
     :param param2: attribute Name
     :param param3: expected Value
     """
-    # param_1, param_2, param_3 = get_params(
-    #     context, (param1, "param1"), (param2, "param2"), (param3, "param3")
-    # )
     g_Context.step.ele_attr_equal(context, selector, param2, param3)
 
 
@@ -52,7 +46,6 @@ def click_ele(context, selector=None):
     :param context: step context
     :param selector: locator string for selector element (or None).
     """
-    # (param_1,) = get_params(context, (param, "param"))
     g_Context.step.click_ele(context, selector)
 
 
@@ -64,7 +57,6 @@ def click_text(context, selector=None):
     :param context: step context
     :param selector: locator string for text element (or None).
     """
-    # (param_1,) = get_params(context, (param, "param"))
     g_Context.step.click_text(context, selector)
 
 
@@ -77,7 +69,6 @@ def click_coordinates(context, x=None, y=None):
     :param x: Coordinate x-axis
     :param y: Coordinate y-axis.
     """
-    # param_x, param_y = get_params(context, (x, "param1"), (y, "param2"))
     g_Context.step.click_coordinates(context, x, y)
 
 
@@ -90,9 +81,6 @@ def ele_input(context, selector=None, param2=None):
     :param selector: locator string for selector element (or None).
     :param param2: string to be input
     """
-    # param_1, param_2 = get_params(
-    #     context, (param1, "param1"), (param2, "param2")
-    # )
     g_Context.step.ele_input(context, selector, param2)
 
 
@@ -106,9 +94,6 @@ def position_not_change(context, selector=None, param2=None):
     :param selector: locator string for selector element (or None).
     :param param2:
     """
-    # param_1, param_2 = get_params(
-    #     context, (param1, "param1"), (param2, "param2")
-    # )
     g_Context.step.position_not_change(context, selector, param2)
 
 
@@ -123,9 +108,6 @@ def ele_swipe(context, selector=None, param2=None, param3=None):
     :param param2: slide direction (top/bottom/left/right)
     :param param3: slide distance
     """
-    # param_1, param_2, param_3 = get_params(
-    #     context, (param1, "param1"), (param2, "param2"), (param3, "param3")
-    # )
     g_Context.step.ele_swipe(context, selector, param2, param3)
 
 
@@ -138,9 +120,6 @@ def full_screen_swipe(context, param1=None, param2=None):
     :param param1: slide direction (top/bottom/left/right)
     :param param2: slide distance
     """
-    # param_1, param_2 = get_params(
-    #     context, (param1, "param1"), (param2, "param2")
-    # )
     g_Context.step.full_screen_swipe(context, param1, param2)
 
 
@@ -163,7 +142,6 @@ def text_not_exist(context, selector=None):
     :param context: step context
     :param selector: locator string for text element (or None).
     """
-    # (param_1,) = get_params(context, (param, "param"))
     g_Context.step.text_not_exist(context, selector)
 
 
@@ -176,7 +154,6 @@ def wait_text_disappear(context, selector=None):
     :param context: step context
     :param selector: locator string for text element (or None).
     """
-    # (param_1,) = get_params(context, (param, "param"))
     g_Context.step.wait_text_disappear(context, selector)
 
 
@@ -190,9 +167,6 @@ def find_child_from_parent(context, p_selector=None, c_selector=None):
     :param p_selector: locator string for parent selector element (or None).
     :param c_selector: locator string for selector child element (or None).
     """
-    # param_1, param_2 = get_params(
-    #     context, (param1, "param1"), (param2, "param2")
-    # )
     g_Context.step.find_child_from_parent(context, p_selector, c_selector)
 
 
@@ -204,7 +178,6 @@ def wait_ele_exit(context, selector=None):
     :param context: step context
     :param selector: locator string for selector element (or None).
     """
-    # (param_1,) = get_params(context, (param, "param"))
     g_Context.step.wait_ele_exit(context, selector)
 
 
@@ -216,7 +189,6 @@ def ele_not_exit(context, selector=None):
     :param context: step context
     :param selector: locator string for selector element (or None).
     """
-    # (param_1,) = get_params(context, (param, "param"))
     g_Context.step.ele_not_exit(context, selector)
 
 
@@ -229,7 +201,6 @@ def wait_ele_disappear(context, selector=None):
     :param context: step context
     :param selector: locator string for selector element (or None).
     """
-    # (param_1,) = get_params(context, (param, "param"))
     g_Context.step.wait_ele_disappear(context, selector)
 
 
@@ -242,9 +213,6 @@ def ele_text_equal(context, selector=None, param2=None):
     :param selector: locator string for selector element (or None).
     :param param2: expected value
     """
-    # param_1, param_2 = get_params(
-    #     context, (param1, "param1"), (param2, "param2")
-    # )
     g_Context.step.ele_text_equal(context, selector, param2)
 
 
@@ -252,14 +220,11 @@ def ele_text_equal(context, selector=None, param2=None):
 @ele_wrap
 def ele_text_container(context, selector=None, param2=None):
     """
-    Check if the value of the text of the selector element param1 include param2
+   Check if the value of the text of the selector element param1 include param2
     :param context: step context
     :param selector: locator string for selector element (or None).
     :param param2: expected value
     """
-    # param_1, param_2 = get_params(
-    #     context, (param1, "param1"), (param2, "param2")
-    # )
     g_Context.step.ele_text_container(context, selector, param2)
 
 
@@ -272,7 +237,6 @@ def wait_ele_appear(context, selector=None):
     :param context: step context
     :param selector: locator string for selector element (or None).
     """
-    # (param_1,) = get_params(context, (param, "param"))
     g_Context.step.wait_ele_appear(context, selector)
 
 
@@ -284,7 +248,6 @@ def exist_ele(context, selector=None):
     :param context: step context
     :param selector: locator string for selector element (or None).
     """
-    # (param_1,) = get_params(context, (param, "param"))
     g_Context.step.exist_ele(context, selector)
 
 
@@ -299,9 +262,6 @@ def swipe_to_ele(context, p_selector=None, param2=None, c_selector=None):
     :param param2: slide direction (top/bottom/left/right)
     :param c_selector: locator string for selector child element (or None).
     """
-    # param_1, param_2, param_3 = get_params(
-    #     context, (param1, "param1"), (param2, "param2"), (param3, "param3")
-    # )
     g_Context.step.swipe_to_ele(context, p_selector, param2, c_selector)
 
 
@@ -315,9 +275,6 @@ def full_screen_swipe_to_ele_aaa(context, param1=None, selector=None):
     :param param1: slide direction (top/bottom/left/right)
     :param selector: locator string for selector element (or None).
     """
-    # param_1, param_2 = get_params(
-    #     context, (param1, "param1"), (param2, "param2")
-    # )
     g_Context.step.full_screen_swipe_to_ele_aaa(context, param1, selector)
 
 
@@ -330,9 +287,6 @@ def ele_clear_input(context, selector=None, param2=None):
     :param selector: locator string for selector element (or None).
     :param param2: string to be input
     """
-    # param_1, param_2 = get_params(
-    #     context, (param1, "param1"), (param2, "param2")
-    # )
     g_Context.step.ele_clear_input(context, selector, param2)
 
 
@@ -345,9 +299,6 @@ def ele_select(context, selector=None, param2=None):
     :param selector: locator string for selector element (or None).
     :param param2: text or value of select option
     """
-    # param_1, param_2 = get_params(
-    #     context, (param1, "param1"), (param2, "param2")
-    # )
     g_Context.step.ele_select(context, selector, param2)
 
 
@@ -363,8 +314,5 @@ def find_text_from_parent(context, p_selector=None, c_selector=None,
     :param c_selector: locator string for selector child element (or None).
     :param param3: expected value.
     """
-    # param_1, param_2, param_3 = get_params(
-    #     context, (param1, "param1"), (param2, "param2"), (param3, "param3")
-    # )
     g_Context.step.find_text_from_parent(context, p_selector, c_selector,
                                          param3)

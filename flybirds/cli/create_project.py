@@ -88,8 +88,8 @@ def create_demo():
                 " flybirds_config.json file.", fg=typer.colors.YELLOW)
     if test_platform == 'web':
         message_start = "Please enter the number represented by the " \
-                        "browserType you want to test? Multiple browsers are " \
-                        "separated by commas(,)."
+                        "browserType you want to test? Multiple browsers " \
+                        "are separated by commas(,)."
         ending = typer.style("(1:chromium  2:firefox  3:webkit)",
                              fg=typer.colors.CYAN, bold=True)
         message = message_start + ending

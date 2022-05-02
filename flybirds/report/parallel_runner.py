@@ -161,8 +161,8 @@ def get_browser_types(context):
     # add default value
     if len(temp) == 0:
         log.warn(
-            f'flybirds did not find a browser that would launch. Now chromium '
-            f'will be launched by default.')
+            'flybirds did not find a browser that would launch. Now chromium '
+            'will be launched by default.')
         temp.append('chromium')
     context['browser_types'] = temp
     return temp
