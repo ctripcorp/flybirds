@@ -2,7 +2,19 @@
   "memberPage": "/memberpage",
   "locatorPage": "https://www.baidu.com/",
   "百度": "https://www.baidu.com/",
-  "携程": "https://www.ctrip.com/",
-  "列表页": "https://spa6.scrape.center/",
-  "列表详情页": "https://spa6.scrape.center/detail/ZWYzNCN0ZXVxMGJ0dWEjKC01N3cxcTVvNS0takA5OHh5Z2ltbHlmeHMqLSFpLTAtbWIx"
+  "携程": {
+    "android": "/rn_test/ctrip_flight_home_android/",
+    "ios": "/rn_test/ctrip_flight_home_ios/",
+    "web": "https://www.ctrip.com/"
+  },
+  "列表页": {
+    "android": "/rn_test/ctrip_flight_list_android/",
+    "ios": "/rn_test/ctrip_flight_list_ios/",
+    "web": "https://spa6.scrape.center/"
+  },
+  "列表详情页": {
+    "android": "/rn_test/ctrip_flight_list_detail_android/",
+    "ios": "/rn_test/ctrip_flight_list_detail_ios/",
+    "web": "https://spa6.scrape.center/detail/ZWYzNCN0ZXVxMGJ0dWEjKC01N3cxcTVvNS0takA5OHh5Z2ltbHlmeHMqLSFpLTAtbWIx"
+  }
 }
