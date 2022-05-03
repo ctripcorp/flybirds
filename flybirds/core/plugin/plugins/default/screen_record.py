@@ -168,6 +168,7 @@ class ScreenRecord:
                 return "No recording service"
 
             message = ""
+            proc.wait()
             proc_code = proc.poll()
             if proc_code is None:
                 proc.terminate()
@@ -177,7 +178,7 @@ class ScreenRecord:
                 message = "Recording is over，code={}".format(proc_code)
             self.end_time = time.time()
             self.status = 3
-            out, err = proc.communicate(timeout=10)
+            out, err = proc.communicate()
             if out:
                 message += " Screen recording {}".format(
                     out.decode(encoding="UTF-8")
