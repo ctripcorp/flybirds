@@ -18,7 +18,7 @@
    Scenario: Multi-platform configuration of text
      When go to url[locatorPage]
      And  page rendering complete appears element[元素1]
-     And  click text[文案1]
+     And  click text[文本元素1]
      And  wait[3]seconds
      Then screenshot
 
