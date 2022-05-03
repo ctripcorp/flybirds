@@ -20,7 +20,7 @@ def scenario_init(context, scenario):
     # initialize the description
     # the information added to the description will
     # take effect in this scenario
-    log.info('[web scenario_init] start!')
+    log.info('[scenario_init] start!')
     scenario.description.append("initialization description_")
     # Initialize the sequence of steps to be executed
     # which is required for subsequent associated screenshots
@@ -113,7 +113,7 @@ def scenario_success(context, scenario):
     scenario success handler
     """
     # adjustment of the currently displayed page after the scene is successful
-    log.info('[web scenario_success] start!')
+    log.info('[scenario_success] start!')
     if context.scenario_screen_record:
         screen_record = gr.get_value("screenRecord")
         screen_record.stop_record()
@@ -139,7 +139,7 @@ class OnBefore:  # pylint: disable=too-few-public-methods
         write run info into description,it will be used at reporter
         """
         try:
-            log.info('[web scenario] OnBefore!')
+            log.info('[scenario_OnBefore] start!')
             f_name = scenario.feature.name
             log.info(
                 f"running feature:{f_name}, scenario:{scenario.name},"
@@ -178,7 +178,7 @@ class OnAfter:  # pylint: disable=too-few-public-methods
         exe scenario after
         """
         try:
-            log.info('[web_scenario_OnAfter] start!')
+            log.info('[scenario_OnAfter] start!')
             if scenario.status == "failed":
                 scenario_fail(context, scenario)
             else:
