@@ -3,8 +3,8 @@
 when run step will trigger this event
 """
 
-from flybirds.utils import flybirds_log as log
 from flybirds.core.global_context import GlobalContext
+from flybirds.utils import flybirds_log as log
 from flybirds.utils import launch_helper
 
 

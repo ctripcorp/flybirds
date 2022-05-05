@@ -4,6 +4,8 @@ hold global config
 """
 import logging
 
+import flybirds.utils.flybirds_log as log
+
 _global_dict = {}
 
 
@@ -25,13 +27,16 @@ def init_glb():
         "deviceid": None,
         "platform": None,
         "run_info": None,
-        "web_driver_agent": None
+        "web_driver_agent": None,
+        "playwright": None,
+        "browser": None,
+        "plugin_page": None
     }
 
 
 def set_value(key, value):
     """
-    pdate or add global attributes
+    update or add global attributes
     """
     global _global_dict
     _global_dict[key] = value
@@ -128,18 +133,30 @@ def get_device_size(def_value=[1080, 1920]):
 
 def get_page_schema_url(page_name):
     """
-    获取指定页面的schema url
+    get the schema url of the page
     """
-    if hasattr(_global_dict["configManage"].device_info, "device_id"):
-        return _global_dict["configManage"].schema_info.all_schema_url[
-            page_name
-        ]
-    return page_name
+    all_schema_url = _global_dict["configManage"].schema_info.all_schema_url
+    if all_schema_url is None:
+        log.warn("[get_page_schema_url] cannot find schema_url.json file")
+        return page_name
+    page_url = all_schema_url.get(page_name)
+    if page_url is None:
+        log.warn(f"the schema_url.json has no schema configuration"
+                 f" for [{page_name}]")
+        return page_name
+    if isinstance(page_url, str):
+        return page_url
+    platform = get_platform().lower()
+    if page_url.get(platform) is None:
+        raise Exception(
+            f"The [{page_name}] has no schema configuration for the"
+            f" [{platform}] platform in schema_url.json")
+    return page_url.get(platform)
 
 
 def get_app_package_name(def_value=None):
     """
-    get the schema url of the specified page
+    get the package name of the page
     """
     if hasattr(_global_dict["configManage"].app_info, "package_name"):
         value = _global_dict["configManage"].app_info.package_name
@@ -222,3 +239,40 @@ def get_run_info():
     get run base info
     """
     return _global_dict["run_info"]
+
+
+def get_web_info_value(key, def_value=None):
+    """
+    get a value in the web_info configuration
+    """
+    if hasattr(_global_dict["configManage"].web_info, key):
+        value = getattr(_global_dict["configManage"].web_info, key)
+        if value is not None:
+            return value
+    return def_value
+
+
+def get_ele_locator(key):
+    """
+    Get the configuration value of the element locator for the current
+    runtime platform
+    """
+    all_locators = _global_dict[
+        "configManage"].ele_locator_info.all_ele_locator
+    if all_locators is None:
+        log.warn("[get_ele_locator] cannot find ele_locator.json file")
+        return key
+    ele_locator = all_locators.get(key)
+    if ele_locator is None:
+        log.info(
+            f"the ele_locator.json has no element locator configuration "
+            f"for [{key}]")
+        return key
+    if isinstance(ele_locator, str):
+        return ele_locator
+    platform = get_platform().lower()
+    if ele_locator.get(platform) is None:
+        raise Exception(
+            f"The [{key}] has no element locator configuration for the"
+            f" [{platform}] platform in ele_locator.json")
+    return ele_locator.get(platform)

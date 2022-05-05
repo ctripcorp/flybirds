@@ -12,7 +12,7 @@ import flybirds.template as template
 import flybirds.utils.flybirds_log as log
 from flybirds.utils.file_helper import get_files_from_dir, \
     get_paths_from_dir, \
-    replace_file_content, update
+    replace_file_content, update, update_json_data
 from flybirds.utils.pkg_helper import find_package_base_path
 
 
@@ -24,61 +24,97 @@ def create_demo():
         "Welcome to flybirds cli. Please enter any information to continue.",
         fg=typer.colors.MAGENTA,
     )
+    user_dict = {
+        'device_id': "127.0.0.1:8200",
+        'package_name': "ctrip.android.view",
+        'web_driver_agent': "com.fd.test.WebDriverAgentLib.xctrunner",
+        'headless': True,
+        'browser_type': ['chromium']
+    }
     project_name = typer.prompt("Please input your project name>>")
-    test_platform = typer.prompt(
-        "Please input your test platform?(Android/IOS)"
-    )
-    if test_platform is None or test_platform not in ['android', 'ios']:
+    user_dict['project_name'] = project_name
+    platform_start = "Please input your test platform? "
+    platform_ending = typer.style("(Android/IOS/Web)", fg=typer.colors.CYAN,
+                                  bold=True)
+    p_message = platform_start + platform_ending
+    test_platform = typer.prompt(p_message)
+    if test_platform is None or test_platform.strip().lower() not in [
+            'android', 'ios', 'web']:
         test_platform = 'android'
     test_platform = test_platform.strip().lower()
-    device_id = "127.0.0.1:8200"
-    package_name = "ctrip.android.view"
-    web_driver_agent = "com.fd.test.WebDriverAgentLib.xctrunner"
-    if test_platform is not None and test_platform.strip().lower() == 'ios':
-        package_name = "com.ctrip.inner.wireless"
+    user_dict['test_platform'] = test_platform
 
-        is_bundle = typer.confirm(
-            "Do you want to configure your webDriverAgent now?"
+    if test_platform in ['android', 'ios']:
+        if test_platform == 'ios':
+            user_dict['package_name'] = "com.ctrip.inner.wireless"
+            is_bundle = typer.confirm(
+                "Do you want to configure your webDriverAgent now?"
+                "(this step can be skipped)")
+            if is_bundle:
+                web_driver_agent = typer.prompt(
+                    "Please input your Bundle ID of"
+                    " webDriverAgent?")
+                user_dict['web_driver_agent'] = web_driver_agent
+            else:
+                typer.secho(
+                    "You can configure your  Bundle ID of webDriverAgent later"
+                    " in the project's"
+                    " flybirds_config.json file.", fg=typer.colors.YELLOW)
+        connect_device = typer.confirm(
+            "Do you want to configure your deviceId now?"
             "(this step can be skipped)")
-        if is_bundle:
-            web_driver_agent = typer.prompt("Please input your Bundle ID of"
-                                            " webDriverAgent?")
+        if connect_device:
+            device_id = typer.prompt("Please input your deviceId?")
+            user_dict['device_id'] = device_id
         else:
             typer.secho(
-                "You can configure your  Bundle ID of webDriverAgent later in"
-                " the project's"
+                "You can configure your deviceId later in the project's"
                 " flybirds_config.json file.", fg=typer.colors.YELLOW)
 
-    connect_device = typer.confirm(
-        "Do you want to configure your deviceId now?"
-        "(this step can be skipped)")
-    if connect_device:
-        device_id = typer.prompt("Please input your deviceId?")
-    else:
-        typer.secho("You can configure your deviceId later in the project's"
-                    " flybirds_config.json file.", fg=typer.colors.YELLOW)
-
-    if_package = typer.confirm(
-        "Do you want to configure your packageName now?"
-        "(this step can be skipped)")
-    if if_package:
-        package_name = typer.prompt(
-            "Please input your packageName?(You can use"
-            " the ADB command to view your package name"
-            ", such as: adb shell pm list packages |"
-            " findstr 'trip')"
-        )
-    else:
-        typer.secho("You can configure your packageName later in the project's"
-                    " flybirds_config.json file.", fg=typer.colors.YELLOW)
-
+        if_package = typer.confirm(
+            "Do you want to configure your packageName now?"
+            "(this step can be skipped)")
+        if if_package:
+            package_name = typer.prompt(
+                "Please input your packageName?(You can use"
+                " the ADB command to view your package name"
+                ", such as: adb shell pm list packages |"
+                " findstr 'trip')"
+            )
+            user_dict['package_name'] = package_name
+        else:
+            typer.secho(
+                "You can configure your packageName later in the project's"
+                " flybirds_config.json file.", fg=typer.colors.YELLOW)
+    if test_platform == 'web':
+        message_start = "Please enter the number represented by the " \
+                        "browserType you want to test? Multiple browsers " \
+                        "are separated by commas(,)."
+        ending = typer.style("(1:chromium  2:firefox  3:webkit)",
+                             fg=typer.colors.CYAN, bold=True)
+        message = message_start + ending
+        out_index = typer.prompt(message)
+        index_arr = out_index.strip().split(',')
+        browser_dict = {
+            '1': "chromium",
+            '2': "firefox",
+            '3': "webkit"
+        }
+        browser_types = []
+        [browser_types.append(browser_dict.get(i)) for i in index_arr if
+         i in browser_dict.keys()]
+        # add default value
+        if len(browser_types) < 1:
+            browser_types.append('chromium')
+        user_dict['browser_type'] = browser_types
+        headless = typer.confirm(
+            "Do you want to launch browser in headless mode?")
+        user_dict['headless'] = headless
     try:
         typer.echo(f"Cloning into '{project_name}'...")
-        total = 700
+        total = 900
         with typer.progressbar(length=total, label="Processing") as progress:
-            demo_path = copy_from_template(progress, project_name,
-                                           test_platform, device_id,
-                                           package_name, web_driver_agent)
+            demo_path = copy_from_template(progress, user_dict)
         typer.secho(
             f"Done it! Create Project {project_name} has success!\n"
             f"You can find it at: {demo_path}",
@@ -92,8 +128,7 @@ def create_demo():
         )
 
 
-def copy_from_template(progress, project_name, test_platform, device_id=None,
-                       package_name=None, web_driver_agent=None):
+def copy_from_template(progress, user_dict):
     """
     Generate project files from template
     """
@@ -101,7 +136,8 @@ def copy_from_template(progress, project_name, test_platform, device_id=None,
     src_file_path = template.__file__
     src_path = os.path.normpath(src_file_path[0: src_file_path.rfind(os.sep)])
     target_path = os.path.normpath(
-        os.path.join(os.path.normpath(os.getcwd()), project_name)
+        os.path.join(os.path.normpath(os.getcwd()),
+                     user_dict.get('project_name'))
     )
 
     if os.path.isdir(target_path):
@@ -115,7 +151,6 @@ def copy_from_template(progress, project_name, test_platform, device_id=None,
         add_extend_pkg(target_path)
     except Exception as e:
         log.error(f"[create_project][add_extend_pkg] has error, msg: {e}")
-
     progress.update(100)
 
     # delete file
@@ -123,6 +158,7 @@ def copy_from_template(progress, project_name, test_platform, device_id=None,
     progress.update(100)
 
     # modify platform
+    test_platform = user_dict.get('test_platform')
     if test_platform is not None:
         replace_file_content(
             os.path.join(target_path, "config/flybirds_config.json"),
@@ -132,6 +168,7 @@ def copy_from_template(progress, project_name, test_platform, device_id=None,
     progress.update(100)
 
     # modify deviceId
+    device_id = user_dict.get('device_id')
     if device_id is not None:
         replace_file_content(
             os.path.join(target_path, "config/flybirds_config.json"),
@@ -141,6 +178,8 @@ def copy_from_template(progress, project_name, test_platform, device_id=None,
     progress.update(100)
 
     # modify packageName
+    package_name = user_dict.get('package_name')
+    package_name = user_dict.get('package_name')
     if package_name is not None:
         replace_file_content(
             os.path.join(target_path, "config/flybirds_config.json"),
@@ -150,11 +189,32 @@ def copy_from_template(progress, project_name, test_platform, device_id=None,
     progress.update(100)
 
     # modify webDriverAgent
+    web_driver_agent = user_dict.get('web_driver_agent')
     if web_driver_agent is not None:
         replace_file_content(
             os.path.join(target_path, "config/flybirds_config.json"),
             "webDriverAgent",
             web_driver_agent,
+        )
+    progress.update(100)
+
+    # modify browserType
+    browser_type = user_dict.get('browser_type')
+    if browser_type is not None:
+        update_json_data(
+            os.path.join(target_path, "config/flybirds_config.json"),
+            "web_info.browserType",
+            browser_type,
+        )
+    progress.update(100)
+
+    # modify headless
+    headless = user_dict.get('headless')
+    if headless is not None:
+        update_json_data(
+            os.path.join(target_path, "config/flybirds_config.json"),
+            "web_info.headless",
+            headless,
         )
     progress.update(100)
     return target_path
@@ -194,8 +254,6 @@ def add_extend_pkg(demo_path):
     pkg_query = "-flybirds-plugin"
     pkg_list = find_package_base_path(pkg_query)
     if pkg_list is None or len(pkg_list) <= 0:
-        log.info("[create_project][add_extend_pkg] has no extend packs need to"
-                 "be added.")
         return
 
     copy_extend_files(pkg_list, demo_path)

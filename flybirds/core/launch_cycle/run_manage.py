@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-
-import os
-import subprocess
-import traceback
 import operator
+import os
+import traceback
+from subprocess import Popen
 
-from flybirds.utils import flybirds_log as log
+from flybirds.core.config_manage import DeviceConfig
 from flybirds.report.fail_feature_create import rerun_launch
+from flybirds.report.parallel_runner import parallel_run
+from flybirds.utils import flybirds_log as log
+from flybirds.utils.dsl_helper import get_use_define_param
 from flybirds.utils.pkg_helper import load_pkg_by_ns
 
 
@@ -66,30 +68,19 @@ class RunManage:
 
             # noinspection PyBroadException
             try:
-                run_args = context.get("run_args")
-                cmd_str = context.get("cmd_str")
-                need_rerun_args = context.get("need_rerun_args")
-                report_dir_path = context.get("report_dir_path")
-                # cwd_pth = os.getcwd()
-                # if os.environ.get('base_dir') is not None:
-                #     cwd_pth = os.environ.get('base_dir')
+                # parallel.run(context)
+                is_parallel = need_parallel_run(context)
+                if is_parallel:
+                    parallel_run(context)
+                else:
+                    cmd_str = context.get("cmd_str")
+                    behave_process = Popen(
+                        cmd_str, cwd=os.getcwd(), shell=True, stdout=None
+                    )
+                    behave_process.wait()
+                    behave_process.communicate()
 
-                behave_process = subprocess.Popen(
-                    cmd_str, cwd=os.getcwd(), shell=True, stdout=None
-                )
-
-                behave_process.wait()
-                behave_process.communicate()
-
-                # if os.environ.get('base_dir') is not None:
-                #     if report_dir_path is not None and os.path.isabs( \
-                #             report_dir_path) is \
-                #             False:
-                #         report_dir_path = os.path.join(
-                #             os.environ.get('base_dir'), report_dir_path)
-
-                # Determine whether the failed scenario needs to be re-run
-                rerun_launch(need_rerun_args, report_dir_path, run_args)
+                rerun_launch(context, is_parallel)
 
             except Exception:
                 log.error(
@@ -152,3 +143,12 @@ def run_script(run_args):
         RunManage.run(r_context)
     except Exception:
         log.error(f"behave task run error: {traceback.format_exc()}")
+
+
+def need_parallel_run(context):
+    user_data = get_use_define_param(context, 'platform')
+    platform = DeviceConfig(user_data, None).platform
+    context['cur_platform'] = platform
+    if 'web' == platform.lower():
+        return True
+    return False

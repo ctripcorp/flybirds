@@ -2,8 +2,11 @@
 """
 dsl helper
 """
+import base64
 import re
+from functools import wraps
 
+import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 
 
@@ -86,9 +89,9 @@ def get_params(context, *args):
     items = []
     for (val, param_name) in args:
         if val is not None:
-            items.append(val)
+            items.append(replace_str(val))
         elif hasattr(context, param_name):
-            items.append(getattr(context, param_name))
+            items.append(replace_str(getattr(context, param_name)))
     return items
 
 
@@ -99,3 +102,73 @@ def return_value(value, def_value=None):
     if value is not None:
         return value
     return def_value
+
+
+def is_number(s):
+    """
+    Determine if the parameter is a number
+    """
+    try:
+        float(s)
+        return True
+    except ValueError:
+        log.error(f"param {s} is not a number!")
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        log.error(f"param {s} cannot turn to a number!")
+    return False
+
+
+def replace_str(u_text):
+    return u_text.strip().replace(u"\u200b", "")
+
+
+def handle_str(un_handle_str):
+    res = re.match(r"([\S\s]+),\s*[0-9_]+\s*", un_handle_str)
+    if res is not None:
+        return res.group(1)
+    else:
+        return un_handle_str
+
+
+def str2bool(v):
+    return v.lower() in ['true', '1', 't', 'y', 'yes', 'yeah', 'yup',
+                         'certainly', 'uh-huh']
+
+
+def get_use_define_param(context, param_name):
+    use_define = context.get("use_define")
+    log.info(f'use_define: {use_define}')
+    params = [i for i in use_define if param_name + '=' in i]
+    user_data = {}
+    if len(params) > 0:
+        if len(params) > 1:
+            log.error(f'Cannot customize multiple parameters with the same '
+                      f'name:{params}')
+        value = params[0].split("=", 1)[1]
+        user_data[param_name] = str(base64.b64decode(value), "utf-8")
+    return user_data
+
+
+def ele_wrap(func):
+    @wraps(func)
+    def wrapper_func(*args, **kwargs):
+        context = args[0]
+        for (k, v) in kwargs.items():
+            if v is None:
+                if hasattr(context, k):
+                    v = getattr(context, k)
+                else:
+                    log.warn(f'[ele_wrap] step param:[{k}] is none.')
+                    continue
+            v = replace_str(v)
+            if 'selector' in k:
+                v = gr.get_ele_locator(v)
+            kwargs[k] = v
+        func(*args, **kwargs)
+        # Do something after the function.
+
+    return wrapper_func

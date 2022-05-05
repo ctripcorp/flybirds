@@ -1,0 +1,28 @@
+{
+  "元素1": {
+    "android": "text=机票",
+    "ios": "label=机票",
+    "web": "#s-top-loginbtn"
+  },
+  "元素2": {
+    "android": "android.widget.LinearLayout",
+    "ios": "ScrollView",
+    "web": "#hotsearch-content-wrapper"
+  },
+  "元素3": {
+    "android": "text=租车",
+    "ios": "label=租车",
+    "web": "li.hotsearch-item.odd[data-index=\"2\"]"
+  },
+  "元素4": {
+    "android": "text=搜索",
+    "ios": "label=搜索",
+    "web": "#kw"
+  },
+  "元素5": "text=帮助中心",
+  "文本元素1": {
+    "android": "机票",
+    "ios": "机票",
+    "web": "新闻"
+  }
+}

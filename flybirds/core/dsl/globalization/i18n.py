@@ -67,63 +67,76 @@ step_language = {
         "start app[{param}]": ["start app[{param}]"],
     },
     "zh-CN": {
-        "install app[{param}]": ["安装APP[{param}]"],
-        "delete app[{param}]": ["删除APP[{param}]"],
-        "start app[{param}]": ["启动APP[{param}]"],
+        "install app[{selector}]": ["安装APP[{selector}]"],
+        "delete app[{selector}]": ["删除APP[{selector}]"],
+        "start app[{selector}]": ["启动APP[{selector}]"],
         "restart app": ["重启App"],
         "close app": ["关闭App"],
-        "init device[{param}]": ["设备初始化[{param}]"],
-        "connect device[{param}]": ["连接设备[{param}]"],
+        "init device[{selector}]": ["设备初始化[{selector}]"],
+        "connect device[{selector}]": ["连接设备[{selector}]"],
         "start recording timeout[{param}]": ["开始录屏超时[{param}]"],
         "start record": ["开始录屏"],
         "stop record": ["结束录屏"],
         "go to url[{param}]": ["跳转到[{param}]", "跳转页面到[{param}]"],
         "return to previous page": ["返回上一页"],
         "go to home page": ["回到首页"],
-        "logon account[{param1}]password[{param2}]": [
-            "登录账号[{param1}]密码[{param2}]",
-            "登陆账号[{param1}]密码[{param2}]",
+        "logon account[{selector1}]password[{selector2}]": [
+            "登录账号[{selector1}]密码[{selector2}]",
+            "登陆账号[{selector1}]密码[{selector2}]",
         ],
         "logout": ["退出登陆", "退出登录"],
         "wait[{param}]seconds": ["等待[{param}]秒"],
         "screenshot": ["全屏截图"],
         "information association of failed operation, run the {param1} time"
         " :[{param2}]": ["失败运行的信息关联,运行第{param1}次:[{param2}]"],
-        "text[{param1}]property[{param2}]is {param3}": [
-            "文案[{param1}]的属性[{param2}]为{param3}"
+        "text[{selector}]property[{param2}]is {param3}": [
+            "文案[{selector}]的属性[{param2}]为{param3}"
         ],
-        "element[{param1}]property[{param2}]is {param3}": [
-            "元素[{param1}]的属性[{param2}]为{param3}"
+        "element[{selector}]property[{param2}]is {param3}": [
+            "元素[{selector}]的属性[{param2}]为{param3}"
         ],
-        "click[{param}]": ["点击[{param}]"],
-        "click text[{param}]": ["点击文案[{param}]"],
+        "click[{selector}]": ["点击[{selector}]"],
+        "click text[{selector}]": ["点击文案[{selector}]"],
         "click position[{x},{y}]": ["点击屏幕位置[{x},{y}]"],
-        "in[{param1}]input[{param2}]": ["在[{param1}]中输入[{param2}]"],
-        "element[{param1}]position not change in[{param2}]seconds": [
-            "元素[{param1}]位置[{param2}]秒内未变动"
+        "in[{selector}]input[{param2}]": ["在[{selector}]中输入[{param2}]"],
+        "clear [{selector}] and input[{param2}]": [
+            "在[{selector}]中清空并输入[{param2}]"],
+        "element[{selector}]position not change in[{param2}]seconds": [
+            "元素[{selector}]位置[{param2}]秒内未变动"
         ],
-        "[{param1}]slide to {param2} distance[{param3}]": [
-            "[{param1}]向{param2}滑动[{param3}]"],
+        "[{selector}]slide to {param2} distance[{param3}]": [
+            "[{selector}]向{param2}滑动[{param3}]"],
         "slide to {param1} distance[{param2}]": ["全屏向{param1}滑动[{param2}]"],
-        "exist text[{param}]": ["存在[{param}]的文案"],
-        "not exist text[{param}]": ["不存在[{param}]的文案"],
-        "text[{param}]disappear": ["文案[{param}]消失"],
-        "exist[{param}]element": ["存在[{param}]的元素"],
-        "not exist element[{param}]": ["不存在[{param}]的元素"],
-        "element[{param}]disappear": ["元素[{param}]消失"],
-        "the text of element[{param1}]is[{param2}]": [
-            "[{param1}]的文案为[{param2}]"
+        "exist text[{selector}]": ["存在[{selector}]的文案"],
+        "not exist text[{selector}]": ["不存在[{selector}]的文案"],
+        "text[{selector}]disappear": ["文案[{selector}]消失"],
+        "exist[{selector}]element": ["存在[{selector}]的元素"],
+        "not exist element[{selector}]": ["不存在[{selector}]的元素"],
+        "element[{selector}]disappear": ["元素[{selector}]消失"],
+        "the text of element[{selector}]is[{param2}]": [
+            "[{selector}]的文案为[{param2}]"
         ],
-        "the text of element[{param1}]include[{param2}]": [
-            "[{param1}]的文案包含[{param2}]"
+        "the text of element[{selector}]include[{param2}]": [
+            "[{selector}]的文案包含[{param2}]"
         ],
-        "page rendering complete appears element[{param}]": [
-            "页面渲染完成出现元素[{param}]"],
-        "existing element[{param}]": ["存在元素[{param}]"],
+        "page rendering complete appears element[{selector}]": [
+            "页面渲染完成出现元素[{selector}]"],
+        "existing element[{selector}]": ["存在元素[{selector}]"],
 
-        "in[{param1}]from {param2} find[{param3}]element": [
-            "在[{param1}]中向{param2}查找[{param3}]的元素"
+        "in[{p_selector}]from {param2} find[{c_selector}]element": [
+            "在[{p_selector}]中向{param2}查找[{c_selector}]的元素"
         ],
-        "from {param1} find[{param2}]element": ["向{param1}查找[{param2}]的元素"],
+        "from {param1} find[{selector}]element": [
+            "向{param1}查找[{selector}]的元素"],
+
+        "unblock the current page": ["解除当前页面限制"],
+        "current page is [{param}]": ["当前页面是[{param}]"],
+        "current page is not last page": ["当前页面已不是上一个指定页面"],
+        "from [{selector}] select [{param2}]": ["在[{selector}]中选择[{param2}]"],
+        "exist [{p_selector}] subNode [{c_selector}] element": [
+            "存在[{p_selector}]的[{c_selector}]的元素"],
+        "the text of element [{p_selector}] subNode [{c_selector}] is [{param3}]": [
+            "[{p_selector}]的[{c_selector}]文案为[{param3}]"
+        ]
     },
 }

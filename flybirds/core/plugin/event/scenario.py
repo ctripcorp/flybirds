@@ -6,8 +6,9 @@ import traceback
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.language_helper as lge
-from flybirds.core.global_context import GlobalContext
 from flybirds.core.driver import screen
+from flybirds.core.global_context import GlobalContext
+from flybirds.core.plugin.plugins.default.screen_record import link_record
 from flybirds.utils import flybirds_log as log
 from flybirds.utils import launch_helper
 
@@ -19,6 +20,7 @@ def scenario_init(context, scenario):
     # initialize the description
     # the information added to the description will
     # take effect in this scenario
+    log.info('[scenario_init] start!')
     scenario.description.append("initialization description_")
     # Initialize the sequence of steps to be executed
     # which is required for subsequent associated screenshots
@@ -45,10 +47,11 @@ def scenario_init(context, scenario):
         if no_screen_record_step:
             try:
                 screen_record = gr.get_value("screenRecord")
-                timeout = gr.get_flow_behave_value(
-                    "scenario_screen_record_time", 120
-                )
-                screen_record.start_record(timeout)
+                if hasattr(screen_record, 'start_record'):
+                    timeout = gr.get_flow_behave_value(
+                        "scenario_screen_record_time", 120
+                    )
+                    screen_record.start_record(timeout)
                 context.scenario_screen_record = True
             except Exception as scenario_error:
                 log.error(
@@ -63,8 +66,8 @@ def scenario_fail(context, scenario):
     scenario fail handler
     """
     log.info(
-        f"feature:{scenario.feature.name} scenario:{scenario.name}"
-        f" failed to run"
+        f"[scenario_fail] feature:{scenario.feature.name}, "
+        f"scenario:{scenario.name} failed to run"
     )
     need_copy_record = 0
 
@@ -79,20 +82,22 @@ def scenario_fail(context, scenario):
         ):
             need_copy_record -= 1
         if step.status == "failed":
-            info_log = f"step:{step.name}"
+            info_log = f"[scenario_fail] step:{step.name}"
             log.info(info_log)
-            log.error(step.error_message)
-            log.info("failed screenshot")
+            log.error(f'[scenario_fail] step error msg:{step.error_message}')
+            log.info("[scenario_fail] start to do failed screenshot")
             screen.screen_link_to_behave(
                 scenario, context.cur_step_index - 1, "fail_"
             )
             break
 
     # save screen recording
-    if need_copy_record >= 1 or context.scenario_screen_record:
+    cur_platform = GlobalContext.platform
+    if need_copy_record >= 1 or context.scenario_screen_record \
+            or cur_platform.strip().lower() == "web":
         screen_record = gr.get_value("screenRecord")
         screen_record.stop_record()
-        screen_record.link_record(scenario, context.cur_step_index - 1)
+        link_record(scenario, context.cur_step_index - 1)
 
     # the processing of the current page after the scene fails
     launch_helper.app_start("scenario_fail_page")
@@ -108,6 +113,7 @@ def scenario_success(context, scenario):
     scenario success handler
     """
     # adjustment of the currently displayed page after the scene is successful
+    log.info('[scenario_success] start!')
     if context.scenario_screen_record:
         screen_record = gr.get_value("screenRecord")
         screen_record.stop_record()
@@ -133,9 +139,10 @@ class OnBefore:  # pylint: disable=too-few-public-methods
         write run info into description,it will be used at reporter
         """
         try:
+            log.info('[scenario_OnBefore] start!')
             f_name = scenario.feature.name
             log.info(
-                f"running feature:{f_name} scenario:{scenario.name},"
+                f"running feature:{f_name}, scenario:{scenario.name},"
                 f" location: {scenario.feature.location}"
             )
             scenario_init(context, scenario)
@@ -171,10 +178,18 @@ class OnAfter:  # pylint: disable=too-few-public-methods
         exe scenario after
         """
         try:
+            log.info('[scenario_OnAfter] start!')
             if scenario.status == "failed":
                 scenario_fail(context, scenario)
             else:
                 scenario_success(context, scenario)
+
+            cur_platform = GlobalContext.platform
+            if cur_platform.strip().lower() == "web":
+                log.info('[web_scenario_OnAfter] reset page、ele、screenRecord')
+                gr.set_value("plugin_page", None)
+                gr.set_value("screenRecord", None)
+                gr.set_value("plugin_ele", None)
         except Exception:
             traceback.print_exc()
 

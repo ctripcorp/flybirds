@@ -47,7 +47,7 @@ def runner(
             None,
             "-D",
             "--define",
-            help="User-defined parameters. e.g. --define screenShotDir=cmVwb.",
+            help="User-defined parameters. e.g. --define headless=false.",
         ),
         rerun: bool = typer.Option(
             True,
@@ -62,6 +62,11 @@ def runner(
         ),
         run_at: str = typer.Option(
             "local", "--run-at", help="Run environment, extended parameters"
+        ),
+        processes: int = typer.Option(
+            4, "--processes", '-p',
+            help="Maximum number of processes. Default = 4. Effective when  "
+                 "test on web."
         )
 ):
     """
@@ -70,7 +75,7 @@ def runner(
     # process args
     run_args = parse_args(
         feature_path, tag, report_format, report_path, define, rerun, es,
-        to_html, run_at
+        to_html, run_at, processes
     )
     log.info("============last run_args: {}".format(str(run_args)))
     run_script(run_args)

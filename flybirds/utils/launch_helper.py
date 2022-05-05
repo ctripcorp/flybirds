@@ -3,11 +3,13 @@
 """
 lunch help
 """
-import flybirds.core.global_resource as gr
-import flybirds.utils.flybirds_log as log
+import time
+
 import flybirds.core.driver.app as app
 import flybirds.core.driver.element as ake
-import time
+import flybirds.core.global_resource as gr
+import flybirds.utils.flybirds_log as log
+from flybirds.core.global_context import GlobalContext as g_context
 
 
 def login():
@@ -32,9 +34,15 @@ def app_start(page_name):
     """
     device start at init
     """
+    page_value = gr.get_flow_behave_value(page_name, None)
+    cur_platform = g_context.platform
+    if cur_platform.strip().lower() == "web":
+        log.info('[app_start] cur_platform is web, run web_start.')
+        web_start(page_value)
+        return
+
     device_id = gr.get_device_id()
     package_name = gr.get_app_package_name()
-    page_value = gr.get_flow_behave_value(page_name, None)
     log.info("device_id:{},".format(device_id))
     log.info("page_name:{},".format(page_name))
     log.info("package_name:{}".format(package_name))
@@ -53,6 +61,21 @@ def app_start(page_name):
             log.info("stop app before running")
         elif "backupPage" == page_value:
             ake.key_event("4")
+
+
+def web_start(page_run_val):
+    if page_run_val is None:
+        page_run_val = 'restartApp'
+    if "restartApp" == page_run_val:
+        # determine if the page is closed
+        page_obj = gr.get_value("plugin_page")
+        if page_obj is not None and hasattr(page_obj, 'context') \
+                and page_obj.context is not None:
+            log.info(
+                '[web_start] Target page, context or browser is opening!')
+            return
+        re_init_page()
+        log.info("complete restart web page")
 
 
 def get_runtime_data(scenario):
@@ -87,9 +110,18 @@ def get_hook_file(filename):
     """
     project_script = gr.get_value("projectScript")
     if hasattr(project_script, "dsl_hook") and hasattr(
-        project_script.dsl_hook, filename
+            project_script.dsl_hook, filename
     ):
         file_extend = getattr(project_script.dsl_hook, filename)
         return file_extend
     else:
         return None
+
+
+def re_init_page():
+    plugin_page = g_context.page()
+    gr.set_value("plugin_page", plugin_page)
+    screen_record = g_context.screen_record()
+    gr.set_value("screenRecord", screen_record)
+    plugin_ele = g_context.element()
+    gr.set_value("plugin_ele", plugin_ele)

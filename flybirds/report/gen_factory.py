@@ -12,14 +12,14 @@ class GenFactory:
     gen_factories = {}
 
     @staticmethod
-    def gen(gen_type, report_path):
+    def gen(gen_type, report_path, platform):
         """
         auto gen
         """
         if gen_type is not None and GenFactory.gen_factories.__contains__(
                 gen_type):
 
-            GenFactory.gen_factories[gen_type].gen(report_path)
+            GenFactory.gen_factories[gen_type].gen(report_path, platform)
         else:
             log.info("not have this kind of report type")
 

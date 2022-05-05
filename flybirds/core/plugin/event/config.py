@@ -2,14 +2,14 @@
 """
 it is triggered when behave before all
 """
-import base64
 import traceback
-from flybirds.core.config_manage import ConfigManage, AppEnvConfig
-from flybirds.core.script_config import ScriptImportManage
-from flybirds.report.fail_feature_create import set_rerun_info
+
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
+from flybirds.core.config_manage import ConfigManage, AppEnvConfig
 from flybirds.core.global_context import GlobalContext
+from flybirds.core.script_config import ScriptImportManage
+from flybirds.report.fail_feature_create import set_rerun_info
 
 
 class OnConfigLoad:  # pylint: disable=too-few-public-methods
@@ -31,17 +31,8 @@ class OnConfigLoad:  # pylint: disable=too-few-public-methods
         """
         try:
             log.info("start on before hook")
-            # initialize the global object module
-            gr.init_glb()
-            # get user-specified parameter value or custom parameter
-            user_data = (
-                context.config.userdata
-                if isinstance(context.config.userdata, dict)
-                else {}
-            )
-            for key, value in user_data.items():
-                user_data[key] = str(base64.b64decode(value), "utf-8")
-            gr.set_value("userData", user_data)
+            user_data = gr.get_value("userData")
+            log.info(f'[event config] user_data: {user_data}')
             # obtain the failure case information and associate
             # it with the report later
             set_rerun_info(user_data, gr)

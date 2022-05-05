@@ -2,8 +2,9 @@
 """
 global plugin holder
 """
-from threading import local
 import operator
+from threading import local
+
 from flybirds.core.plugin.plugin_proxy import PluginProxy
 
 

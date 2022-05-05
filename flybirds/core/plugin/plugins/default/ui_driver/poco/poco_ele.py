@@ -5,7 +5,8 @@ Poco element apis
 import time
 
 import flybirds.core.global_resource as gr
-import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap as find_snap
+import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap \
+    as find_snap
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_manage as pm
 import flybirds.utils.flybirds_log as log
 from flybirds.core.exceptions import FlybirdEleExistsException

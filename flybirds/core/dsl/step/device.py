@@ -5,19 +5,19 @@ This module defines the steps related to the device.
 from behave import step
 
 from flybirds.core.global_context import GlobalContext as g_Context
-from flybirds.utils.dsl_helper import get_params
+from flybirds.utils.dsl_helper import get_params, ele_wrap
 
 
-@step("init device[{param}]")
-def init_device(context, param=None):
-    (param_1,) = get_params(context, (param, "param"))
-    g_Context.step.init_device(context, param_1)
+@step("init device[{selector}]")
+@ele_wrap
+def init_device(context, selector=None):
+    g_Context.step.init_device(context, selector)
 
 
-@step("connect device[{param}]")
-def connect_device(context, param=None):
-    (param_1,) = get_params(context, (param, "param"))
-    g_Context.step.connect_device(context, param_1)
+@step("connect device[{selector}]")
+@ele_wrap
+def connect_device(context, selector=None):
+    g_Context.step.connect_device(context, selector)
 
 
 @step("start recording timeout[{param}]")

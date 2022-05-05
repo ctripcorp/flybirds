@@ -4,6 +4,9 @@ file helper
 """
 import json
 import os
+from json import JSONDecodeError
+
+from flybirds.utils import flybirds_log as log
 
 
 def store_json_to_file_path(data, path, write_type):
@@ -22,11 +25,11 @@ def get_json_from_file_path(path):
     result = None
     # noinspection PyBroadException
     try:
-        f = open(path, "r", encoding="utf-8")
-        json_str = f.read().strip()
-        result = json.loads(json_str)
-    except Exception as e:
-        raise e
+        f = open(path, "r", errors='ignore')
+        json_str = f.read().strip().replace('\r\n', '\\r\\n')
+        result = json.loads(json_str, strict=False)
+    except JSONDecodeError:
+        log.warn('get_json_from_file_path has error.')
     finally:
         if f:
             f.close()
@@ -165,3 +168,13 @@ def update(filename, text):
     # write file
     with open(filename, "w", encoding="utf-8") as f:
         f.write(content)
+
+
+def update_json_data(json_path, key, value):
+    with open(json_path, "r") as jsonFile:
+        data = json.load(jsonFile)
+    key_arr = key.split('.')
+    data[key_arr[0]][key_arr[1]] = value
+
+    with open(json_path, "w") as jsonFile:
+        json.dump(data, jsonFile, indent=2, separators=(',', ': '))

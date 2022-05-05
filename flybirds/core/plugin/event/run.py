@@ -3,11 +3,12 @@
 when behave start run hook will trigger this
 """
 import traceback
-from flybirds.utils import launch_helper
-from flybirds.core.driver import ui_driver
+
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
+from flybirds.core.driver import ui_driver
 from flybirds.core.global_context import GlobalContext
+from flybirds.utils import launch_helper
 
 
 class OnBefore:  # pylint: disable=too-few-public-methods
@@ -20,7 +21,11 @@ class OnBefore:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def can(context):
-        return True
+        if gr.get_platform() is not None \
+                and (gr.get_platform().lower() != "web"):
+            return True
+        else:
+            return False
 
     @staticmethod
     def init_ui_driver(context):
@@ -32,7 +37,7 @@ class OnBefore:  # pylint: disable=too-few-public-methods
         if device_id is not None:
 
             # get the globally defined poco object
-            poco_instance = ui_driver.poco_init()
+            poco_instance = ui_driver.init_driver()
             gr.set_value("pocoInstance", poco_instance)
             context.poco_instance = poco_instance
             GlobalContext.ui_driver_instance = poco_instance
@@ -100,9 +105,7 @@ class OnAfter:  # pylint: disable=too-few-public-methods
         """
         close screen record
         """
-        screen_record = gr.get_value("screenRecord")
-        if screen_record is not None and hasattr(screen_record, "destroy"):
-            screen_record.destroy()
+        ui_driver.close_driver()
 
         # hook extend by tester
         after_all_extend = launch_helper.get_hook_file("after_all_extend")
@@ -120,7 +123,11 @@ class OnScreenRecordRelease:
 
     @staticmethod
     def can(context):
-        return True
+        if gr.get_platform() is not None \
+                and (gr.get_platform().lower() != "web"):
+            return True
+        else:
+            return False
 
     @staticmethod
     def run(context):
@@ -163,4 +170,4 @@ class OnRelease:
 var = GlobalContext.join("before_run_processor", OnBefore, 1)
 var2 = GlobalContext.join("after_run_processor", OnScreenRecordRelease, 1)
 var3 = GlobalContext.join("after_run_processor", OnRelease, 1)
-var2 = GlobalContext.join("after_run_processor", OnAfter, 1)
+var4 = GlobalContext.join("after_run_processor", OnAfter, 1)

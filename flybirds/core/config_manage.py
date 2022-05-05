@@ -7,7 +7,7 @@ import os
 
 from flybirds.utils import file_helper
 from flybirds.utils import flybirds_log as log
-from flybirds.utils.dsl_helper import return_value
+from flybirds.utils.dsl_helper import return_value, str2bool
 
 
 class ConfigManage:
@@ -31,6 +31,10 @@ class ConfigManage:
         log.info(
             "Device configuration information", str(self.device_info.__dict__)
         )
+        self.web_info = WebConfig(user_data, None)
+        log.info(
+            "Web configuration information", str(self.web_info.__dict__)
+        )
         self.frame_info = FrameConfig(user_data, None)
         log.info(
             "Frame parameter configuration information",
@@ -47,6 +51,7 @@ class ConfigManage:
             "Process control configuration information",
             str(self.flow_behave.__dict__),
         )
+        self.ele_locator_info = EleLocator()
 
 
 def get_config(config, name):
@@ -154,6 +159,39 @@ class DeviceConfig:
             self.platform = user_data.get("platform", platform)
             self.web_driver_agent = device_driver
             self.screen_size = None
+
+
+class WebConfig:
+    """
+    Read configuration information about the web test
+    """
+
+    def __init__(self, user_data, config):
+        web_info = get_config(config, "web_info")
+        if user_data is None and web_info is None:
+            log.warn('[web_info] configuration of web_info is none.')
+            # default value
+            self.headless = True
+            self.browser_type = 'chromium'
+            self.default_time_out = 30
+            return
+
+        headless = user_data.get("headless", web_info["headless"])
+        browser_type = user_data.get("browserType", web_info["browserType"])
+        default_time_out = user_data.get("defaultTimeout",
+                                         web_info["defaultTimeout"])
+        if headless is None:
+            headless = True
+        if isinstance(headless, str):
+            headless = str2bool(headless)
+        self.headless = headless
+        if browser_type is None:
+            browser_type = 'chromium'
+        self.browser_type = browser_type
+        if default_time_out is None:
+            # default webTimeout is 30s
+            default_time_out = 30
+        self.default_time_out = default_time_out
 
 
 class FlowBehave:
@@ -432,6 +470,9 @@ class SchemaUrl:
             self.all_schema_url = file_helper.get_json_from_file(
                 schema_url_path
             )
+        else:
+            log.warn(
+                f"[SchemaUrl] cannot find path: {schema_url_path}")
 
 
 class PluginConfig:
@@ -462,3 +503,20 @@ class RunConfig:
 
         run_at = user_data.get("run_at", "local")
         self.run_at = run_at
+
+
+class EleLocator:
+    """
+    element locator config
+    """
+
+    def __init__(self):
+        ele_locator_path = os.path.join(
+            os.getcwd(), "config", "ele_locator.json"
+        )
+        if not os.path.exists(ele_locator_path):
+            log.warn(
+                f"[EleLocator] cannot find path: {ele_locator_path}")
+        else:
+            self.all_ele_locator = file_helper.get_json_from_file(
+                ele_locator_path)

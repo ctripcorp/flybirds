@@ -12,6 +12,11 @@
     "platform": "%{{platform}}",
     "webDriverAgent": "%{{webDriverAgent}}"
   },
+  "web_info": {
+    "headless": true,
+    "browserType": [],
+    "defaultTimeout": 30
+  },
   "flow_behave": {
     "beforeRunPage": "restartApp",
     "scenarioFailPage": "restartApp",

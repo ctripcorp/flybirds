@@ -294,6 +294,7 @@ class DirectoryPluginManager(PluginModule):
                 mod = load_module(name, fh, filename, desc)
 
                 if hasattr(mod, "__open__"):
+                    # get class
                     attrs = [getattr(mod, x) for x in mod.__open__]
                     for plug in attrs:
                         if hasattr(plug, "instantiation_timing") and \

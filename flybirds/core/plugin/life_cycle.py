@@ -20,7 +20,3 @@ def destroy(context):
      destroy plugin
     """
     raise Exception("not implement destroy")
-
-
-# start load
-load(None)

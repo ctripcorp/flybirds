@@ -2,8 +2,8 @@
 """
 manage user py code
 """
-import sys
 import os
+import sys
 
 
 class ScriptImportManage:
@@ -31,3 +31,10 @@ class ScriptImportManage:
             dsl_hook_import_path = "dsl.hook"
             dsl_module = __import__(dsl_hook_import_path)
             self.dsl_hook = getattr(dsl_module, "hook")
+        # tag_provider
+        tag_provider_path = os.path.join(
+            os.getcwd(), "pscript", "tag_provider.py"
+        )
+        if os.path.exists(tag_provider_path):
+            tag_provider_path_import_path = "tag_provider"
+            self.tag_provider = __import__(tag_provider_path_import_path)

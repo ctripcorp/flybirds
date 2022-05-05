@@ -8,6 +8,7 @@ import os
 
 import flybirds.utils.flybirds_log as log
 import flybirds.utils.uuid_helper as uuid_helper
+from flybirds.core.exceptions import FlybirdVerifyException
 from flybirds.core.tag_expression import TagExpression
 from flybirds.utils import file_helper
 
@@ -32,15 +33,15 @@ def check_workspace_args(feature_path):
 
 def parse_args(
         feature_path, tag, report_format, report_path, define, rerun, es,
-        to_html, run_at
+        to_html, run_at, processes
 ):
     """
     process args
     :return:
     """
     log.info(
-        f"flybirds cmd info: {feature_path} {tag} {report_format} {report_path}"
-        f" {define} {rerun} {es} {to_html} {run_at}"
+        f"flybirds cmd info: {feature_path} {tag} {report_format} "
+        f"{report_path} {define} {rerun} {es} {to_html} {run_at}"
     )
 
     check_workspace_args(feature_path)
@@ -94,6 +95,7 @@ def parse_args(
         )
 
     # process tag
+    behave_tag_array = []
     if not (tag is None):
         # tag deal
         tags.append(tag)
@@ -120,9 +122,10 @@ def parse_args(
 
     if len(use_define) > 0:
         cmd_array.extend(use_define)
+        has_user_tag_exist(use_define)
 
     cmd_array.append(
-        "--no-color --no-capture --no-capture-stderr --no-skipped"
+        "--no-color --no-capture --no-capture-stderr"
     )
     cmd_str = " ".join(cmd_array)
     log.info("the assembled behave execution command: {}".format(cmd_str))
@@ -134,5 +137,20 @@ def parse_args(
         "env_config": es,
         "report_format": report_format,
         "html": to_html,
-        "run_at": run_at
+        "run_at": run_at,
+        "processes": processes,
+        "feature_path": feature_path,
+        "parsed_tags": behave_tag_array
     }
+
+
+def has_user_tag_exist(arr):
+    new_arr = []
+    for item in arr:
+        if not ('=' in item):
+            continue
+        key = item.split("=", 1)[0]
+        if key in new_arr:
+            message = f"the tag [{key}] already exist,please chang other one."
+            raise FlybirdVerifyException(message)
+        new_arr.append(item.split("=", 1)[0])

@@ -6,8 +6,8 @@ from airtest.core.api import (time, text, keyevent)
 
 import \
     flybirds.core.plugin.plugins.default.ui_driver.poco.poco_attr as poco_attr
-import \
-    flybirds.core.plugin.plugins.default.ui_driver.poco.poco_click as poco_click
+import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_click \
+    as poco_click
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_ele as poco_ele
 import \
     flybirds.core.plugin.plugins.default.ui_driver.poco.poco_findsnap \
@@ -18,8 +18,8 @@ import \
 import \
     flybirds.core.plugin.plugins.default.ui_driver.poco.poco_selector \
     as poco_selector
-import \
-    flybirds.core.plugin.plugins.default.ui_driver.poco.poco_swipe as poco_swipe
+import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_swipe \
+    as poco_swipe
 import \
     flybirds.core.plugin.plugins.default.ui_driver.poco.poco_text as poco_text
 import \

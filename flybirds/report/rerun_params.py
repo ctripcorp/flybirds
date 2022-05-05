@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-import os
 import base64
 import json
+import os
+
 import flybirds.utils.file_helper as file_helper
 import flybirds.utils.flybirds_log as log
 
 
 def get_rerun_params(
-    run_count, rerun_feature_path, max_retry_count, report_dir_path, run_args
+        run_count, rerun_feature_path, max_retry_count, report_dir_path,
+        run_args
 ):
     if run_args is not None:
         use_define = run_args.get("use_define")
@@ -23,8 +25,8 @@ def get_rerun_params(
         )
         #   create and clear report path
         rerun_report_dir_path = rerun_report_path[
-            0: rerun_report_path.rfind(os.sep)
-        ]
+                                0: rerun_report_path.rfind(os.sep)
+                                ]
         file_helper.create_dirs(rerun_report_dir_path)
         file_helper.clear_dirs(rerun_report_dir_path)
         rerun_report_path = "-o {}".format(rerun_report_path)

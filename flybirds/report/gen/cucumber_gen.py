@@ -4,8 +4,9 @@ report gen
 """
 import os
 import subprocess
-from flybirds.utils.flybirds_log import logger
+
 from flybirds.report.gen_factory import GenFactory
+from flybirds.utils.flybirds_log import logger
 
 STATIC_DIR = os.path.dirname(__file__)
 
@@ -17,7 +18,7 @@ class CucumberGen:
     name = "cucumber"
 
     @staticmethod
-    def gen(report_path):
+    def gen(report_path, platform):
         """
         report gen
         """
@@ -27,12 +28,8 @@ class CucumberGen:
         gen_path = os.path.join(report_js_path, "node_report",
                                 "report.js")
 
-        cmd_str = f"node {gen_path} {report_path} {report_path}"
+        cmd_str = f"node {gen_path} {report_path} {report_path} {platform}"
         logger.info(f"report cmd:{cmd_str}")
-
-        # cwd_pth = os.getcwd()
-        # if os.environ.get('base_dir') is not None:
-        #     cwd_pth = os.environ.get('base_dir')
 
         report_process = subprocess.Popen(
             cmd_str, cwd=os.getcwd(), shell=True, stdout=None
