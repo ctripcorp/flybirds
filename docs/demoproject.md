@@ -9,7 +9,7 @@
 ## Config
 When testing on **mobile**, you must configure the items: `deviceId`、`packageName`. When testing on IOS devices, you must additionally configure `webDriverAgent`.
 
-**flybirds_config.json**
+#### **flybirds_config.json**
 
 - `packageName` 
 
@@ -49,11 +49,11 @@ When testing on **mobile**, you must configure the items: `deviceId`、`packageN
 
 - `headless` 
 
-	The running mode of the browser, `true` means the browser will run in **headless** mode. Effective when `platform=web`.
+	The running mode of the browser, `true` means the browser will run in **headless** mode. Required for `platform=web`. Default is: `true`.
 
 - `browserType` 
 
-	Supported browser types: `chromium`, `firefox` and `webkit`. Effective when `platform=web`.
+  Supported browser types: `chromium`, `firefox` and `webkit`. Required for `platform=web`. Multiple values are supported to be configured at the same time. For example: `browserType`: ["firefox", "chromium", "webkit"].  Default is: "browserType": ["chromium"].
 
 - `beforeRunPage` 
 
@@ -161,14 +161,61 @@ When testing on **mobile**, you must configure the items: `deviceId`、`packageN
 - `useAirtestRecord`
 
    Use airtest record, default: "true"
+   
+   
 
-**schema_url.json**
+#### **schema_url.json**
 
-page schema access address
+For unified configuration of `schema` access addresses for multi-platform pages.
 
-- "front page": "ctrip://homepage"   
+**Examples：**
+
+- The `schema` access address is the same for multi-platform pages：
+
+  "front page": "ctrip://homepage"   
 
   above example is the Trip APP homepage
+
+- Different `schema` access addresses for multi-platform pages:
+
+  The following example is the list page  of Trip for android, ios and web
+
+  ```json
+  "listPage": {
+    "android": "/rn_test/ctrip_list_android/",
+    "ios": "/rn_test/ctrip_list_ios/",
+    "web": "https://ctrip.test/list"
+  }
+  
+  ```
+
+
+
+#### **ele_locator.json**
+
+For unified configuration of how to position elements on multiple platforms.
+
+**Examples：**
+
+- Elements on multiple platforms are positioned in the same way：
+
+  "element1": "text=Help Center"
+
+  The above example shows how to position [element 1].
+
+- Different ways of positioning elements for multiple platforms:
+
+  The following example shows how [element 2] is positioned on android, ios and web
+
+  ```json
+  "element2":{
+    "android": "text=ticket",
+    "ios": "label=ticket",
+    "web": "#ticket"
+  }
+  ```
+
+
 
 
 ## Pscripts

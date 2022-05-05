@@ -11,7 +11,7 @@
 
 进行**移动端**测试时，必须配置项：`deviceId` 、`packageName`。在IOS设备上测试时，必须额外配置`webDriverAgent`。
 
-**flybirds_config.json**
+#### **flybirds_config.json**
 
 - `packageName` 
 
@@ -51,11 +51,13 @@
 
 - `headless` 
 
-	浏览器的运行模式，为 true 时表示浏览器将以**无头**方式运行。`platform=web`时生效。
+	浏览器的运行模式，为 true 时表示浏览器将以**无头**方式运行。`platform=web`时必填。默认为：`true`
 
 - `browserType` 
 
-	支持的浏览器类型： `chromium`, `firefox` and `webkit`。`platform=web`时生效。
+  支持的浏览器类型： `chromium`, `firefox` and `webkit`。`platform=web`时必填。支持同时配置多个值，
+
+  如："browserType": ["firefox","chromium","webkit"]。 默认为："browserType": ["chromium"]。
 
 - `beforeRunPage` 
 
@@ -165,13 +167,60 @@
 
   使用airtest录屏, 默认：true
 
-**schema_url.json**
 
-页面schema访问地址
 
-- "首页": "ctrip://homepage"
+#### **schema_url.json**
 
+用于对多端页面的`schema`访问地址进行统一配置
+
+**示例：**
+
+- 多端页面的 `schema` 访问地址相同：
+
+  "首页": "ctrip://homepage"
+  
   示例为携程APP首页
+  
+- 多端页面的 `schema` 访问地址不同
+
+  示例为携程android、ios、web端的列表页地址
+  
+  ```json
+  "列表页": {
+    "android": "/rn_test/ctrip_list_android/",
+    "ios": "/rn_test/ctrip_list_ios/",
+    "web": "https://ctrip.test/list"
+  }
+  
+  ```
+
+
+
+#### **ele_locator.json**
+
+用于对多端元素的定位方式进行统一配置
+
+**示例：**
+
+- 多端元素的 定位方式相同：
+
+  "元素1": "text=帮助中心"
+
+  示例为【元素1】的定位方式
+
+- 多端元素的 定位方式不同
+
+  示例为【元素2】在android、ios、web端的定位方式
+
+  ```json
+  "元素2": {
+    "android": "text=机票",
+    "ios": "label=机票",
+    "web": "#s-top-loginbtn"
+  }
+  ```
+
+
 
 
 ## pscripts目录

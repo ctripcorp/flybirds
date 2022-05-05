@@ -108,6 +108,12 @@ flybirds run --report report\curent\report.json
 ```bash 
 # 通过参数切换执行平台Android、iOS、Web
 flybirds run --define platform=web 
+
+# 通过参数指定web执行平台启动的浏览器(单个)
+flybirds run -D browserType=webkit
+
+# 通过参数指定web执行平台启动的浏览器(多个浏览器时用半角逗号进行分隔)
+flybirds run -D browserType=webkit,firefox
 ```
 
 作用2: 传入自定义参数以便在`pscript`目录下的自定义脚本中使用，使用全局参数 `global_resource` 获取.
