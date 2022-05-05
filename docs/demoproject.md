@@ -49,11 +49,11 @@ When testing on **mobile**, you must configure the items: `deviceId`、`packageN
 
 - `headless` 
 
-	The running mode of the browser, `true` means the browser will run in **headless** mode. Effective when `platform=web`.
+	The running mode of the browser, `true` means the browser will run in **headless** mode. Required for `platform=web`. Default is: `true`.
 
 - `browserType` 
 
-	Supported browser types: `chromium`, `firefox` and `webkit`. Effective when `platform=web`. Support multiple values at the same time.
+  Supported browser types: `chromium`, `firefox` and `webkit`. Required for `platform=web`. Multiple values are supported to be configured at the same time. For example: `browserType`: ["firefox", "chromium", "webkit"].  Default is: "browserType": ["chromium"].
 
 - `beforeRunPage` 
 
