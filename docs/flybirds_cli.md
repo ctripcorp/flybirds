@@ -109,9 +109,14 @@ flybirds run --report report\curent\report.json
 Function 1: Override the value of the corresponding configuration item in the  **`config`** file, such as:
 
 ```bash 
- # The device and uniqueTag used at runtime are the values specified in the command, and the values configured in the configuration file will not be read
- 
-flybirds run --define deviceId=*** --define uniqueTag=***
+# switch execution platform by parameter: Android, iOS, Web
+flybirds run --define platform=web 
+
+# specify the browser to be launched by the web execution platform with parameters (single)
+flybirds run -D browserType=webkit
+
+# Specify the browser to be launched by the web execution platform with parameters (multiple)
+flybirds run -D browserType=webkit,firefox
 ```
 
 Function 2: Pass in custom parameters for use in custom scripts in the **`pscript`** directory. Use the global parameter **`global_resource`** to get it.
