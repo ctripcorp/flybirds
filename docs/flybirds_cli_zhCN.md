@@ -112,7 +112,7 @@ flybirds run --define platform=web
 # 通过参数指定web执行平台启动的浏览器(单个)
 flybirds run -D browserType=webkit
 
-# 通过参数指定web执行平台启动的浏览器(多个)
+# 通过参数指定web执行平台启动的浏览器(多个浏览器时用半角逗号进行分隔)
 flybirds run -D browserType=webkit,firefox
 ```
 

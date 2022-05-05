@@ -51,11 +51,13 @@
 
 - `headless` 
 
-	浏览器的运行模式，为 true 时表示浏览器将以**无头**方式运行。`platform=web`时生效。
+	浏览器的运行模式，为 true 时表示浏览器将以**无头**方式运行。`platform=web`时必填。默认为：`true`
 
 - `browserType` 
 
-	支持的浏览器类型： `chromium`, `firefox` and `webkit`。`platform=web`时生效。支持同时配置多个值。
+  支持的浏览器类型： `chromium`, `firefox` and `webkit`。`platform=web`时必填。支持同时配置多个值，
+
+  如："browserType": ["firefox","chromium","webkit"]。 默认为："browserType": ["chromium"]。
 
 - `beforeRunPage` 
 

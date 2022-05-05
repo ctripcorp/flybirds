@@ -115,7 +115,7 @@ flybirds run --define platform=web
 # specify the browser to be launched by the web execution platform with parameters (single)
 flybirds run -D browserType=webkit
 
-# Specify the browser to be launched by the web execution platform with parameters (multiple)
+# Specify the browser to be launched by the web execution platform with parameters (Separate multiple browsers with half-angle comma)
 flybirds run -D browserType=webkit,firefox
 ```
 
