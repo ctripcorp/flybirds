@@ -156,7 +156,7 @@ class DeviceConfig:
             if device_info.__contains__("webDriverAgent"):
                 device_driver = device_info["webDriverAgent"]
 
-            self.platform = user_data.get("platform", platform)
+            self.platform = user_data.get("platform", platform).lower()
             self.web_driver_agent = device_driver
             self.screen_size = None
 

@@ -57,8 +57,8 @@ class PluginManager:  # pylint: disable=too-few-public-methods
             browser_types = browser_type.split(',')
             browser_types = list(set(browser_types))
             temp = []
-            [temp.append(i) for i in browser_types if
-             i in ['chromium', 'firefox', 'webkit']]
+            [temp.append(i.strip().lower()) for i in browser_types if
+             i.strip().lower() in ['chromium', 'firefox', 'webkit']]
             if len(temp) == 0:
                 temp.append('chromium')
             user_data['browserType'] = ",".join(temp)

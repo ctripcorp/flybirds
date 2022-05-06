@@ -156,8 +156,8 @@ def get_browser_types(context):
         browser_types = browser_type.split(',')
     browser_types = list(set(browser_types))
     temp = []
-    [temp.append(i) for i in browser_types if
-     i in ['chromium', 'firefox', 'webkit']]
+    [temp.append(i.strip().lower()) for i in browser_types if
+     i.strip().lower() in ['chromium', 'firefox', 'webkit']]
     # add default value
     if len(temp) == 0:
         log.warn(
