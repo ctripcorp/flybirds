@@ -166,7 +166,10 @@ def ele_wrap(func):
                     continue
             v = replace_str(v)
             if 'selector' in k:
-                v = gr.get_ele_locator(v)
+                selector_str = v
+                ele_key = v.split(',')[0]
+                ele_value = gr.get_ele_locator(ele_key)
+                v = selector_str.replace(ele_key, ele_value, 1)
             kwargs[k] = v
         func(*args, **kwargs)
         # Do something after the function.
