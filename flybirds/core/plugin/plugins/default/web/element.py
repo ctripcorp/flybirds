@@ -87,6 +87,7 @@ class Element:
                 selector_node = self.page.query_selector(selector_str)
                 if selector_node is None:
                     raise FlybirdsVerifyEleException(selector=selector_str)
+                return selector_node, selector_str
             raise FlybirdsVerifyEleException(selector=selector_str)
         return selector_node, selector_str
 
@@ -117,18 +118,26 @@ class Element:
         verify_helper.text_container(param_2, e_text)
 
     def find_text(self, context, param):
+        param_temp = handle_str(param)
+        param_dict = params_to_dic(param_temp)
+        selector_str = param_dict["selector"]
+
         p_content = self.page.content()
-        if param in p_content:
-            log.info(f'fif_ind_text: [{param}] is success!')
+        if selector_str in p_content:
+            log.info(f'find_text: [{selector_str}] is success!')
         else:
-            message = f"expect to find the text [{param}] in the page, " \
-                      f"but not actually find it"
+            message = f"expect to find the text [{selector_str}] in the " \
+                      f"page, but not actually find it"
             raise FlybirdVerifyException(message)
 
     def find_no_text(self, context, param):
+        param_temp = handle_str(param)
+        param_dict = params_to_dic(param_temp)
+        selector_str = param_dict["selector"]
+
         p_content = self.page.content()
-        if param in p_content:
-            message = f"except text [{param}] not exists in page, " \
+        if selector_str in p_content:
+            message = f"except text [{selector_str}] not exists in page, " \
                       f"but actual has find it."
             raise FlybirdVerifyException(message)
 

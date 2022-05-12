@@ -164,7 +164,7 @@ class Step:
     @classmethod
     def text_attr_equal(cls, context, selector, param2, param3):
         ele = gr.get_value("plugin_ele")
-        ele.is_ele_attr_equal(context, selector, param2, param3)
+        ele.is_text_attr_equal(context, selector, param2, param3)
 
     @classmethod
     def find_child_from_parent(cls, context, p_selector, c_selector):
