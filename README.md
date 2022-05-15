@@ -10,7 +10,7 @@
 [![pypi version](https://img.shields.io/pypi/v/flybirds.svg)](https://pypi.python.org/pypi/flybirds)
 [![pyversions](https://img.shields.io/pypi/pyversions/flybirds.svg)](https://pypi.python.org/pypi/flybirds)
 
-> 基于自然语言的，跨端跨框架 BDD UI自动化测试方案
+> 跨端跨框架 BDD UI自动化测试方案
 
 ## 架构
 
@@ -24,7 +24,7 @@
 
 Flybirds是基于BDD模式的前端UI自动化测试框架,提供了一系列开箱即用的工具和完善的文档。
 - 基于Behave，实现BDD中“自然语言测试用例文档”和“自动化测试代码”关联需要用到支持BDD工具。
-- 基于Airtest，实现BDD中“测试用例能在自动化测试平台上执行”需要用到移动端UI自动化测试框架。
+- 基于Airtest和Poco，实现BDD中“测试用例能在自动化测试平台上执行”需要用到移动端UI自动化测试框架。
 - 基于Playwright, 实现BDD中“测试用例能在自动化测试平台上执行”需要用到Web端UI自动化测试框架。
 
 ## 特性
@@ -32,7 +32,7 @@ Flybirds是基于BDD模式的前端UI自动化测试框架,提供了一系列开
 使用Flybirds你能够完成大部分的手机端自动化操作，以下是一些帮助入门的特性描述：
 - 基于BDD模式，类自然语言语法
 - 支持Android、iOS、Web 自动化操作、表单提交、UI元素校验、键盘输入、Deeplink跳转等
-- 一套用例，支持 Android、iOS、Web 三端
+- 一套用例，多端复用
 - 默认支持英文、中文两种语言，支持更多语言扩展
 - 插件式设计，支持用户自定义自动化扩展
 - 提供cli脚手架，快速搭建项目
@@ -62,24 +62,26 @@ cd {your_python_path}/site-packages/airtest/core/android/static/adb/linux
 chmod +x adb
 ```
 
+- for web
+```bash
+# 不带参数的运行将安装默认所有浏览器
+playwright install
+# 通过提供一个参数来安装特定的浏览器
+playwright install webkit
+# 查看支持安装的浏览器
+playwright install --help
+
+```
+
+
 ## 创建项目
 ```bash
 flybirds create 
 ```
-Web项目，需安装浏览器
-```bash
-# 不带参数的运行将安装默认所有浏览器
-playwright install
-```
 
+## 执行测试
 ```bash
-# 通过提供一个参数来安装特定的浏览器
-playwright install webkit
-```
-
-```bash
-# 查看支持安装的浏览器
-playwright install --help
+flybirds run 
 ```
 
 ## 教程
@@ -88,8 +90,8 @@ playwright install --help
 - [项目结构](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id6)
 - [自动化操作语法](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#step)
 - [运行前检查](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id13)
-- [开始运行](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id15)
-- [配置参数](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id16)
+- [开始运行](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id14)
+- [配置参数](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id15)
 - [脚手架参数](https://github.com/ctripcorp/flybirds/blob/main/docs/flybirds_cli_zhCN.md)
 - [多语言](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id19)
 - [持续集成](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id20)
