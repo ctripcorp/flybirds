@@ -24,6 +24,7 @@ class GlobalContext:
     screen = PluginProxy()
     screen_record = PluginProxy()
     ui_driver = PluginProxy()
+    interception = PluginProxy()
     platform = None
     config = None
     config_processor = []

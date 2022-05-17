@@ -123,3 +123,16 @@ class FlybirdsVerifyEleException(Exception):
         message += f'\nwaiting for selector "{param}"\n'
         message += '=' * 46
         return message
+
+
+class FlybirdsException(Exception):
+    """
+     flybirds exception base class
+    """
+
+    def __init__(self, message):
+        super().__init__()
+        self.message = message
+
+    def __str__(self):
+        return str(self.message)

@@ -30,7 +30,9 @@ def init_glb():
         "web_driver_agent": None,
         "playwright": None,
         "browser": None,
-        "plugin_page": None
+        "plugin_page": None,
+        "interceptionRequest": {},
+        "interceptionValues": {}
     }
 
 
@@ -276,3 +278,10 @@ def get_ele_locator(key):
             f"The [{key}] has no element locator configuration for the"
             f" [{platform}] platform in ele_locator.json")
     return ele_locator.get(platform)
+
+
+def get_server_request_body(service):
+    interception_request = get_value('interceptionRequest')
+    if interception_request:
+        return interception_request.get(service)
+    return None

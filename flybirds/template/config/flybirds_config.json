@@ -15,7 +15,13 @@
   "web_info": {
     "headless": true,
     "browserType": [],
-    "defaultTimeout": 30
+    "defaultTimeout": 30,
+    "requestInterception": true,
+    "abortDomainList": [
+      "www.google-analytics.com",
+      "accounts.google.com",
+      "www.facebook.com"
+    ]
   },
   "flow_behave": {
     "beforeRunPage": "restartApp",

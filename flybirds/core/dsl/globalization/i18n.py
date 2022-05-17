@@ -137,6 +137,15 @@ step_language = {
             "存在[{p_selector}]的[{c_selector}]的元素"],
         "the text of element [{p_selector}] subNode [{c_selector}] is [{param3}]": [
             "[{p_selector}]的[{c_selector}]文案为[{param3}]"
-        ]
+        ],
+
+        "cache service request [{service}]": ["缓存服务请求[{service}]"],
+        "remove service request cache [{service}]": ["移除请求缓存[{service}]"],
+        "remove all service request caches": ["移除所有请求缓存"],
+        "listening service [{service}] bind mockCase[{mock_case_id}]": [
+            "监听服务[{service}]绑定MockCase[{mock_case_id}]"],
+        "remove service listener [{service}]": ["移除服务监听[{service}]"],
+        "remove all service listeners": ["移除所有服务监听"],
+
     },
 }

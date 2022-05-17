@@ -72,6 +72,17 @@ def get_config(config, name):
     return None
 
 
+def get_interface_ignore_config():
+    """
+    load flybirds interfaceIgnoreConfig
+    """
+    # todo readJsonData(path.join(root, 'interfaceIgnoreConfig'));
+    all_json_data = {}
+    path = os.path.join(os.getcwd(), "interfaceIgnoreConfig")
+
+    return None
+
+
 class AppConfig:
     """
     Read configuration information about the test app
@@ -166,6 +177,7 @@ class WebConfig:
     Read configuration information about the web test
     """
 
+    # todo 增加配置逻辑处理
     def __init__(self, user_data, config):
         web_info = get_config(config, "web_info")
         if user_data is None and web_info is None:
