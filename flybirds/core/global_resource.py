@@ -280,8 +280,17 @@ def get_ele_locator(key):
     return ele_locator.get(platform)
 
 
-def get_server_request_body(service):
-    interception_request = get_value('interceptionRequest')
-    if interception_request:
-        return interception_request.get(service)
-    return None
+def get_service_ignore_nodes(service):
+    """
+    Get the ignore nodes configuration value of the service interface
+    """
+    all_ignore_nodes = _global_dict[
+        "configManage"].ignore_node_info.all_ignore_nodes
+    if all_ignore_nodes is None:
+        log.warn("[get_service_ignore_nodes] cannot find configuration value "
+                 "from interfaceIgnoreConfig folder")
+        return
+    service_ignore_nodes = all_ignore_nodes.get(service)
+    if service_ignore_nodes is None:
+        log.info(f"interface service [{service}] has not set ignore nodes")
+    return service_ignore_nodes

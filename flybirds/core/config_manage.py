@@ -52,6 +52,7 @@ class ConfigManage:
             str(self.flow_behave.__dict__),
         )
         self.ele_locator_info = EleLocator()
+        self.ignore_node_info = IgnoreNodeConfig()
 
 
 def get_config(config, name):
@@ -532,3 +533,23 @@ class EleLocator:
         else:
             self.all_ele_locator = file_helper.get_json_from_file(
                 ele_locator_path)
+
+
+class IgnoreNodeConfig:
+    """
+    todo
+    all interface ignore node config
+    """
+
+    def __init__(self):
+        interface_ignore_dir_path = os.path.join(
+            os.getcwd(), "interfaceIgnoreConfig"
+        )
+        self.all_ignore_nodes = None
+        # if os.path.exists(interface_ignore_dir_path):
+        #     self.all_schema_url = file_helper.get_json_from_file(
+        #         schema_url_path
+        #     )
+        # else:
+        #     log.warn(
+        #         f"[SchemaUrl] cannot find path: {schema_url_path}")

@@ -3,7 +3,11 @@
 # @Author : hyx
 # @File : interception.py
 # @desc :web request interception related operations
+import json
 import os
+import re
+
+from deepdiff import DeepDiff
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
@@ -111,35 +115,44 @@ class Interception:
     # compare service requests  todo
     # -------------------------------------------------------------------------
     @staticmethod
-    def request_compare(operation, target_data_path):
+    def request_compare(operation, target_file_name):
         """
         # /^验证服务请求\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
          operation 待校验的接口名称
-         target_data_path 校验报文路径
+         target_file_name 校验报文文件名称
         """
-        request_info = gr.get_server_request_body(operation)
+        request_info = get_server_request_body(operation)
         actual_request_obj = None
         if request_info and request_info.get('postData'):
             actual_request_obj = request_info.get('postData')
         if actual_request_obj is None:
-            message = f'未监听到[{operation}]的数据'
-            log.error(message)
+            message = f'[request_compare] not listening to data from ' \
+                      f'[{operation}]'
             raise FlybirdsException(message)
 
-        file_path = os.path.join(os.getcwd(), target_data_path)
+        file_path = os.path.join(os.getcwd(), "compareData", target_file_name)
         expect_request_obj = None
         if os.path.exists(file_path):
             expect_request_obj = file_helper.get_json_from_file_path(file_path)
 
         if expect_request_obj is None:
-            message = f'未获取到[{target_data_path}]的数据'
-            log.error(message)
+            message = f'[request_compare] data for file ' \
+                      f'[{target_file_name}] was not retrieved!'
             raise FlybirdsException(message)
-        # todo 处理忽略节点
-        handled_expect, handled_actual = handle_config_node(expect_request_obj,
-                                                            actual_request_obj,
-                                                            operation)
-        # todo 获取差异节点
+        exclude_paths, exclude_regex_paths = handle_ignore_node(operation)
+        ignore_order = gr.get_web_info_value("ignore_order", False)
+        diff = DeepDiff(actual_request_obj, expect_request_obj,
+                        ignore_order=ignore_order, verbose_level=2,
+                        exclude_paths=exclude_paths,
+                        exclude_regex_paths=exclude_regex_paths)
+        if not diff:
+            log.info(f'compare the service request [{operation}] with '
+                     f'[{target_file_name}], the result is the same.')
+            return
+        format_diff = json.dumps(diff, indent=2)
+        log.info(f'Difference when comparing service request [{operation}] '
+                 f'with [{target_file_name}]. Difference node:\n'
+                 f'{format_diff}')
 
     @staticmethod
     def request_query_string_compare(operation, target_data_path):
@@ -152,6 +165,38 @@ class Interception:
         pass
 
 
-def handle_config_node(expect_request_obj, actual_request_obj, operation):
-    # todo
-    return "handled_expect", "handled_actual"
+def get_server_request_body(service):
+    interception_request = gr.get_value('interceptionRequest')
+    if interception_request:
+        return interception_request.get(service)
+    return None
+
+
+def handle_ignore_node(service):
+    service_ignore_nodes = gr.get_service_ignore_nodes(service)
+    if service_ignore_nodes is None:
+        return
+    exclude_paths = []
+    exclude_regex_paths = []
+    for item in service_ignore_nodes:
+        if 'regex' in item:
+            regex_item = item.split('regex:')[-1].strip()
+            exclude_regex_paths.append(regex_item)
+        else:
+            nodes = item.split('.')
+            new_nodes = []
+            for node in nodes:
+                rs = re.findall(r"([^\[\]]+)\[(\d+)\]", node.strip())
+                if len(rs) == 0:
+                    new_nodes.append(node.strip())
+                else:
+                    [new_nodes.append(i.strip()) for i in list(rs[0])]
+
+            path = 'root'
+            for node in new_nodes:
+                if node.isdigit():
+                    path += f'[{node}]'
+                else:
+                    path += f"['{node}']"
+            exclude_paths.append(path.strip())
+    return exclude_paths, exclude_regex_paths
