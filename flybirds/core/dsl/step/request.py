@@ -47,3 +47,34 @@ def remover_request_mock(context, service=None):
 def clear_all_request_mock(context):
     # 移除所有服务监听
     g_Context.step.clear_all_request_mock(context)
+
+
+@step(
+    "compare service request [{operation}] with json file [{target_data_path}]"
+)
+@ele_wrap
+def add_request_mock(context, operation=None, target_data_path=None):
+    # /^验证服务请求\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
+    g_Context.step.request_compare_from_path(context, operation,
+                                             target_data_path)
+
+
+@step(
+    "compare service non-json request [{operation}] with non-json "
+    "file [{target_data_path}]")
+@ele_wrap
+def remover_request_mock(context, operation=None, target_data_path=None):
+    # /^验证服务非json请求\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
+    g_Context.step.request_query_str_compare_from_path(context, operation,
+                                                       target_data_path)
+
+
+@step(
+    "service request [{operation}] request parameter [{target_json_path}] "
+    "is [{expect_value}]")
+@ele_wrap
+def clear_all_request_mock(context, operation=None, target_json_path=None,
+                           expect_value=None):
+    # /^验证服务\[([\s\S]*)\]的请求参数\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
+    g_Context.step.request_compare_value(context, operation, target_json_path,
+                                         expect_value)

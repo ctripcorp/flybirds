@@ -178,3 +178,12 @@ def update_json_data(json_path, key, value):
 
     with open(json_path, "w") as jsonFile:
         json.dump(data, jsonFile, indent=2, separators=(',', ': '))
+
+
+def read_file_from_path(path):
+    """
+    Get the content of the file by path
+    """
+    with open(path, 'r') as f:
+        data = f.read()
+    return data

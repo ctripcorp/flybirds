@@ -6,8 +6,10 @@
 import json
 import os
 import re
+from urllib.parse import parse_qs
 
 from deepdiff import DeepDiff
+from jsonpath_ng import parse as parse_path
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
@@ -25,7 +27,7 @@ class Interception:
     name = "web_interception"
 
     # -------------------------------------------------------------------------
-    # request interception  todo
+    # request interception
     # -------------------------------------------------------------------------
     @staticmethod
     def add_some_interception_request_body(service_str):
@@ -66,7 +68,7 @@ class Interception:
         gr.set_value('interceptionRequest', interception_request)
 
     # -------------------------------------------------------------------------
-    # request service listening  todo
+    # request service listening
     # -------------------------------------------------------------------------
     @staticmethod
     def add_some_interception_mock(service_str, mock_case_id_str):
@@ -112,57 +114,91 @@ class Interception:
         gr.set_value('interceptionValues', interception_values)
 
     # -------------------------------------------------------------------------
-    # compare service requests  todo
+    # compare service requests
     # -------------------------------------------------------------------------
     @staticmethod
-    def request_compare(operation, target_file_name):
+    def request_compare(operation, target_data_path):
         """
         # /^验证服务请求\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
          operation 待校验的接口名称
-         target_file_name 校验报文文件名称
+         target_data_path 校验报文路径
         """
         request_info = get_server_request_body(operation)
         actual_request_obj = None
         if request_info and request_info.get('postData'):
             actual_request_obj = request_info.get('postData')
+        # todo 待删除
+        log.info(f'[request_compare] actualObj:{actual_request_obj}')
         if actual_request_obj is None:
             message = f'[request_compare] not listening to data from ' \
                       f'[{operation}]'
             raise FlybirdsException(message)
-
-        file_path = os.path.join(os.getcwd(), "compareData", target_file_name)
+        actual_request_obj = json.loads(actual_request_obj)
+        file_path = os.path.join(os.getcwd(), target_data_path)
         expect_request_obj = None
         if os.path.exists(file_path):
             expect_request_obj = file_helper.get_json_from_file_path(file_path)
 
+        log.info(f'[request_compare] expect_request_obj:{expect_request_obj}')
         if expect_request_obj is None:
             message = f'[request_compare] data for file ' \
-                      f'[{target_file_name}] was not retrieved!'
+                      f'[{target_data_path}] was not retrieved!'
             raise FlybirdsException(message)
-        exclude_paths, exclude_regex_paths = handle_ignore_node(operation)
-        ignore_order = gr.get_web_info_value("ignore_order", False)
-        diff = DeepDiff(actual_request_obj, expect_request_obj,
-                        ignore_order=ignore_order, verbose_level=2,
-                        exclude_paths=exclude_paths,
-                        exclude_regex_paths=exclude_regex_paths)
-        if not diff:
-            log.info(f'compare the service request [{operation}] with '
-                     f'[{target_file_name}], the result is the same.')
-            return
-        format_diff = json.dumps(diff, indent=2)
-        log.info(f'Difference when comparing service request [{operation}] '
-                 f'with [{target_file_name}]. Difference node:\n'
-                 f'{format_diff}')
+        handle_diff(actual_request_obj, expect_request_obj, operation,
+                    target_data_path)
 
     @staticmethod
     def request_query_string_compare(operation, target_data_path):
         # /^验证服务非json请求\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
-        pass
+        request_info = get_server_request_body(operation)
+        actual_request_obj = None
+        if request_info and request_info.get('postData'):
+            actual_request_obj = request_info.get('postData')
+        if actual_request_obj is None:
+            message = f'[requestQuerystringCompare] not listening to data ' \
+                      f'from [{operation}]'
+            raise FlybirdsException(message)
+        actual_request_obj = parse_qs(actual_request_obj)
+
+        file_path = os.path.join(os.getcwd(), target_data_path)
+        expect_request_obj = None
+        if os.path.exists(file_path):
+            expect_request_obj = file_helper.read_file_from_path(file_path)
+        if expect_request_obj is None:
+            message = f'[requestQuerystringCompare] data for file ' \
+                      f'[{target_data_path}] was not retrieved!'
+            raise FlybirdsException(message)
+        expect_request_obj = parse_qs(expect_request_obj)
+        handle_diff(actual_request_obj, expect_request_obj, operation,
+                    target_data_path)
 
     @staticmethod
     def request_compare_value(operation, target_json_path, expect_value):
         # /^验证服务\[([\s\S]*)\]的请求参数\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
-        pass
+        request_info = get_server_request_body(operation)
+        json_data = None
+        if request_info and request_info.get('postData'):
+            json_data = request_info.get('postData')
+        if json_data is None:
+            message = f'[requestCompareValue] not listening to data ' \
+                      f'from [{operation}]'
+            raise FlybirdsException(message)
+        json_data = json.loads(json_data)
+        json_path_expr = parse_path(target_json_path)
+        target_values = [match.value for match in
+                         json_path_expr.find(json_data)]
+        log.info(f'[requestCompareValue] get jsonPathData: {target_values}')
+        if len(target_values) == 0:
+            message = f'[requestCompareValue] cannot get the value of the ' \
+                      f'[${target_json_path}] path from [{operation}] '
+            raise FlybirdsException(message)
+        if target_values[0] != expect_value:
+            # todo print pretty
+            message = f'The value of the request parameter ' \
+                      f'[{target_json_path}] for service [{operation}] is ' \
+                      f'[{target_values[0]}], which does not match the ' \
+                      f'expected value [{expect_value}]'
+            raise FlybirdsException(message)
 
 
 def get_server_request_body(service):
@@ -173,30 +209,55 @@ def get_server_request_body(service):
 
 
 def handle_ignore_node(service):
-    service_ignore_nodes = gr.get_service_ignore_nodes(service)
-    if service_ignore_nodes is None:
-        return
     exclude_paths = []
     exclude_regex_paths = []
+    service_ignore_nodes = gr.get_service_ignore_nodes(service)
+    if service_ignore_nodes is None:
+        return exclude_paths, exclude_regex_paths
     for item in service_ignore_nodes:
         if 'regex' in item:
             regex_item = item.split('regex:')[-1].strip()
             exclude_regex_paths.append(regex_item)
         else:
-            nodes = item.split('.')
-            new_nodes = []
-            for node in nodes:
-                rs = re.findall(r"([^\[\]]+)\[(\d+)\]", node.strip())
-                if len(rs) == 0:
-                    new_nodes.append(node.strip())
-                else:
-                    [new_nodes.append(i.strip()) for i in list(rs[0])]
-
             path = 'root'
-            for node in new_nodes:
-                if node.isdigit():
-                    path += f'[{node}]'
+            for level_item in item.split('.'):
+                # 标识是否是数组写法
+                level_item = level_item.strip()
+                item_is_array = re.search(r"([^\[\]]+)\[(\d+)\]",
+                                          level_item) is not None
+                item_str = ''
+                if item_is_array:
+                    property_name = "['" + re.search(r"([^\[\]]+)\[(\d+)\]",
+                                                     level_item).group(
+                        1) + "']"
+                    array_index = ''.join(
+                        list(map(
+                            lambda x: "[" + x + "]",
+                            re.findall(r"\[(\d+)\]", level_item))
+                        )
+                    )
+                    item_str = property_name + array_index
                 else:
-                    path += f"['{node}']"
+                    item_str = "['" + level_item + "']"
+                path += item_str
             exclude_paths.append(path.strip())
     return exclude_paths, exclude_regex_paths
+
+
+def handle_diff(actual_request_obj, expect_request_obj, operation,
+                target_file_name):
+    exclude_paths, exclude_regex_paths = handle_ignore_node(operation)
+    ignore_order = gr.get_web_info_value("ignore_order", False)
+    # diff with jsons
+    diff = DeepDiff(actual_request_obj, expect_request_obj,
+                    ignore_order=ignore_order, verbose_level=2,
+                    exclude_paths=exclude_paths,
+                    exclude_regex_paths=exclude_regex_paths)
+    if diff:
+        format_diff = json.dumps(diff, indent=2)
+        message = f'Difference when comparing service request ' \
+                  f'[{operation}] with [{target_file_name}]. ' \
+                  f'Difference node:\n {format_diff}'
+        raise FlybirdsException(message)
+    log.info(f'compare the service request [{operation}] with '
+             f'[{target_file_name}], the result is the same.')

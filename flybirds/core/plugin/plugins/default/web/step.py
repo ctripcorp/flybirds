@@ -196,7 +196,7 @@ class Step:
         app_logout(context)
 
     # -------------------------------------------------------------------------
-    # request interception  todo
+    # request interception
     # -------------------------------------------------------------------------
     @staticmethod
     def add_request_body(context, service_str):
@@ -214,7 +214,7 @@ class Step:
         request_op.clear_interception_request_body()
 
     # -------------------------------------------------------------------------
-    # request service listening  todo
+    # request service listening
     # -------------------------------------------------------------------------
     @staticmethod
     def add_request_mock(context, service_str, mock_case_id_str):
@@ -232,15 +232,15 @@ class Step:
         request_op.clear_interception_mock()
 
     # -------------------------------------------------------------------------
-    # compare service requests  todo
+    # compare service requests
     # -------------------------------------------------------------------------
     @staticmethod
-    def request_compare_with_path(context, operation, target_data_path):
+    def request_compare_from_path(context, operation, target_data_path):
         # /^验证服务请求\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
         request_op.request_compare(operation, target_data_path)
 
     @staticmethod
-    def request_query_str_compare_with_path(context, operation,
+    def request_query_str_compare_from_path(context, operation,
                                             target_data_path):
         # /^验证服务非json请求\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
         request_op.request_query_string_compare(operation, target_data_path)
