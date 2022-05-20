@@ -17,10 +17,9 @@
     "browserType": [],
     "defaultTimeout": 30,
     "requestInterception": true,
+    "ignoreOrder": false,
     "abortDomainList": [
-      "www.google-analytics.com",
-      "accounts.google.com",
-      "www.facebook.com"
+      "google.com"
     ]
   },
   "flow_behave": {

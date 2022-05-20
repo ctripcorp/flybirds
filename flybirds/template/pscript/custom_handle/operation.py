@@ -64,3 +64,12 @@ def login(user_name, password):
 
 def logout():
     pass
+
+
+def get_mock_case_body(mock_case_id):
+    """
+    custom get MockCase response body
+    """
+    mock_case_body = None
+    # here add something...
+    return mock_case_body
