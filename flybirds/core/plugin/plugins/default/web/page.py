@@ -3,7 +3,6 @@
 # @Author : hyx
 # @File : page.py
 # @desc : web page implement
-import json
 import time
 from urllib.parse import urlparse
 
@@ -11,6 +10,8 @@ import flybirds.core.global_resource as global_resource
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 import flybirds.utils.verify_helper as verify_helper
+from flybirds.core.plugin.plugins.default.web.interception import \
+    get_case_response_body
 from flybirds.utils import dsl_helper
 from flybirds.utils.dsl_helper import is_number
 
@@ -37,8 +38,8 @@ class Page:
         context.set_default_timeout(float(default_timeout) * 1000)
         page = context.new_page()
 
-        # todo 读取 requestInterception 配置
-        request_interception = True
+        request_interception = gr.get_web_info_value("request_interception",
+                                                     True)
         if request_interception:
             page.route("**/*", handle_route)
             # request listening events
@@ -106,8 +107,7 @@ def handle_request(request):
 
 
 def handle_route(route):
-    # todo abort_domain_list 获取
-    abort_domain_list = None
+    abort_domain_list = gr.get_web_info_value("abort_domain_list", [])
     parsed_uri = urlparse(route.request.url)
     domain = parsed_uri.hostname
     if abort_domain_list and domain in abort_domain_list:
@@ -127,21 +127,10 @@ def handle_route(route):
         interception_values = gr.get_value('interceptionValues')
         mock_case_id = interception_values.get(operation)
     if mock_case_id:
-        # todo   getCaseResponseBody 1. 从文件读取 ：load时存入global  2. 从接口读取
-        # mock_body = getCaseResponseBody(mock_case_id)
-        mock_body = json.dumps({'mock_case_id': f'hyx_{mock_case_id}'})
+        mock_body = get_case_response_body(mock_case_id)
         if mock_body:
             route.fulfill(status=200,
                           content_type="application/json;charset=utf-8",
                           body=mock_body)
     else:
         route.continue_()
-
-    # if "airlineRebateActivityHomePage" in route.request.url:
-    #     print('handle_route:**** url:>', route.request.url)
-    #     route.fulfill(
-    #         status=200,
-    #         content_type="application/json;charset=utf-8",
-    #         body='{"data":"hyx"}')
-    # else:
-    #     route.continue_()

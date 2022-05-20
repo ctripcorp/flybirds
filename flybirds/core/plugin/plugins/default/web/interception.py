@@ -18,6 +18,7 @@ from flybirds.core.exceptions import FlybirdsException
 __open__ = ["Interception"]
 
 from flybirds.utils import file_helper
+from flybirds.utils.file_helper import read_json_data
 
 
 class Interception:
@@ -127,7 +128,6 @@ class Interception:
         actual_request_obj = None
         if request_info and request_info.get('postData'):
             actual_request_obj = request_info.get('postData')
-        # todo 待删除
         log.info(f'[request_compare] actualObj:{actual_request_obj}')
         if actual_request_obj is None:
             message = f'[request_compare] not listening to data from ' \
@@ -139,7 +139,7 @@ class Interception:
         if os.path.exists(file_path):
             expect_request_obj = file_helper.get_json_from_file_path(file_path)
 
-        log.info(f'[request_compare] expect_request_obj:{expect_request_obj}')
+        log.info(f'[request_compare] expectObj:{expect_request_obj}')
         if expect_request_obj is None:
             message = f'[request_compare] data for file ' \
                       f'[{target_data_path}] was not retrieved!'
@@ -193,11 +193,10 @@ class Interception:
                       f'[${target_json_path}] path from [{operation}] '
             raise FlybirdsException(message)
         if target_values[0] != expect_value:
-            # todo print pretty
-            message = f'The value of the request parameter ' \
-                      f'[{target_json_path}] for service [{operation}] is ' \
-                      f'[{target_values[0]}], which does not match the ' \
-                      f'expected value [{expect_value}]'
+            message = f'value not equal, service [{operation}] request ' \
+                      f'parameter [{target_json_path}] actual value:' \
+                      f'[{target_values[0]}], but expect value:' \
+                      f'[{expect_value}]'
             raise FlybirdsException(message)
 
 
@@ -257,7 +256,29 @@ def handle_diff(actual_request_obj, expect_request_obj, operation,
         format_diff = json.dumps(diff, indent=2)
         message = f'Difference when comparing service request ' \
                   f'[{operation}] with [{target_file_name}]. ' \
-                  f'Difference node:\n {format_diff}'
+                  f'\n Difference node:\n {format_diff} \n'
         raise FlybirdsException(message)
     log.info(f'compare the service request [{operation}] with '
              f'[{target_file_name}], the result is the same.')
+
+
+def get_case_response_body(case_id):
+    operation_module = gr.get_value("projectScript").custom_operation
+    get_mock_case_body = getattr(operation_module, "get_mock_case_body")
+    mock_case_body = get_mock_case_body(case_id)
+    if mock_case_body is not None:
+        log.info('[get_case_response_body] successfully get mockCaseBody '
+                 'from custom operation')
+        return mock_case_body
+    log.warn(f'[get_case_response_body] cannot get mockCaseBody from custom '
+             f'operation. Now try to get from the folder mockCaseData.')
+    # read from folder mockCaseData
+    mock_data_path = os.path.join(os.getcwd(), "mockCaseData")
+    all_mock_data = read_json_data(mock_data_path)
+    if all_mock_data.get(case_id):
+        log.info('[get_case_response_body] successfully get mockCaseBody '
+                 'from folder mockCaseData')
+        return all_mock_data.get(case_id)
+    log.warn(f'[get_case_response_body] cannot get mockCaseBody from folder '
+             f'mockCaseData.')
+    return
