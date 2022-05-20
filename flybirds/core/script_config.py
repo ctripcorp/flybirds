@@ -19,13 +19,13 @@ class ScriptImportManage:
         if os.path.exists(params_deal_path):
             params_deal_import_path = "params_deal"
             self.params_deal = __import__(params_deal_import_path)
-        app_operation_path = os.path.join(
-            os.getcwd(), "pscript", "app", "operation.py"
+        custom_operation_path = os.path.join(
+            os.getcwd(), "pscript", "custom_handle", "operation.py"
         )
-        if os.path.exists(app_operation_path):
-            app_operation_import_path = "app.operation"
-            app_module = __import__(app_operation_import_path)
-            self.app_operation = getattr(app_module, "operation")
+        if os.path.exists(custom_operation_path):
+            custom_operation_import_path = "custom_handle.operation"
+            operation_module = __import__(custom_operation_import_path)
+            self.custom_operation = getattr(operation_module, "operation")
         dsl_hook_path = os.path.join(os.getcwd(), "pscript", "dsl", "hook.py")
         if os.path.exists(dsl_hook_path):
             dsl_hook_import_path = "dsl.hook"

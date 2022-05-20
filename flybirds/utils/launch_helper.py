@@ -19,7 +19,7 @@ def login():
     need_login = gr.get_flow_behave_value("before_run_login", False)
     log.info("before_run_login:{}".format(need_login))
     if need_login:
-        schema_goto_module = gr.get_value("projectScript").app_operation
+        schema_goto_module = gr.get_value("projectScript").custom_operation
         login = getattr(schema_goto_module, "login")
         if not (login is None):
             login_user = gr.get_app_config_value("default_user")
