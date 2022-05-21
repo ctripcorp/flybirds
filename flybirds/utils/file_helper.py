@@ -26,7 +26,7 @@ def get_json_from_file_path(path):
     result = None
     # noinspection PyBroadException
     try:
-        f = open(path, "r", errors='ignore')
+        f = open(path, "r", errors='ignore', encoding="utf-8")
         json_str = f.read().strip().replace('\r\n', '\\r\\n')
         result = json.loads(json_str, strict=False)
     except JSONDecodeError:
@@ -199,7 +199,6 @@ def read_json_data(root_dir_path):
         for file in file_name_list:
             file_path = os.path.join(main_dir, file)
             if re.search(r"\.json", str(file_path)) is not None:
-                print(file_path)
                 json_data = get_json_from_file_path(file_path)
                 for key, value in json_data.items():
                     all_json_data[key] = value

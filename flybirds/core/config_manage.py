@@ -188,17 +188,17 @@ class WebConfig:
             self.abort_domain_list = abort_domain_list
             return
 
-        if web_info.get("headless"):
+        if web_info.get("headless") is not None:
             headless = web_info.get("headless")
-        if web_info.get("browserType"):
+        if web_info.get("browserType") is not None:
             browser_type = web_info.get("browserType")
-        if web_info.get("defaultTimeout"):
+        if web_info.get("defaultTimeout") is not None:
             default_time_out = web_info.get("defaultTimeout")
-        if web_info.get("requestInterception"):
+        if web_info.get("requestInterception") is not None:
             request_interception = web_info.get("requestInterception")
-        if web_info.get("ignoreOrder"):
+        if web_info.get("ignoreOrder") is not None:
             ignore_order = web_info.get("ignoreOrder")
-        if web_info.get("abortDomainList"):
+        if web_info.get("abortDomainList") is not None:
             abort_domain_list = web_info.get("abortDomainList")
 
         headless = user_data.get("headless", headless)
