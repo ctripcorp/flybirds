@@ -200,17 +200,14 @@ class Step:
     # -------------------------------------------------------------------------
     @staticmethod
     def add_request_body(context, service_str):
-        # // 缓存服务请求\[([\s\S]*)\]$/ :初始化
         request_op.add_some_interception_request_body(service_str)
 
     @staticmethod
     def remove_request_body(context, service_str):
-        # // 移除请求缓存\[([\s\S]*)\]$/
         request_op.remove_some_interception_request_body(service_str)
 
     @staticmethod
     def clear_all_request_body(context):
-        # //移除所有请求缓存
         request_op.clear_interception_request_body()
 
     # -------------------------------------------------------------------------
@@ -218,17 +215,14 @@ class Step:
     # -------------------------------------------------------------------------
     @staticmethod
     def add_request_mock(context, service_str, mock_case_id_str):
-        # // 监听服务\[([\s\S]*)\]绑定MockCase\[([\s\S]*)\]
         request_op.add_some_interception_mock(service_str, mock_case_id_str)
 
     @staticmethod
     def remover_request_mock(context, service_str):
-        # //移除服务监听\[([\s\S]*)\]
         request_op.remove_some_interception_mock(service_str)
 
     @staticmethod
     def clear_all_request_mock(context):
-        # // 移除所有服务监听
         request_op.clear_interception_mock()
 
     # -------------------------------------------------------------------------
@@ -236,18 +230,15 @@ class Step:
     # -------------------------------------------------------------------------
     @staticmethod
     def request_compare_from_path(context, operation, target_data_path):
-        # /^验证服务请求\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
         request_op.request_compare(operation, target_data_path)
 
     @staticmethod
     def request_query_str_compare_from_path(context, operation,
                                             target_data_path):
-        # /^验证服务非json请求\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
         request_op.request_query_string_compare(operation, target_data_path)
 
     @staticmethod
     def request_compare_value(context, operation, target_json_path,
                               expect_value):
-        # /^验证服务\[([\s\S]*)\]的请求参数\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
         request_op.request_compare_value(operation, target_json_path,
                                          expect_value)

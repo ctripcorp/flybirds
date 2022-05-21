@@ -32,7 +32,6 @@ class Interception:
     # -------------------------------------------------------------------------
     @staticmethod
     def add_some_interception_request_body(service_str):
-        # // 缓存服务请求\[([\s\S]*)\]$/ :初始化
         if service_str is None:
             log.error(
                 '[addSomeInterceptionRequestBody] param can not be none.')
@@ -46,7 +45,6 @@ class Interception:
 
     @staticmethod
     def remove_some_interception_request_body(service_str):
-        # // 移除请求缓存\[([\s\S]*)\]$/
         service_list = service_str.strip().split(',')
         interception_request = gr.get_value('interceptionRequest')
 
@@ -63,7 +61,6 @@ class Interception:
 
     @staticmethod
     def clear_interception_request_body():
-        # //移除所有请求缓存
         interception_request = gr.get_value('interceptionRequest')
         interception_request.clear()
         gr.set_value('interceptionRequest', interception_request)
@@ -73,7 +70,6 @@ class Interception:
     # -------------------------------------------------------------------------
     @staticmethod
     def add_some_interception_mock(service_str, mock_case_id_str):
-        # // 监听服务\[([\s\S]*)\]绑定MockCase\[([\s\S]*)\]
         if service_str is None or mock_case_id_str is None:
             log.error('[addSomeInterceptionMock] param can not be none. ')
             return
@@ -87,21 +83,20 @@ class Interception:
 
         interception_values = gr.get_value('interceptionValues')
         for i, service in enumerate(service_list):
-            interception_values[service.strip()] = int(
-                mock_case_id_list[i].strip())
+            interception_values[service.strip()] = mock_case_id_list[i].strip()
 
         gr.set_value('interceptionValues', interception_values)
 
     @staticmethod
     def remove_some_interception_mock(service_str):
-        # //移除服务监听\[([\s\S]*)\]
         service_list = service_str.strip().split(',')
         interception_values = gr.get_value('interceptionValues')
 
         for service in service_list:
             try:
-                interception_values.pop(service.strip())
-                log.info(f'remove mock data from request [{service.strip()}]')
+                case_id = interception_values.pop(service.strip())
+                log.info(f'remove mock data [{case_id}] from request '
+                         f'[{service.strip()}]')
             except Exception as e:
                 log.error(f'[removeSomeInterceptionMock] has KeyError! '
                           f'error key: {str(e)}')
@@ -109,7 +104,6 @@ class Interception:
 
     @staticmethod
     def clear_interception_mock():
-        # // 移除所有服务监听
         interception_values = gr.get_value('interceptionValues')
         interception_values.clear()
         gr.set_value('interceptionValues', interception_values)
@@ -119,18 +113,13 @@ class Interception:
     # -------------------------------------------------------------------------
     @staticmethod
     def request_compare(operation, target_data_path):
-        """
-        # /^验证服务请求\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
-         operation 待校验的接口名称
-         target_data_path 校验报文路径
-        """
         request_info = get_server_request_body(operation)
         actual_request_obj = None
-        if request_info and request_info.get('postData'):
+        if request_info is not None and request_info.get('postData'):
             actual_request_obj = request_info.get('postData')
         log.info(f'[request_compare] actualObj:{actual_request_obj}')
         if actual_request_obj is None:
-            message = f'[request_compare] not listening to data from ' \
+            message = f'[request_compare] not get listener data for ' \
                       f'[{operation}]'
             raise FlybirdsException(message)
         actual_request_obj = json.loads(actual_request_obj)
@@ -138,25 +127,23 @@ class Interception:
         expect_request_obj = None
         if os.path.exists(file_path):
             expect_request_obj = file_helper.get_json_from_file_path(file_path)
-
         log.info(f'[request_compare] expectObj:{expect_request_obj}')
         if expect_request_obj is None:
-            message = f'[request_compare] data for file ' \
-                      f'[{target_data_path}] was not retrieved!'
+            message = f'[request_compare] cannot get data form path' \
+                      f'[{target_data_path}]]'
             raise FlybirdsException(message)
         handle_diff(actual_request_obj, expect_request_obj, operation,
                     target_data_path)
 
     @staticmethod
     def request_query_string_compare(operation, target_data_path):
-        # /^验证服务非json请求\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
         request_info = get_server_request_body(operation)
         actual_request_obj = None
-        if request_info and request_info.get('postData'):
+        if request_info is not None and request_info.get('postData'):
             actual_request_obj = request_info.get('postData')
         if actual_request_obj is None:
-            message = f'[requestQuerystringCompare] not listening to data ' \
-                      f'from [{operation}]'
+            message = f'[requestQuerystringCompare] not get listener data ' \
+                      f'for [{operation}]'
             raise FlybirdsException(message)
         actual_request_obj = parse_qs(actual_request_obj)
 
@@ -165,8 +152,8 @@ class Interception:
         if os.path.exists(file_path):
             expect_request_obj = file_helper.read_file_from_path(file_path)
         if expect_request_obj is None:
-            message = f'[requestQuerystringCompare] data for file ' \
-                      f'[{target_data_path}] was not retrieved!'
+            message = f'[requestQuerystringCompare] cannot get data form ' \
+                      f'path [{target_data_path}]'
             raise FlybirdsException(message)
         expect_request_obj = parse_qs(expect_request_obj)
         handle_diff(actual_request_obj, expect_request_obj, operation,
@@ -174,14 +161,13 @@ class Interception:
 
     @staticmethod
     def request_compare_value(operation, target_json_path, expect_value):
-        # /^验证服务\[([\s\S]*)\]的请求参数\[([\s\S]*)\]与\[([\s\S]*)\]一致$/
         request_info = get_server_request_body(operation)
         json_data = None
         if request_info and request_info.get('postData'):
             json_data = request_info.get('postData')
         if json_data is None:
-            message = f'[requestCompareValue] not listening to data ' \
-                      f'from [{operation}]'
+            message = f'[requestCompareValue] not get listener data for ' \
+                      f'[{operation}]'
             raise FlybirdsException(message)
         json_data = json.loads(json_data)
         json_path_expr = parse_path(target_json_path)
@@ -189,8 +175,8 @@ class Interception:
                          json_path_expr.find(json_data)]
         log.info(f'[requestCompareValue] get jsonPathData: {target_values}')
         if len(target_values) == 0:
-            message = f'[requestCompareValue] cannot get the value of the ' \
-                      f'[${target_json_path}] path from [{operation}] '
+            message = f'[requestCompareValue] cannot get the value from ' \
+                      f'path [{target_json_path}] of [{operation}]'
             raise FlybirdsException(message)
         if target_values[0] != expect_value:
             message = f'value not equal, service [{operation}] request ' \
@@ -220,7 +206,7 @@ def handle_ignore_node(service):
         else:
             path = 'root'
             for level_item in item.split('.'):
-                # 标识是否是数组写法
+                # identifies whether the item is an array
                 level_item = level_item.strip()
                 item_is_array = re.search(r"([^\[\]]+)\[(\d+)\]",
                                           level_item) is not None
@@ -247,7 +233,7 @@ def handle_diff(actual_request_obj, expect_request_obj, operation,
                 target_file_name):
     exclude_paths, exclude_regex_paths = handle_ignore_node(operation)
     ignore_order = gr.get_web_info_value("ignore_order", False)
-    # diff with jsons
+    # diffs with jsons
     diff = DeepDiff(actual_request_obj, expect_request_obj,
                     ignore_order=ignore_order, verbose_level=2,
                     exclude_paths=exclude_paths,

@@ -3,6 +3,7 @@
 # @Author : hyx
 # @File : page.py
 # @desc : web page implement
+import json
 import time
 from urllib.parse import urlparse
 
@@ -56,13 +57,7 @@ class Page:
         param_dict = dsl_helper.params_to_dic(param, "urlKey")
         url_key = param_dict["urlKey"]
         schema_url_value = gr.get_page_schema_url(url_key)
-        # self.page.goto(schema_url_value)
-        # todo 待去掉
-        with self.page.expect_response(lambda
-                                               response: response.status == 200 and 'airlineRebateActivityHomePage' in response.url) as response_info:
-            self.page.goto(schema_url_value)
-        response = response_info.value
-        print(f'response>>>: {response.json()}')
+        self.page.goto(schema_url_value)
 
     def return_pre_page(self, context):
         self.page.go_back()
@@ -85,11 +80,10 @@ class Page:
 
 
 def handle_request(request):
-    # interceptionRequest  缓存请求相关操作
+    # interception request handle
     parsed_uri = urlparse(request.url)
     operation = parsed_uri.path.split('/')[-1]
     if operation is not None:
-        # // 服务请求缓存是否存在
         interception_request = gr.get_value('interceptionRequest')
         request_body = interception_request.get(operation)
 
@@ -101,7 +95,6 @@ def handle_request(request):
                                     'url': request.url,
                                     'updateTimeStamp': int(
                                         round(time.time() * 1000))}
-            # // 缓存服务请求：赋值
             interception_request[operation] = current_request_info
             gr.set_value("interceptionRequest", interception_request)
 
@@ -123,12 +116,13 @@ def handle_route(route):
     operation = parsed_uri.path.split('/')[-1]
     mock_case_id = None
     if operation is not None:
-        # /服务监听：operation->mockCaseId
         interception_values = gr.get_value('interceptionValues')
         mock_case_id = interception_values.get(operation)
     if mock_case_id:
         mock_body = get_case_response_body(mock_case_id)
         if mock_body:
+            if not isinstance(mock_body, str):
+                mock_body = json.dumps(mock_body)
             route.fulfill(status=200,
                           content_type="application/json;charset=utf-8",
                           body=mock_body)
