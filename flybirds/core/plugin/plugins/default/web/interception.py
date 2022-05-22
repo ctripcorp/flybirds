@@ -48,15 +48,16 @@ class Interception:
         service_list = service_str.strip().split(',')
         interception_request = gr.get_value('interceptionRequest')
 
-        for service in service_list:
-            try:
+        try:
+            for service in service_list:
                 request_body = interception_request.pop(service.strip())
                 log.info(
                     f'remove data cached by request [{service.strip()}]: '
                     f'{request_body}')
-            except Exception as e:
-                log.error(f'[removeSomeInterceptionRequestBody] has KeyError! '
-                          f'error key: {str(e)}')
+        except Exception as e:
+            message = f'[removeSomeInterceptionRequestBody]  ' \
+                      f'has KeyError! error key: {str(e)}'
+            raise FlybirdsException(message)
         gr.set_value('interceptionRequest', interception_request)
 
     @staticmethod
@@ -92,14 +93,15 @@ class Interception:
         service_list = service_str.strip().split(',')
         interception_values = gr.get_value('interceptionValues')
 
-        for service in service_list:
-            try:
+        try:
+            for service in service_list:
                 case_id = interception_values.pop(service.strip())
                 log.info(f'remove mock data [{case_id}] from request '
                          f'[{service.strip()}]')
-            except Exception as e:
-                log.error(f'[removeSomeInterceptionMock] has KeyError! '
-                          f'error key: {str(e)}')
+        except Exception as e:
+            message = f'[removeSomeInterceptionMock]  ' \
+                      f'has KeyError! error key: {str(e)}'
+            raise FlybirdsException(message)
         gr.set_value('interceptionValues', interception_values)
 
     @staticmethod
@@ -178,7 +180,7 @@ class Interception:
             message = f'[requestCompareValue] cannot get the value from ' \
                       f'path [{target_json_path}] of [{operation}]'
             raise FlybirdsException(message)
-        if target_values[0] != expect_value:
+        if str(target_values[0]) != expect_value:
             message = f'value not equal, service [{operation}] request ' \
                       f'parameter [{target_json_path}] actual value:' \
                       f'[{target_values[0]}], but expect value:' \
