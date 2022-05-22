@@ -89,8 +89,7 @@ def handle_request(request):
 
         if request_body is not None:
             log.info(
-                f'[handle_request]缓存服务：{operation},'
-                f'request_body: {request_body}')
+                f'[handle_request] start cache service：{operation}')
             current_request_info = {'postData': request.post_data,
                                     'url': request.url,
                                     'updateTimeStamp': int(
