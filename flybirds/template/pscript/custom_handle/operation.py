@@ -68,8 +68,8 @@ def logout():
 
 def get_mock_case_body(mock_case_id):
     """
-    custom get MockCase response body
+    custom get mockCase response body
     """
     mock_case_body = None
-    # here add something...
+    # here add something to get mockCase response body...
     return mock_case_body
