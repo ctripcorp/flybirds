@@ -16,5 +16,6 @@
     "android": "/rn_test/ctrip_flight_list_detail_android/",
     "ios": "/rn_test/ctrip_flight_list_detail_ios/",
     "web": "https://spa6.scrape.center/detail/ZWYzNCN0ZXVxMGJ0dWEjKC01N3cxcTVvNS0takA5OHh5Z2ltbHlmeHMqLSFpLTAtbWIx"
-  }
+  },
+  "携程官网": "https://www.ctrip.com/?sid=155952&allianceid=4897&ouid=index"
 }

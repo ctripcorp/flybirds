@@ -1,0 +1,33 @@
+{
+  "cityId": 2,
+  "hotCities": false,
+  "oversea": false,
+  "head": {
+    "cid": "12131017227555019",
+    "ctok": "",
+    "cver": "1.0",
+    "lang": "01",
+    "sid": "6666",
+    "syscode": "PC",
+    "auth": "",
+    "xsid": "",
+    "extension": [
+      {
+        "name": "sdkVersion",
+        "value": "2.34.0"
+      },
+      {
+        "name": "openId",
+        "value": "ce0ae70f-9365"
+      },
+      {
+        "name": "supportWeb_P",
+        "value": "false"
+      },
+      {
+        "name": "scene",
+        "value": "1036"
+      }
+    ]
+  }
+}
