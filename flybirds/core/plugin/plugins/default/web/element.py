@@ -66,30 +66,30 @@ class Element:
         self.page = page_obj.page
 
     def get_ele_locator(self, selector):
-        selector_node, selector_str = self.get_ele_handle(selector)
-        return self.page.locator(selector_str)
-
-    def get_ele_handle(self, selector):
         if selector is None:
             message = f"[get_ele_locator] the param[{selector}] is None."
             raise FlybirdsVerifyEleException(message=message)
-
         param_temp = handle_str(selector)
         param_dict = params_to_dic(param_temp)
         selector_str = param_dict["selector"]
-        selector_node = self.page.query_selector(selector_str)
-        if selector_node is None:
+        try:
+            ele_locator = self.page.locator(selector_str)
+            ele_locator.element_handle()
+            return ele_locator
+        except Exception as e:
             if 'text=' not in selector_str:
                 log.warn(
-                    f'[get_ele_handle] has not find element by[{selector_str}'
+                    f'[get_ele_locator] has not find element by[{selector_str}'
                     f'], now try to find by text.')
-                selector_str = 'text=' + selector_str
-                selector_node = self.page.query_selector(selector_str)
-                if selector_node is None:
-                    raise FlybirdsVerifyEleException(selector=selector_str)
-                return selector_node, selector_str
-            raise FlybirdsVerifyEleException(selector=selector_str)
-        return selector_node, selector_str
+                text_ele_locator = self.locator_ele_by_text(selector_str)
+                return text_ele_locator
+            raise e
+
+    def locator_ele_by_text(self, selector_str):
+        text_selector_str = 'text=' + selector_str
+        text_ele_locator = self.page.locator(text_selector_str)
+        text_ele_locator.element_handle()
+        return text_ele_locator
 
     def get_ele_text(self, param):
         locator = self.get_ele_locator(param)
@@ -149,7 +149,7 @@ class Element:
         try:
             self.get_ele_locator(param)
             ele_exists = True
-        except FlybirdsVerifyEleException:
+        except Exception:
             ele_exists = False
 
         if ele_exists:
@@ -205,9 +205,8 @@ class Element:
         self.page.evaluate(f"window.scrollBy({to_x}, {to_y})")
 
     def ele_select(self, context, selector, option_str):
-        locator = None
+        locator = self.get_ele_locator(selector)
         try:
-            locator = self.get_ele_locator(selector)
             # select by text
             locator.select_option(label=option_str)
             log.info(f'[ele_select] select option[{option_str}] success.')
@@ -252,25 +251,27 @@ class Element:
         self.is_ele_attr_equal(context, text_selector, attr_name, target_val)
 
     def is_parent_exist_child(self, context, parent_selector, child_selector):
-        parent_node, p_selector_str = self.get_ele_handle(parent_selector)
+        parent_locator = self.get_ele_locator(parent_selector)
+
         child_temp = handle_str(child_selector)
         child_dict = params_to_dic(child_temp)
         child_str = child_dict["selector"]
-        child_node = parent_node.query_selector(child_str)
-        if child_node is None:
+
+        try:
+            sub_locator = parent_locator.locator(child_str)
+            sub_locator.element_handle()
+            return sub_locator
+        except Exception as e:
             if 'text=' not in child_str:
-                child_str = 'text=' + child_str
-                child_node = parent_node.query_selector(child_str)
-                if child_node is None:
-                    raise FlybirdsVerifyEleException(selector=child_str)
-            raise FlybirdsVerifyEleException(selector=child_str)
-        return child_node
+                text_ele_locator = self.locator_ele_by_text(child_str)
+                return text_ele_locator
+            raise e
 
     def find_text_from_parent(self, context, parent_selector, child_selector,
                               target_text):
-        child_node = self.is_parent_exist_child(context, parent_selector,
-                                                child_selector)
-        e_text = child_node.inner_text()
+        sub_locator = self.is_parent_exist_child(context, parent_selector,
+                                                 child_selector)
+        e_text = sub_locator.inner_text()
         if e_text is None or e_text.strip() == '':
-            e_text = child_node.get_attribute('value')
+            e_text = sub_locator.get_attribute('value')
         verify_helper.text_equal(target_text, e_text)
