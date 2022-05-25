@@ -69,7 +69,24 @@ def logout():
 def get_mock_case_body(mock_case_id):
     """
     custom get mockCase response body
+
+    :param mock_case_id: unique key for get mock data
     """
     mock_case_body = None
     # here add something to get mockCase response body...
     return mock_case_body
+
+
+def create_browser_context(browser):
+    """
+    custom creates a new browser context.
+    :param browser: the browser instance
+    """
+    context = None
+    # here add something to create BrowserContext...
+    # For example, adding a 'local' parameter when create.
+    #
+    # context = browser.new_context(record_video_dir="videos",
+    #                               ignore_https_errors=True,
+    #                               locale="en")
+    return context

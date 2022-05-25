@@ -32,9 +32,8 @@ class Page:
 
     @staticmethod
     def init_page():
-        browser = gr.get_value('browser')
-        context = browser.new_context(record_video_dir="videos",
-                                      ignore_https_errors=True)
+        context = Page.new_browser_context()
+
         default_timeout = gr.get_web_info_value("default_time_out", 30)
         context.set_default_timeout(float(default_timeout) * 1000)
         page = context.new_page()
@@ -52,6 +51,22 @@ class Page:
         page.set_default_timeout(float(ele_wait_time) * 1000)
         page.set_default_navigation_timeout(float(page_render_timeout) * 1000)
         return page, context
+
+    @staticmethod
+    def new_browser_context():
+        browser = gr.get_value('browser')
+
+        operation_module = gr.get_value("projectScript").custom_operation
+        create_browser_context = getattr(operation_module,
+                                         "create_browser_context")
+        context = create_browser_context(browser)
+        if context is not None:
+            log.info('[new_browser_context] successfully get BrowserContext '
+                     'from custom operation')
+            return context
+        context = browser.new_context(record_video_dir="videos",
+                                      ignore_https_errors=True)
+        return context
 
     def navigate(self, context, param):
         param_dict = dsl_helper.params_to_dic(param, "urlKey")
