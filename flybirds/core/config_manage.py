@@ -173,7 +173,6 @@ class WebConfig:
         # default value
         headless = True
         browser_type = 'chromium'
-        default_time_out = 30
         request_interception = True
         ignore_order = False
         abort_domain_list = []
@@ -182,7 +181,6 @@ class WebConfig:
             log.warn('[web_info] configuration of web_info is none.')
             self.headless = headless
             self.browser_type = browser_type
-            self.default_time_out = default_time_out
             self.request_interception = request_interception
             self.ignore_order = ignore_order
             self.abort_domain_list = abort_domain_list
@@ -192,8 +190,6 @@ class WebConfig:
             headless = web_info.get("headless")
         if web_info.get("browserType") is not None:
             browser_type = web_info.get("browserType")
-        if web_info.get("defaultTimeout") is not None:
-            default_time_out = web_info.get("defaultTimeout")
         if web_info.get("requestInterception") is not None:
             request_interception = web_info.get("requestInterception")
         if web_info.get("ignoreOrder") is not None:
@@ -206,8 +202,6 @@ class WebConfig:
             headless = str2bool(headless)
         self.headless = headless
         self.browser_type = user_data.get("browserType", browser_type)
-        self.default_time_out = user_data.get("defaultTimeout",
-                                              default_time_out)
         self.request_interception = user_data.get("requestInterception",
                                                   request_interception)
         self.ignore_order = user_data.get("ignoreOrder", ignore_order)

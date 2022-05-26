@@ -15,7 +15,6 @@
   "web_info": {
     "headless": true,
     "browserType": [],
-    "defaultTimeout": 30,
     "requestInterception": true,
     "ignoreOrder": false,
     "abortDomainList": [

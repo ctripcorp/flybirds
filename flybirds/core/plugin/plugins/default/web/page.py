@@ -34,10 +34,7 @@ class Page:
     def init_page():
         context = Page.new_browser_context()
 
-        default_timeout = gr.get_web_info_value("default_time_out", 30)
-        context.set_default_timeout(float(default_timeout) * 1000)
         page = context.new_page()
-
         request_interception = gr.get_web_info_value("request_interception",
                                                      True)
         if request_interception:
