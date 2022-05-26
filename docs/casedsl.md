@@ -349,6 +349,49 @@ remove service request cache [getRecommendHotelList,writecookie]
 - platform：Web
 - description：Monitor the operation request and intercept it, and mock data with the return message of mockCaseId<br />Note: `operation` is the string between the last  `\` and  `?` in the url
 
+- **MockCase Configuration**：
+
+  ​	The `mock` data of the service listening `step` statement can be obtained in two ways: **json file configuration** and **function call**.
+
+  -  **json file configuration**：Example 1 below. For the specific setting method and format, please refer to the json file in the **Demo** project **mockCaseData** directory.
+
+    In this method, it should be noted that the `mockCaseId` (json key, such as `4245512` in example 1) corresponding to `response` needs to be unique in the entire `mockCaseData` directory, otherwise the mock data will be used by others with the same `key` data is overwritten.
+
+  - **function call**:  Custom handling with getting `MockData`. This approach requires the implementation of the `get_mock_case_body(mock_case_id)` extension method in the **pscript/custom_handle/operation.py** file of the **Demo** project.
+
+  The `MockCase` binding data prefers the result returned by the custom extension method. When the result of the custom extension method is None, the framework will try to find all json files in the project **mockCaseData** directory and return the mock data corresponding to `mock_case_id` in the json file.
+
+**Mock data configuration example I: json file configuration**
+
+```json
+{
+  "4245512": {
+    "count": 101,
+    "results": [
+      {
+        "id": 10,
+        "name": "test-狮子王",
+        "alias": "The Lion King",
+        "cover": "https://p0.meituan.net/movie/27b76fe6cf3903f3d74963f70786001e1438406.jpg@464w_644h_1e_1c",
+        "categories": [
+          "动画",
+          "歌舞",
+          "冒险"
+        ],
+        "published_at": "1995-07-15",
+        "minute": 89,
+        "score": 9.0,
+        "regions": [
+          "美国"
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Syntax usage example:**
+
 ```js
 //Example1：
 listening service [movie] bind mockCase[4245512]

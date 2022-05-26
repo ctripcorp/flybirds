@@ -61,11 +61,11 @@ When testing on **mobile**, you must configure the items: `deviceId`、`packageN
 
 - `ignoreOrder` 
 
-​		List difference ignoring order or duplicates.  Required for `platform=web`. Default is：`false`。Valid only when  `requestInterception=true`.
+​		List difference ignoring order or duplicates.  Default is：`false`。Valid only when  `requestInterception=true`.
 
 - `abortDomainList` 
 
-​		List of domains that abort routes when requests are blocked。 Required for `platform=web`. For example："abortDomainList": ["google.com"]. Valid only when  `requestInterception=true`.
+​		List of domains that abort routes when requests are blocked. For example："abortDomainList": ["google.com"]. Valid only when  `requestInterception=true`.
 
 - `beforeRunPage` 
 
@@ -235,6 +235,23 @@ For unified configuration of how to position elements on multiple platforms.
 Store custom scripts in python language (including custom step statements, docking with other platforms such as mocks, custom schema jump logic, login and logout, extension of various hook functions when behave is running, parameter processing methods, etc.)
 
 - **custom_handle/operation.py** : Define some app、web specific behaviors, such as the splicing of the schema jump protocol, login, logout, and jump to the homepage in app, and  creates a new  BrowserContext, get Mock data in web.
+
+  Example : Web-side custom creates BrowserContext
+
+  ```python
+  def create_browser_context(browser):
+      """
+      custom creates a new browser context.
+      :param browser: the browser instance
+      """
+      # For example, adding a 'local' parameter when create.
+      context = browser.new_context(record_video_dir="videos",
+                                    ignore_https_errors=True,
+                                     locale="en")
+      return context
+  ```
+
+  
 
 - **dsl.step**：Custom dsl statements, if you create a new .py file to write custom statements, you need to import the .py file in feature/steps/steps.py
 - **dsl.hook**：The extension of each hook function in the execution process, so that users can exert their own influence on the execution process
