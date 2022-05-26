@@ -44,20 +44,32 @@
 - `platform` 
 
     项目case执行的平台，目前支持`android` 、`ios` 和 `web`, 不填时默认为：`android`
-  
+
 - `webDriverAgent` 
 
   设备里WebDriverAgent的BundleID，可通过`tidevice applist`命令查看。连接IOS设备时必填。
 
 - `headless` 
 
-	浏览器的运行模式，为 true 时表示浏览器将以**无头**方式运行。`platform=web`时必填。默认为：`true`
+  浏览器的运行模式，为 true 时表示浏览器将以**无头**方式运行。`platform=web`时必填。默认为：`true`
 
 - `browserType` 
 
   支持的浏览器类型： `chromium`, `firefox` and `webkit`。`platform=web`时必填。支持同时配置多个值，
 
   如："browserType": ["firefox","chromium","webkit"]。 默认为："browserType": ["chromium"]。
+
+- `requestInterception` 
+
+    开启请求拦截。`platform=web`时必填。默认为：`true`
+
+- `ignoreOrder` 
+
+​		请求报文比对时忽略报文节点的顺序或重复的列表差异。 `platform=web`时必填。默认为：`false`。仅在`requestInterception=true`时有效。
+
+- `abortDomainList` 
+
+​		请求拦截时，终止路由的域名列表。`platform=web`时必填。如："abortDomainList": ["google.com"]。仅在`requestInterception=true`时有效。
 
 - `beforeRunPage` 
 
@@ -74,23 +86,23 @@
 - `beforeRunLogin` 
 
   开始测试前是否需要登陆, 默认："false"
-  
+
 - `failScreenRecord` 
 
   失败后是否需要关联用例的执行录屏文件到测试报告中, 默认："true"
-  
+
 - `scenarioScreenRecordTime` 
 
   failScreenRecord为ture开启失败录屏时，录制屏幕的最大时长, 默认：120
-  
+
 - `failRerun` 
 
   失败后是否重新运行, 默认：true
-  
+
 - `maxFailRerunCount` 
 
   失败重新运行所满足的失败个数, 默认：1
-  
+
 - `maxRetryCount` 
 
   失败重试次数, 默认：2
@@ -98,35 +110,35 @@
 - `waitEleTimeout` 
 
   页面中查找元素的超时时间, 默认：15
-  
+
 - `waitEleDisappear` 
 
   页面中指定元素消失的超时时间, 默认：10
-  
+
 - `clickVerifyTimeout` 
 
   点击操作的判断渲染完成的超时时间, 默认：15
-  
+
 - `useSwipeDuration` 
 
   使用全局配置的滑动时间, 默认："false"
-  
+
 - `swipeDuration` 
 
   当useSwipeDuration为ture时，滑动操作的时间为该值, 默认：6
-  
+
 - `usePocoInput` 
 
   输入是否使用poco的输入方法，默认使用airtest, 默认：false
-  
+
 - `afterInputWait` 
 
   输入框输入后的等待时间, 默认：1
-  
+
 - `useSearchSwipeDuration`
 
   滑动查找中是否使用全局的滑动时间, 默认：false
-  
+
 - `searchSwipeDuration`
 
   useSearchSwipeDuration为ture时，滑动查找中的所有滑动时间由该值全局设置, 默认：1
@@ -138,31 +150,31 @@
 - `swipeSearchDistance` 
 
   滑动查找中每次滑动的距离, 默认：0.3
-  
+
 - `pageRenderTimeout` 
 
   等待页面渲染完成的时间，语句 “页面渲染完成出现元素[选择器{, path=false, multiSelector=false, timeout=10}]” 中的timeout参数的全局配置时间, 默认：35
-  
+
 - `appStartTime` 
 
   APP 启动后等待时间, 默认：6
-  
+
 - `swipeReadyTime` 
 
   滑动开始前的等待时间, 默认：3
-  
+
 - `verifyPosNotChangeCount`
 
   判断元素位置未发生改变的最大判断次数, 默认：5
-  
+
 - `screenRecordTime` 
 
   录屏时间, 默认：60
-  
+
 - `useSnap`
 
   是否使用快照查找文案, 默认：true
-  
+
 - `useAirtestRecord` 
 
   使用airtest录屏, 默认：true
@@ -226,13 +238,10 @@
 ## pscripts目录
 
 存放python语言自定义的脚本（包括自定义step语句，对接如mock等其他平台，自定义schema跳转逻辑，登陆登出，behave运行时各种钩子函数的扩展，参数处理方法等等）
-app/operation.py 定义一些app特有的行为，比如schema跳转协议的拼接，登陆，登出，跳转到首页
 
-- dsl.step：自定义dsl语句，如果新建.py文件来编写自定义语句，需要在feature/steps/steps.py中import 该 .py文件
+- **custom_handle/operation.py** ：定义一些app、web特有的行为。比如，app的 schema跳转协议的拼接，登陆，登出，跳转到首页； web的创建自定义BrowserContext，获取MockData等。
 
-- dsl.hook：执行过程中各个钩子函数的扩展
-
-- other_platform：存放的是一些与其他平台交互的代码
-
-- params_deal：存放自定义的一些处理方法
+- **dsl.step**：自定义dsl语句，如果新建.py文件来编写自定义语句，需要在feature/steps/steps.py中import 该 .py文件
+- **dsl.hook**：执行过程中各个钩子函数的扩展
+- **params_deal**：存放自定义的一些处理方法
 
