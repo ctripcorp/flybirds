@@ -258,8 +258,8 @@ def get_case_response_body(case_id):
         log.info('[get_case_response_body] successfully get mockCaseBody '
                  'from custom operation')
         return mock_case_body
-    log.warn(f'[get_case_response_body] cannot get mockCaseBody from custom '
-             f'operation. Now try to get from the folder mockCaseData.')
+    log.warn('[get_case_response_body] cannot get mockCaseBody from custom '
+             'operation. Now try to get from the folder mockCaseData.')
     # read from folder mockCaseData
     mock_data_path = os.path.join(os.getcwd(), "mockCaseData")
     all_mock_data = read_json_data(mock_data_path)
@@ -267,6 +267,6 @@ def get_case_response_body(case_id):
         log.info('[get_case_response_body] successfully get mockCaseBody '
                  'from folder mockCaseData')
         return all_mock_data.get(case_id)
-    log.warn(f'[get_case_response_body] cannot get mockCaseBody from folder '
-             f'mockCaseData.')
+    log.warn('[get_case_response_body] cannot get mockCaseBody from folder '
+             'mockCaseData.')
     return

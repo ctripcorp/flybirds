@@ -135,7 +135,8 @@ step_language = {
         "from [{selector}] select [{param2}]": ["在[{selector}]中选择[{param2}]"],
         "exist [{p_selector}] subNode [{c_selector}] element": [
             "存在[{p_selector}]的[{c_selector}]的元素"],
-        "the text of element [{p_selector}] subNode [{c_selector}] is [{param3}]": [
+        "the text of element [{p_selector}] subNode [{c_selector}] is "
+        "[{param3}]": [
             "[{p_selector}]的[{c_selector}]文案为[{param3}]"
         ],
         "cache service request [{service}]": ["缓存服务请求[{service}]"],
