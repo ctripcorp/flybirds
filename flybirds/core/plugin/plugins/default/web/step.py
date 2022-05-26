@@ -105,12 +105,12 @@ class Step:
     @classmethod
     def exist_ele(cls, context, selector):
         ele = gr.get_value("plugin_ele")
-        ele.get_ele_locator(selector)
+        ele.ele_exist(context, selector)
 
     @classmethod
     def wait_ele_exit(cls, context, selector):
         ele = gr.get_value("plugin_ele")
-        ele.get_ele_locator(selector)
+        ele.ele_exist(context, selector)
 
     @classmethod
     def ele_not_exit(cls, context, selector):

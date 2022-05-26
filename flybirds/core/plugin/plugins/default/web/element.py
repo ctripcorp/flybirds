@@ -72,28 +72,18 @@ class Element:
         param_temp = handle_str(selector)
         param_dict = params_to_dic(param_temp)
         selector_str = param_dict["selector"]
-        try:
-            ele_locator = self.page.locator(selector_str)
-            ele_locator.element_handle()
-            return ele_locator
-        except Exception as e:
-            if 'text=' not in selector_str:
-                log.warn(
-                    f'[get_ele_locator] has not find element by[{selector_str}'
-                    f'], now try to find by text.')
-                text_ele_locator = self.locator_ele_by_text(selector_str)
-                return text_ele_locator
-            raise e
 
-    def locator_ele_by_text(self, selector_str):
-        text_selector_str = 'text=' + selector_str
-        text_ele_locator = self.page.locator(text_selector_str)
-        text_ele_locator.element_handle()
-        return text_ele_locator
+        if "timeout" in param_dict.keys():
+            timeout = param_dict["timeout"]
+        else:
+            timeout = gr.get_frame_config_value("wait_ele_timeout", 30)
+
+        ele_locator = self.page.locator(selector_str)
+        return ele_locator, float(timeout) * 1000
 
     def get_ele_text(self, param):
-        locator = self.get_ele_locator(param)
-        e_text = locator.inner_text()
+        locator, timeout = self.get_ele_locator(param)
+        e_text = locator.inner_text(timeout=timeout)
         if e_text is None or e_text.strip() == '':
             e_text = locator.get_attribute('value')
             if e_text is None or e_text.strip() == '':
@@ -101,14 +91,14 @@ class Element:
         return e_text
 
     def ele_click(self, context, param):
-        locator = self.get_ele_locator(param)
-        locator.click()
+        locator, timeout = self.get_ele_locator(param)
+        locator.click(timeout=timeout)
 
     def click_text(self, context, param):
         if 'text=' not in param:
             param = "text=" + param
-        locator = self.get_ele_locator(param)
-        locator.click()
+        locator, timeout = self.get_ele_locator(param)
+        locator.click(timeout=timeout)
 
     def click_coordinates(self, context, x, y):
         self.page.mouse.click(float(x), float(y))
@@ -145,9 +135,13 @@ class Element:
         e_text = self.get_ele_text(param_1)
         verify_helper.text_equal(param_2, e_text)
 
+    def ele_exist(self, context, param):
+        locator, timeout = self.get_ele_locator(param)
+        locator.element_handle(timeout=timeout)
+
     def ele_not_exist(self, context, param):
         try:
-            self.get_ele_locator(param)
+            self.ele_exist(context, param)
             ele_exists = True
         except Exception:
             ele_exists = False
@@ -158,31 +152,25 @@ class Element:
             raise FlybirdVerifyException(message)
 
     def wait_for_ele(self, context, param):
-        if param is None:
-            message = f"[wait_for_ele] the param[{param}] is None."
-            raise FlybirdsVerifyEleException(message=message)
-
-        param_temp = handle_str(param)
-        param_dict = params_to_dic(param_temp)
-        selector_str = param_dict["selector"]
-        self.page.wait_for_selector(selector_str, state='visible')
+        locator, timeout = self.get_ele_locator(param)
+        locator.wait_for(timeout=timeout, state='visible')
 
     def ele_input_text(self, context, param_1, param_2):
-        locator = self.get_ele_locator(param_1)
-        locator.click()
-        locator.fill(param_2)
+        locator, timeout = self.get_ele_locator(param_1)
+        locator.click(timeout=timeout)
+        locator.fill(param_2, timeout=timeout)
         return self.page.wait_for_timeout(100)
 
     def clear_and_input(self, context, param_1, param_2):
-        locator = self.get_ele_locator(param_1)
-        locator.click()
-        locator.fill('')
-        locator.fill(param_2)
+        locator, timeout = self.get_ele_locator(param_1)
+        locator.click(timeout=timeout)
+        locator.fill('', timeout=timeout)
+        locator.fill(param_2, timeout=timeout)
         return self.page.wait_for_timeout(100)
 
     def ele_slide(self, context, param_1, param_2, param_3):
-        locator = self.get_ele_locator(param_1)
-        box = locator.bounding_box()
+        locator, timeout = self.get_ele_locator(param_1)
+        box = locator.bounding_box(timeout=timeout)
         x = box["x"] + box["width"] / 2
         y = box["y"] + box["height"] / 2
         # get scroll direction
@@ -205,26 +193,26 @@ class Element:
         self.page.evaluate(f"window.scrollBy({to_x}, {to_y})")
 
     def ele_select(self, context, selector, option_str):
-        locator = self.get_ele_locator(selector)
+        locator, timeout = self.get_ele_locator(selector)
         try:
             # select by text
-            locator.select_option(label=option_str)
+            locator.select_option(label=option_str, timeout=timeout)
             log.info(f'[ele_select] select option[{option_str}] success.')
         except FlybirdsVerifyEleException as fe:
             raise fe
         except Exception:
             # select by value
             log.warn(f'[ele_select] retry select option[{option_str}].')
-            locator.select_option(option_str)
+            locator.select_option(option_str, timeout=timeout)
 
     def find_full_screen_slide(self, context, param1, param2):
-        locator = self.get_ele_locator(param2)
-        locator.scroll_into_view_if_needed()
+        locator, timeout = self.get_ele_locator(param2)
+        locator.scroll_into_view_if_needed(timeout=timeout)
 
     def get_ele_attr(self, selector, attr_name, params_deal_module=None,
                      deal_method=None):
-        locator = self.get_ele_locator(selector)
-        ele_attr = locator.get_attribute(attr_name)
+        locator, timeout = self.get_ele_locator(selector)
+        ele_attr = locator.get_attribute(attr_name, timeout=timeout)
         if deal_method is not None:
             deal_method = getattr(params_deal_module, deal_method)
             ele_attr = deal_method(ele_attr)
@@ -251,27 +239,28 @@ class Element:
         self.is_ele_attr_equal(context, text_selector, attr_name, target_val)
 
     def is_parent_exist_child(self, context, parent_selector, child_selector):
-        parent_locator = self.get_ele_locator(parent_selector)
+        parent_locator, p_timeout = self.get_ele_locator(parent_selector)
 
         child_temp = handle_str(child_selector)
         child_dict = params_to_dic(child_temp)
         child_str = child_dict["selector"]
 
-        try:
-            sub_locator = parent_locator.locator(child_str)
-            sub_locator.element_handle()
-            return sub_locator
-        except Exception as e:
-            if 'text=' not in child_str:
-                text_ele_locator = self.locator_ele_by_text(child_str)
-                return text_ele_locator
-            raise e
+        if "timeout" in child_dict.keys():
+            c_timeout = child_dict["timeout"]
+        else:
+            c_timeout = gr.get_frame_config_value("wait_ele_timeout", 30)
+        c_timeout = float(c_timeout) * 1000
+
+        sub_locator = parent_locator.locator(child_str)
+        sub_locator.element_handle(timeout=p_timeout)
+        return sub_locator, c_timeout
 
     def find_text_from_parent(self, context, parent_selector, child_selector,
                               target_text):
-        sub_locator = self.is_parent_exist_child(context, parent_selector,
-                                                 child_selector)
-        e_text = sub_locator.inner_text()
+        sub_locator, c_timeout = self.is_parent_exist_child(context,
+                                                            parent_selector,
+                                                            child_selector)
+        e_text = sub_locator.inner_text(timeout=c_timeout)
         if e_text is None or e_text.strip() == '':
-            e_text = sub_locator.get_attribute('value')
+            e_text = sub_locator.get_attribute('value', timeout=c_timeout)
         verify_helper.text_equal(target_text, e_text)
