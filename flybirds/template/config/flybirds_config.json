@@ -17,9 +17,7 @@
     "browserType": [],
     "requestInterception": true,
     "ignoreOrder": false,
-    "abortDomainList": [
-      "google.com"
-    ]
+    "abortDomainList": []
   },
   "flow_behave": {
     "beforeRunPage": "restartApp",
