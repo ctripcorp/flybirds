@@ -129,7 +129,7 @@ def dry_run_parsed_cmd(cmd: str) -> str:
     p = Popen(cmd, stdout=PIPE, shell=True)
     out, err = p.communicate()
 
-    return json.loads(out.decode())
+    return json.loads(out.decode('utf-8-sig'))
 
 
 def get_features_num(cmd: str):

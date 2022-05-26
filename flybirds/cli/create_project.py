@@ -279,7 +279,8 @@ def copy_extend_files(pkg_list, demo_pro_path):
 
         feat_path = os.path.join(os.path.normpath(extend_path), 'features')
         config_path = os.path.join(os.path.normpath(extend_path), 'config')
-
+        custom_handle_path = os.path.join(os.path.normpath(extend_path),
+                                          'pscript', "custom_handle")
         # add extend features
         if feat_path is not None and os.path.exists(feat_path):
             feat_files = get_files_from_dir(feat_path)
@@ -305,6 +306,18 @@ def copy_extend_files(pkg_list, demo_pro_path):
                 # target_path is existed
                 shutil.rmtree(demo_config_path)
             shutil.copytree(config_path, demo_config_path)
+
+        # add extend custom operation
+        if custom_handle_path is not None and os.path.exists(
+                custom_handle_path):
+            # config target path
+            demo_custom_handle_path = os.path.join(
+                os.path.normpath(demo_pro_path),
+                'pscript', "custom_handle")
+            if os.path.isdir(demo_custom_handle_path):
+                # target_path is existed
+                shutil.rmtree(demo_custom_handle_path)
+            shutil.copytree(custom_handle_path, demo_custom_handle_path)
 
 
 def write_import_steps(pkg_list, demo_pro_path, site_path):

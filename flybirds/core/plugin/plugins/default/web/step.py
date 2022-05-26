@@ -10,6 +10,8 @@ from flybirds.core.plugin.plugins.default.step.app \
     import to_app_home, app_login, app_logout
 from flybirds.core.plugin.plugins.default.step.record import \
     stop_screen_record
+from flybirds.core.plugin.plugins.default.web.interception import \
+    Interception as request_op
 
 __open__ = ["Step"]
 
@@ -103,12 +105,12 @@ class Step:
     @classmethod
     def exist_ele(cls, context, selector):
         ele = gr.get_value("plugin_ele")
-        ele.get_ele_locator(selector)
+        ele.ele_exist(context, selector)
 
     @classmethod
     def wait_ele_exit(cls, context, selector):
         ele = gr.get_value("plugin_ele")
-        ele.get_ele_locator(selector)
+        ele.ele_exist(context, selector)
 
     @classmethod
     def ele_not_exit(cls, context, selector):
@@ -164,7 +166,7 @@ class Step:
     @classmethod
     def text_attr_equal(cls, context, selector, param2, param3):
         ele = gr.get_value("plugin_ele")
-        ele.is_ele_attr_equal(context, selector, param2, param3)
+        ele.is_text_attr_equal(context, selector, param2, param3)
 
     @classmethod
     def find_child_from_parent(cls, context, p_selector, c_selector):
@@ -192,3 +194,51 @@ class Step:
     @classmethod
     def app_logout(cls, context):
         app_logout(context)
+
+    # -------------------------------------------------------------------------
+    # request interception
+    # -------------------------------------------------------------------------
+    @staticmethod
+    def add_request_body(context, service_str):
+        request_op.add_some_interception_request_body(service_str)
+
+    @staticmethod
+    def remove_request_body(context, service_str):
+        request_op.remove_some_interception_request_body(service_str)
+
+    @staticmethod
+    def clear_all_request_body(context):
+        request_op.clear_interception_request_body()
+
+    # -------------------------------------------------------------------------
+    # request service listening
+    # -------------------------------------------------------------------------
+    @staticmethod
+    def add_request_mock(context, service_str, mock_case_id_str):
+        request_op.add_some_interception_mock(service_str, mock_case_id_str)
+
+    @staticmethod
+    def remover_request_mock(context, service_str):
+        request_op.remove_some_interception_mock(service_str)
+
+    @staticmethod
+    def clear_all_request_mock(context):
+        request_op.clear_interception_mock()
+
+    # -------------------------------------------------------------------------
+    # compare service requests
+    # -------------------------------------------------------------------------
+    @staticmethod
+    def request_compare_from_path(context, operation, target_data_path):
+        request_op.request_compare(operation, target_data_path)
+
+    @staticmethod
+    def request_query_str_compare_from_path(context, operation,
+                                            target_data_path):
+        request_op.request_query_string_compare(operation, target_data_path)
+
+    @staticmethod
+    def request_compare_value(context, operation, target_json_path,
+                              expect_value):
+        request_op.request_compare_value(operation, target_json_path,
+                                         expect_value)

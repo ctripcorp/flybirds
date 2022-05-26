@@ -30,7 +30,9 @@ def init_glb():
         "web_driver_agent": None,
         "playwright": None,
         "browser": None,
-        "plugin_page": None
+        "plugin_page": None,
+        "interceptionRequest": {},
+        "interceptionValues": {}
     }
 
 
@@ -276,3 +278,19 @@ def get_ele_locator(key):
             f"The [{key}] has no element locator configuration for the"
             f" [{platform}] platform in ele_locator.json")
     return ele_locator.get(platform)
+
+
+def get_service_ignore_nodes(service):
+    """
+    Get the ignore nodes configuration value of the service interface
+    """
+    all_ignore_nodes = _global_dict[
+        "configManage"].ignore_node_info.all_ignore_nodes
+    if all_ignore_nodes is None:
+        log.warn("[get_service_ignore_nodes] cannot find configuration value "
+                 "from interfaceIgnoreConfig folder")
+        return
+    service_ignore_nodes = all_ignore_nodes.get(service)
+    if service_ignore_nodes is None:
+        log.info(f"interface service [{service}] has not set ignore nodes")
+    return service_ignore_nodes

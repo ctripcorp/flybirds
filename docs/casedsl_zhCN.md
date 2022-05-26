@@ -7,49 +7,58 @@
 
 ## 以下是常用语句模板：
 
-| 语句模板                         | 语义                                                       | 适用于         |
-| -------------------------------- | ---------------------------------------------------------- | -------------- |
-| 跳转到[]                         | 跳转到指定的url地址                                        | android 、web  |
-| 等待[]秒                         | 等待一段时间                                               | ALL            |
-| 页面渲染完成出现元素[]           | 进入新的页面时检查指定元素是否渲染完成                     | ALL            |
-| 点击[]                           | 点击指定属性的元素                                         | ALL            |
-| 点击文案[]                       | 点击指定文案的元素                                         | ALL            |
-| 点击屏幕位置[][]                 | 点击屏幕指定位置                                           | ALL            |
-| 在 [] 中输入[]                   | 在指定选择器中输入字符串                                   | ALL            |
-| 在[]中清空并输入[]               | 在指定选择器中清空并输入字符串                             | Web            |
-| 向[] 查找[]的元素                | 向指定方向查找指定属性的元素                               | ALL            |
-| 全屏向[] 滑动[]                  | 全屏向指定方向滑动指定距离                                 | ALL            |
-| [] 向[] 滑动[]                   | 在指定区域内向指定方向滑动指定距离                         | ALL            |
-| 存在[]的文案                     | 检查页面中存在指定的字符串                                 | ALL            |
-| 不存在[]的文案                   | 检查页面中不存在指定的字符串                               | ALL            |
-| 存在[]的元素                     | 检查页面中存在指定属性的元素                               | ALL            |
-| 不存在[]的元素                   | 检查页面中不存在指定属性的元素                             | ALL            |
-| 元素[]消失                       | 检查页面中指定属性的元素在指定时间内消失                   | App            |
-| 文案[]消失                       | 检查页面中指定的字符串在规定时间内从页面消失               | App            |
-| 文案[] 的属性[] 为 []            | 检查页面中指定文案的指定属性为指定值                       | ALL            |
-| 元素[] 的属性[] 为 []            | 检查页面中指定元素的指定属性为指定值                       | ALL            |
-| 元素[] 位置[] 秒内未变动         | 检查页面中指定元素的位置在指定时间内未发生变化             | App            |
-| [] 的文案为[]                    | 检查页面中指定元素的文案等于指定值                         | ALL            |
-| [] 的文案包含[]                  | 检查页面中指定元素的文案包含指定值                         | ALL            |
-| 回到首页                         | 回到首页                                                   | ALL            |
-| 全屏截图                         | 保存当前屏幕图像                                           | ALL            |
-| 开始录屏                         | 开始录制视频                                               | App            |
-| 开始录屏超时[]                   | 开始录屏并设置超时时间                                     | App            |
-| 结束录屏                         | 结束录制视频                                               | ALL            |
-| 连接设备[]                       | 连接测试设备                                               | App            |
-| 安装APP[]                        | 安装APP                                                    | android        |
-| 删除APP[]                        | 删除APP                                                    | android        |
-| 启动APP[]                        | 启动APP                                                    | App            |
-| 重启APP                          | 重启APP                                                    | App            |
-| 关闭App                          | 关闭App                                                    | App            |
-| 登录账号[] 密码[]                | 使用账号密码进行登录                                       | ALL            |
-| 退出登录                         | 退出系统登录                                               | ALL            |
-| 返回上一页                       | 返回上一页面                                               | Android 、 web |
-| 在[]中向[]查找[]的元素           | 在指定 选择器 的元素内 向指定方向滑动查找 指定选择器的元素 | ALL            |
-| 在[]中选择[]                     | 在web页面下拉框元素中选择指定值                                    | web            |
-| 存在[父选择器]的[子选择器]的元素 | 存在某个父元素，并且该父元素下存在某个子元素               | web            |
-| [父选择器]的[子选择器]的文案为[] | 存在某个父元素，并且该父元素下某个子元素的文案为指定字符串 | web            |
-| \-----                           | \-----                                                     | \-----         |
+| 语句模板                                                     | 语义                                                         | 适用于         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- |
+| 跳转到[]                                                     | 跳转到指定的url地址                                          | android 、web  |
+| 等待[]秒                                                     | 等待一段时间                                                 | ALL            |
+| 页面渲染完成出现元素[]                                       | 进入新的页面时检查指定元素是否渲染完成                       | ALL            |
+| 点击[]                                                       | 点击指定属性的元素                                           | ALL            |
+| 点击文案[]                                                   | 点击指定文案的元素                                           | ALL            |
+| 点击屏幕位置[][]                                             | 点击屏幕指定位置                                             | ALL            |
+| 在 [] 中输入[]                                               | 在指定选择器中输入字符串                                     | ALL            |
+| 在[]中清空并输入[]                                           | 在指定选择器中清空并输入字符串                               | Web            |
+| 向[] 查找[]的元素                                            | 向指定方向查找指定属性的元素                                 | ALL            |
+| 全屏向[] 滑动[]                                              | 全屏向指定方向滑动指定距离                                   | ALL            |
+| [] 向[] 滑动[]                                               | 在指定区域内向指定方向滑动指定距离                           | ALL            |
+| 存在[]的文案                                                 | 检查页面中存在指定的字符串                                   | ALL            |
+| 不存在[]的文案                                               | 检查页面中不存在指定的字符串                                 | ALL            |
+| 存在[]的元素                                                 | 检查页面中存在指定属性的元素                                 | ALL            |
+| 不存在[]的元素                                               | 检查页面中不存在指定属性的元素                               | ALL            |
+| 元素[]消失                                                   | 检查页面中指定属性的元素在指定时间内消失                     | App            |
+| 文案[]消失                                                   | 检查页面中指定的字符串在规定时间内从页面消失                 | App            |
+| 文案[] 的属性[] 为 []                                        | 检查页面中指定文案的指定属性为指定值                         | ALL            |
+| 元素[] 的属性[] 为 []                                        | 检查页面中指定元素的指定属性为指定值                         | ALL            |
+| 元素[] 位置[] 秒内未变动                                     | 检查页面中指定元素的位置在指定时间内未发生变化               | App            |
+| [] 的文案为[]                                                | 检查页面中指定元素的文案等于指定值                           | ALL            |
+| [] 的文案包含[]                                              | 检查页面中指定元素的文案包含指定值                           | ALL            |
+| 回到首页                                                     | 回到首页                                                     | ALL            |
+| 全屏截图                                                     | 保存当前屏幕图像                                             | ALL            |
+| 开始录屏                                                     | 开始录制视频                                                 | App            |
+| 开始录屏超时[]                                               | 开始录屏并设置超时时间                                       | App            |
+| 结束录屏                                                     | 结束录制视频                                                 | ALL            |
+| 连接设备[]                                                   | 连接测试设备                                                 | App            |
+| 安装APP[]                                                    | 安装APP                                                      | android        |
+| 删除APP[]                                                    | 删除APP                                                      | android        |
+| 启动APP[]                                                    | 启动APP                                                      | App            |
+| 重启APP                                                      | 重启APP                                                      | App            |
+| 关闭App                                                      | 关闭App                                                      | App            |
+| 登录账号[] 密码[]                                            | 使用账号密码进行登录                                         | ALL            |
+| 退出登录                                                     | 退出系统登录                                                 | ALL            |
+| 返回上一页                                                   | 返回上一页面                                                 | Android 、 web |
+| 在[]中向[]查找[]的元素                                       | 在指定 选择器 的元素内 向指定方向滑动查找 指定选择器的元素   | ALL            |
+| 在[]中选择[]                                                 | 在web页面下拉框元素中选择指定值                              | web            |
+| 存在[父选择器]的[子选择器]的元素                             | 存在某个父元素，并且该父元素下存在某个子元素                 | web            |
+| [父选择器]的[子选择器]的文案为[]                             | 存在某个父元素，并且该父元素下某个子元素的文案为指定字符串   | web            |
+| 缓存服务请求[operation[,operation ...]]                      | 缓存该服务的最后一次请求报文到本地。 <br />注意： operation 是 url 最后一个\ 和 ？ 中间的字符串，即请求名 | web            |
+| 移除请求缓存[operation[,operation ...]]                      | 从本地清除该服务的请求缓存报文。<br />注意： operation 是 url 最后一个\ 和 ？ 中间的字符串，即请求名 | web            |
+| 移除所有请求缓存                                             | 移除所有请求的缓存报文                                       | web            |
+| 监听服务[operation[,operation ...]]绑定MockCase[mockCaseId[,mockCaseId ...]] | 监听相关operation的请求并拦截，用mockCaseId的返回报文进行替换<br />注意：operation 是url 最后一个\ 和 ？ 中间的字符串 | web            |
+| 移除服务监听[operation[,operation ...]]                      | 移除operation 的请求监听<br />注意：operation 是url 最后一个\ 和 ？ 中间的字符串 | web            |
+| 移除所有服务监听                                             | 移除所有请求监听                                             | web            |
+| 验证服务请求[operation]与[target_data_path]一致              | 比对相关operation的缓存报文与target_data_path对应的文件内容<br />注意：operation 是url 最后一个\ 和 ？ 中间的字符串 | web            |
+| 验证服务非json请求[operation]与[target_data_path]一致        | 比对相关operation的非json类型的缓存报文与target_data_path对应的文件内容<br />注意：operation 是url 最后一个\ 和 ？ 中间的字符串 | web            |
+| 验证服务[operation]的请求参数[target_json_path]与[expect_value]一致 | 检查相关operation的缓存报文体对应参数的值与给定的期望值是否一致<br />注意：operation 是url 最后一个\ 和 ？ 中间的字符串 | web            |
+| \-----                                                       | \-----                                                       | \-----         |
 
 
 ## 语句模版：
@@ -321,3 +330,164 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 ```js
 跳转到[首页]
 ```
+
+**缓存服务请求[operation[,operation ...]]**
+
+- 支持平台：Web
+- 语义：缓存该服务的最后一次请求报文到本地。 <br />注意： operation 是 url 最后一个\ 和 ？ 中间的字符串，即请求名
+
+```js
+//示例1：
+缓存服务请求[getRecommendHotelList]
+
+//示例2：
+缓存服务请求[getRecommendHotelList,writecookie]
+```
+
+**移除请求缓存[operation[,operation ...]]**
+
+- 支持平台：Web
+- 语义：从本地清除该服务请求的缓存报文。<br />注意： operation 是 url 最后一个\ 和 ？ 中间的字符串，即请求名
+
+```js
+//示例1：
+移除请求缓存[getRecommendHotelList]
+
+//示例2：
+移除请求缓存[getRecommendHotelList,writecookie]
+```
+
+**移除所有请求缓存**
+
+- 支持平台：Web
+- 语义：移除所有请求的缓存报文
+
+**监听服务[operation[,operation ...]]绑定MockCase[mockCaseId[,mockCaseId ...]]**
+
+- 支持平台：Web
+- 语义：监听相关operation的请求并拦截，用mockCaseId的返回报文进行替换。<br />注意：operation 是url 最后一个\ 和 ？ 中间的字符串
+
+- **MockCase配置**：
+
+  ​	服务监听`step`语句的`mock`数据支持通过2种方式来获取：**json文件配置** 和 **函数调用**。
+
+  - **json文件配置**：如以下示例一。具体设置方式及格式可以参考**Demo**项目**mockCaseData** 目录下的json文件。
+
+    此方式需要注意，对应`response` 的`mockCaseId` （json key，如示例一中的`4245512`）在整个`mockCaseData`目录下需要是唯一的，否则该mock数据会被其他具有相同 `key` 的数据覆盖掉。
+
+  - **函数调用**：自定义处理与获取`MockData`。此种方式需要在 **Demo**项目的**pscript/custom_handle/operation.py** 文件中实现 `get_mock_case_body(mock_case_id)` 扩展方法。
+
+  `MockCase` 绑定的报文优先以自定义扩展方法的返回结果为主。当自定义扩展方法返回结果为None时，框架会尝试查找项目**mockCaseData** 目录下的所有json文件，并返回json文件中`mock_case_id` 对应的 mock数据。
+
+**Mock数据配置示例一：json文件配置**
+
+```json
+{
+  "4245512": {
+    "count": 101,
+    "results": [
+      {
+        "id": 10,
+        "name": "test-狮子王",
+        "alias": "The Lion King",
+        "cover": "https://p0.meituan.net/movie/27b76fe6cf3903f3d74963f70786001e1438406.jpg@464w_644h_1e_1c",
+        "categories": [
+          "动画",
+          "歌舞",
+          "冒险"
+        ],
+        "published_at": "1995-07-15",
+        "minute": 89,
+        "score": 9.0,
+        "regions": [
+          "美国"
+        ]
+      }
+    ]
+  }
+}
+```
+
+**语法使用示例:**
+
+```js
+//示例1：
+监听服务[movie]绑定MockCase[4245512]
+
+//示例2：
+监听服务[movie,testList]绑定MockCase[4245512,123456]
+```
+
+**移除服务监听[operation[,operation ...]]**
+
+- 支持平台：Web
+- 语义：移除operation 的请求监听<br />注意：operation 是url 最后一个\ 和 ？ 中间的字符串
+
+```js
+//示例1：
+移除服务监听[movie]
+
+//示例2：
+移除服务监听[movie,testList]
+```
+
+**移除所有服务监听**
+
+- 支持平台：Web
+- 语义： 移除所有请求监听
+
+**验证服务请求[operation]与[target_data_path]一致**
+
+- 支持平台：Web
+- 语义：比对相关operation的缓存报文与target_data_path对应的文件内容<br />注意：operation 是url 最后一个\ 和 ？ 中间的字符串
+
+```js
+验证服务请求[getRecommendHotelList]与[compareData/getRecommendHotelList.json]一致
+```
+
+**验证服务非json请求[operation]与[target_data_path]一致**
+
+- 支持平台：Web
+- 语义：比对相关operation的非json类型的缓存报文与target_data_path对应的文件内容<br />注意：operation 是url 最后一个\ 和 ？ 中间的字符串
+
+```js
+验证服务非json请求[writecookie]与[compareData/writecookie.txt]一致
+```
+
+**验证服务[operation]的请求参数[target_json_path]与[expect_value]一致**
+
+- 支持平台：Web
+- 语义：检查相关operation的缓存报文体对应参数的值与给定的期望值是否一致<br />注意：operation 是url 最后一个\ 和 ？ 中间的字符串
+
+```js
+验证服务[getRecommendHotelList]的请求参数[head.syscode]与[PC]一致
+```
+
+- 🍖**配置忽略节点：**
+
+​		服务报文比对支持设置**忽略节点**，包括**具体路径**和**正则表达式**。具体设置方式及格式可以参考**Demo**项目**interfaceIgnoreConfig** 目录下的json文件。
+
+**示例：**
+
+```json
+{
+  "getRecommendHotelList": [
+    "head.cid",
+    "regex: root\\['head'\\]\\['extension'\\]\\[\\d+\\]\\['value'\\]"
+  ],
+  "writecookie": [
+    "token"
+  ]
+}
+```
+
+**说明**：
+
+- `getRecommendHotelList`、`writecookie` 为 服务请求的请求名`operation` 
+
+- `head.cid` 为服务`getRecommendHotelList` 请求体的具体节点路径。与文件进行报文比对时，该节点会被忽略。
+
+- `regex: root\\['head'\\]\\['extension'\\]\\[\\d+\\]\\['value'\\]`  是一个正则表达式。 `getRecommendHotelList` 请求体中所有匹配该路径的节点在比对时都将被忽略。
+
+     🧨  **注意：** 配置正则表达式时，请在字符串前用`regex:`进行标注申明。
+

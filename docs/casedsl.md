@@ -7,49 +7,59 @@ The "[]" in the statement template needs to add a value, otherwise the statement
 
 ## Common statement template
 
-| statement template                          | description                                                  | suitable for   |
-| ------------------------------------------- | ------------------------------------------------------------ | -------------- |
-| go to url[]                                 | jump to the specified url address                            | android 、web  |
-| wait [] seconds                             | Wait for a while                                             | ALL            |
-| element [] appear after page rendering      | check whether the specified element has been rendered when entering a new page | ALL            |
-| click[]                                     | click on the element with the specified attribute            | ALL            |
-| click text[]                                | Click on the element of the specified text                   | ALL            |
-| click position[][]                          | click to specify the location on the screen                  | ALL            |
-| input [] into []                            | input a string in the specified selector                     | ALL            |
-| clear [] and input[]                        | clear and input a string in the specified selector           | Web            |
-| from [] find [] element                     | find the element with the specified attribute in the specified direction | ALL            |
-| slide to [] distance []                     | swipe the specified distance in the specified direction on the full screen | ALL            |
-| [] slide to [] distance []                  | slide the specified distance in the specified direction in the specified area | ALL            |
-| exist text []                               | check that the specified string exists in the page           | ALL            |
-| not exist text []                           | check that the specified string does not exist in the page   | ALL            |
-| exist element []                            | check the presence of elements with specified attributes on the page | ALL            |
-| not exist element []                        | check that there is no element with the specified attribute in the page | ALL            |
-| element [] disappear                        | check that the element with the specified attribute in the page disappears within the specified time | App            |
-| text[]disappear                             | check that the specified string in the page disappears from the page within a specified time | App            |
-| text [] property [] is []                   | check that the specified attribute of the specified text in the page is the specified value | ALL            |
-| element [] property [] is []                | check that the specified attribute of the specified element in the page is the specified value | ALL            |
-| element [] position not change in []seconds | check that the position of the specified element on the page has not changed within the specified time | App            |
-| the text of element [] is []                | check that the text of the specified element in the page is equal to the specified value | ALL            |
-| the text of element [] include []           | check that the text of the specified element in the page contains the specified value | ALL            |
-| go to home page                             | go to home page                                              | ALL            |
-| screenshot                                  | save the current screen image                                | ALL            |
-| start record                                | start recording video                                        | App            |
-| start recording timeout []                  | start recording screen and set timeout                       | App            |
-| stop record                                 | stop recording video                                         | ALL            |
-| connect device []                           | connect test device                                          | App            |
-| install app[]                               | install app                                                  | android        |
-| delete app[]                                | delete app                                                   | android        |
-| start app[]                                 | start app                                                    | App            |
-| retart app                                  | retart app                                                   | App            |
-| close app                                   | close app                                                    | App            |
-| logon account[] password []                 | login with account and password                              | ALL            |
-| logout                                      | logout                                                       | ALL            |
-| return to previous page                     | return to previous page                                      | Android 、 web |
-| in[]from [] find [] element                 | Find the element of the specified selector by sliding in the specified direction within the element that refers to the selector | ALL            |
-| from [] select []                           | Select the specified value in the web select element         | web            |
-| exist [] subNode [] element                 | check that  a parent element exists, and a child element exists under that parent element | web            |
-| the text of element [] subNode [] is []     | check that  a parent element exists, and the text of a child element under that parent element is the specified string | web            |
-| -----                                       | -----                                                        | -----          |
+| statement template                                           | description                                                  | suitable for   |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- |
+| go to url[]                                                  | jump to the specified url address                            | android 、web  |
+| wait [] seconds                                              | Wait for a while                                             | ALL            |
+| element [] appear after page rendering                       | check whether the specified element has been rendered when entering a new page | ALL            |
+| click[]                                                      | click on the element with the specified attribute            | ALL            |
+| click text[]                                                 | Click on the element of the specified text                   | ALL            |
+| click position[][]                                           | click to specify the location on the screen                  | ALL            |
+| input [] into []                                             | input a string in the specified selector                     | ALL            |
+| clear [] and input[]                                         | clear and input a string in the specified selector           | Web            |
+| from [] find [] element                                      | find the element with the specified attribute in the specified direction | ALL            |
+| slide to [] distance []                                      | swipe the specified distance in the specified direction on the full screen | ALL            |
+| [] slide to [] distance []                                   | slide the specified distance in the specified direction in the specified area | ALL            |
+| exist text []                                                | check that the specified string exists in the page           | ALL            |
+| not exist text []                                            | check that the specified string does not exist in the page   | ALL            |
+| exist element []                                             | check the presence of elements with specified attributes on the page | ALL            |
+| not exist element []                                         | check that there is no element with the specified attribute in the page | ALL            |
+| element [] disappear                                         | check that the element with the specified attribute in the page disappears within the specified time | App            |
+| text[]disappear                                              | check that the specified string in the page disappears from the page within a specified time | App            |
+| text [] property [] is []                                    | check that the specified attribute of the specified text in the page is the specified value | ALL            |
+| element [] property [] is []                                 | check that the specified attribute of the specified element in the page is the specified value | ALL            |
+| element [] position not change in []seconds                  | check that the position of the specified element on the page has not changed within the specified time | App            |
+| the text of element [] is []                                 | check that the text of the specified element in the page is equal to the specified value | ALL            |
+| the text of element [] include []                            | check that the text of the specified element in the page contains the specified value | ALL            |
+| go to home page                                              | go to home page                                              | ALL            |
+| screenshot                                                   | save the current screen image                                | ALL            |
+| start record                                                 | start recording video                                        | App            |
+| start recording timeout []                                   | start recording screen and set timeout                       | App            |
+| stop record                                                  | stop recording video                                         | ALL            |
+| connect device []                                            | connect test device                                          | App            |
+| install app[]                                                | install app                                                  | android        |
+| delete app[]                                                 | delete app                                                   | android        |
+| start app[]                                                  | start app                                                    | App            |
+| retart app                                                   | retart app                                                   | App            |
+| close app                                                    | close app                                                    | App            |
+| logon account[] password []                                  | login with account and password                              | ALL            |
+| logout                                                       | logout                                                       | ALL            |
+| return to previous page                                      | return to previous page                                      | Android 、 web |
+| in[]from [] find [] element                                  | Find the element of the specified selector by sliding in the specified direction within the element that refers to the selector | ALL            |
+| from [] select []                                            | Select the specified value in the web select element         | web            |
+| exist [] subNode [] element                                  | check that  a parent element exists, and a child element exists under that parent element | web            |
+| the text of element [] subNode [] is []                      | check that  a parent element exists, and the text of a child element under that parent element is the specified string | web            |
+|                                                              |                                                              |                |
+| cache service request [operation[,operation ...]]            | Cache the last request body  for this service locally<br />Note: `operation` is the string between the last  `\` and  `?` in the url | web            |
+| remove service request cache[operation[,operation ...]]      | Clear cached request body for this operation from local<br />Note: `operation` is the string between the last  `\` and  `?` in the url | web            |
+| remove all service request caches                            | Remove all operations cached request body                    | web            |
+| listening service [operation[,operation ...]] bind mockCase[mockCaseId[,mockCaseId ...]] | Monitor the operation request and intercept it, and mock data with the return message of mockCaseId<br />Note: `operation` is the string between the last  `\` and  `?` in the url | web            |
+| remove service listener [operation[,operation ...]]          | Remove request listener for this operation<br />Note: `operation` is the string between the last  `\` and  `?` in the url | web            |
+| remove all service listeners                                 | remove all request listeners                                 | web            |
+| compare service request operation] with json file [target_data_path] | Compare the cached  request body of the operation with the file content corresponding to target_data_path<br />Note: `operation` is the string between the last  `\` and  `?` in the url | web            |
+| compare service non-json request [operation] with non-json file [target_data_path] | Compare the non-json cached request body of the operation with the file content corresponding to target_data_path<br />Note: `operation` is the string between the last  `\` and  `?` in the url | web            |
+| service request [operation] request parameter [target_json_path] is [expect_value] | Check whether the value of the corresponding parameter of the request body cached by the operation is consistent with the given expected value<br />Note: `operation` is the string between the last  `\` and  `?` in the url | web            |
+| -----                                                        | -----                                                        | -----          |
 
 
 
@@ -302,3 +312,167 @@ from left find [testId, distance=0.5, duration=2, swipeCount=8] element
 ```js
 go to url [list page]
 ```
+
+**cache service request [operation[,operation ...]]**
+
+- platform：Web
+- description： Cache the last request body  for this service locally<br />Note: `operation` is the string between the last  `\` and  `?` in the url
+
+```js
+//Example1：
+cache service request [getRecommendHotelList]
+
+//Example2：
+cache service request [getRecommendHotelList,writecookie]
+```
+
+**remove service request cache[operation[,operation ...]]**
+
+- platform：Web
+- description：Clear cached request body for this operation from local<br />Note: `operation` is the string between the last  `\` and  `?` in the url
+
+```js
+//Example1：
+remove service request cache [getRecommendHotelList]
+
+//Example2：
+remove service request cache [getRecommendHotelList,writecookie]
+```
+
+**remove all service request caches**
+
+- platform：Web
+- description：Remove all operations cached request body
+
+**listening service [operation[,operation ...]] bind mockCase[mockCaseId[,mockCaseId ...]]**
+
+- platform：Web
+- description：Monitor the operation request and intercept it, and mock data with the return message of mockCaseId<br />Note: `operation` is the string between the last  `\` and  `?` in the url
+
+- **MockCase Configuration**：
+
+  ​	The `mock` data of the service listening `step` statement can be obtained in two ways: **json file configuration** and **function call**.
+
+  -  **json file configuration**：Example 1 below. For the specific setting method and format, please refer to the json file in the **Demo** project **mockCaseData** directory.
+
+    In this method, it should be noted that the `mockCaseId` (json key, such as `4245512` in example 1) corresponding to `response` needs to be unique in the entire `mockCaseData` directory, otherwise the mock data will be used by others with the same `key` data is overwritten.
+
+  - **function call**:  Custom handling with getting `MockData`. This approach requires the implementation of the `get_mock_case_body(mock_case_id)` extension method in the **pscript/custom_handle/operation.py** file of the **Demo** project.
+
+  The `MockCase` binding data prefers the result returned by the custom extension method. When the result of the custom extension method is None, the framework will try to find all json files in the project **mockCaseData** directory and return the mock data corresponding to `mock_case_id` in the json file.
+
+**Mock data configuration example I: json file configuration**
+
+```json
+{
+  "4245512": {
+    "count": 101,
+    "results": [
+      {
+        "id": 10,
+        "name": "test-狮子王",
+        "alias": "The Lion King",
+        "cover": "https://p0.meituan.net/movie/27b76fe6cf3903f3d74963f70786001e1438406.jpg@464w_644h_1e_1c",
+        "categories": [
+          "动画",
+          "歌舞",
+          "冒险"
+        ],
+        "published_at": "1995-07-15",
+        "minute": 89,
+        "score": 9.0,
+        "regions": [
+          "美国"
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Syntax usage example:**
+
+```js
+//Example1：
+listening service [movie] bind mockCase[4245512]
+
+//Example2：
+listening service [movie,testList] bind mockCase[4245512,123456]
+```
+
+**remove service listener [operation[,operation ...]]**
+
+- platform：Web
+- description：Remove request listener for this operation<br />Note: `operation` is the string between the last  `\` and  `?` in the url
+
+```js
+//Example1：
+remove service listener [movie]
+
+//Example2：
+remove service listener [movie,testList]
+```
+
+**remove all service listeners**
+
+- platform：Web
+- description：remove all request listeners
+
+**compare service request operation] with json file [target_data_path]**
+
+- 支持平台：Web
+- description：Compare the cached  request body of the operation with the file content corresponding to target_data_path<br />Note: `operation` is the string between the last  `\` and  `?` in the url
+
+```js
+compare service request [getRecommendHotelList] with json file [compareData/getRecommendHotelList.json]
+```
+
+**compare service non-json request [operation] with non-json file [target_data_path]**
+
+- platform：Web
+- description：Compare the non-json cached request body of the operation with the file content corresponding to target_data_path<br />Note: `operation` is the string between the last  `\` and  `?` in the url
+
+```gherkin
+compare service non-json request [writecookie] with non-json file [compareData/writecookie.txt]
+```
+
+**service request [operation] request parameter [target_json_path] is [expect_value]**
+
+- platform：Web
+- description：Check whether the value of the corresponding parameter of the request body cached by the operation is consistent with the given expected value<br />Note: `operation` is the string between the last  `\` and  `?` in the url
+
+```gherkin
+# Examples
+service request [getRecommendHotelList] request parameter [head.syscode] is [PC]
+service request [getRecommendHotelList] request parameter [$.cityId] is [2]
+service request [getRecommendHotelList] request parameter [cityId] is [2]
+```
+
+- 🍖**Configure ignore nodes：**
+
+​		Service request comparison supports setting **ignore node**, including **specific path** and **regular expression**. For the specific setting method and format, please refer to the json file in the **Demo** project **interfaceIgnoreConfig** directory.
+
+**Example：**
+
+```json
+{
+  "getRecommendHotelList": [
+    "head.cid",
+    "regex: root\\['head'\\]\\['extension'\\]\\[\\d+\\]\\['value'\\]"
+  ],
+  "writecookie": [
+    "token"
+  ]
+}
+```
+
+**Description**：
+
+- `getRecommendHotelList`, `writecookie` are the request name `operation` of the service request
+
+- `head.cid` is the specific node path in the request body of the service `getRecommendHotelList`. This node will be ignored when comparing messages with files.
+
+- `regex: root\\['head'\\]\\['extension'\\]\\[\\d+\\]\\['value'\\]` is a regular expression. All nodes matching this path in the `getRecommendHotelList` request body will be ignored when comparing.
+
+    	🧨**Note:** When configuring a regular expression, please use `regex:` before the string to declare it.
+

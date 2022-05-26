@@ -1,0 +1,9 @@
+{
+  "getRecommendHotelList": [
+    "head.cid",
+    "regex: root\\['head'\\]\\['extension'\\]\\[\\d+\\]\\['value'\\]"
+  ],
+  "writecookie": [
+    "token"
+  ]
+}

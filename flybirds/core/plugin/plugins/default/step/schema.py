@@ -13,7 +13,7 @@ def jump_to_page(context, param):
     page_name = param_dict["pageName"]
     schema_url = gr.get_page_schema_url(page_name)
 
-    schema_goto_module = gr.get_value("projectScript").app_operation
+    schema_goto_module = gr.get_value("projectScript").custom_operation
     deal_method = None
     params_deal_module = None
     if "dealMethod" in param_dict.keys():

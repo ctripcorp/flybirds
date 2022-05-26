@@ -3,10 +3,16 @@
 # @Author : hyx
 # @File : page.py
 # @desc : web page implement
+import json
+import time
+from urllib.parse import urlparse
+
 import flybirds.core.global_resource as global_resource
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 import flybirds.utils.verify_helper as verify_helper
+from flybirds.core.plugin.plugins.default.web.interception import \
+    get_case_response_body
 from flybirds.utils import dsl_helper
 from flybirds.utils.dsl_helper import is_number
 
@@ -26,12 +32,15 @@ class Page:
 
     @staticmethod
     def init_page():
-        browser = gr.get_value('browser')
-        context = browser.new_context(record_video_dir="videos",
-                                      ignore_https_errors=True)
-        default_timeout = gr.get_web_info_value("default_time_out", 30)
-        context.set_default_timeout(float(default_timeout) * 1000)
+        context = Page.new_browser_context()
+
         page = context.new_page()
+        request_interception = gr.get_web_info_value("request_interception",
+                                                     True)
+        if request_interception:
+            page.route("**/*", handle_route)
+            # request listening events
+            page.on("request", handle_request)
 
         ele_wait_time = gr.get_frame_config_value("wait_ele_timeout", 30)
         page_render_timeout = gr.get_frame_config_value("page_render_timeout",
@@ -39,6 +48,22 @@ class Page:
         page.set_default_timeout(float(ele_wait_time) * 1000)
         page.set_default_navigation_timeout(float(page_render_timeout) * 1000)
         return page, context
+
+    @staticmethod
+    def new_browser_context():
+        browser = gr.get_value('browser')
+
+        operation_module = gr.get_value("projectScript").custom_operation
+        create_browser_context = getattr(operation_module,
+                                         "create_browser_context")
+        context = create_browser_context(browser)
+        if context is not None:
+            log.info('[new_browser_context] successfully get BrowserContext '
+                     'from custom operation')
+            return context
+        context = browser.new_context(record_video_dir="videos",
+                                      ignore_https_errors=True)
+        return context
 
     def navigate(self, context, param):
         param_dict = dsl_helper.params_to_dic(param, "urlKey")
@@ -64,3 +89,53 @@ class Page:
             schema_url = global_resource.get_page_schema_url(param)
             target_url = schema_url
         verify_helper.text_equal(target_url, cur_url)
+
+
+def handle_request(request):
+    # interception request handle
+    parsed_uri = urlparse(request.url)
+    operation = parsed_uri.path.split('/')[-1]
+    if operation is not None:
+        interception_request = gr.get_value('interceptionRequest')
+        request_body = interception_request.get(operation)
+
+        if request_body is not None:
+            log.info(
+                f'[handle_request] start cache service：{operation}')
+            current_request_info = {'postData': request.post_data,
+                                    'url': request.url,
+                                    'updateTimeStamp': int(
+                                        round(time.time() * 1000))}
+            interception_request[operation] = current_request_info
+            gr.set_value("interceptionRequest", interception_request)
+
+
+def handle_route(route):
+    abort_domain_list = gr.get_web_info_value("abort_domain_list", [])
+    parsed_uri = urlparse(route.request.url)
+    domain = parsed_uri.hostname
+    if abort_domain_list and domain in abort_domain_list:
+        route.abort()
+        return
+
+    resource_type = route.request.resource_type
+    if resource_type != 'fetch' and resource_type != 'xhr':
+        route.continue_()
+        return
+
+    # mock response data
+    operation = parsed_uri.path.split('/')[-1]
+    mock_case_id = None
+    if operation is not None:
+        interception_values = gr.get_value('interceptionValues')
+        mock_case_id = interception_values.get(operation)
+    if mock_case_id:
+        mock_body = get_case_response_body(mock_case_id)
+        if mock_body:
+            if not isinstance(mock_body, str):
+                mock_body = json.dumps(mock_body)
+            route.fulfill(status=200,
+                          content_type="application/json;charset=utf-8",
+                          body=mock_body)
+    else:
+        route.continue_()

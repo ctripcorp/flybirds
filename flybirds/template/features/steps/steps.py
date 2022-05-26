@@ -5,6 +5,7 @@ import flybirds.core.dsl.step.common
 import flybirds.core.dsl.step.element
 import flybirds.core.dsl.step.page
 import flybirds.core.dsl.step.device
+import flybirds.core.dsl.step.request
 
 # import custom step statements
 import pscript.dsl.step.custom_test

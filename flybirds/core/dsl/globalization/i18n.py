@@ -135,8 +135,27 @@ step_language = {
         "from [{selector}] select [{param2}]": ["在[{selector}]中选择[{param2}]"],
         "exist [{p_selector}] subNode [{c_selector}] element": [
             "存在[{p_selector}]的[{c_selector}]的元素"],
-        "the text of element [{p_selector}] subNode [{c_selector}] is [{param3}]": [
+        "the text of element [{p_selector}] subNode [{c_selector}] is "
+        "[{param3}]": [
             "[{p_selector}]的[{c_selector}]文案为[{param3}]"
-        ]
+        ],
+        "cache service request [{service}]": ["缓存服务请求[{service}]"],
+        "remove service request cache [{service}]": ["移除请求缓存[{service}]"],
+        "remove all service request caches": ["移除所有请求缓存"],
+        "listening service [{service}] bind mockCase[{mock_case_id}]": [
+            "监听服务[{service}]绑定MockCase[{mock_case_id}]"],
+        "remove service listener [{service}]": ["移除服务监听[{service}]"],
+        "remove all service listeners": ["移除所有服务监听"],
+        "compare service request [{service}] with json file "
+        "[{target_data_path}]": [
+            "验证服务请求[{service}]与[{target_data_path}]一致"],
+        "compare service non-json request [{service}] with non-json file "
+        "[{target_data_path}]": [
+            "验证服务非json请求[{service}]与[{target_data_path}]一致"],
+        "service request [{service}] request parameter [{target_json_path}] "
+        "is [{expect_value}]": [
+            "验证服务[{service}]的请求参数[{target_json_path}]"
+            "与[{expect_value}]一致"]
+
     },
 }

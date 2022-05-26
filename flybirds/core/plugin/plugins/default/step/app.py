@@ -57,18 +57,18 @@ def return_pre_page(context):
 
 
 def to_app_home(context):
-    schema_goto_module = gr.get_value("projectScript").app_operation
+    schema_goto_module = gr.get_value("projectScript").custom_operation
     to_home = getattr(schema_goto_module, "to_home")
     to_home()
 
 
 def app_login(context, param1, param2):
-    schema_goto_module = gr.get_value("projectScript").app_operation
+    schema_goto_module = gr.get_value("projectScript").custom_operation
     login = getattr(schema_goto_module, "login")
     login(param1, param2)
 
 
 def app_logout(context):
-    schema_goto_module = gr.get_value("projectScript").app_operation
+    schema_goto_module = gr.get_value("projectScript").custom_operation
     logout = getattr(schema_goto_module, "logout")
     logout()

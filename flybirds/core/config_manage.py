@@ -8,6 +8,7 @@ import os
 from flybirds.utils import file_helper
 from flybirds.utils import flybirds_log as log
 from flybirds.utils.dsl_helper import return_value, str2bool
+from flybirds.utils.file_helper import read_json_data
 
 
 class ConfigManage:
@@ -52,6 +53,7 @@ class ConfigManage:
             str(self.flow_behave.__dict__),
         )
         self.ele_locator_info = EleLocator()
+        self.ignore_node_info = IgnoreNodeConfig()
 
 
 def get_config(config, name):
@@ -168,30 +170,43 @@ class WebConfig:
 
     def __init__(self, user_data, config):
         web_info = get_config(config, "web_info")
+        # default value
+        headless = True
+        browser_type = 'chromium'
+        request_interception = True
+        ignore_order = False
+        abort_domain_list = []
+
         if user_data is None and web_info is None:
             log.warn('[web_info] configuration of web_info is none.')
-            # default value
-            self.headless = True
-            self.browser_type = 'chromium'
-            self.default_time_out = 30
+            self.headless = headless
+            self.browser_type = browser_type
+            self.request_interception = request_interception
+            self.ignore_order = ignore_order
+            self.abort_domain_list = abort_domain_list
             return
 
-        headless = user_data.get("headless", web_info["headless"])
-        browser_type = user_data.get("browserType", web_info["browserType"])
-        default_time_out = user_data.get("defaultTimeout",
-                                         web_info["defaultTimeout"])
-        if headless is None:
-            headless = True
+        if web_info.get("headless") is not None:
+            headless = web_info.get("headless")
+        if web_info.get("browserType") is not None:
+            browser_type = web_info.get("browserType")
+        if web_info.get("requestInterception") is not None:
+            request_interception = web_info.get("requestInterception")
+        if web_info.get("ignoreOrder") is not None:
+            ignore_order = web_info.get("ignoreOrder")
+        if web_info.get("abortDomainList") is not None:
+            abort_domain_list = web_info.get("abortDomainList")
+
+        headless = user_data.get("headless", headless)
         if isinstance(headless, str):
             headless = str2bool(headless)
         self.headless = headless
-        if browser_type is None:
-            browser_type = 'chromium'
-        self.browser_type = browser_type
-        if default_time_out is None:
-            # default webTimeout is 30s
-            default_time_out = 30
-        self.default_time_out = default_time_out
+        self.browser_type = user_data.get("browserType", browser_type)
+        self.request_interception = user_data.get("requestInterception",
+                                                  request_interception)
+        self.ignore_order = user_data.get("ignoreOrder", ignore_order)
+        self.abort_domain_list = user_data.get("abortDomainList",
+                                               abort_domain_list)
 
 
 class FlowBehave:
@@ -520,3 +535,16 @@ class EleLocator:
         else:
             self.all_ele_locator = file_helper.get_json_from_file(
                 ele_locator_path)
+
+
+class IgnoreNodeConfig:
+    """
+    all interface ignore node config
+    """
+
+    def __init__(self):
+        interface_ignore_dir_path = os.path.join(
+            os.getcwd(), "interfaceIgnoreConfig"
+        )
+        all_ignore_data = read_json_data(interface_ignore_dir_path)
+        self.all_ignore_nodes = all_ignore_data

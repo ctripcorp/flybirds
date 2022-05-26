@@ -30,7 +30,7 @@ class OnConfigLoad:  # pylint: disable=too-few-public-methods
         execute load config and set to global context
         """
         try:
-            log.info("start on before hook")
+            log.info("start load configuration file...")
             user_data = gr.get_value("userData")
             log.info(f'[event config] user_data: {user_data}')
             # obtain the failure case information and associate
