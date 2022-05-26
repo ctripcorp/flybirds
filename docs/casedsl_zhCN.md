@@ -367,6 +367,49 @@ timeout 等待消失的超时时间 ，优先级：默认值 < flybirds_config.j
 - 支持平台：Web
 - 语义：监听相关operation的请求并拦截，用mockCaseId的返回报文进行替换。<br />注意：operation 是url 最后一个\ 和 ？ 中间的字符串
 
+- **MockCase配置**：
+
+  ​	服务监听`step`语句的`mock`数据支持通过2种方式来获取：**json文件配置** 和 **函数调用**。
+
+  - **json文件配置**：如以下示例一。具体设置方式及格式可以参考**Demo**项目**mockCaseData** 目录下的json文件。
+
+    此方式需要注意，对应`response` 的`mockCaseId` （json key，如示例一中的`4245512`）在整个`mockCaseData`目录下需要是唯一的，否则该mock数据会被其他具有相同 `key` 的数据覆盖掉。
+
+  - **函数调用**：自定义处理与获取`MockData`。此种方式需要在 **Demo**项目的**pscript/custom_handle/operation.py** 文件中实现 `get_mock_case_body(mock_case_id)` 扩展方法。
+
+  `MockCase` 绑定的报文优先以自定义扩展方法的返回结果为主。当自定义扩展方法返回结果为None时，框架会尝试查找项目**mockCaseData** 目录下的所有json文件，并返回json文件中`mock_case_id` 对应的 mock数据。
+
+**Mock数据配置示例一：json文件配置**
+
+```json
+{
+  "4245512": {
+    "count": 101,
+    "results": [
+      {
+        "id": 10,
+        "name": "test-狮子王",
+        "alias": "The Lion King",
+        "cover": "https://p0.meituan.net/movie/27b76fe6cf3903f3d74963f70786001e1438406.jpg@464w_644h_1e_1c",
+        "categories": [
+          "动画",
+          "歌舞",
+          "冒险"
+        ],
+        "published_at": "1995-07-15",
+        "minute": 89,
+        "score": 9.0,
+        "regions": [
+          "美国"
+        ]
+      }
+    ]
+  }
+}
+```
+
+**语法使用示例:**
+
 ```js
 //示例1：
 监听服务[movie]绑定MockCase[4245512]

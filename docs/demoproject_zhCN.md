@@ -65,11 +65,11 @@
 
 - `ignoreOrder` 
 
-​		请求报文比对时忽略报文节点的顺序或重复的列表差异。 `platform=web`时必填。默认为：`false`。仅在`requestInterception=true`时有效。
+​		请求报文比对时忽略报文节点的顺序或重复的列表差异。默认为：`false`。仅在`requestInterception=true`时有效。
 
 - `abortDomainList` 
 
-​		请求拦截时，终止路由的域名列表。`platform=web`时必填。如："abortDomainList": ["google.com"]。仅在`requestInterception=true`时有效。
+​		请求拦截时，终止路由的域名列表。如："abortDomainList": ["google.com"]。仅在`requestInterception=true`时有效。
 
 - `beforeRunPage` 
 
@@ -240,6 +240,22 @@
 存放python语言自定义的脚本（包括自定义step语句，对接如mock等其他平台，自定义schema跳转逻辑，登陆登出，behave运行时各种钩子函数的扩展，参数处理方法等等）
 
 - **custom_handle/operation.py** ：定义一些app、web特有的行为。比如，app的 schema跳转协议的拼接，登陆，登出，跳转到首页； web的创建自定义BrowserContext，获取MockData等。
+
+  示例一：web端自定义BrowserContext
+
+  ```python
+  def create_browser_context(browser):
+      """
+      custom creates a new browser context.
+      :param browser: the browser instance
+      """
+      # For example, adding a 'local' parameter when create.
+      context = browser.new_context(record_video_dir="videos",
+                                    ignore_https_errors=True,
+                                     locale="en")
+      return context
+  
+  ```
 
 - **dsl.step**：自定义dsl语句，如果新建.py文件来编写自定义语句，需要在feature/steps/steps.py中import 该 .py文件
 - **dsl.hook**：执行过程中各个钩子函数的扩展
