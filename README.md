@@ -139,8 +139,8 @@ flybirds run
 - [数据驱动参数化](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id80)
 - [多浏览器并发](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id81)
 - [自定义框架扩展](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id84)
-- [多语言](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id19)
-- [持续集成](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id20)
+- [多语言](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id85)
+- [持续集成](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id86)
 - [更多细节](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#)
 
 
