@@ -38,6 +38,31 @@ Flybirds从2022年初开源至今，通过与社区内活跃用户的交流和�
 * 基于Playwright, 实现BDD中“测试用例能在自动化测试平台上执行”需要用到Web端UI自动化测试框架。
 * 基于Multiple-cucumber-html-reporter，实现可视化的测试报告
 
+## 文件结构
+
+```bash
+ 																
+├─ cli	                        脚手架
+├─ core
+|   ├─ config_manage.py         配置管理
+|   ├─ dsl
+|   │    ├─ globalization       国际化处理
+|   │    └─ step                Step 列表
+|   ├─ global_resource.py       全局配置
+|   ├─ launch_cycle             生命周期管理
+|   └─ plugin
+|        ├─ event               事件管理
+|        ├─ plugin_manager.py   插件管理
+|        └─ plugins					
+|             ├─ android        Andriod 相关处理
+|             ├─ ios            iOS 相关处理
+|             └─ web            Web 相关处理
+├─ report                       报告
+├─ template                     模板处理
+└─ utils								
+
+```
+
 ## 特性
 
 使用Flybirds你能够完成大部分的手机端自动化操作，以下是一些帮助入门的特性描述：
