@@ -146,6 +146,14 @@ playwright install webkit
 playwright install --help
 ```
 
+### 语言环境
+检查执行环境中是否已安装了对应的字体，以`unbutu`系统为例，执行中文用例前，需安装对应的字库
+```bash
+sudo apt-get install ttf-wqy-microhei #文泉驿-微米黑
+sudo apt-get install ttf-wqy-zenhei #文泉驿-正黑
+sudo apt-get install xfonts-wqy #文泉驿-点阵宋体
+```
+
 ## 运行
 
 ### 运行参数
