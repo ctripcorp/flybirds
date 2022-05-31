@@ -76,7 +76,7 @@ Flybirds从2022年初开源至今，通过与社区内活跃用户的交流和�
 
 ## 环境搭建
 
-1. **使用`pip`安装flybirds框架，过程中会自动安装所需的 [依赖包](https://github.com/ctripcorp/flybirds/blob/main/docs/relate_zhCN.md)**
+**使用`pip`安装flybirds框架，过程中会自动安装所需的 [依赖包](https://github.com/ctripcorp/flybirds/blob/main/docs/relate_zhCN.md)**
 
 ```bash
 pip3 install flybirds
@@ -93,7 +93,7 @@ chmod +x adb
 cd {your_python_path}/site-packages/airtest/core/android/static/adb/linux
 chmod +x adb
 ```
-2. **使用脚手架创建项目**
+**使用脚手架创建项目**
 
 ```bash
 flybirds create 
