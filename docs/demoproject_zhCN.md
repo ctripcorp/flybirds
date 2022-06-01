@@ -249,10 +249,11 @@
       custom creates a new browser context.
       :param browser: the browser instance
       """
-      # For example, adding a 'local' parameter when create.
+      # For example, adding parameter when create, locale: language, viewport: screen size
       context = browser.new_context(record_video_dir="videos",
                                     ignore_https_errors=True,
-                                     locale="en")
+                                    locale="en",
+                                    viewport={"width": 800, "height": 800})
       return context
   
   ```
