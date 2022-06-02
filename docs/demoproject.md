@@ -241,13 +241,17 @@ Store custom scripts in python language (including custom step statements, docki
   ```python
   def create_browser_context(browser):
       """
-      custom creates a new browser context.
+      custom creates a new browser context. 
+      
+      For related api, also see: https://playwright.dev/python/docs/api/class-browser#browser-new-context
+      
       :param browser: the browser instance
       """
-      # For example, adding a 'local' parameter when create.
+      # For example, adding parameters when create, locale: language, viewport: screen size
       context = browser.new_context(record_video_dir="videos",
                                     ignore_https_errors=True,
-                                     locale="en")
+                                    locale="en",
+                                    viewport={"width": 800, "height": 800})
       return context
   ```
 
