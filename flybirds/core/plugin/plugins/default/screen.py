@@ -85,5 +85,7 @@ class BaseScreen:
                 ' width="375" src="{}" />'.format(step_index, src_path)
             )
             scenario.description.append(data)
-            g_context.screen.screen_shot(
-                os.path.join(current_screen_dir, file_name))
+            screen_path = os.path.join(current_screen_dir, file_name)
+            g_context.screen.screen_shot(screen_path)
+            # os.path.join(current_screen_dir, file_name))
+            return screen_path
