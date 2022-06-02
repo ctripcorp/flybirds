@@ -6,6 +6,8 @@ import os
 import time
 import traceback
 from base64 import b64decode
+from PIL import Image
+from paddleocr import PaddleOCR, draw_ocr
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.file_helper as file_helper
@@ -89,3 +91,21 @@ class BaseScreen:
             g_context.screen.screen_shot(screen_path)
             # os.path.join(current_screen_dir, file_name))
             return screen_path
+
+    @staticmethod
+    def image_scan(img_path):
+        # Paddleocr support languages
+        # example`ch`, `en`, `fr`, `german`, `korean`, `japan`
+        ocr = PaddleOCR(use_angle_cls=True,
+                        lang="ch")  # need to run only once to download and load model into memory
+        result = ocr.ocr(img_path, cls=True)
+        for line in result:
+            print(line)
+        # show result
+        image = Image.open(img_path).convert('RGB')
+        boxes = [line[0] for line in result]
+        txts = [line[1][0] for line in result]
+        scores = [line[1][1] for line in result]
+        im_show = draw_ocr(image, boxes, txts, scores, font_path='./fonts/simfang.ttf')
+        im_show = Image.fromarray(im_show)
+        im_show.save('result.jpg')
