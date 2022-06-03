@@ -20,6 +20,11 @@ def screenshot(context):
     g_Context.step.screenshot(context)
 
 
+@step("scan")
+def scan(context):
+    g_Context.step.scan(context)
+
+
 @step("information association of failed operation,"
       " run the {param1} time :[{param2}]"
       )

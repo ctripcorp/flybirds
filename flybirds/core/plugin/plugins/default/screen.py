@@ -100,7 +100,7 @@ class BaseScreen:
                         lang="ch")  # need to run only once to download and load model into memory
         result = ocr.ocr(img_path, cls=True)
         for line in result:
-            print(line)
+            log.info(f"[image scan result] scan line info is:{line}")
         # show result
         image = Image.open(img_path).convert('RGB')
         boxes = [line[0] for line in result]
