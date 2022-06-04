@@ -60,6 +60,9 @@ class AppBaseStep:
     def screenshot(self, context):
         step_common.screenshot(context)
 
+    def ocr(self, context):
+        step_common.ocr(context)
+
     def prev_fail_scenario_relevance(self, context, param1, param2):
         step_common.prev_fail_scenario_relevance(context, param1, param2)
 
