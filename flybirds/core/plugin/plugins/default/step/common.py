@@ -10,6 +10,7 @@ import traceback
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 from flybirds.core.plugin.plugins.default.screen import BaseScreen
+from flybirds.core.plugin.plugins.default.ocr import BaseOcr
 
 
 def sleep(context, param):
@@ -21,10 +22,10 @@ def screenshot(context):
     BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_")
 
 
-def scan(context):
+def ocr(context):
     step_index = context.cur_step_index - 1
     image_path = BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_")
-    BaseScreen.image_scan(image_path)
+    BaseOcr.image_ocr(image_path)
 
 
 def prev_fail_scenario_relevance(context, param1, param2):

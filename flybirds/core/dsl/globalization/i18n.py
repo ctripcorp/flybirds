@@ -87,7 +87,7 @@ step_language = {
         "logout": ["退出登陆", "退出登录"],
         "wait[{param}]seconds": ["等待[{param}]秒"],
         "screenshot": ["全屏截图"],
-        "scan": ["全屏扫描"],
+        "ocr": ["全屏扫描"],
         "information association of failed operation, run the {param1} time"
         " :[{param2}]": ["失败运行的信息关联,运行第{param1}次:[{param2}]"],
         "text[{selector}]property[{param2}]is {param3}": [
