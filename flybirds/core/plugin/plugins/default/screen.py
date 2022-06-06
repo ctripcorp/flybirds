@@ -6,8 +6,7 @@ import os
 import time
 import traceback
 from base64 import b64decode
-from PIL import Image
-from paddleocr import PaddleOCR, draw_ocr
+from paddleocr import PaddleOCR
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.file_helper as file_helper
@@ -89,7 +88,6 @@ class BaseScreen:
             scenario.description.append(data)
             screen_path = os.path.join(current_screen_dir, file_name)
             g_context.screen.screen_shot(screen_path)
-            # os.path.join(current_screen_dir, file_name))
             return screen_path
 
     @staticmethod
@@ -102,6 +100,7 @@ class BaseScreen:
         result = ocr.ocr(img_path, cls=True)
         for line in result:
             log.info(f"[image ocr result] scan line info is:{line}")
+        g_context.ocr_result = result
 
 
 

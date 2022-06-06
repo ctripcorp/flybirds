@@ -47,6 +47,7 @@ class GlobalContext:
     active_plugin = "default"
     connector = None
     current_local = local()
+    ocr_result = []
 
     @classmethod
     def set_current_language(cls, l_g):
