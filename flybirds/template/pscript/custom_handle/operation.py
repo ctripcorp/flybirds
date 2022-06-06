@@ -80,13 +80,19 @@ def get_mock_case_body(mock_case_id):
 def create_browser_context(browser):
     """
     custom creates a new browser context.
+
+    For related api, also see: https://playwright.dev/python/docs/api/class-browser#browser-new-context
+
     :param browser: the browser instance
     """
     context = None
     # here add something to create BrowserContext...
-    # For example, adding a 'local' parameter when create.
+    #
+    # For example, adding parameters when create,
+    #   locale: language, viewport: screen size
     #
     # context = browser.new_context(record_video_dir="videos",
     #                               ignore_https_errors=True,
-    #                               locale="en")
+    #                               locale="en",
+    #                               viewport={"width": 800, "height": 800})
     return context
