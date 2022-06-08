@@ -5,13 +5,15 @@ Element verification
 import re
 
 import flybirds.core.global_resource as gr
-import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_ele\
+from flybirds.core.global_context import GlobalContext as g_context
+import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_ele \
     as poco_ele
-import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_findsnap\
+import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_findsnap \
     as poco_find_snap
-import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_verify\
+import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_verify \
     as poco_verify
 import flybirds.utils.dsl_helper as dsl_helper
+import flybirds.utils.verify_helper as verify
 
 
 def wait_text_exist(context, param):
@@ -258,3 +260,8 @@ def exist_ele(context, param):
             "wait_ele_timeout", 10
         )
     poco_ele.wait_exists(poco_instance, selector_str, optional)
+
+
+def ocr_txt_exist(context, param):
+    txts = [line[1][0] for line in g_context.ocr_result]
+    verify.text_container(param, txts)

@@ -109,6 +109,7 @@ step_language = {
             "[{selector}]向{param2}滑动[{param3}]"],
         "slide to {param1} distance[{param2}]": ["全屏向{param1}滑动[{param2}]"],
         "exist text[{selector}]": ["存在[{selector}]的文案"],
+        "ocr exist text[{selector}]": ["扫描存在[{selector}]的文案"],
         "not exist text[{selector}]": ["不存在[{selector}]的文案"],
         "text[{selector}]disappear": ["文案[{selector}]消失"],
         "exist[{selector}]element": ["存在[{selector}]的元素"],

@@ -97,10 +97,9 @@ class BaseScreen:
         log.info(f"[image ocr path] image path is:{img_path}")
         ocr = PaddleOCR(use_angle_cls=True,
                         lang="ch")  # need to run only once to download and load model into memory
-        result = ocr.ocr(img_path, cls=True)
-        for line in result:
+        g_context.ocr_result = ocr.ocr(img_path, cls=True)
+        for line in g_context.ocr_result:
             log.info(f"[image ocr result] scan line info is:{line}")
-        g_context.ocr_result = result
 
 
 
