@@ -265,3 +265,8 @@ def exist_ele(context, param):
 def ocr_txt_exist(context, param):
     txts = [line[1][0] for line in g_context.ocr_result]
     verify.text_container(param, txts)
+
+
+def ocr_txt_not_exist(context, param):
+    txts = [line[1][0] for line in g_context.ocr_result]
+    verify.text_not_container(param, txts)
