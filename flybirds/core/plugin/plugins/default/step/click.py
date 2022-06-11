@@ -7,6 +7,7 @@ import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap \
     as find_snap
 import flybirds.utils.dsl_helper as dsl_helper
 from flybirds.core.global_context import GlobalContext as g_Context
+from flybirds.core.plugin.plugins.default.step.verify import ocr_txt_exist
 
 
 def click_ele(context, param):
@@ -104,3 +105,18 @@ def click_coordinates(context, x, y):
     poco_instance.click([x_coordinate, y_coordinate])
     if gr.get_frame_config_value("use_snap", False):
         find_snap.fix_refresh_status(True)
+
+
+def click_ocr_text(context, param):
+    ocr_txt_exist(context, param)
+    for line in g_Context.ocr_result:
+        if line[1][0] == param:
+            box = line[0]
+            x = (box[0][0] + box[1][0]) / 2
+            y = (box[0][1] + box[2][1]) / 2
+            poco_instance = gr.get_value("pocoInstance")
+            screen_size = gr.get_device_size()
+            x_coordinate = float(x) / screen_size[0]
+            y_coordinate = float(y) / screen_size[1]
+            poco_instance.click([x_coordinate, y_coordinate])
+

@@ -12,7 +12,7 @@ import flybirds.core.global_resource as gr
 import flybirds.utils.file_helper as file_helper
 import flybirds.utils.flybirds_log as log
 import flybirds.utils.uuid_helper as uuid_helper
-from flybirds.core.global_context import GlobalContext as g_context
+from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.core.plugin.plugins.default.ios_snapshot import get_screen
 
 
@@ -97,9 +97,20 @@ class BaseScreen:
         log.info(f"[image ocr path] image path is:{img_path}")
         ocr = PaddleOCR(use_angle_cls=True,
                         lang="ch")  # need to run only once to download and load model into memory
-        g_context.ocr_result = ocr.ocr(img_path, cls=True)
-        for line in g_context.ocr_result:
+        g_Context.ocr_result = ocr.ocr(img_path, cls=True)
+        for line in g_Context.ocr_result:
             log.info(f"[image ocr result] scan line info is:{line}")
+            box = line[0]
+            log.info(f"[image ocr result] scan box info is:{box}")
+            x = (box[0][0] + box[1][0]) / 2
+            y = (box[0][1] + box[2][1]) / 2
+            log.info(f"[image ocr result] scan box xy info is:{x},{y}")
+            txt = line[1][0]
+            log.info(f"[image ocr result] scan txt info is:{txt}")
+            score = line[1][1]
+            log.info(f"[image ocr result] scan score info is:{score}")
+
+
 
 
 

@@ -5,7 +5,7 @@ Element verification
 import re
 
 import flybirds.core.global_resource as gr
-from flybirds.core.global_context import GlobalContext as g_context
+from flybirds.core.global_context import GlobalContext as g_Context
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_ele \
     as poco_ele
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_findsnap \
@@ -263,10 +263,12 @@ def exist_ele(context, param):
 
 
 def ocr_txt_exist(context, param):
-    txts = [line[1][0] for line in g_context.ocr_result]
-    verify.text_container(param, txts)
+    if len(g_Context.ocr_result) >= 1:
+        txts = [line[1][0] for line in g_Context.ocr_result]
+        verify.text_container(param, txts)
 
 
 def ocr_txt_not_exist(context, param):
-    txts = [line[1][0] for line in g_context.ocr_result]
-    verify.text_not_container(param, txts)
+    if len(g_Context.ocr_result) >= 1:
+        txts = [line[1][0] for line in g_Context.ocr_result]
+        verify.text_not_container(param, txts)
