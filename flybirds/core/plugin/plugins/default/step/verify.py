@@ -14,6 +14,7 @@ import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_verify \
     as poco_verify
 import flybirds.utils.dsl_helper as dsl_helper
 import flybirds.utils.verify_helper as verify
+from flybirds.core.exceptions import FlybirdVerifyException
 
 
 def wait_text_exist(context, param):
@@ -266,9 +267,15 @@ def ocr_txt_exist(context, param):
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
         verify.text_container(param, txts)
+    else:
+        message = "ocr result is null"
+        raise FlybirdVerifyException(message)
 
 
 def ocr_txt_not_exist(context, param):
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
         verify.text_not_container(param, txts)
+    else:
+        message = "ocr result is null"
+        raise FlybirdVerifyException(message)

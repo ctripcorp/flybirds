@@ -54,6 +54,9 @@ class AppBaseStep:
     def click_coordinates(self, context, x, y):
         step_click.click_coordinates(context, x, y)
 
+    def click_ocr_text(self, context, selector):
+        step_click.click_ocr_text(context, selector)
+
     def sleep(self, context, param):
         step_common.sleep(context, param)
 
