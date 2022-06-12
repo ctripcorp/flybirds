@@ -24,13 +24,13 @@ class BaseScreen:
         Take a screenshot and save
         """
         log.info(f"[screen_shot] screen shot start. path is:{path}")
-        cur_platform = g_context.platform
+        cur_platform = g_Context.platform
         try:
             if cur_platform is None:
                 log.error('[screen_shot] get cur_platform is None!')
                 raise Exception("[screen_shot] get cur_platform is None!")
 
-            poco = g_context.ui_driver_instance
+            poco = g_Context.ui_driver_instance
             screen_size = gr.get_device_size()
             if cur_platform.strip().lower() == "ios":
                 b64img, fmt = get_screen()
@@ -87,16 +87,13 @@ class BaseScreen:
             )
             scenario.description.append(data)
             screen_path = os.path.join(current_screen_dir, file_name)
-            g_context.screen.screen_shot(screen_path)
+            g_Context.screen.screen_shot(screen_path)
             return screen_path
 
     @staticmethod
     def image_ocr(img_path):
-        # Paddleocr support languages
-        # example`ch`, `en`, `fr`, `german`, `korean`, `japan`
         log.info(f"[image ocr path] image path is:{img_path}")
-        ocr = PaddleOCR(use_angle_cls=True,
-                        lang="ch")  # need to run only once to download and load model into memory
+        ocr = g_Context.ocr_driver_instance
         g_Context.ocr_result = ocr.ocr(img_path, cls=True)
         for line in g_Context.ocr_result:
             log.info(f"[image ocr result] scan line info is:{line}")

@@ -20,6 +20,7 @@ def init_glb():
         "userData": {},
         "deviceInstance": None,
         "pocoInstance": None,
+        "ocrInstance": None,
         "rerunFailInfo": None,
         "appEnvConfig": None,
         "packageName": None,
