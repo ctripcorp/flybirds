@@ -115,8 +115,7 @@ def click_ocr_text(context, param):
             x = (box[0][0] + box[1][0]) / 2
             y = (box[0][1] + box[2][1]) / 2
             poco_instance = gr.get_value("pocoInstance")
-            screen_size = gr.get_device_size()
-            x_coordinate = float(x) / screen_size[0]
-            y_coordinate = float(y) / screen_size[1]
+            x_coordinate = float(x) / g_Context.image_size[0]
+            y_coordinate = float(y) / g_Context.image_size[1]
             poco_instance.click([x_coordinate, y_coordinate])
 

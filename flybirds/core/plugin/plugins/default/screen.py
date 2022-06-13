@@ -6,7 +6,7 @@ import os
 import time
 import traceback
 from base64 import b64decode
-from paddleocr import PaddleOCR
+from PIL import Image
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.file_helper as file_helper
@@ -95,6 +95,8 @@ class BaseScreen:
         log.info(f"[image ocr path] image path is:{img_path}")
         ocr = g_Context.ocr_driver_instance
         g_Context.ocr_result = ocr.ocr(img_path, cls=True)
+        g_Context.image_size = Image.open(img_path).size
+        log.info(f"[image ocr path] image size is:{g_Context.image_size}")
         for line in g_Context.ocr_result:
             log.info(f"[image ocr result] scan line info is:{line}")
             box = line[0]

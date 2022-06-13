@@ -49,6 +49,7 @@ class GlobalContext:
     connector = None
     current_local = local()
     ocr_result = []
+    image_size = []
 
     @classmethod
     def set_current_language(cls, l_g):
