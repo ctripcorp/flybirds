@@ -3,6 +3,7 @@
 Element verification
 """
 import re
+import time
 
 import flybirds.core.global_resource as gr
 from flybirds.core.global_context import GlobalContext as g_Context
@@ -15,6 +16,7 @@ import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_verify \
 import flybirds.utils.dsl_helper as dsl_helper
 import flybirds.utils.verify_helper as verify
 from flybirds.core.exceptions import FlybirdVerifyException
+from flybirds.core.plugin.plugins.default.step.common import ocr
 
 
 def wait_text_exist(context, param):
@@ -261,6 +263,21 @@ def exist_ele(context, param):
             "wait_ele_timeout", 10
         )
     poco_ele.wait_exists(poco_instance, selector_str, optional)
+
+
+def wait_ocr_text_appear(context, param):
+    timeout = 30
+    text_exist = False
+    start = time.time()
+    while not text_exist:
+        ocr(context)
+        txts = [line[1][0] for line in g_Context.ocr_result]
+        if param in txts:
+            text_exist = True
+        if time.time() - start > timeout:
+            message = "text not found in {} seconds, expect text:{}" \
+                      .format(timeout, param)
+            raise FlybirdVerifyException(message)
 
 
 def ocr_txt_exist(context, param):

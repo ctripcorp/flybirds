@@ -125,6 +125,8 @@ step_language = {
         ],
         "page rendering complete appears element[{selector}]": [
             "页面渲染完成出现元素[{selector}]"],
+        "page ocr complete find text[{selector}]": [
+            "页面扫描完成出现文字[{selector}]"],
         "existing element[{selector}]": ["存在元素[{selector}]"],
 
         "in[{p_selector}]from {param2} find[{c_selector}]element": [

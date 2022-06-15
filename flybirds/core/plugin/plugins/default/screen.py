@@ -99,15 +99,15 @@ class BaseScreen:
         log.info(f"[image ocr path] image size is:{g_Context.image_size}")
         for line in g_Context.ocr_result:
             log.info(f"[image ocr result] scan line info is:{line}")
-            box = line[0]
-            log.info(f"[image ocr result] scan box info is:{box}")
-            x = (box[0][0] + box[1][0]) / 2
-            y = (box[0][1] + box[2][1]) / 2
-            log.info(f"[image ocr result] scan box xy info is:{x},{y}")
-            txt = line[1][0]
-            log.info(f"[image ocr result] scan txt info is:{txt}")
-            score = line[1][1]
-            log.info(f"[image ocr result] scan score info is:{score}")
+            # box = line[0]
+            # log.info(f"[image ocr result] scan box info is:{box}")
+            # x = (box[0][0] + box[1][0]) / 2
+            # y = (box[0][1] + box[2][1]) / 2
+            # log.info(f"[image ocr result] scan box xy info is:{x},{y}")
+            # txt = line[1][0]
+            # log.info(f"[image ocr result] scan txt info is:{txt}")
+            # score = line[1][1]
+            # log.info(f"[image ocr result] scan score info is:{score}")
 
 
 

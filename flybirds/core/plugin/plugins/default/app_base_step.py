@@ -120,6 +120,9 @@ class AppBaseStep:
     def wait_ele_disappear(self, context, selector):
         step_verify.wait_ele_disappear(context, selector)
 
+    def wait_ocr_text_appear(self, context, param):
+        step_verify.wait_ocr_text_appear(context, param)
+
     def ele_text_equal(self, context, selector, param2):
         step_verify.ele_text_equal(context, selector, param2)
 
