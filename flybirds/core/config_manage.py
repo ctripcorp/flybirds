@@ -116,6 +116,11 @@ class AppConfig:
                 app_config.get("overwriteInstallation", None)
             )
 
+            self.ocr_lang = user_data.get(
+                "ocrLang",
+                app_config.get("ocrLang", "ch")
+            )
+
             self.run_id = user_data.get("runId", None)
             self.build_id = user_data.get("buildId", None)
             self.pkg_version = user_data.get("pkgVersion", None)
