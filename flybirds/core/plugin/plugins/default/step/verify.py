@@ -266,7 +266,7 @@ def exist_ele(context, param):
 
 
 def wait_ocr_text_appear(context, param):
-    timeout = 30
+    timeout = gr.get_frame_config_value("page_render_timeout", 30)
     text_exist = False
     start = time.time()
     while not text_exist:
