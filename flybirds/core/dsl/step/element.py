@@ -95,6 +95,18 @@ def ele_input(context, selector=None, param2=None):
     g_Context.step.ele_input(context, selector, param2)
 
 
+@step("in ocr[{selector}]input[{param2}]")
+@ele_wrap
+def ocr_text_input(context, selector=None, param2=None):
+    """
+    Enter the value param2 in the selector element param1
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param param2: string to be input
+    """
+    g_Context.step.ocr_text_input(context, selector, param2)
+
+
 @step("element[{selector}]position not change in[{param2}]seconds")
 @ele_wrap
 def position_not_change(context, selector=None, param2=None):

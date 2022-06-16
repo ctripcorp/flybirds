@@ -101,6 +101,7 @@ step_language = {
         "click ocr text[{selector}]": ["点击扫描文案[{selector}]"],
         "click position[{x},{y}]": ["点击屏幕位置[{x},{y}]"],
         "in[{selector}]input[{param2}]": ["在[{selector}]中输入[{param2}]"],
+        "in ocr[{selector}]input[{param2}]": ["在扫描文字[{selector}]中输入[{param2}]"],
         "clear [{selector}] and input[{param2}]": [
             "在[{selector}]中清空并输入[{param2}]"],
         "element[{selector}]position not change in[{param2}]seconds": [

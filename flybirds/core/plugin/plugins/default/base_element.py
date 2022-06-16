@@ -52,7 +52,7 @@ class BaseElement:
         :param after_input_wait:
         :return:
         """
-        text(input_str)
+        text(input_str, enter=False)
         if not (after_input_wait is None):
             time.sleep(after_input_wait)
 

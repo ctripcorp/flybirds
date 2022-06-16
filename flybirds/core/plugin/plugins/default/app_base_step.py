@@ -13,7 +13,8 @@ import flybirds.core.plugin.plugins.default.step.swipe as step_swipe
 import flybirds.core.plugin.plugins.default.step.verify as step_verify
 from flybirds.core.plugin.plugins.default.step.app \
     import (to_app_home, app_login, app_logout)
-from flybirds.core.plugin.plugins.default.step.input import ele_input
+from flybirds.core.plugin.plugins.default.step.input \
+    import (ele_input, ocr_text_input)
 from flybirds.core.plugin.plugins.default.step.position import (
     position_not_change
 )
@@ -71,6 +72,9 @@ class AppBaseStep:
 
     def ele_input(self, context, selector, param2):
         ele_input(context, selector, param2)
+
+    def ocr_text_input(self, context, selector, param2):
+        ocr_text_input(context, selector, param2)
 
     def swipe_to_ele(self, context, p_selector, param2, c_selector):
         step_adjust.swipe_to_ele(context, p_selector, param2, c_selector)
