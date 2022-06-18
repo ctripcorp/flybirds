@@ -5,7 +5,8 @@
     "overwriteInstallation": false,
     "uniqueTag": "",
     "defaultUser": null,
-    "defaultPassword": null
+    "defaultPassword": null,
+    "ocrLang": "ch"
   },
   "device_info": {
     "deviceId": "%{{deviceId}}",
