@@ -11,3 +11,4 @@ jenkins
 **/__pycache__
 .DS_Store
 /venv/
+multiprocessing_features.log
