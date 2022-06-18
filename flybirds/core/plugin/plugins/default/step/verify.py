@@ -274,10 +274,16 @@ def wait_ocr_text_appear(context, param):
         txts = [line[1][0] for line in g_Context.ocr_result]
         if param in txts:
             text_exist = True
+        else:
+            if time.time() - start > timeout/2:
+                time.sleep(timeout/2)
+            else:
+                time.sleep(5)
         if time.time() - start > timeout:
             message = "text not found in {} seconds, expect text:{}" \
                       .format(timeout, param)
             raise FlybirdVerifyException(message)
+
 
 
 def ocr_txt_exist(context, param):

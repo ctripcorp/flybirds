@@ -27,8 +27,8 @@
     "failScreenRecord": true,
     "scenarioScreenRecordTime": 120,
     "failRerun": false,
-    "maxFailRerunCount": 1.0,
-    "maxRetryCount": 1
+    "maxFailRerunCount": 0,
+    "maxRetryCount": 0
   },
   "frame_info": {
     "waitEleTimeout": 35,
