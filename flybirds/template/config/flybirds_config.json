@@ -43,7 +43,7 @@
     "searchSwipeDuration": 1,
     "swipeSearchCount": 5,
     "swipeSearchDistance": 0.3,
-    "pageRenderTimeout": 65,
+    "pageRenderTimeout": 30,
     "appStartTime": 6,
     "swipeReadyTime": 3,
     "verifyPosNotChangeCount": 5,
