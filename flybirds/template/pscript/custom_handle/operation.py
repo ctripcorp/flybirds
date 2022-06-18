@@ -6,7 +6,7 @@ This module is used to define APP unique behavior
 
 def schema_deal_rule(page_name, schema_url):
     """
-    Custom schema jump rules
+    Custom android schema jump rules
 
     > NOTE:  The schema jump rules within each app are inconsistent.
 
@@ -96,3 +96,34 @@ def create_browser_context(browser):
     #                               locale="en",
     #                               viewport={"width": 800, "height": 800})
     return context
+
+
+def get_page_url(param):
+    """
+    Custom web get page url rules
+
+    ```py
+    # example 1
+    import os
+    from flybirds.utils import file_helper
+
+    path = os.path.join(os.getcwd(), "config", "schema_url.json")
+    if os.path.exists(path):
+        c_f = file_helper.get_json_from_file(path)
+        if c_f.__contains__(param):
+                return c_f.get(param)
+
+    # example 2
+    url = "https://www.ctrip.com/"
+    return url
+    ```
+    Parameters
+        ----------
+        param :
+            The key of the schema_url to be jumped to in schema_url.config
+    Returns
+        -------
+        url string
+    """
+    pass
+

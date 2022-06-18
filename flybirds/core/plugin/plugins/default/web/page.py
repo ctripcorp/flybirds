@@ -66,6 +66,15 @@ class Page:
         return context
 
     def navigate(self, context, param):
+        operation_module = gr.get_value("projectScript").custom_operation
+        get_page_url = getattr(operation_module,
+                                         "get_page_url")
+        page_url = get_page_url(param)
+        if page_url is not None:
+            log.info('[get_page_url] successfully get page_url_value '
+                     'from custom operation')
+            self.page.goto(page_url)
+            return
         param_dict = dsl_helper.params_to_dic(param, "urlKey")
         url_key = param_dict["urlKey"]
         schema_url_value = gr.get_page_schema_url(url_key)

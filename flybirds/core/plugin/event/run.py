@@ -57,6 +57,19 @@ class OnBefore:  # pylint: disable=too-few-public-methods
                 f"initialization device not obtained:{device_id} or platform"
             )
 
+
+    @staticmethod
+    def init_ocr_driver(context):
+        """
+        init ocr
+        """
+        ocr_instance = ui_driver.init_ocr()
+        gr.set_value("ocrInstance", ocr_instance)
+        context.ocr_instance = ocr_instance
+        GlobalContext.ocr_driver_instance = ocr_instance
+        log.info("ocr object initialization completed")
+
+
     @staticmethod
     def run(context):
         """
@@ -66,6 +79,7 @@ class OnBefore:  # pylint: disable=too-few-public-methods
         try:
             log.info("init device and screen config")
             OnBefore.init_ui_driver(context)
+            OnBefore.init_ocr_driver(context)
             # get the global object used to record the screen
             screen_record = GlobalContext.screen_record()
             gr.set_value("screenRecord", screen_record)

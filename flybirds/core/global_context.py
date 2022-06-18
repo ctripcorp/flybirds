@@ -44,9 +44,12 @@ class GlobalContext:
     language = "zh-CN"
     device_driver = None
     ui_driver_instance = None
+    ocr_driver_instance = None
     active_plugin = "default"
     connector = None
     current_local = local()
+    ocr_result = []
+    image_size = []
 
     @classmethod
     def set_current_language(cls, l_g):

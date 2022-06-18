@@ -2,10 +2,12 @@
 """
 Step implement of element input.
 """
+import time
 import flybirds.core.global_resource as gr
 import flybirds.utils.dsl_helper as dsl_helper
 
 from flybirds.core.global_context import GlobalContext as g_Context
+from flybirds.core.plugin.plugins.default.step.click import click_ocr_text
 
 
 def ele_input(context, param1, param2):
@@ -45,3 +47,10 @@ def ele_input(context, param1, param2):
             poco_instance, selector_str, optional, None, None, None
         )
         g_Context.element.str_input(input_str, after_input_wait)
+
+
+def ocr_text_input(context, param1, param2):
+    click_ocr_text(context, param1)
+    after_input_wait = gr.get_frame_config_value("after_input_wait", 1)
+    time.sleep(after_input_wait)
+    g_Context.element.str_input(param2, after_input_wait)

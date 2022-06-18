@@ -26,6 +26,16 @@ def text_container(o_text, t_text):
         raise FlybirdVerifyException(message)
 
 
+def text_not_container(o_text, t_text):
+    """
+    Determine whether the text is included
+    """
+    if o_text in t_text:
+        message = "text contain, expect value not include:{}," \
+                  " actual value:{}".format(o_text, t_text)
+        raise FlybirdVerifyException(message)
+
+
 def attr_equal(o_attr, t_attr):
     """
     Determine whether the attributes are equal

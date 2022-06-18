@@ -60,6 +60,17 @@ def click_text(context, selector=None):
     g_Context.step.click_text(context, selector)
 
 
+@step("click ocr text[{selector}]")
+@ele_wrap
+def click_ocr_text(context, selector=None):
+    """
+    Click on the ocr text element
+    :param context: step context
+    :param selector: locator string for text element (or None).
+    """
+    g_Context.step.click_ocr_text(context, selector)
+
+
 @step("click position[{x},{y}]")
 @ele_wrap
 def click_coordinates(context, x=None, y=None):
@@ -82,6 +93,18 @@ def ele_input(context, selector=None, param2=None):
     :param param2: string to be input
     """
     g_Context.step.ele_input(context, selector, param2)
+
+
+@step("in ocr[{selector}]input[{param2}]")
+@ele_wrap
+def ocr_text_input(context, selector=None, param2=None):
+    """
+    Enter the value param2 in the selector element param1
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param param2: string to be input
+    """
+    g_Context.step.ocr_text_input(context, selector, param2)
 
 
 @step("element[{selector}]position not change in[{param2}]seconds")
@@ -134,6 +157,29 @@ def wait_text_exist(context, selector=None):
     g_Context.step.wait_text_exist(context, selector)
 
 
+@step("ocr exist text[{selector}]")
+@ele_wrap
+def wait_text_exist(context, selector=None):
+    """
+    The specified text element string exists in the page
+    :param context: step context
+    :param selector: locator string for text element (or None).
+    """
+    g_Context.step.wait_text_exist(context, selector)
+
+
+@step("page ocr complete find text[{selector}]")
+@ele_wrap
+def wait_ocr_text_appear(context, selector=None):
+    """
+    Wait for the page to finish rendering and the selector element param1
+     to appear
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    """
+    g_Context.step.wait_ocr_text_appear(context, selector)
+
+
 @step("not exist text[{selector}]")
 @ele_wrap
 def text_not_exist(context, selector=None):
@@ -144,6 +190,16 @@ def text_not_exist(context, selector=None):
     """
     g_Context.step.text_not_exist(context, selector)
 
+
+@step("ocr not exist text[{selector}]")
+@ele_wrap
+def ocr_text_not_exist(context, selector=None):
+    """
+    The specified text string does not exist in the page
+    :param context: step context
+    :param selector: locator string for text element (or None).
+    """
+    g_Context.step.ocr_text_not_exist(context, selector)
 
 @step("text[{selector}]disappear")
 @ele_wrap

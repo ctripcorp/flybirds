@@ -5,6 +5,8 @@ ui driver
 import flybirds.core.global_resource as gr
 from flybirds.core.plugin.plugins.default.ui_driver.poco.poco_manage import \
     poco_init
+from flybirds.core.plugin.plugins.default.ui_driver.paddleocr.ocr_manage import \
+    ocr_init
 from flybirds.core.plugin.plugins.default.ui_driver.poco.poco_screen import \
     air_bdd_screen_size
 
@@ -20,6 +22,10 @@ class UIDriver:
     @staticmethod
     def init_driver():
         return poco_init()
+
+    @staticmethod
+    def init_ocr():
+        return ocr_init()
 
     @staticmethod
     def air_bdd_screen_size(dr_instance):

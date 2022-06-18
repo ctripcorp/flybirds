@@ -21,6 +21,12 @@ def screenshot(context):
     BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_")
 
 
+def ocr(context):
+    step_index = context.cur_step_index - 1
+    image_path = BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_")
+    BaseScreen.image_ocr(image_path)
+
+
 def prev_fail_scenario_relevance(context, param1, param2):
     """
     Related operations for the previous failure scenario

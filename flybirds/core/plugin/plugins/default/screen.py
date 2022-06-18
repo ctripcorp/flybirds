@@ -6,12 +6,13 @@ import os
 import time
 import traceback
 from base64 import b64decode
+from PIL import Image
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.file_helper as file_helper
 import flybirds.utils.flybirds_log as log
 import flybirds.utils.uuid_helper as uuid_helper
-from flybirds.core.global_context import GlobalContext as g_context
+from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.core.plugin.plugins.default.ios_snapshot import get_screen
 
 
@@ -23,13 +24,13 @@ class BaseScreen:
         Take a screenshot and save
         """
         log.info(f"[screen_shot] screen shot start. path is:{path}")
-        cur_platform = g_context.platform
+        cur_platform = g_Context.platform
         try:
             if cur_platform is None:
                 log.error('[screen_shot] get cur_platform is None!')
                 raise Exception("[screen_shot] get cur_platform is None!")
 
-            poco = g_context.ui_driver_instance
+            poco = g_Context.ui_driver_instance
             screen_size = gr.get_device_size()
             if cur_platform.strip().lower() == "ios":
                 b64img, fmt = get_screen()
@@ -85,5 +86,30 @@ class BaseScreen:
                 ' width="375" src="{}" />'.format(step_index, src_path)
             )
             scenario.description.append(data)
-            g_context.screen.screen_shot(
-                os.path.join(current_screen_dir, file_name))
+            screen_path = os.path.join(current_screen_dir, file_name)
+            g_Context.screen.screen_shot(screen_path)
+            return screen_path
+
+    @staticmethod
+    def image_ocr(img_path):
+        log.info(f"[image ocr path] image path is:{img_path}")
+        ocr = g_Context.ocr_driver_instance
+        g_Context.ocr_result = ocr.ocr(img_path, cls=True)
+        g_Context.image_size = Image.open(img_path).size
+        log.info(f"[image ocr path] image size is:{g_Context.image_size}")
+        for line in g_Context.ocr_result:
+            log.info(f"[image ocr result] scan line info is:{line}")
+            # box = line[0]
+            # log.info(f"[image ocr result] scan box info is:{box}")
+            # x = (box[0][0] + box[1][0]) / 2
+            # y = (box[0][1] + box[2][1]) / 2
+            # log.info(f"[image ocr result] scan box xy info is:{x},{y}")
+            # txt = line[1][0]
+            # log.info(f"[image ocr result] scan txt info is:{txt}")
+            # score = line[1][1]
+            # log.info(f"[image ocr result] scan score info is:{score}")
+
+
+
+
+

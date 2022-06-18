@@ -5,7 +5,8 @@
     "overwriteInstallation": false,
     "uniqueTag": "",
     "defaultUser": null,
-    "defaultPassword": null
+    "defaultPassword": null,
+    "ocrLang": "ch"
   },
   "device_info": {
     "deviceId": "%{{deviceId}}",
@@ -27,8 +28,8 @@
     "failScreenRecord": true,
     "scenarioScreenRecordTime": 120,
     "failRerun": false,
-    "maxFailRerunCount": 1.0,
-    "maxRetryCount": 1
+    "maxFailRerunCount": 0,
+    "maxRetryCount": 0
   },
   "frame_info": {
     "waitEleTimeout": 35,
@@ -42,7 +43,7 @@
     "searchSwipeDuration": 1,
     "swipeSearchCount": 5,
     "swipeSearchDistance": 0.3,
-    "pageRenderTimeout": 65,
+    "pageRenderTimeout": 30,
     "appStartTime": 6,
     "swipeReadyTime": 3,
     "verifyPosNotChangeCount": 5,

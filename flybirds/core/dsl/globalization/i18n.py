@@ -87,6 +87,7 @@ step_language = {
         "logout": ["退出登陆", "退出登录"],
         "wait[{param}]seconds": ["等待[{param}]秒"],
         "screenshot": ["全屏截图"],
+        "ocr": ["全屏扫描"],
         "information association of failed operation, run the {param1} time"
         " :[{param2}]": ["失败运行的信息关联,运行第{param1}次:[{param2}]"],
         "text[{selector}]property[{param2}]is {param3}": [
@@ -97,8 +98,10 @@ step_language = {
         ],
         "click[{selector}]": ["点击[{selector}]"],
         "click text[{selector}]": ["点击文案[{selector}]"],
+        "click ocr text[{selector}]": ["点击扫描文案[{selector}]"],
         "click position[{x},{y}]": ["点击屏幕位置[{x},{y}]"],
         "in[{selector}]input[{param2}]": ["在[{selector}]中输入[{param2}]"],
+        "in ocr[{selector}]input[{param2}]": ["在扫描文字[{selector}]中输入[{param2}]"],
         "clear [{selector}] and input[{param2}]": [
             "在[{selector}]中清空并输入[{param2}]"],
         "element[{selector}]position not change in[{param2}]seconds": [
@@ -108,7 +111,9 @@ step_language = {
             "[{selector}]向{param2}滑动[{param3}]"],
         "slide to {param1} distance[{param2}]": ["全屏向{param1}滑动[{param2}]"],
         "exist text[{selector}]": ["存在[{selector}]的文案"],
+        "ocr exist text[{selector}]": ["扫描存在[{selector}]的文案"],
         "not exist text[{selector}]": ["不存在[{selector}]的文案"],
+        "ocr not exist text[{selector}]": ["扫描不存在[{selector}]的文案"],
         "text[{selector}]disappear": ["文案[{selector}]消失"],
         "exist[{selector}]element": ["存在[{selector}]的元素"],
         "not exist element[{selector}]": ["不存在[{selector}]的元素"],
@@ -121,6 +126,8 @@ step_language = {
         ],
         "page rendering complete appears element[{selector}]": [
             "页面渲染完成出现元素[{selector}]"],
+        "page ocr complete find text[{selector}]": [
+            "页面扫描完成出现文字[{selector}]"],
         "existing element[{selector}]": ["存在元素[{selector}]"],
 
         "in[{p_selector}]from {param2} find[{c_selector}]element": [
