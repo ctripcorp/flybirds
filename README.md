@@ -124,4 +124,5 @@ Flybirds从2022年初开源至今，通过与社区内活跃用户的交流和�
 - [behave](https://github.com/behave)
 - [playwright](https://github.com/microsoft/playwright-python)
 - [multiple-cucumber-html-reporter](https://github.com/wswebcreation/multiple-cucumber-html-reporter)
+- [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)
 
