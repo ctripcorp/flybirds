@@ -159,13 +159,13 @@ def wait_text_exist(context, selector=None):
 
 @step("ocr exist text[{selector}]")
 @ele_wrap
-def wait_text_exist(context, selector=None):
+def ocr_text_exist(context, selector=None):
     """
     The specified text element string exists in the page
     :param context: step context
     :param selector: locator string for text element (or None).
     """
-    g_Context.step.wait_text_exist(context, selector)
+    g_Context.step.ocr_text_exist(context, selector)
 
 
 @step("page ocr complete find text[{selector}]")
