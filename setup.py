@@ -18,7 +18,7 @@ req = parse_requirements("requirements.txt")
 
 setup(
     name="flybirds",
-    version="0.3.0",
+    version="0.3.1",
     author="trip_flight",
     author_email="flybirds_support@trip.com",
     description="BDD-driven natural language automated testing framework",
