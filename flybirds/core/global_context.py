@@ -64,6 +64,25 @@ class GlobalContext:
         c_l = cls.current_local
         del c_l.language
 
+    @classmethod
+    def set_global_cache(cls, key, value):
+        if not hasattr(cls.current_local, "glb_cache") or cls.current_local.glb_cache is None:
+            cls.current_local.glb_cache = {}
+        cls.current_local.glb_cache[key] = value
+
+    @classmethod
+    def get_global_cache(cls, key):
+        if not hasattr(cls.current_local, "glb_cache") or cls.current_local.glb_cache is None:
+            return None
+        return cls.current_local.glb_cache.get(key)
+
+    @classmethod
+    def del_global_cache(cls):
+        if not hasattr(cls.current_local, "glb_cache") or cls.current_local.glb_cache is None:
+            return None
+        rc_l = cls.current_local
+        del rc_l.glb_cache
+
     @staticmethod
     def process(processors_name, *args):
         """

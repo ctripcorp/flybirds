@@ -3,9 +3,13 @@
 load event
 """
 import base64
+import os
+
+from flybirds.utils.pkg_helper import load_pkg_by_ns
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
+from flybirds.utils.flybirds_log import logger
 from flybirds.core.config_manage import DeviceConfig
 from flybirds.core.config_manage import PluginConfig
 from flybirds.core.global_context import GlobalContext
@@ -90,5 +94,33 @@ class PluginManager:  # pylint: disable=too-few-public-methods
         return plugin_manager
 
 
+class ExtendPluginLoader:
+    """
+    extend plugin event load
+    """
+    name = "ExtendPluginLoader"
+    order = 20
+
+    @staticmethod
+    def run(context):
+        """
+        load extend hook
+        """
+        try:
+            if os.environ.get("extend_pkg_list") is not None:
+                extend_pkg = os.environ.get("extend_pkg_list")
+                extend_pkg_list = extend_pkg.split(",")
+                if len(extend_pkg_list) > 0:
+                    for pkg in extend_pkg_list:
+                        if pkg is not None and pkg != "":
+                            logger.info(f"load extend hook package:{pkg}")
+                            load_pkg_by_ns(f"{pkg}.hook")
+        except Exception as load_ex:
+            logger.info("no extend hook to be loaded")
+            print(f"{load_ex}")
+
+
 # add plugin load event to global processor
 GlobalContext.join("plugin_processor", PluginManager, 1)
+
+GlobalContext.join("plugin_processor", ExtendPluginLoader, 1)
