@@ -3,6 +3,7 @@
 """
 config management all config should load by this module
 """
+import json
 import os
 
 from flybirds.utils import file_helper
@@ -32,10 +33,13 @@ class ConfigManage:
         log.info(
             "Device configuration information", str(self.device_info.__dict__)
         )
-        self.web_info = WebConfig(user_data, None)
-        log.info(
-            "Web configuration information", str(self.web_info.__dict__)
-        )
+        if self.device_info is not None \
+                and self.device_info.platform.lower() == "web":
+            self.web_info = WebConfig(user_data, None)
+            log.info(
+                "Web configuration information", str(self.web_info.__dict__)
+            )
+
         self.frame_info = FrameConfig(user_data, None)
         log.info(
             "Frame parameter configuration information",
@@ -536,7 +540,9 @@ class EleLocator:
         )
         if not os.path.exists(ele_locator_path):
             log.warn(
-                f"[EleLocator] cannot find path: {ele_locator_path}")
+                f"[EleLocator] cannot find path: {ele_locator_path} "
+                "will set default")
+            self.all_ele_locator = json.loads("{}")
         else:
             self.all_ele_locator = file_helper.get_json_from_file(
                 ele_locator_path)
