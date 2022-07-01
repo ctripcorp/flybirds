@@ -57,7 +57,6 @@ class OnBefore:  # pylint: disable=too-few-public-methods
                 f"initialization device not obtained:{device_id} or platform"
             )
 
-
     @staticmethod
     def init_ocr_driver(context):
         """
@@ -68,7 +67,6 @@ class OnBefore:  # pylint: disable=too-few-public-methods
         context.ocr_instance = ocr_instance
         GlobalContext.ocr_driver_instance = ocr_instance
         log.info("ocr object initialization completed")
-
 
     @staticmethod
     def run(context):
@@ -96,10 +94,6 @@ class OnBefore:  # pylint: disable=too-few-public-methods
         except Exception as init_error:
             log.info("global initialization error", traceback.format_exc())
             raise init_error
-        # hook extend by tester
-        before_all_extend = launch_helper.get_hook_file("before_all_extend")
-        if before_all_extend is not None:
-            before_all_extend(context)
 
 
 class OnAfter:  # pylint: disable=too-few-public-methods

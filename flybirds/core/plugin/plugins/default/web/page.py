@@ -54,13 +54,18 @@ class Page:
         browser = gr.get_value('browser')
 
         operation_module = gr.get_value("projectScript").custom_operation
-        create_browser_context = getattr(operation_module,
-                                         "create_browser_context")
-        context = create_browser_context(browser)
-        if context is not None:
-            log.info('[new_browser_context] successfully get BrowserContext '
-                     'from custom operation')
-            return context
+        context = None
+        if operation_module is not None and \
+                hasattr(operation_module, "create_browser_context"):
+            create_browser_context = getattr(operation_module,
+                                             "create_browser_context")
+            if create_browser_context is not None:
+                context = create_browser_context(browser)
+                if context is not None:
+                    log.info('[new_browser_context] successfully get BrowserContext '
+                             'from custom operation')
+                    return context
+
         context = browser.new_context(record_video_dir="videos",
                                       ignore_https_errors=True)
         return context

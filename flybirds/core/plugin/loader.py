@@ -116,8 +116,7 @@ class ExtendPluginLoader:
                             logger.info(f"load extend hook package:{pkg}")
                             load_pkg_by_ns(f"{pkg}.hook")
         except Exception as load_ex:
-            logger.info("no extend hook to be loaded")
-            print(f"{load_ex}")
+            logger.debug(f"no extend hook to be loaded--{load_ex}")
 
 
 # add plugin load event to global processor
