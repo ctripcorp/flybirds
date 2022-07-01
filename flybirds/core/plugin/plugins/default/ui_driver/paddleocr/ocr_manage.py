@@ -5,12 +5,15 @@ Poco manage api
 import flybirds.core.global_resource as gr
 
 
-def ocr_init():
+def ocr_init(lang=None):
     """
     Initialize the paddleocr object
      :return:
     """
-    ocr_lang = gr.get_app_config_value("ocr_lang")
+    if lang is None:
+        ocr_lang = gr.get_app_config_value("ocr_lang")
+    else:
+        ocr_lang = lang
     from paddleocr import PaddleOCR
     # Paddleocr support languages
     # example`ch`, `en`, `fr`, `german`, `korean`, `japan`

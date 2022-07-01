@@ -20,6 +20,10 @@ def screenshot(context):
     g_Context.step.screenshot(context)
 
 
+@step("change ocr lang [{param}]")
+def change_ocr_lang(context, param=None):
+    g_Context.step.change_ocr_lang(context, param)
+
 @step("ocr")
 def scan(context):
     g_Context.step.ocr(context)

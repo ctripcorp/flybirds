@@ -13,8 +13,8 @@ def init_driver():
     return GlobalContext.ui_driver.init_driver()
 
 
-def init_ocr():
-    return GlobalContext.ui_driver.init_ocr()
+def init_ocr(lang=None):
+    return GlobalContext.ui_driver.init_ocr(lang)
 
 
 def close_driver():

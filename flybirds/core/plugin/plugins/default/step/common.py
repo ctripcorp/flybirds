@@ -10,6 +10,8 @@ import traceback
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 from flybirds.core.plugin.plugins.default.screen import BaseScreen
+from flybirds.core.driver import ui_driver
+from flybirds.core.global_context import GlobalContext
 
 
 def sleep(context, param):
@@ -25,6 +27,17 @@ def ocr(context):
     step_index = context.cur_step_index - 1
     image_path = BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_")
     BaseScreen.image_ocr(image_path)
+
+
+def change_ocr_lang(context,lang=None):
+    """
+    init ocr
+    """
+    ocr_instance = ui_driver.init_ocr(lang)
+    gr.set_value("ocrInstance", ocr_instance)
+    context.ocr_instance = ocr_instance
+    GlobalContext.ocr_driver_instance = ocr_instance
+    log.info("ocr change lang complete with {}".format(lang))
 
 
 def prev_fail_scenario_relevance(context, param1, param2):

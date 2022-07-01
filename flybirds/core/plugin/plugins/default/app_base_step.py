@@ -28,6 +28,9 @@ class AppBaseStep:
     def init_device(self, context, param=None):
         step_app.init_device(context, param)
 
+    def change_ocr_lang(self, context, param=None):
+        step_common.change_ocr_lang(context, lang=param)
+
     def connect_device(self, context, param):
         step_app.connect_device(context, param)
 

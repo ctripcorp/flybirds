@@ -21,8 +21,8 @@ class UIDriver:
         return poco_init()
 
     @staticmethod
-    def init_ocr():
-        return ocr_init()
+    def init_ocr(lang=None):
+        return ocr_init(lang)
 
     @staticmethod
     def air_bdd_screen_size(dr_instance):
