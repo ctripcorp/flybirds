@@ -109,6 +109,9 @@ class AppBaseStep:
     def ocr_text_exist(self, context, selector):
         step_verify.ocr_txt_exist(context, selector)
 
+    def ocr_text_contain(self, context, selector):
+        step_verify.ocr_txt_contain(context, selector)
+
     def ocr_text_not_exist(self, context, selector):
         step_verify.ocr_txt_not_exist(context, selector)
 

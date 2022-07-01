@@ -285,11 +285,25 @@ def wait_ocr_text_appear(context, param):
             raise FlybirdVerifyException(message)
 
 
-
 def ocr_txt_exist(context, param):
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
         verify.text_container(param, txts)
+    else:
+        message = "ocr result is null"
+        raise FlybirdVerifyException(message)
+
+
+def ocr_txt_contain(context, param):
+    if len(g_Context.ocr_result) >= 1:
+        txts = [line[1][0] for line in g_Context.ocr_result]
+        result = None
+        for txt in txts:
+            if param in txt:
+                result = True
+        if result is None:
+            message = "ocr result not contain {}".format(param)
+            raise FlybirdVerifyException(message)
     else:
         message = "ocr result is null"
         raise FlybirdVerifyException(message)
