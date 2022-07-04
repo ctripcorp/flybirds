@@ -53,6 +53,7 @@ class OnAfter:  # pylint: disable=too-few-public-methods
         """
         # thread local release feature language
         GlobalContext.del_current_language()
+        GlobalContext.del_global_cache()
         # hook extend by tester
         after_feature_extend = launch_helper.get_hook_file(
             "after_feature_extend"

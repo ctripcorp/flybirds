@@ -65,10 +65,6 @@ class OnBefore:
         except Exception as init_error:
             log.info("global initialization error", traceback.format_exc())
             raise init_error
-        # hook extend by tester
-        before_all_extend = launch_helper.get_hook_file("before_all_extend")
-        if before_all_extend is not None:
-            before_all_extend(context)
 
 
 class OnAfter:

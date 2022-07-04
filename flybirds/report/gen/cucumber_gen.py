@@ -28,7 +28,7 @@ class CucumberGen:
         gen_path = os.path.join(report_js_path, "node_report",
                                 "report.js")
 
-        cmd_str = f"node {gen_path} {report_path} {report_path} {platform}"
+        cmd_str = f'node "{gen_path}" {report_path} {report_path} {platform}'
         logger.info(f"report cmd:{cmd_str}")
 
         report_process = subprocess.Popen(
