@@ -275,8 +275,9 @@ def process_loop_block(report_dir, rerun_feature_index, sum_count, fail_count,
                 if isinstance(report_json, list):
                     # 1. to find need to be rerun case
                     for feature in report_json:
-                        cur_feature_array = get_init_feature_array(
-                            rerun_feature_index, feature.get("language")
+                        cur_feature_array = get_init_feature_array_tags(
+                            rerun_feature_index, feature.get("language"),
+                            feature.get("tags")
                         )
                         rerun_feature_location = feature["location"]
                         rerun_match_obj = re.match(
@@ -395,6 +396,25 @@ def get_init_feature_array(index, language):
 
     feature_des = []
     feature_des.append(f"# language: {language}\n\n")
+    f_l = lge.parse_keyword("feature", language)
+    r_f = lge.parse_glb_str("rerun failed scenario", language)
+    feature_des.append(f"{f_l}:{r_f}{index}\n\n")
+
+    return feature_des
+
+
+def get_init_feature_array_tags(index, language, tags):
+    """
+    generate failed info
+    """
+
+    feature_des = [f"# language: {language}\n\n"]
+    if tags is not None and len(tags) > 0:
+        temp_tag = []
+        for i, val in enumerate(tags):
+            temp_tag.append(f'@{val}')
+        temp_tag_str = " ".join(temp_tag)
+        feature_des.append(f"{temp_tag_str}\n")
     f_l = lge.parse_keyword("feature", language)
     r_f = lge.parse_glb_str("rerun failed scenario", language)
     feature_des.append(f"{f_l}:{r_f}{index}\n\n")
