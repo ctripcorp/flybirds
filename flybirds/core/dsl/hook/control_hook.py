@@ -25,7 +25,11 @@ def after_all(context):
     """
     behave global hook after running
     """
-    GlobalContext.process("after_run_processor", context)
+    try:
+        GlobalContext.process("after_run_processor", context)
+    finally:
+        if hasattr(GlobalContext, "del_global_cache"):
+            GlobalContext.del_global_cache()
 
 
 def before_feature(context, feature):
