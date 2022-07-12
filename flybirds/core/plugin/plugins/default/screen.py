@@ -57,7 +57,12 @@ class BaseScreen:
         feature_name = file_helper.valid_file_name(scenario.feature.name)
         scenario_name = file_helper.valid_file_name(scenario.name)
 
-        if len(scenario.steps) > step_index >= 0:
+        step_len = len(scenario.steps)
+        if scenario is not None and hasattr(scenario, "background_steps") and \
+                len(scenario.background_steps) > 0:
+            step_len = step_len + len(scenario.background_steps)
+
+        if step_len > step_index >= 0:
             file_name = None
             if not (tag is None):
                 file_name = tag
@@ -108,8 +113,3 @@ class BaseScreen:
             # log.info(f"[image ocr result] scan txt info is:{txt}")
             # score = line[1][1]
             # log.info(f"[image ocr result] scan score info is:{score}")
-
-
-
-
-
