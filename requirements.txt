@@ -1,5 +1,5 @@
 playwright>=1.19.0
-pocoui>=1.0.85
+pocoui>=1.0.87
 airtest>=1.2.6
 setuptools~=47.1.0
 behave==1.2.6
