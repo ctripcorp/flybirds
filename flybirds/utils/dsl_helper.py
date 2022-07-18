@@ -170,8 +170,31 @@ def ele_wrap(func):
                 ele_key = v.split(',')[0]
                 ele_value = gr.get_ele_locator(ele_key)
                 v = selector_str.replace(ele_key, ele_value, 1)
+            new_v = get_global_value(v)
+            if new_v is not None:
+                v = new_v
             kwargs[k] = v
         func(*args, **kwargs)
         # Do something after the function.
 
     return wrapper_func
+
+
+def get_global_value(v):
+    projectScript = gr.get_value("projectScript")
+    if projectScript is not None:
+        if hasattr(projectScript, "custom_operation"):
+            custom_operation = projectScript.custom_operation
+            if custom_operation is not None and hasattr(custom_operation,
+                                                        "get_global_value"):
+                rp = custom_operation.get_global_value(v)
+                if rp is not None:
+                    return rp
+        elif hasattr(projectScript, "app_operation"):
+            app_operation = projectScript.app_operation
+            if app_operation is not None and hasattr(app_operation,
+                                                     "get_global_value"):
+                rp = app_operation.get_global_value(v)
+                if rp is not None:
+                    return rp
+    return None
