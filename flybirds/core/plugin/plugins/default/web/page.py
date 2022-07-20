@@ -41,6 +41,7 @@ class Page:
             page.route("**/*", handle_route)
             # request listening events
             page.on("request", handle_request)
+        page.on("console", handle_page_error)
 
         ele_wait_time = gr.get_frame_config_value("wait_ele_timeout", 30)
         page_render_timeout = gr.get_frame_config_value("page_render_timeout",
@@ -107,6 +108,18 @@ class Page:
             schema_url = global_resource.get_page_schema_url(param)
             target_url = schema_url
         verify_helper.text_equal(target_url, cur_url)
+
+
+def handle_page_error(msg):
+    if hasattr(msg, "type") and msg.type is not None:
+        need_log = False
+        if msg.type.lower() == "warn":
+            need_log = True
+        if msg.type.lower() == "error":
+            need_log = True
+        if need_log:
+            if hasattr(msg, "text"):
+                log.info(f"=====================page console==================:\n {msg.text}")
 
 
 def handle_request(request):

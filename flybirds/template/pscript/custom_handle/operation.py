@@ -127,3 +127,9 @@ def get_page_url(param):
     """
     pass
 
+
+def get_global_value(v):
+    """
+    replace with global cache
+    """
+    pass
