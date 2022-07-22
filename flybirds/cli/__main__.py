@@ -50,7 +50,7 @@ def runner(
             help="User-defined parameters. e.g. --define headless=false.",
         ),
         rerun: bool = typer.Option(
-            True,
+            None,
             "--rerun/--no-rerun",
             help="Whether the failed scenario needs to be rerun",
         ),
