@@ -78,15 +78,11 @@ def get_app_config_value(key, def_value=None):
     return def_value
 
 
-def get_paddle_fix_config_value(key, def_value=None):
+def get_paddle_fix_config_value():
     """
-    get a value in the app_info.json configuration file
+    get paddle_fix value in the flybirds_config.json configuration file
     """
-    if hasattr(_global_dict["configManage"].paddle_fix, key):
-        value = getattr(_global_dict["configManage"].paddle_fix, key)
-        if value is not None:
-            return value
-    return def_value
+    return _global_dict["configManage"].paddle_fix
 
 
 def get_flow_behave_value(key, def_value=None):
