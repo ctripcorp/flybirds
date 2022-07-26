@@ -78,13 +78,6 @@ def get_app_config_value(key, def_value=None):
     return def_value
 
 
-def get_paddle_fix_config_value():
-    """
-    get paddle_fix value in the flybirds_config.json configuration file
-    """
-    return _global_dict["configManage"].paddle_fix
-
-
 def get_flow_behave_value(key, def_value=None):
     """
     get a value in the flow_behave.json configuration file
@@ -302,3 +295,15 @@ def get_service_ignore_nodes(service):
     if service_ignore_nodes is None:
         log.info(f"interface service [{service}] has not set ignore nodes")
     return service_ignore_nodes
+
+
+def get_paddle_fix_config_value():
+    """
+    get paddle_fix value in the paddleFixConfig.json configuration file
+    """
+    paddle_fix_nodes = _global_dict[
+        "configManage"].paddle_fix_info.paddle_fix_node
+    if paddle_fix_nodes is None:
+        log.info("paddle_fix_nodes not found")
+        return
+    return paddle_fix_nodes
