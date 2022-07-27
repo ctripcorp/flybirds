@@ -58,6 +58,11 @@ class ConfigManage:
         )
         self.ele_locator_info = EleLocator()
         self.ignore_node_info = IgnoreNodeConfig()
+        self.paddle_fix_info = PaddleFixConfig()
+        log.info(
+            "Process paddle fix configuration information",
+            str(self.paddle_fix_info.__dict__),
+        )
 
 
 def get_config(config, name):
@@ -559,3 +564,19 @@ class IgnoreNodeConfig:
         )
         all_ignore_data = read_json_data(interface_ignore_dir_path)
         self.all_ignore_nodes = all_ignore_data
+
+
+class PaddleFixConfig:
+    """
+    paddle ocr fix config
+    """
+
+    def __init__(self):
+        paddle_fix_path = os.path.join(
+            os.getcwd(), "config", "paddle_fix.json"
+        )
+        if not os.path.exists(paddle_fix_path):
+            self.paddle_fix_node = json.loads("{}")
+        else:
+            self.paddle_fix_node = file_helper.get_json_from_file(
+                paddle_fix_path)

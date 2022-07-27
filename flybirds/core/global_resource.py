@@ -295,3 +295,15 @@ def get_service_ignore_nodes(service):
     if service_ignore_nodes is None:
         log.info(f"interface service [{service}] has not set ignore nodes")
     return service_ignore_nodes
+
+
+def get_paddle_fix_value():
+    """
+    get paddle_fix value in the paddleFixConfig.json configuration file
+    """
+    paddle_fix_nodes = _global_dict[
+        "configManage"].paddle_fix_info.paddle_fix_node
+    if len(paddle_fix_nodes) == 0:
+        log.info("paddle_fix_nodes not found")
+        return None
+    return paddle_fix_nodes
