@@ -59,6 +59,10 @@ class ConfigManage:
         self.ele_locator_info = EleLocator()
         self.ignore_node_info = IgnoreNodeConfig()
         self.paddle_fix_info = PaddleFixConfig()
+        log.info(
+            "Process paddle fix configuration information",
+            str(self.paddle_fix_info.__dict__),
+        )
 
 
 def get_config(config, name):
@@ -569,12 +573,9 @@ class PaddleFixConfig:
 
     def __init__(self):
         paddle_fix_path = os.path.join(
-            os.getcwd(), "config", "paddleFixConfig.json"
+            os.getcwd(), "config", "paddle_fix.json"
         )
         if not os.path.exists(paddle_fix_path):
-            log.info(
-                f"paddle fix config not found: {paddle_fix_path} "
-                "you can continue")
             self.paddle_fix_node = json.loads("{}")
         else:
             self.paddle_fix_node = file_helper.get_json_from_file(

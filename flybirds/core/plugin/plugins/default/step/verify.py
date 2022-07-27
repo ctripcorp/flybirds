@@ -272,7 +272,8 @@ def wait_ocr_text_appear(context, param):
     while not text_exist:
         ocr(context)
         txts = [line[1][0] for line in g_Context.ocr_result]
-        if param in txts:
+        fixed_txt = paddle_fix_txt(txts)
+        if param in fixed_txt:
             text_exist = True
         else:
             if time.time() - start > timeout/2:
@@ -288,7 +289,8 @@ def wait_ocr_text_appear(context, param):
 def ocr_txt_exist(context, param):
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
-        verify.text_container(param, txts)
+        fixed_txt = paddle_fix_txt(txts)
+        verify.text_container(param, fixed_txt)
     else:
         message = "ocr result is null"
         raise FlybirdVerifyException(message)
@@ -297,8 +299,9 @@ def ocr_txt_exist(context, param):
 def ocr_txt_contain(context, param):
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
+        fixed_txt = paddle_fix_txt(txts)
         result = None
-        for txt in txts:
+        for txt in fixed_txt:
             if param in txt:
                 result = True
         if result is None:
@@ -312,7 +315,21 @@ def ocr_txt_contain(context, param):
 def ocr_txt_not_exist(context, param):
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
-        verify.text_not_container(param, txts)
+        fixed_txt = paddle_fix_txt(txts)
+        verify.text_not_container(param, fixed_txt)
     else:
         message = "ocr result is null"
         raise FlybirdVerifyException(message)
+
+
+def paddle_fix_txt(txt):
+    paddle_fix = gr.get_paddle_fix_value()
+    if paddle_fix is not None:
+        for i in range(len(txt)):
+            for key in paddle_fix:
+                origin_txt = txt[i]
+                if key in origin_txt:
+                    txt[i] = origin_txt.replace(key, paddle_fix[key])
+    return txt
+
+

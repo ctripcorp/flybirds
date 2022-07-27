@@ -297,13 +297,13 @@ def get_service_ignore_nodes(service):
     return service_ignore_nodes
 
 
-def get_paddle_fix_config_value():
+def get_paddle_fix_value():
     """
     get paddle_fix value in the paddleFixConfig.json configuration file
     """
     paddle_fix_nodes = _global_dict[
         "configManage"].paddle_fix_info.paddle_fix_node
-    if paddle_fix_nodes is None:
+    if len(paddle_fix_nodes) == 0:
         log.info("paddle_fix_nodes not found")
-        return
+        return None
     return paddle_fix_nodes
