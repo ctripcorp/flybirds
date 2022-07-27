@@ -28,8 +28,8 @@
     "failScreenRecord": true,
     "scenarioScreenRecordTime": 120,
     "failRerun": false,
-    "maxFailRerunCount": 0,
-    "maxRetryCount": 0
+    "maxFailRerunCount": 0.95,
+    "maxRetryCount": 1
   },
   "frame_info": {
     "waitEleTimeout": 35,
