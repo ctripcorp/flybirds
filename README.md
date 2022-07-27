@@ -68,6 +68,7 @@ Flybirds从2022年初开源至今，通过与社区内活跃用户的交流和�
 使用Flybirds你能够完成大部分的手机端自动化操作，以下是一些帮助入门的特性描述：
 - 基于BDD模式，类自然语言语法
 - 支持Android、iOS、Web 自动化操作、表单提交、UI元素校验、键盘输入、Deeplink跳转等
+- 支持 ReactNative、Flutter
 - 多端脚本复用
 - 支持多浏览器渲染引擎：Chromium、WebKit 和 Firefox
 - 支持多浏览器并发模式下的兼容性测试
