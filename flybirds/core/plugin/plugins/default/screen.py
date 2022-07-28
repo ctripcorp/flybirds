@@ -5,8 +5,10 @@ Device screenshot method.
 import os
 import time
 import traceback
+import baseImage
 from base64 import b64decode
 from PIL import Image
+from flybirds.core.plugin.plugins.default.ui_driver.image_registration.matching.keypoint.sift import SIFT
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.file_helper as file_helper
@@ -113,3 +115,16 @@ class BaseScreen:
             # log.info(f"[image ocr result] scan txt info is:{txt}")
             # score = line[1][1]
             # log.info(f"[image ocr result] scan score info is:{score}")
+
+
+    @staticmethod
+    def image_verify(img_source_path, img_search_path):
+        match = SIFT()
+        img_source = baseImage.Image(img_source_path)
+        img_search = baseImage.Image(img_search_path)
+
+        start = time.time()
+
+        result = match.find_all_results(img_source, img_search)
+        print(time.time() - start)
+        print(result)

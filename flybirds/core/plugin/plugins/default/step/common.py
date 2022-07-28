@@ -84,3 +84,10 @@ def prev_fail_scenario_relevance(context, param1, param2):
     except Exception:
         log.warn("rerun failed senario error")
         log.warn(traceback.format_exc())
+
+
+def img_verify(context, search_image_path):
+    step_index = context.cur_step_index - 1
+    source_image_path = BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_")
+    BaseScreen.image_verify(source_image_path, search_image_path)
+

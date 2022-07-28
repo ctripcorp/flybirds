@@ -89,6 +89,7 @@ step_language = {
         "screenshot": ["全屏截图"],
         "ocr": ["全屏扫描"],
         "change ocr lang [{param}]": ["切换OCR语言[{param}]"],
+        "image search [{param}]": ["查找图像[{param}]"],
         "information association of failed operation, run the {param1} time"
         " :[{param2}]": ["失败运行的信息关联,运行第{param1}次:[{param2}]"],
         "text[{selector}]property[{param2}]is {param3}": [
