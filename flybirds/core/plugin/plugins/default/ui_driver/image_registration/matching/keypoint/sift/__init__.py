@@ -1,1 +1,0 @@
-from .sift import SIFT

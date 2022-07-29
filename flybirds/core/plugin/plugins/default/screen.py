@@ -8,7 +8,8 @@ import traceback
 import baseImage
 from base64 import b64decode
 from PIL import Image
-from flybirds.core.plugin.plugins.default.ui_driver.image_registration.matching.keypoint.sift import SIFT
+# from flybirds.core.plugin.plugins.default.ui_driver.image_registration.matching.keypoint.sift import SIFT
+from .ui_driver import SIFT
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.file_helper as file_helper

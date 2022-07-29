@@ -7,9 +7,8 @@ import numpy as np
 from baseImage import Image, Rect
 from baseImage.constant import Place
 
-from image_registration.exceptions import MatchResultError, NoModuleError, InputImageError
-from image_registration.utils import generate_result
-from typing import Union
+from .exceptions import MatchResultError, InputImageError
+from .utils import generate_result
 
 
 class MatchTemplate(object):
@@ -229,21 +228,3 @@ class MatchTemplate(object):
         return confidence
 
 
-class CudaMatchTemplate(MatchTemplate):
-    METHOD_NAME = 'cuda_tpl'
-    Dtype = np.uint8
-    Place = (Place.GpuMat, )
-
-    def __init__(self, threshold=0.8, rgb=True):
-        super(CudaMatchTemplate, self).__init__(threshold=threshold, rgb=rgb)
-        try:
-            self.matcher = cv2.cuda.createTemplateMatching(cv2.CV_8U, cv2.TM_CCOEFF_NORMED)
-        except AttributeError:
-            raise NoModuleError('create CUDA TemplateMatching Error')
-
-    @staticmethod
-    def minMaxLoc(result):
-        return cv2.cuda.minMaxLoc(result)
-
-    def match(self, img1, img2):
-        return self.matcher.match(img1, img2)

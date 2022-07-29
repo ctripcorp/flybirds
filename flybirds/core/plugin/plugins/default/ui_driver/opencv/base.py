@@ -4,9 +4,9 @@ import cv2
 import numpy as np
 from baseImage import Image, Rect
 
-from image_registration.matching import MatchTemplate
-from image_registration.utils import (generate_result, get_keypoint_from_matches, keypoint_distance, rectangle_transform)
-from image_registration.exceptions import (NoEnoughPointsError, PerspectiveTransformError, HomographyError, MatchResultError,
+from .matchTemplate import MatchTemplate
+from .utils import (generate_result, get_keypoint_from_matches, keypoint_distance, rectangle_transform)
+from .exceptions import (NoEnoughPointsError, PerspectiveTransformError, HomographyError, MatchResultError,
                                            InputImageError)
 from typing import List
 
@@ -516,7 +516,7 @@ class BaseKeypoint(object):
         """
         try:
             # M, mask = cv2.findHomography(sch_pts, src_pts, cv2.RANSAC)
-            M, mask = cv2.findHomography(sch_pts, src_pts, cv2.USAC_MAGSAC, 4.0, None, 2000, 0.99)
+            M, mask = cv2.findHomography(sch_pts, src_pts, cv2.RANSAC, 4.0, None, 2000, 0.99)
         except cv2.error:
             import traceback
             traceback.print_exc()

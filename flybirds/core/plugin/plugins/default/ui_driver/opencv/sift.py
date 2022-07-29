@@ -4,12 +4,12 @@ import cv2
 import numpy as np
 from baseImage.constant import Place
 
-from image_registration.matching.keypoint.base import BaseKeypoint
+from .base import BaseKeypoint
 
 
-class SURF(BaseKeypoint):
+class SIFT(BaseKeypoint):
     FLANN_INDEX_KDTREE = 0
-    METHOD_NAME = "SURF"
+    METHOD_NAME = 'SIFT'
     Dtype = np.uint8
     Place = (Place.UMat, Place.Ndarray)
 
@@ -26,13 +26,13 @@ class SURF(BaseKeypoint):
         matcher = cv2.FlannBasedMatcher(index_params, search_params)
         return matcher
 
-    def create_detector(self, **kwargs):
-        hessianThreshold = kwargs.get('hessianThreshold', 400)
-        nOctaves = kwargs.get('nOctaves', 4)
+    def create_detector(self, **kwargs) -> cv2.SIFT:
+        nfeatures = kwargs.get('nfeatures', 0)
         nOctaveLayers = kwargs.get('nOctaveLayers', 3)
-        extended = kwargs.get('extended', True)
-        upright = kwargs.get('upright', False)
+        contrastThreshold = kwargs.get('contrastThreshold', 0.04)
+        edgeThreshold = kwargs.get('edgeThreshold', 10)
+        sigma = kwargs.get('sigma', 1.6)
 
-        detector = cv2.xfeatures2d.SURF_create(hessianThreshold=hessianThreshold, nOctaves=nOctaves, nOctaveLayers=nOctaveLayers,
-                                               extended=extended, upright=upright)
+        detector = cv2.SIFT_create(nfeatures=nfeatures, nOctaveLayers=nOctaveLayers, contrastThreshold=contrastThreshold,
+                                   edgeThreshold=edgeThreshold, sigma=sigma)
         return detector
