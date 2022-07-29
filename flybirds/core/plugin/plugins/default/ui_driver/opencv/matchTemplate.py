@@ -18,13 +18,13 @@ class MatchTemplate(object):
 
     def __init__(self, threshold=0.8, rgb=True):
         """
-        初始化
+        init
 
         Args:
-            threshold: 识别阈值(0~1)
-            rgb: 是否使用rgb通道进行校验
+             threshold: recognition threshold (0~1)
+             rgb: whether to use the rgb channel for verification
         """
-        assert 0 <= threshold <= 1, 'threshold 取值在0到1直接'
+        assert 0 <= threshold <= 1, 'threshold value between 0 and 1'
 
         self.threshold = threshold
         self.rgb = rgb
@@ -32,13 +32,14 @@ class MatchTemplate(object):
 
     def find_best_result(self, im_source, im_search, threshold=None, rgb=None):
         """
-        模板匹配, 返回匹配度最高且大于阈值的范围
+        Template matching, return the range with the highest
+        matching degree and greater than the threshold
 
         Args:
-            im_source: 待匹配图像
-            im_search: 图片模板
-            threshold: 识别阈值(0~1)
-            rgb: 是否使用rgb通道进行校验
+             im_source: the image to be matched
+             im_search: image template
+             threshold: recognition threshold (0~1)
+             rgb: whether to use the rgb channel for verification
 
         Returns:
             generate_result
@@ -51,16 +52,16 @@ class MatchTemplate(object):
             rgb = False
 
         result = self._get_template_result_matrix(im_source=im_source, im_search=im_search)
-        # 找到最佳匹配项
+        # Find the best match
 
         min_val, max_val, min_loc, max_loc = self.minMaxLoc(result.data)
 
         h, w = im_search.size
-        # 求可信度
+        # Seek credibility
         crop_rect = Rect(max_loc[0], max_loc[1], w, h)
 
         confidence = self.cal_confidence(im_source, im_search, crop_rect, max_val, rgb)
-        # 如果可信度小于threshold,则返回None
+        # Returns None if the confidence is less than the threshold
         if confidence < (threshold or self.threshold):
             return None
         x, y = max_loc
@@ -69,14 +70,15 @@ class MatchTemplate(object):
 
     def find_all_results(self, im_source, im_search, threshold=None, rgb=None, max_count=10):
         """
-        模板匹配, 返回匹配度大于阈值的范围, 且最大数量不超过max_count
+        Template matching, return the range with matching degree greater
+        than the threshold, and the maximum number does not exceed max_count
 
         Args:
-            im_source: 待匹配图像
-            im_search: 图片模板
-            threshold:: 识别阈值(0~1)
-            rgb: 是否使用rgb通道进行校验
-            max_count: 最多匹配数量
+             im_source: the image to be matched
+             im_search: image template
+             threshold:: recognition threshold (0~1)
+             rgb: whether to use the rgb channel for verification
+             max_count: maximum number of matches
 
         Returns:
 
@@ -90,7 +92,7 @@ class MatchTemplate(object):
 
         result = self._get_template_result_matrix(im_source=im_source, im_search=im_search)
         results = []
-        # 找到最佳匹配项
+        # Find the best match
         h, w = im_search.size
         while True:
             min_val, max_val, min_loc, max_loc = self.minMaxLoc(result.data)
@@ -107,7 +109,7 @@ class MatchTemplate(object):
         return results if results else None
 
     def _get_template_result_matrix(self, im_source, im_search):
-        """求取模板匹配的结果矩阵."""
+        """Get the result matrix of template matching."""
         if im_source.channels == 3:
             i_gray = im_source.cvtColor(cv2.COLOR_BGR2GRAY).data
             s_gray = im_search.cvtColor(cv2.COLOR_BGR2GRAY).data
@@ -124,11 +126,11 @@ class MatchTemplate(object):
         im_search = self._image_check(im_search)
 
         if im_source.place != im_search.place:
-            raise InputImageError('输入图片类型必须相同, source={}, search={}'.format(im_source.place, im_search.place))
+            raise InputImageError('image type must be same, source={}, search={}'.format(im_source.place, im_search.place))
         elif im_source.dtype != im_search.dtype:
-            raise InputImageError('输入图片数据类型必须相同, source={}, search={}'.format(im_source.dtype, im_search.dtype))
+            raise InputImageError('image data type must be same, source={}, search={}'.format(im_source.dtype, im_search.dtype))
         elif im_source.channels != im_search.channels:
-            raise InputImageError('输入图片通道必须相同, source={}, search={}'.format(im_source.channels, im_search.channels))
+            raise InputImageError('image channel must be same, source={}, search={}'.format(im_source.channels, im_search.channels))
 
         if im_source.place == Place.UMat:
             warnings.warn('Umat has error,will clone new image with np.ndarray '
@@ -143,7 +145,7 @@ class MatchTemplate(object):
             data = Image(data, dtype=self.Dtype)
 
         if data.place not in self.Place:
-            raise TypeError('Image类型必须为(Place.UMat, Place.Ndarray)')
+            raise TypeError('Image type must be(Place.UMat, Place.Ndarray)')
         return data
 
     @staticmethod
@@ -155,17 +157,18 @@ class MatchTemplate(object):
 
     def cal_confidence(self, im_source, im_search, crop_rect, max_val, rgb):
         """
-        将截图和识别结果缩放到大小一致,并计算可信度
+        Scale the screenshot and the recognition result
+        to the same size, and calculate the reliability
 
         Args:
-            im_source: 待匹配图像
-            im_search: 图片模板
-            crop_rect: 需要在im_source截取的区域
-            max_val: matchTemplate得到的最大值
-            rgb: 是否使用rgb通道进行校验
+             im_source: the image to be matched
+             im_search: image template
+             crop_rect: The area that needs to be intercepted in im_source
+             max_val: the maximum value obtained by matchTemplate
+             rgb: whether to use the rgb channel for verification
 
         Returns:
-            float: 可信度(0~1)
+            float: credibility(0~1)
         """
         try:
             target_img = im_source.crop(crop_rect)
@@ -176,14 +179,14 @@ class MatchTemplate(object):
 
     def cal_rgb_confidence(self, im_source, im_search):
         """
-        计算两张图片图片rgb三通道的置信度
+        Calculate the confidence of two picture rgb three-channel
 
         Args:
-            im_source: 待匹配图像
-            im_search: 图片模板
+             im_source: the image to be matched
+             im_search: image template
 
         Returns:
-            float: 最小置信度
+            float: minimum confidence
         """
         # im_search = im_search.copyMakeBorder(10, 10, 10, 10, cv2.BORDER_REPLICATE)
         #
@@ -193,7 +196,7 @@ class MatchTemplate(object):
         src_split = im_source.split()
         sch_split = im_search.split()
 
-        # 计算BGR三通道的confidence，存入bgr_confidence:
+        # Calculate the confidence of the BGR three channels and store it in bgr_confidence:
         bgr_confidence = [0, 0, 0]
         for i in range(3):
             res_temp = self.match(sch_split[i], src_split[i])
@@ -218,10 +221,11 @@ class MatchTemplate(object):
         return max_val
 
     def _get_confidence_from_matrix(self, img_crop, im_search, max_val, rgb):
-        """根据结果矩阵求出confidence."""
-        # 求取可信度:
+        """Find confidence from the result matrix."""
+        # Seek credibility:
         if rgb:
-            # 如果有颜色校验,对目标区域进行BGR三通道校验:
+            # If there is color verification, perform
+            # BGR three-channel verification on the target area:
             confidence = self.cal_rgb_confidence(img_crop, im_search)
         else:
             confidence = max_val

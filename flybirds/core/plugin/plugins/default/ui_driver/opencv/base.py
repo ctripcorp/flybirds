@@ -7,7 +7,7 @@ from baseImage import Image, Rect
 from .matchTemplate import MatchTemplate
 from .utils import (generate_result, get_keypoint_from_matches, keypoint_distance, rectangle_transform)
 from .exceptions import (NoEnoughPointsError, PerspectiveTransformError, HomographyError, MatchResultError,
-                                           InputImageError)
+                         InputImageError)
 from typing import List
 
 
@@ -20,11 +20,11 @@ class BaseKeypoint(object):
 
     def __init__(self, threshold=0.8, rgb=True, **kwargs):
         """
-        初始化
+        init
 
         Args:
-            threshold: 识别阈值(0~1)
-            rgb: 是否使用rgb通道进行校验
+            threshold: recognition threshold(0~1)
+            rgb: Whether to use rgb channel for verification
         """
         self.threshold = threshold
         self.rgb = rgb
@@ -39,13 +39,13 @@ class BaseKeypoint(object):
 
     def find_best_result(self, im_source, im_search, threshold=None, rgb=None, **kwargs):
         """
-        通过特征点匹配,在im_source中找到最符合im_search的范围
+        Through feature point matching, find the range that best matches im_search in im_source
 
         Args:
-            im_source: 待匹配图像
-            im_search: 图片模板
-            threshold: 识别阈值(0~1)
-            rgb: 是否使用rgb通道进行校验
+            im_source: image to be matched
+            im_search: image template
+            threshold: recognition threshold(0~1)
+            rgb: Whether to use rgb channel for verification
 
         Returns:
 
@@ -57,18 +57,20 @@ class BaseKeypoint(object):
             return ret[0]
         return None
 
-    def find_all_results(self, im_source, im_search, threshold=None, rgb=None, max_count=10, max_iter_counts=20, distance_threshold=150):
+    def find_all_results(self, im_source, im_search, threshold=None, rgb=None, max_count=10, max_iter_counts=20,
+                         distance_threshold=150):
         """
-        通过特征点匹配,在im_source中找到全部符合im_search的范围
+        Through feature point matching, find all the ranges that match im_search in im_source
 
         Args:
-            im_source: 待匹配图像
-            im_search: 图片模板
-            threshold: 识别阈值(0~1)
-            rgb: 是否使用rgb通道进行校验
-            max_count: 最多可以返回的匹配数量
-            max_iter_counts: 最大的搜索次数,需要大于max_count
-            distance_threshold: 距离阈值,特征点(first_point)大于该阈值后,不做后续筛选
+             im_source: the image to be matched
+             im_search: image template
+             threshold: recognition threshold (0~1)
+             rgb: whether to use the rgb channel for verification
+             max_count: the maximum number of matches that can be returned
+             max_iter_counts: The maximum number of searches, which needs to be greater than max_count
+             distance_threshold: distance threshold, after the feature point (first_point) is greater than
+                                 the threshold, no subsequent screening will be done
 
         Returns:
 
@@ -85,7 +87,7 @@ class BaseKeypoint(object):
         kp_sch, des_sch = self.get_keypoint_and_descriptor(image=im_search)
 
         kp_src, kp_sch = list(kp_src), list(kp_sch)
-        # 在特征点集中,匹配最接近的特征点
+        # In the feature point set, match the closest feature point
         matches = np.array(self.match_keypoint(des_sch=des_sch, des_src=des_src))
         kp_sch_point = np.array([(kp.pt[0], kp.pt[1], kp.angle) for kp in kp_sch])
         kp_src_matches_point = np.array([[(*kp_src[dMatch.trainIdx].pt, kp_src[dMatch.trainIdx].angle)
@@ -93,8 +95,9 @@ class BaseKeypoint(object):
         _max_iter_counts = 0
         src_pop_list = []
         while True:
-            # 这里没有用matches判断nan, 是因为类型不对
-            if (np.count_nonzero(~np.isnan(kp_src_matches_point)) == 0) or (len(result) == max_count) or (_max_iter_counts >= max_iter_counts):
+            # not use of matches to judge nan, because the type is wrong
+            if (np.count_nonzero(~np.isnan(kp_src_matches_point)) == 0) or (len(result) == max_count) or (
+                    _max_iter_counts >= max_iter_counts):
                 break
             _max_iter_counts += 1
             filtered_good_point, angle, first_point = self.filter_good_point(matches=matches, kp_src=kp_src,
@@ -107,7 +110,8 @@ class BaseKeypoint(object):
             rect, confidence = None, 0
             try:
                 rect, confidence = self.extract_good_points(im_source=im_source, im_search=im_search, kp_src=kp_src,
-                                                            kp_sch=kp_sch, good=filtered_good_point, angle=angle, rgb=rgb)
+                                                            kp_sch=kp_sch, good=filtered_good_point, angle=angle,
+                                                            rgb=rgb)
                 # print(f'good:{len(filtered_good_point)}, rect={rect}, confidence={confidence}')
             except PerspectiveTransformError:
                 pass
@@ -115,7 +119,6 @@ class BaseKeypoint(object):
 
                 if rect and confidence >= threshold:
                     br, tl = rect.br, rect.tl
-                    # 移除改范围内的所有特征点 ??有可能因为透视变换的原因，删除了多余的特征点
                     for index, match in enumerate(kp_src_matches_point):
                         x, y = match[:, 0], match[:, 1]
                         flag = np.argwhere((x < br.x) & (x > tl.x) & (y < br.y) & (y > tl.y))
@@ -130,24 +133,14 @@ class BaseKeypoint(object):
                         for _index in flags:
                             kp_src_matches_point[match.queryIdx, _index, :] = np.nan
                             matches[match.queryIdx, _index] = np.nan
-
-        # 一下代码用于删除目标图片中的特征点,以后会用
-        # src_pop_list = list(set(src_pop_list))
-        # src_pop_list.sort(reverse=True)
-        # mask = np.ones(len(des_src), dtype=bool)
-        # for v in src_pop_list:
-        #     kp_src.pop(v)
-        #     mask[v] = False
-        #
-        # des_src = des_src[mask, ...]
         return result
 
     def get_keypoint_and_descriptor(self, image):
         """
-        获取图像关键点(keypoint)与描述符(descriptor)
+        Get image keypoint (keypoint) and descriptor (descriptor)
 
         Args:
-            image: 待检测的灰度图像
+            image: Grayscale image to be detected
 
         Returns:
 
@@ -164,8 +157,8 @@ class BaseKeypoint(object):
 
     @staticmethod
     def filter_good_point(matches, kp_src, kp_sch, kp_sch_point, kp_src_matches_point):
-        """ 筛选最佳点 """
-        # 假设第一个点,及distance最小的点,为基准点
+        """ Filter the sweet spot """
+        # Assume that the first point and the point with the smallest distance are the reference points
         sort_list = [sorted(match, key=lambda x: x is np.nan and float('inf') or x.distance)[0]
                      for match in matches]
         sort_list = [v for v in sort_list if v is not np.nan]
@@ -191,11 +184,11 @@ class BaseKeypoint(object):
             )
             return points_origin_angle
 
-        # 计算模板图像上,该点与其他特征点的旋转角
+        # Calculate the rotation angle between this point and other feature points on the template image
         first_good_point_sch_origin_angle = get_points_origin_angle(kp_sch_point[:, 0], kp_sch_point[:, 1],
                                                                     first_good_point_query)
 
-        # 计算目标图像中,该点与其他特征点的夹角
+        # Calculate the angle between the point and other feature points in the target image
         kp_sch_rotate_angle = kp_sch_point[:, 2] + first_good_point_angle
         kp_sch_rotate_angle = np.where(kp_sch_rotate_angle >= 360, kp_sch_rotate_angle - 360, kp_sch_rotate_angle)
         kp_sch_rotate_angle = kp_sch_rotate_angle.reshape(kp_sch_rotate_angle.shape + (1,))
@@ -204,10 +197,10 @@ class BaseKeypoint(object):
         good_point = np.array([matches[index][array[0]] for index, array in
                                enumerate(np.argsort(np.abs(kp_src_angle - kp_sch_rotate_angle)))])
 
-        # 计算各点以first_good_point为原点的旋转角
+        # Calculate the rotation angle of each point with first_good_point as the origin
         good_point_nan = (np.nan, np.nan)
-        good_point_pt = np.array([good_point_nan if dMatch is np.nan else (*kp_src[dMatch.trainIdx].pt, )
-                                 for dMatch in good_point])
+        good_point_pt = np.array([good_point_nan if dMatch is np.nan else (*kp_src[dMatch.trainIdx].pt,)
+                                  for dMatch in good_point])
         good_point_origin_angle = get_points_origin_angle(good_point_pt[:, 0], good_point_pt[:, 1],
                                                           first_good_point_train)
         threshold = round(5 / 360, 2) * 100
@@ -219,29 +212,29 @@ class BaseKeypoint(object):
 
     def match_keypoint(self, des_sch, des_src, k=10):
         """
-        特征点匹配
+        Feature point matching
 
         Args:
-            des_src: 待匹配图像的描述符集
-            des_sch: 图片模板的描述符集
-            k(int): 获取多少匹配点
+             des_src: descriptor set of the image to be matched
+             des_sch: descriptor set for image templates
+             k(int): how many matching points to get
 
         Returns:
-            List[List[cv2.DMatch]]: 包含最匹配的描述符
+            List[List[cv2.DMatch]]: contains the best matching descriptor
         """
-        # k=2表示每个特征点取出2个最匹配的对应点
+        # k=2 means that each feature point takes out the 2 most matching corresponding points
         matches = self.matcher.knnMatch(des_sch, des_src, k)
         return matches
 
     def get_good_in_matches(self, matches):
         """
-        特征点过滤
+        Feature point filtering
 
         Args:
-            matches: 特征点集
+            matches: Feature point set
 
         Returns:
-            List[cv2.DMatch]: 过滤后的描述符集
+            List[cv2.DMatch]: Filtered descriptor set
         """
         if not matches:
             return None
@@ -255,19 +248,19 @@ class BaseKeypoint(object):
 
     def extract_good_points(self, im_source, im_search, kp_src, kp_sch, good, angle, rgb):
         """
-        根据匹配点(good)数量,提取识别区域
+        According to the number of matching points (good), extract the recognition area
 
         Args:
-            im_source: 待匹配图像
-            im_search: 图片模板
-            kp_src: 关键点集
-            kp_sch: 关键点集
-            good: 描述符集
-            angle: 旋转角度
-            rgb: 是否使用rgb通道进行校验
+             im_source: the image to be matched
+             im_search: image template
+             kp_src: keypoint set
+             kp_sch: keypoint set
+             good: descriptor set
+             angle: rotation angle
+             rgb: whether to use the rgb channel for verification
 
         Returns:
-            范围,和置信度
+            range, and confidence
         """
         len_good = len(good)
         confidence, rect, target_img = None, None, None
@@ -294,18 +287,20 @@ class BaseKeypoint(object):
 
     def _handle_one_good_points(self, im_source, im_search, kp_src, kp_sch, good, angle):
         """
-        特征点匹配数量等于1时,根据特征点的大小,对矩形进行缩放,并根据旋转角度,获取识别的目标图片
+        When the number of feature point matching is equal to 1, the rectangle is scaled according
+        to the size of the feature point, and the recognized target image is obtained according to
+        the rotation angle.
 
         Args:
-            im_source: 待匹配图像
-            im_search: 图片模板
-            kp_sch: 关键点集
-            kp_src: 关键点集
-            good: 描述符集
-            angle: 旋转角度
+             im_source: the image to be matched
+             im_search: image template
+             kp_sch: keypoint set
+             kp_src: keypoint set
+             good: descriptor set
+             angle: rotation angle
 
         Returns:
-            待验证的图片
+            Image to be verified
         """
         sch_point = get_keypoint_from_matches(kp=kp_sch, matches=good, mode='query')[0]
         src_point = get_keypoint_from_matches(kp=kp_src, matches=good, mode='train')[0]
@@ -322,18 +317,20 @@ class BaseKeypoint(object):
 
     def _handle_two_good_points(self, im_source, im_search, kp_src, kp_sch, good, angle):
         """
-        特征点匹配数量等于2时,根据两点距离差,对矩形进行缩放,并根据旋转角度,获取识别的目标图片
+        When the number of feature points matching is equal to 2, the rectangle is scaled
+        according to the distance difference between the two points, and the recognized target
+        image is obtained according to the rotation angle.
 
         Args:
-            im_source: 待匹配图像
-            im_search: 图片模板
-            kp_sch: 关键点集
-            kp_src: 关键点集
-            good: 描述符集
-            angle: 旋转角度
+             im_source: the image to be matched
+             im_search: image template
+             kp_sch: keypoint set
+             kp_src: keypoint set
+             good: descriptor set
+             angle: rotation angle
 
         Returns:
-            待验证的图片
+            Image to be verified
         """
         sch_point = get_keypoint_from_matches(kp=kp_sch, matches=good, mode='query')
         src_point = get_keypoint_from_matches(kp=kp_src, matches=good, mode='train')
@@ -342,7 +339,7 @@ class BaseKeypoint(object):
         src_distance = keypoint_distance(src_point[0], src_point[1])
 
         try:
-            scale = src_distance / sch_distance  # 计算缩放大小
+            scale = src_distance / sch_distance  # Calculate the zoom size
         except ZeroDivisionError:
             if src_distance == sch_distance:
                 scale = 1
@@ -360,18 +357,20 @@ class BaseKeypoint(object):
 
     def _handle_three_good_points(self, im_source, im_search, kp_src, kp_sch, good, angle):
         """
-        特征点匹配数量等于3时,根据三个点组成的三角面积差,对矩形进行缩放,并根据旋转角度,获取识别的目标图片
+        When the number of feature points matching is equal to 3, the rectangle is scaled
+        according to the difference in the area of the triangle formed by the three points,
+        and the recognized target image is obtained according to the rotation angle.
 
         Args:
-            im_source: 待匹配图像
-            im_search: 图片模板
-            kp_sch: 关键点集
-            kp_src: 关键点集
-            good: 描述符集
-            angle: 旋转角度
+             im_source: the image to be matched
+             im_search: image template
+             kp_sch: keypoint set
+             kp_src: keypoint set
+             good: descriptor set
+             angle: rotation angle
 
         Returns:
-            待验证的图片
+            Image to be verified
         """
         sch_point = get_keypoint_from_matches(kp=kp_sch, matches=good, mode='query')
         src_point = get_keypoint_from_matches(kp=kp_src, matches=good, mode='train')
@@ -389,7 +388,7 @@ class BaseKeypoint(object):
         src_area = _area(src_point)
 
         try:
-            scale = src_area / sch_area  # 计算缩放大小
+            scale = src_area / sch_area  # Calculate the zoom size
         except ZeroDivisionError:
             if sch_area == src_area:
                 scale = 1
@@ -407,24 +406,26 @@ class BaseKeypoint(object):
 
     def _handle_many_good_points(self, im_source, im_search, kp_src, kp_sch, good):
         """
-        特征点匹配数量>=4时,使用单矩阵映射,获取识别的目标图片
+        When the number of feature point matching is >= 4,
+        use single matrix mapping to obtain the recognized target image
 
         Args:
-            im_source: 待匹配图像
-            im_search: 图片模板
-            kp_sch: 关键点集
-            kp_src: 关键点集
-            good: 描述符集
+             im_source: the image to be matched
+             im_search: image template
+             kp_sch: keypoint set
+             kp_src: keypoint set
+             good: descriptor set
 
         Returns:
-            透视变换后的图片
+            Perspective transformed image
         """
 
         sch_pts, img_pts = np.float32([kp_sch[m.queryIdx].pt for m in good]).reshape(
             -1, 1, 2), np.float32([kp_src[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
-        # M是转化矩阵
+        # M is the transformation matrix
         M, mask = self._find_homography(sch_pts, img_pts)
-        # 计算四个角矩阵变换后的坐标，也就是在大图中的目标区域的顶点坐标:
+        # Calculate the transformed coordinates of the four corner matrices,
+        # that is, the vertex coordinates of the target area in the large image:
         h, w = im_search.size
         h_s, w_s = im_source.size
         pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
@@ -451,14 +452,14 @@ class BaseKeypoint(object):
     @staticmethod
     def _target_image_crop(img, rect):
         """
-        截取目标图像
+        Capture target image
 
         Args:
-            img: 图像
-            rect: 图像范围
+            img: image
+            rect: Image range
 
         Returns:
-            裁剪后的图像
+            cropped image
         """
         try:
             target_img = img.crop(rect)
@@ -468,12 +469,12 @@ class BaseKeypoint(object):
 
     def _cal_confidence(self, im_source, im_search, rgb):
         """
-        将截图和识别结果缩放到大小一致,并计算可信度
+        Scale the screenshot and the recognition result to the same size, and calculate the reliability
 
         Args:
-            im_source: 待匹配图像
-            im_search: 图片模板
-            rgb:是否使用rgb通道进行校验
+             im_source: the image to be matched
+             im_search: image template
+             rgb: whether to use the rgb channel for verification
 
         Returns:
 
@@ -493,11 +494,14 @@ class BaseKeypoint(object):
         im_search = self._image_check(im_search)
 
         if im_source.place != im_search.place:
-            raise InputImageError('输入图片类型必须相同, source={}, search={}'.format(im_source.place, im_search.place))
+            raise InputImageError(
+                'image type must be same, source={}, search={}'.format(im_source.place, im_search.place))
         elif im_source.dtype != im_search.dtype:
-            raise InputImageError('输入图片数据类型必须相同, source={}, search={}'.format(im_source.dtype, im_search.dtype))
+            raise InputImageError(
+                'image data type must be same, source={}, search={}'.format(im_source.dtype, im_search.dtype))
         elif im_source.channels != im_search.channels:
-            raise InputImageError('输入图片通道必须相同, source={}, search={}'.format(im_source.channels, im_search.channels))
+            raise InputImageError(
+                'image channel must be same, source={}, search={}'.format(im_source.channels, im_search.channels))
 
         return im_source, im_search
 
@@ -506,13 +510,13 @@ class BaseKeypoint(object):
             data = Image(data, dtype=self.Dtype)
 
         if data.place not in self.Place:
-            raise TypeError(f'{self.METHOD_NAME}方法,Image类型必须为(Place.UMat, Place.Ndarray)')
+            raise TypeError(f'{self.METHOD_NAME}method,Image type must be(Place.UMat, Place.Ndarray)')
         return data
 
     @staticmethod
     def _find_homography(sch_pts, src_pts):
         """
-        多组特征点对时，求取单向性矩阵
+        When there are multiple sets of feature point pairs, obtain the unidirectional matrix
         """
         try:
             # M, mask = cv2.findHomography(sch_pts, src_pts, cv2.RANSAC)
@@ -530,13 +534,16 @@ class BaseKeypoint(object):
     @staticmethod
     def _perspective_transform(im_source, im_search, src, dst):
         """
-        根据四对对应点计算透视变换, 并裁剪相应图片
+        Calculate the perspective transformation according to the
+        four pairs of corresponding points, and crop the corresponding picture
 
         Args:
-            im_source: 待匹配图像
-            im_search: 待匹配模板
-            src: 目标图像中相应四边形顶点的坐标 (左上,右上,左下,右下)
-            dst: 源图像中四边形顶点的坐标 (左上,右上,左下,右下)
+             im_source: the image to be matched
+             im_search: template to be matched
+             src: The coordinates of the corresponding quad vertices in the target
+                  image (upper left, upper right, lower left, lower right)
+             dst: coordinates of the quad vertices in the source image (upper left,
+                  upper right, lower left, lower right)
 
         Returns:
 
@@ -551,14 +558,15 @@ class BaseKeypoint(object):
     @staticmethod
     def _get_perspective_area_rect(im_source, src):
         """
-        根据矩形四个顶点坐标,获取在原图中的最大外接矩形
+        According to the coordinates of the four vertices
+        of the rectangle, obtain the largest circumscribed rectangle in the original image
 
         Args:
-            im_source: 待匹配图像
-            src: 目标图像中相应四边形顶点的坐标
+            im_source: image to be matched
+            src: the coordinates of the corresponding quadrilateral vertices in the target image
 
         Returns:
-            最大外接矩形
+            Maximum circumscribed rectangle
         """
         h, w = im_source.size
 
@@ -566,15 +574,18 @@ class BaseKeypoint(object):
         y = [int(i[1]) for i in src]
         x_min, x_max = min(x), max(x)
         y_min, y_max = min(y), max(y)
-        # 挑选出目标矩形区域可能会有越界情况，越界时直接将其置为边界：
-        # 超出左边界取0，超出右边界取w_s-1，超出下边界取0，超出上边界取h_s-1
-        # 当x_min小于0时，取0。  x_max小于0时，取0。
+        # Selecting the target rectangular area may be out of bounds,
+        # and directly set it as the boundary when the boundary is exceeded:
+        # If it exceeds the left boundary, it takes 0, if it exceeds the right boundary,
+        # it takes w_s-1, if it exceeds the lower boundary, it takes 0, and if it exceeds
+        # the upper boundary, it takes h_s-1.
+        # When x_min is less than 0, take 0. When x_max is less than 0, take 0.
         x_min, x_max = int(max(x_min, 0)), int(max(x_max, 0))
-        # 当x_min大于w_s时，取值w_s-1。  x_max大于w_s-1时，取w_s-1。
+        # When x_min is greater than w_s, the value is w_s-1. When x_max is greater than w_s-1, take w_s-1。
         x_min, x_max = int(min(x_min, w - 1)), int(min(x_max, w - 1))
-        # 当y_min小于0时，取0。  y_max小于0时，取0。
+        # When y_min is less than 0, take 0. When y_max is less than 0, take 0.
         y_min, y_max = int(max(y_min, 0)), int(max(y_max, 0))
-        # 当y_min大于h_s时，取值h_s-1。  y_max大于h_s-1时，取h_s-1。
+        # When y_min is greater than h_s, the value is h_s-1. When y_max is greater than h_s-1, take h_s-1.
         y_min, y_max = int(min(y_min, h - 1)), int(min(y_max, h - 1))
         rect = Rect(x=x_min, y=y_min, width=(x_max - x_min), height=(y_max - y_min))
         return rect

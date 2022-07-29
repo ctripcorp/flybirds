@@ -15,13 +15,14 @@ class SIFT(BaseKeypoint):
 
     def create_matcher(self, **kwargs) -> cv2.DescriptorMatcher:
         """
-        创建特征点匹配器
+        Create a feature point matcher
 
         Returns:
             cv2.FlannBasedMatcher
         """
         index_params = {'algorithm': self.FLANN_INDEX_KDTREE, 'tree': 5}
-        # 指定递归遍历的次数. 值越高结果越准确，但是消耗的时间也越多
+        # Specifies the number of recursive traversals.
+        # The higher the value, the more accurate the result, but the more time it takes
         search_params = {'checks': 50}
         matcher = cv2.FlannBasedMatcher(index_params, search_params)
         return matcher

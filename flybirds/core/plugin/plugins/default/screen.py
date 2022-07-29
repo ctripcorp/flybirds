@@ -8,7 +8,6 @@ import traceback
 import baseImage
 from base64 import b64decode
 from PIL import Image
-# from flybirds.core.plugin.plugins.default.ui_driver.image_registration.matching.keypoint.sift import SIFT
 from .ui_driver import SIFT
 
 import flybirds.core.global_resource as gr
@@ -127,5 +126,6 @@ class BaseScreen:
         start = time.time()
 
         result = match.find_all_results(img_source, img_search)
-        print(time.time() - start)
-        print(result)
+        log.info(f"[image verify] cost time:{time.time() - start}")
+        log.info(f"[image verify] result:{result}")
+

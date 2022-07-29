@@ -5,7 +5,7 @@ import cv2
 
 
 def generate_result(rect, confi):
-    """Format the result: 定义图像识别结果格式."""
+    """Format the result: Define the image recognition result format."""
     ret = {
         'rect': rect,
         'confidence': confi,
@@ -14,36 +14,24 @@ def generate_result(rect, confi):
 
 
 def keypoint_distance(kp1, kp2):
-    """求两个keypoint的两点之间距离"""
+    """Find the distance between two keypoints"""
     if isinstance(kp1, cv2.KeyPoint):
         kp1 = kp1.pt
     elif isinstance(kp1, (list, tuple)):
         kp1 = kp1
     else:
-        raise ValueError('kp1需要时keypoint或直接是坐标, kp1={}'.format(kp1))
+        raise ValueError('When kp1 needs keypoint or direct coordinates, kp1={}'.format(kp1))
 
     if isinstance(kp2, cv2.KeyPoint):
         kp2 = kp2.pt
     elif isinstance(kp2, (list, tuple)):
         kp2 = kp2
     else:
-        raise ValueError('kp2需要时keypoint或直接是坐标, kp1={}'.format(kp2))
+        raise ValueError('When kp2 needs keypoint or direct coordinates, kp1={}'.format(kp2))
 
     x = kp1[0] - kp2[0]
     y = kp1[1] - kp2[1]
     return math.sqrt((x ** 2) + (y ** 2))
-
-
-def keypoint_angle(kp1, kp2):
-    """求两个keypoint的夹角 """
-    k = [
-        (kp1.angle - 180) if kp1.angle >= 180 else kp1.angle,
-        (kp2.angle - 180) if kp2.angle >= 180 else kp2.angle
-    ]
-    if k[0] == k[1]:
-        return 0
-    else:
-        return abs(k[0] - k[1])
 
 
 def get_keypoint_from_matches(kp, matches, mode):
@@ -58,45 +46,13 @@ def get_keypoint_from_matches(kp, matches, mode):
     return res
 
 
-def keypoint_origin_angle(kp1, kp2):
-    """
-    以kp1为原点,计算kp2的旋转角度
-    """
-    origin_point = kp1.pt
-    train_point = kp2.pt
-
-    point = (abs(origin_point[0] - train_point[0]), abs(origin_point[1] - train_point[1]))
-
-    x_quadrant = (1, 4)
-    y_quadrant = (3, 4)
-    if origin_point[0] > train_point[0]:
-        x_quadrant = (2, 3)
-
-    if origin_point[1] > train_point[1]:
-        y_quadrant = (1, 2)
-    point_quadrant = list(set(x_quadrant).intersection(set(y_quadrant)))[0]
-
-    x, y = point[::-1]
-    angle = math.degrees(math.atan2(x, y))
-    if point_quadrant == 4:
-        angle = angle
-    elif point_quadrant == 3:
-        angle = 180 - angle
-    elif point_quadrant == 2:
-        angle = 180 + angle
-    elif point_quadrant == 1:
-        angle = 360 - angle
-
-    return angle
-
-
 def _mapping_angle_distance(distance, origin_angle, angle):
     """
 
     Args:
-        distance: 距离
-        origin_angle: 对应原点的角度
-        angle: 旋转角度
+        distance: distance
+        origin_angle: The angle corresponding to the origin
+        angle: Rotation angle
 
     """
     _angle = origin_angle + angle
@@ -107,14 +63,14 @@ def _mapping_angle_distance(distance, origin_angle, angle):
 
 def rectangle_transform(point, size, mapping_point, mapping_size, angle):
     """
-    根据point,找出mapping_point映射的矩形顶点坐标
+    According to the point, find the rectangle vertex coordinates mapped by mapping_point
 
     Args:
-        point: 坐标在矩形中的坐标
-        size: 矩形的大小(h, w)
-        mapping_point: 映射矩形的坐标
-        mapping_size: 映射矩形的大小(h, w)
-        angle: 旋转角度
+         point: the coordinates of the coordinates in the rectangle
+         size: the size of the rectangle (h, w)
+         mapping_point: the coordinates of the mapping rectangle
+         mapping_size: the size of the mapping rectangle (h, w)
+         angle: rotation angle
 
     Returns:
 
@@ -125,14 +81,11 @@ def rectangle_transform(point, size, mapping_point, mapping_size, angle):
     h_scale = _h / h
     w_scale = _w / w
 
-    tl = keypoint_distance((0, 0), point)  # 左上
-    tr = keypoint_distance((w, 0), point)  # 右上
-    bl = keypoint_distance((0, h), point)  # 左下
-    br = keypoint_distance((w, h), point)  # 右下
+    tl = keypoint_distance((0, 0), point)  # upper left
+    tr = keypoint_distance((w, 0), point)  # top right
+    bl = keypoint_distance((0, h), point)  # lower left
+    br = keypoint_distance((w, h), point)  # lower right
 
-    # x = np.float32([point[1], point[1], (h - point[1]), (h - point[1])])
-    # y = np.float32([point[0], (w - point[0]), point[0], (w - point[0])])
-    # A, B, C, D = cv2.phase(x, y, angleInDegrees=True)
     A = math.degrees(math.atan2(point[0], point[1]))
     B = math.degrees(math.atan2((w - point[0]), point[1]))
     C = math.degrees(math.atan2(point[0], (h - point[1])))
