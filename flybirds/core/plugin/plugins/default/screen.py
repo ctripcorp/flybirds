@@ -123,9 +123,8 @@ class BaseScreen:
         img_source = baseImage.Image(img_source_path)
         img_search = baseImage.Image(img_search_path)
 
-        start = time.time()
-
         result = match.find_all_results(img_source, img_search)
-        log.info(f"[image verify] cost time:{time.time() - start}")
-        log.info(f"[image verify] result:{result}")
+        return result
+
+
 
