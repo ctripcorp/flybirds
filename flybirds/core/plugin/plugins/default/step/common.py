@@ -98,7 +98,7 @@ def img_verify(context, search_image_path):
             ' width="375" src="{}" />'.format(step_index, src_path)
         )
         context.scenario.description.append(data)
-        context.cur_step_index += 1
+        # context.cur_step_index += 1
         raise Exception("[image verify] image not found !")
     else:
         log.info(f"[image verify] cost time:{time.time() - start}")
