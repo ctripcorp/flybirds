@@ -47,7 +47,7 @@ class BaseScreen:
         log.info("[screen_shot] screen shot end!")
 
     @staticmethod
-    def screen_link_to_behave(scenario, step_index, tag=None):
+    def screen_link_to_behave(scenario, step_index, tag=None, link=True):
         """
         screenshot address and linked to the <scr> tag
         The label information is placed in the description of the scene,
@@ -91,7 +91,8 @@ class BaseScreen:
                 'embeddingsTags, stepIndex={}, <image class ="screenshot"'
                 ' width="375" src="{}" />'.format(step_index, src_path)
             )
-            scenario.description.append(data)
+            if link is True:
+                scenario.description.append(data)
             screen_path = os.path.join(current_screen_dir, file_name)
             g_Context.screen.screen_shot(screen_path)
             return screen_path
