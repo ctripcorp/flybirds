@@ -71,6 +71,17 @@ def click_ocr_text(context, selector=None):
     g_Context.step.click_ocr_text(context, selector)
 
 
+@step("click image[{selector}]")
+@ele_wrap
+def click_image(context, selector=None):
+    """
+    Click on the image
+    :param context: step context
+    :param selector: locator string for text element (or None).
+    """
+    g_Context.step.click_image(context, selector)
+
+
 @step("click position[{x},{y}]")
 @ele_wrap
 def click_coordinates(context, x=None, y=None):
@@ -383,3 +394,13 @@ def find_text_from_parent(context, p_selector=None, c_selector=None,
     """
     g_Context.step.find_text_from_parent(context, p_selector, c_selector,
                                          param3)
+
+@step("exist image [{param}]")
+def img_exist(context, param):
+    g_Context.step.img_exist(context, param)
+
+
+@step("not exist image [{param}]")
+def img_not_exist(context, param):
+    g_Context.step.img_not_exist(context, param)
+

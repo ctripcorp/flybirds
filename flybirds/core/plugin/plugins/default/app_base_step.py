@@ -31,6 +31,12 @@ class AppBaseStep:
     def change_ocr_lang(self, context, param=None):
         step_common.change_ocr_lang(context, lang=param)
 
+    def img_exist(self, context, param):
+        step_verify.img_exist(context, param)
+
+    def img_not_exist(self, context, param):
+        step_verify.img_not_exist(context, param)
+
     def connect_device(self, context, param):
         step_app.connect_device(context, param)
 
@@ -60,6 +66,9 @@ class AppBaseStep:
 
     def click_ocr_text(self, context, selector):
         step_click.click_ocr_text(context, selector)
+
+    def click_image(self, context, selector):
+        step_click.click_image(context, selector)
 
     def sleep(self, context, param):
         step_common.sleep(context, param)

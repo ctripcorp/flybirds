@@ -6,6 +6,7 @@ import re
 import time
 
 import flybirds.core.global_resource as gr
+import flybirds.utils.flybirds_log as log
 from flybirds.core.global_context import GlobalContext as g_Context
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_ele \
     as poco_ele
@@ -16,7 +17,7 @@ import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_verify \
 import flybirds.utils.dsl_helper as dsl_helper
 import flybirds.utils.verify_helper as verify
 from flybirds.core.exceptions import FlybirdVerifyException
-from flybirds.core.plugin.plugins.default.step.common import ocr
+from flybirds.core.plugin.plugins.default.step.common import ocr,img_verify
 
 
 def wait_text_exist(context, param):
@@ -331,5 +332,41 @@ def paddle_fix_txt(txt):
                 if key in origin_txt:
                     txt[i] = origin_txt.replace(key, paddle_fix[key])
     return txt
+
+
+def img_exist(context, param):
+    start = time.time()
+    step_index = context.cur_step_index - 1
+    result = img_verify(context, param)
+    if len(result) == 0:
+        src_path = "../../../{}".format(param)
+        data = (
+            'embeddingsTags, stepIndex={}, <image class ="screenshot"'
+            ' width="375" src="{}" />'.format(step_index, src_path)
+        )
+        context.scenario.description.append(data)
+        # context.cur_step_index += 1
+        raise Exception("[image exist verify] image not found !")
+    else:
+        log.info(f"[image exist verify] cost time:{time.time() - start}")
+        log.info(f"[image exist verify] result:{result}")
+
+
+def img_not_exist(context, param):
+    start = time.time()
+    step_index = context.cur_step_index - 1
+    result = img_verify(context, param)
+    if len(result) == 0:
+        log.info(f"[image not exist verify] cost time:{time.time() - start}")
+        log.info(f"[image not exist verify] result:{result}")
+    else:
+        src_path = "../../../{}".format(param)
+        data = (
+            'embeddingsTags, stepIndex={}, <image class ="screenshot"'
+            ' width="375" src="{}" />'.format(step_index, src_path)
+        )
+        context.scenario.description.append(data)
+        # context.cur_step_index += 1
+        raise Exception("[image not exist verify] image found !")
 
 

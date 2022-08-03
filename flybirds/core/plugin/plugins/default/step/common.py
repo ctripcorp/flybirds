@@ -25,13 +25,13 @@ def screenshot(context):
 
 def ocr(context):
     step_index = context.cur_step_index - 1
-    image_path = BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_")
+    image_path = BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_", False)
     BaseScreen.image_ocr(image_path)
 
 
 def change_ocr_lang(context,lang=None):
     """
-    init ocr
+    change ocr language
     """
     ocr_instance = ui_driver.init_ocr(lang)
     gr.set_value("ocrInstance", ocr_instance)
@@ -84,3 +84,14 @@ def prev_fail_scenario_relevance(context, param1, param2):
     except Exception:
         log.warn("rerun failed senario error")
         log.warn(traceback.format_exc())
+
+
+def img_verify(context, search_image_path):
+    """
+    verify image exist or not
+    """
+    step_index = context.cur_step_index - 1
+    source_image_path = BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_", False)
+    result = BaseScreen.image_verify(source_image_path, search_image_path)
+    return result
+

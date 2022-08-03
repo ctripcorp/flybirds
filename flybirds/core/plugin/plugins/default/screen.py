@@ -5,8 +5,9 @@ Device screenshot method.
 import os
 import time
 import traceback
+from baseImage import Image
 from base64 import b64decode
-from PIL import Image
+from .ui_driver import SIFT
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.file_helper as file_helper
@@ -46,7 +47,7 @@ class BaseScreen:
         log.info("[screen_shot] screen shot end!")
 
     @staticmethod
-    def screen_link_to_behave(scenario, step_index, tag=None):
+    def screen_link_to_behave(scenario, step_index, tag=None, link=True):
         """
         screenshot address and linked to the <scr> tag
         The label information is placed in the description of the scene,
@@ -90,17 +91,21 @@ class BaseScreen:
                 'embeddingsTags, stepIndex={}, <image class ="screenshot"'
                 ' width="375" src="{}" />'.format(step_index, src_path)
             )
-            scenario.description.append(data)
+            if link is True:
+                scenario.description.append(data)
             screen_path = os.path.join(current_screen_dir, file_name)
             g_Context.screen.screen_shot(screen_path)
             return screen_path
 
     @staticmethod
     def image_ocr(img_path):
+        """
+        Take a screenshot and ocr
+        """
         log.info(f"[image ocr path] image path is:{img_path}")
         ocr = g_Context.ocr_driver_instance
         g_Context.ocr_result = ocr.ocr(img_path, cls=True)
-        g_Context.image_size = Image.open(img_path).size
+        g_Context.image_size = Image(img_path).size
         log.info(f"[image ocr path] image size is:{g_Context.image_size}")
         for line in g_Context.ocr_result:
             log.info(f"[image ocr result] scan line info is:{line}")
@@ -113,3 +118,19 @@ class BaseScreen:
             # log.info(f"[image ocr result] scan txt info is:{txt}")
             # score = line[1][1]
             # log.info(f"[image ocr result] scan score info is:{score}")
+
+
+    @staticmethod
+    def image_verify(img_source_path, img_search_path):
+        """
+        Take a screenshot and verify image
+        """
+        match = SIFT()
+        img_source = Image(img_source_path)
+        img_search = Image(img_search_path)
+
+        result = match.find_all_results(img_source, img_search)
+        return result
+
+
+

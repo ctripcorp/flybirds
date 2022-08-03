@@ -14,3 +14,4 @@ deepdiff>=5.8.1
 paddleocr>=2.5.0
 paddlepaddle>=2.3.0
 protobuf==3.20.1
+baseImage>=2.1.1

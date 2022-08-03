@@ -89,6 +89,8 @@ step_language = {
         "screenshot": ["全屏截图"],
         "ocr": ["全屏扫描"],
         "change ocr lang [{param}]": ["切换OCR语言[{param}]"],
+        "exist image [{param}]": ["存在图像[{param}]"],
+        "not exist image [{param}]": ["不存在图像[{param}]"],
         "information association of failed operation, run the {param1} time"
         " :[{param2}]": ["失败运行的信息关联,运行第{param1}次:[{param2}]"],
         "text[{selector}]property[{param2}]is {param3}": [
@@ -100,6 +102,7 @@ step_language = {
         "click[{selector}]": ["点击[{selector}]"],
         "click text[{selector}]": ["点击文案[{selector}]"],
         "click ocr text[{selector}]": ["点击扫描文案[{selector}]"],
+        "click image[{selector}]": ["点击图像[{selector}]"],
         "click position[{x},{y}]": ["点击屏幕位置[{x},{y}]"],
         "in[{selector}]input[{param2}]": ["在[{selector}]中输入[{param2}]"],
         "in ocr[{selector}]input[{param2}]": ["在扫描文字[{selector}]中输入[{param2}]"],
