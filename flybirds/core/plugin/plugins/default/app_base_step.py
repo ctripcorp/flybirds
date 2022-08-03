@@ -64,6 +64,9 @@ class AppBaseStep:
     def click_ocr_text(self, context, selector):
         step_click.click_ocr_text(context, selector)
 
+    def click_image(self, context, selector):
+        step_click.click_image(context, selector)
+
     def sleep(self, context, param):
         step_common.sleep(context, param)
 

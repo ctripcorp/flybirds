@@ -8,6 +8,7 @@ import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap \
 import flybirds.utils.dsl_helper as dsl_helper
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.core.plugin.plugins.default.step.verify import ocr_txt_exist
+from flybirds.core.plugin.plugins.default.step.common import img_verify
 
 
 def click_ele(context, param):
@@ -115,7 +116,17 @@ def click_ocr_text(context, param):
             x = (box[0][0] + box[1][0]) / 2
             y = (box[0][1] + box[2][1]) / 2
             poco_instance = gr.get_value("pocoInstance")
-            x_coordinate = float(x) / g_Context.image_size[0]
-            y_coordinate = float(y) / g_Context.image_size[1]
+            x_coordinate = float(x) / g_Context.image_size[1]
+            y_coordinate = float(y) / g_Context.image_size[0]
             poco_instance.click([x_coordinate, y_coordinate])
+
+
+def click_image(context, param):
+    result = img_verify(context, param)
+    x = result[0].get('rect').x + result[0].get('rect').width / 2
+    y = result[0].get('rect').y + result[0].get('rect').height / 2
+    poco_instance = gr.get_value("pocoInstance")
+    x_coordinate = float(x) / g_Context.image_size[1]
+    y_coordinate = float(y) / g_Context.image_size[0]
+    poco_instance.click([x_coordinate, y_coordinate])
 

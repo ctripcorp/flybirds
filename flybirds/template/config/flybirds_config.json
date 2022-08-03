@@ -48,7 +48,7 @@
     "swipeReadyTime": 3,
     "verifyPosNotChangeCount": 5,
     "screenRecordTime": 90,
-    "useSnap": true
+    "useSnap": false
   },
   "report": {},
   "log": {}

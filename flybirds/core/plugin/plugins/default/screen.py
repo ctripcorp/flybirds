@@ -5,9 +5,8 @@ Device screenshot method.
 import os
 import time
 import traceback
-import baseImage
+from baseImage import Image
 from base64 import b64decode
-from PIL import Image
 from .ui_driver import SIFT
 
 import flybirds.core.global_resource as gr
@@ -99,10 +98,13 @@ class BaseScreen:
 
     @staticmethod
     def image_ocr(img_path):
+        """
+        Take a screenshot and ocr
+        """
         log.info(f"[image ocr path] image path is:{img_path}")
         ocr = g_Context.ocr_driver_instance
         g_Context.ocr_result = ocr.ocr(img_path, cls=True)
-        g_Context.image_size = Image.open(img_path).size
+        g_Context.image_size = Image(img_path).size
         log.info(f"[image ocr path] image size is:{g_Context.image_size}")
         for line in g_Context.ocr_result:
             log.info(f"[image ocr result] scan line info is:{line}")
@@ -119,9 +121,12 @@ class BaseScreen:
 
     @staticmethod
     def image_verify(img_source_path, img_search_path):
+        """
+        Take a screenshot and verify image
+        """
         match = SIFT()
-        img_source = baseImage.Image(img_source_path)
-        img_search = baseImage.Image(img_search_path)
+        img_source = Image(img_source_path)
+        img_search = Image(img_search_path)
 
         result = match.find_all_results(img_source, img_search)
         return result
