@@ -394,3 +394,13 @@ def find_text_from_parent(context, p_selector=None, c_selector=None,
     """
     g_Context.step.find_text_from_parent(context, p_selector, c_selector,
                                          param3)
+
+@step("image exist [{param}]")
+def img_exist(context, param):
+    g_Context.step.img_exist(context, param)
+
+
+@step("image not exist [{param}]")
+def img_not_exist(context, param):
+    g_Context.step.img_not_exist(context, param)
+

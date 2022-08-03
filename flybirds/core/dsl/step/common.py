@@ -29,11 +29,6 @@ def scan(context):
     g_Context.step.ocr(context)
 
 
-@step("image search [{param}]")
-def img_verify(context, param):
-    g_Context.step.img_verify(context, param)
-
-
 @step("information association of failed operation,"
       " run the {param1} time :[{param2}]"
       )

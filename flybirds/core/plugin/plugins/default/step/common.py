@@ -92,18 +92,6 @@ def img_verify(context, search_image_path):
     """
     step_index = context.cur_step_index - 1
     source_image_path = BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_")
-    start = time.time()
     result = BaseScreen.image_verify(source_image_path, search_image_path)
-    if len(result) == 0:
-        src_path = "../../../{}".format(search_image_path)
-        data = (
-            'embeddingsTags, stepIndex={}, <image class ="screenshot"'
-            ' width="375" src="{}" />'.format(step_index, src_path)
-        )
-        context.scenario.description.append(data)
-        # context.cur_step_index += 1
-        raise Exception("[image verify] image not found !")
-    else:
-        log.info(f"[image verify] cost time:{time.time() - start}")
-        log.info(f"[image verify] result:{result}")
-        return result
+    return result
+
