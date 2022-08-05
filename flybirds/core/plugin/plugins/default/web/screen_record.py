@@ -28,7 +28,11 @@ class ScreenRecordInfo:
         if page_obj is None or (not hasattr(page_obj, 'context')):
             log.error('[web stop_record] get page object has error!')
 
-        page_obj.context.close()
+        if gr.get_web_info_value("browserExit") is not None and \
+                gr.get_web_info_value("browserExit") is False:
+            page_obj.page.close()
+        else:
+            page_obj.context.close()
 
     @staticmethod
     def copy_record(src_path):

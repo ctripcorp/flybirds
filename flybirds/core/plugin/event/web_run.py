@@ -51,6 +51,11 @@ class OnBefore:
         gr.set_value("plugin_ele", plugin_ele)
         context.plugin_ele = plugin_ele
 
+        if gr.get_web_info_value("browserExit") is not None and \
+                gr.get_web_info_value("browserExit") is False:
+            gr.set_value("browser_context", plugin_page.page
+                         .context)
+
         log.info("screen recording context initialization completed")
         if not screen_record.support:
             log.info("the device does not support screen recording")

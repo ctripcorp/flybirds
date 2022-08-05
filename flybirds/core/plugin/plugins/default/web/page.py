@@ -32,7 +32,10 @@ class Page:
 
     @staticmethod
     def init_page():
-        context = Page.new_browser_context()
+        context = gr.get_value("browser_context")
+        if context is None or gr.get_web_info_value("browserExit") is None \
+                or gr.get_web_info_value("browserExit") is True:
+            context = Page.new_browser_context()
 
         page = context.new_page()
         request_interception = gr.get_web_info_value("request_interception",
@@ -63,8 +66,9 @@ class Page:
             if create_browser_context is not None:
                 context = create_browser_context(browser)
                 if context is not None:
-                    log.info('[new_browser_context] successfully get BrowserContext '
-                             'from custom operation')
+                    log.info(
+                        '[new_browser_context] successfully get BrowserContext '
+                        'from custom operation')
                     return context
 
         context = browser.new_context(record_video_dir="videos",
@@ -119,7 +123,8 @@ def handle_page_error(msg):
             need_log = True
         if need_log:
             if hasattr(msg, "text"):
-                log.info(f"=====================page console==================:\n {msg.text}")
+                log.info(
+                    f"=====================page console==================:\n {msg.text}")
 
 
 def handle_request(request):

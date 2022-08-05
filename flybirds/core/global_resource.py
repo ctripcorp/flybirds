@@ -33,7 +33,8 @@ def init_glb():
         "browser": None,
         "plugin_page": None,
         "interceptionRequest": {},
-        "interceptionValues": {}
+        "interceptionValues": {},
+        "browser_context": None
     }
 
 

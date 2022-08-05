@@ -210,6 +210,8 @@ class WebConfig:
             ignore_order = web_info.get("ignoreOrder")
         if web_info.get("abortDomainList") is not None:
             abort_domain_list = web_info.get("abortDomainList")
+        if web_info.get("browserExitAfterCase") is not None:
+            self.browserExit = web_info.get("browserExitAfterCase", True)
 
         headless = user_data.get("headless", headless)
         if isinstance(headless, str):

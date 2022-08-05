@@ -64,18 +64,14 @@ def app_start(page_name):
 
 
 def web_start(page_run_val):
-    if page_run_val is None:
-        page_run_val = 'restartApp'
-    if "restartApp" == page_run_val:
-        # determine if the page is closed
-        page_obj = gr.get_value("plugin_page")
-        if page_obj is not None and hasattr(page_obj, 'context') \
-                and page_obj.context is not None:
-            log.info(
-                '[web_start] Target page, context or browser is opening!')
-            return
-        re_init_page()
-        log.info("complete restart web page")
+    page_obj = gr.get_value("plugin_page")
+    if page_obj is not None and hasattr(page_obj, 'context') \
+            and page_obj.context is not None:
+        log.info(
+            '[web_start] Target page, context or browser is opening!')
+        return
+    re_init_page()
+    log.info("complete restart web page")
 
 
 def get_runtime_data(scenario):
