@@ -168,7 +168,7 @@ class ScreenRecord:
                 return "No recording service"
 
             message = ""
-            proc.wait(timeout=30)
+            # proc.wait()
             proc_code = proc.poll()
             if proc_code is None:
                 proc.terminate()
