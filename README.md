@@ -90,7 +90,7 @@ Flybirds从2022年初开源至今，通过与社区内活跃用户的交流和�
 - [DSL step](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id18)
 - [Android端例子](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#android)
 - [iOS端例子](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#ios)
-- [OCR使用例子](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#ocr)
+- [OCR&OpenCV使用例子](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#ocr-opencv)
 - [Web端例子](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id69)
 - [多端应用例子](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id80)
 - [数据驱动参数化](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id83)
