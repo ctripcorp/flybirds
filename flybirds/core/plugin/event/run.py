@@ -106,7 +106,11 @@ class OnAfter:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def can(context):
-        return True
+        if gr.get_platform() is not None \
+                and (gr.get_platform().lower() != "web"):
+            return True
+        else:
+            return False
 
     @staticmethod
     def run(context):
