@@ -283,6 +283,8 @@ def wait_ocr_text_appear(context, param):
             else:
                 time.sleep(5)
         if time.time() - start > timeout:
+            for line in g_Context.ocr_result:
+                log.info(f"[image ocr result] scan line info is:{line}")
             message = "text not found in {} seconds, expect text:{}" \
                       .format(timeout, param)
             raise FlybirdVerifyException(message)
@@ -294,6 +296,8 @@ def ocr_txt_exist(context, param):
         fixed_txt = paddle_fix_txt(txts)
         verify.text_container(param, fixed_txt)
     else:
+        for line in g_Context.ocr_result:
+            log.info(f"[image ocr result] scan line info is:{line}")
         message = "ocr result is null"
         raise FlybirdVerifyException(message)
 
@@ -308,6 +312,8 @@ def ocr_txt_contain(context, param):
                 result = True
                 return result
         if result is False:
+            for line in g_Context.ocr_result:
+                log.info(f"[image ocr result] scan line info is:{line}")
             message = "ocr result not contain {}".format(param)
             raise FlybirdVerifyException(message)
     else:
@@ -321,6 +327,8 @@ def ocr_txt_not_exist(context, param):
         fixed_txt = paddle_fix_txt(txts)
         verify.text_not_container(param, fixed_txt)
     else:
+        for line in g_Context.ocr_result:
+            log.info(f"[image ocr result] scan line info is:{line}")
         message = "ocr result is null"
         raise FlybirdVerifyException(message)
 

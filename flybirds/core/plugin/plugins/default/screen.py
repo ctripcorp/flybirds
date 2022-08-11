@@ -24,7 +24,7 @@ class BaseScreen:
         """
         Take a screenshot and save
         """
-        log.info(f"[screen_shot] screen shot start. path is:{path}")
+        log.debug(f"[screen_shot] screen shot start. path is:{path}")
         cur_platform = g_Context.platform
         try:
             if cur_platform is None:
@@ -44,7 +44,7 @@ class BaseScreen:
                 "Screenshot failed path: {}, error: {}".format(path, str(e)),
                 traceback.format_exc(),
             )
-        log.info("[screen_shot] screen shot end!")
+        log.debug("[screen_shot] screen shot end!")
 
     @staticmethod
     def screen_link_to_behave(scenario, step_index, tag=None, link=True):
@@ -102,13 +102,13 @@ class BaseScreen:
         """
         Take a screenshot and ocr
         """
-        log.info(f"[image ocr path] image path is:{img_path}")
+        log.debug(f"[image ocr path] image path is:{img_path}")
         ocr = g_Context.ocr_driver_instance
         g_Context.ocr_result = ocr.ocr(img_path, cls=True)
         g_Context.image_size = Image(img_path).size
-        log.info(f"[image ocr path] image size is:{g_Context.image_size}")
-        for line in g_Context.ocr_result:
-            log.info(f"[image ocr result] scan line info is:{line}")
+        log.debug(f"[image ocr path] image size is:{g_Context.image_size}")
+        # for line in g_Context.ocr_result:
+            # log.info(f"[image ocr result] scan line info is:{line}")
             # box = line[0]
             # log.info(f"[image ocr result] scan box info is:{box}")
             # x = (box[0][0] + box[1][0]) / 2
