@@ -301,11 +301,12 @@ def ocr_txt_contain(context, param):
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
         fixed_txt = paddle_fix_txt(txts)
-        result = None
+        result = False
         for txt in fixed_txt:
-            if param in txt:
+            if re.search(param, txt, flags=0) is not None:
                 result = True
-        if result is None:
+                return result
+        if result is False:
             message = "ocr result not contain {}".format(param)
             raise FlybirdVerifyException(message)
     else:

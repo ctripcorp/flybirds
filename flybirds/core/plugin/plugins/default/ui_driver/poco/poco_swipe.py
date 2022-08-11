@@ -12,6 +12,7 @@ import flybirds.utils.point_helper as point_helper
 from flybirds.core.exceptions import FlybirdNotFoundException
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.utils import language_helper as lan
+from flybirds.core.plugin.plugins.default.step.verify import ocr, ocr_txt_contain
 
 
 def air_bdd_full_screen_swipe(
@@ -286,3 +287,52 @@ def air_bdd_swipe_search(
         raise FlybirdNotFoundException(message, {})
     if gr.get_frame_config_value("use_snap", False):
         findsnap.fix_refresh_status(True)
+
+
+def full_screen_swipe_search_ocr(
+    context,
+    poco,
+    search_dsl_str,
+    swipe_count,
+    direction,
+    screen_size,
+    start_x=None,
+    start_y=None,
+    distance=None,
+    duration=None,
+):
+    """
+    Full screen swipe to find
+    """
+    direction = point_helper.search_direction_switch(direction)
+    start_point = point_helper.get_swipe_search_start_point(
+        direction, start_x, start_y
+    )
+
+    if distance is None:
+        distance = 0.3
+
+    log_count = swipe_count
+    searched = False
+    while swipe_count >= 0:
+        print("swipe_count", swipe_count)
+        print("search_dsl_str:", search_dsl_str)
+        try:
+            ocr(context)
+            searched = ocr_txt_contain(context, search_dsl_str)
+            if searched is True:
+                break
+        except Exception:
+            pass
+        if swipe_count == 0:
+            break
+        air_bdd_full_screen_swipe(
+            poco, start_point, screen_size, direction, distance, duration
+        )
+        swipe_count -= 1
+    if not searched:
+        message = "swipe to {} {} times，not find {}".format(
+            direction, log_count, search_dsl_str
+        )
+        raise FlybirdNotFoundException(message, {})
+

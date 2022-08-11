@@ -141,3 +141,53 @@ def full_screen_swipe_to_ele_aaa(context, param1, param2):
         distance,
         duration,
     )
+
+
+def full_screen_swipe_to_ocr_txt(context, param1, param2):
+    poco_instance = gr.get_value("pocoInstance")
+    handled_param2_temp = handle_str(param2)
+    param2_dict = dsl_helper.params_to_dic(handled_param2_temp)
+
+    search_dsl_str = param2_dict["selector"]
+
+    swipe_count = None
+    if "swipeCount" in param2_dict.keys():
+        swipe_count = int(param2_dict["swipeCount"])
+    else:
+        swipe_count = gr.get_frame_config_value("swipe_search_count", 5)
+
+    direction = param1.strip()
+
+    screen_size = gr.get_device_size()
+
+    start_x = None
+    if "startX" in param2_dict.keys():
+        start_x = float(param2_dict["startX"])
+    start_y = None
+    if "startY" in param2_dict.keys():
+        start_y = float(param2_dict["startY"])
+
+    distance = None
+    if "distance" in param2_dict.keys():
+        distance = float(param2_dict["distance"])
+    else:
+        distance = gr.get_frame_config_value("swipe_search_distance", 0.3)
+
+    duration = None
+    if gr.get_frame_config_value("use_search_swipe_duration", False):
+        duration = gr.get_frame_config_value("search_swipe_duration", 1)
+    if "duration" in param2_dict.keys():
+        duration = float(param2_dict["duration"])
+
+    ps.full_screen_swipe_search_ocr(
+        context,
+        poco_instance,
+        search_dsl_str,
+        swipe_count,
+        direction,
+        screen_size,
+        start_x,
+        start_y,
+        distance,
+        duration,
+    )
