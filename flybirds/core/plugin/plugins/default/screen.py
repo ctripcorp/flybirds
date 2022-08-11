@@ -80,13 +80,13 @@ class BaseScreen:
                                                   feature_name)
             else:
                 current_screen_dir = os.path.join(feature_name)
-            log.info(f"[screen_link_to_behave] screen_shot_dir path :"
+            log.debug(f"[screen_link_to_behave] screen_shot_dir path :"
                      f"{screen_shot_dir} and "
                      f"current_screen_dir path: {current_screen_dir}")
             file_helper.create_dirs_path_object(current_screen_dir)
 
             src_path = "../screenshot/{}/{}".format(feature_name, file_name)
-            log.info("[screen_link_to_behave] src_path: {}".format(src_path))
+            log.debug("[screen_link_to_behave] src_path: {}".format(src_path))
             data = (
                 'embeddingsTags, stepIndex={}, <image class ="screenshot"'
                 ' width="375" src="{}" />'.format(step_index, src_path)

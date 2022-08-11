@@ -13,6 +13,7 @@ from flybirds.core.exceptions import FlybirdNotFoundException
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.utils import language_helper as lan
 from flybirds.core.plugin.plugins.default.step.verify import ocr, ocr_txt_contain
+import flybirds.utils.flybirds_log as log
 
 
 def air_bdd_full_screen_swipe(
@@ -315,11 +316,9 @@ def full_screen_swipe_search_ocr(
     log_count = swipe_count
     searched = False
     while swipe_count >= 0:
-        print("swipe_count", swipe_count)
-        print("search_dsl_str:", search_dsl_str)
         try:
             ocr(context)
-            searched = ocr_txt_contain(context, search_dsl_str)
+            searched = ocr_txt_contain(context, search_dsl_str, islog=False)
             if searched is True:
                 break
         except Exception:
@@ -331,6 +330,8 @@ def full_screen_swipe_search_ocr(
         )
         swipe_count -= 1
     if not searched:
+        for line in g_Context.ocr_result:
+            log.info(f"[image ocr result] scan line info is:{line}")
         message = "swipe to {} {} times，not find {}".format(
             direction, log_count, search_dsl_str
         )

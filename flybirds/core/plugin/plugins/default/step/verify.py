@@ -302,7 +302,7 @@ def ocr_txt_exist(context, param):
         raise FlybirdVerifyException(message)
 
 
-def ocr_txt_contain(context, param):
+def ocr_txt_contain(context, param, islog=True):
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
         fixed_txt = paddle_fix_txt(txts)
@@ -311,7 +311,7 @@ def ocr_txt_contain(context, param):
             if re.search(param, txt, flags=0) is not None:
                 result = True
                 return result
-        if result is False:
+        if result is False and islog is True:
             for line in g_Context.ocr_result:
                 log.info(f"[image ocr result] scan line info is:{line}")
             message = "ocr result not contain {}".format(param)
