@@ -141,7 +141,7 @@ step_language = {
         "from {param1} find[{selector}]element": [
             "向{param1}查找[{selector}]的元素"],
         "from {param1} find[{selector}]text": [
-            "向{param1}查找[{selector}]的扫描文案"],
+            "向{param1}扫描[{selector}]的文案"],
         "unblock the current page": ["解除当前页面限制"],
         "current page is [{param}]": ["当前页面是[{param}]"],
         "current page is not last page": ["当前页面已不是上一个指定页面"],
