@@ -274,9 +274,10 @@ def wait_ocr_text_appear(context, param):
         ocr(context)
         txts = [line[1][0] for line in g_Context.ocr_result]
         fixed_txt = paddle_fix_txt(txts)
-        if param in fixed_txt:
-            text_exist = True
-        else:
+        for txt in fixed_txt:
+            if re.search(param, txt, flags=0) is not None:
+                text_exist = True
+        if text_exist is False:
             if time.time() - start > timeout/2:
                 time.sleep(timeout/2)
             else:
