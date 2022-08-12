@@ -212,6 +212,37 @@ class WebConfig:
             abort_domain_list = web_info.get("abortDomainList")
         if web_info.get("browserExitAfterCase") is not None:
             self.browserExit = web_info.get("browserExitAfterCase", True)
+        if web_info.get("emulatedDevice") is not None:
+            self.emulated_device = web_info.get("emulatedDevice", None)
+
+        if web_info.get("userAgent") is not None:
+            self.user_agent = web_info.get("userAgent", None)
+        if web_info.get("locale") is not None:
+            self.locale = web_info.get("locale", None)
+
+        if web_info.get("timezone") is not None:
+            self.timezone = web_info.get("timezone", None)
+
+        if web_info.get("permissions") is not None:
+            self.permissions = web_info.get("permissions", None)
+
+        if web_info.get("geolocation") is not None:
+            self.geolocation = web_info.get("geolocation", None)
+
+        if web_info.get("width") is not None:
+            self.width = web_info.get("width", None)
+
+        if web_info.get("height") is not None:
+            self.height = web_info.get("height", None)
+
+        if web_info.get("deviceScaleFactor") is not None:
+            self.device_scale_factor = web_info.get("deviceScaleFactor", None)
+
+        if web_info.get("hasTouch") is not None:
+            self.has_touch = web_info.get("has_touch", None)
+
+        if web_info.get("defaultBrowserType") is not None:
+            self.default_browser_type = web_info.get("defaultBrowserType", None)
 
         headless = user_data.get("headless", headless)
         if isinstance(headless, str):

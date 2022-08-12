@@ -21,7 +21,6 @@ class UIDriver:
         try:
             play_wright = sync_playwright().start()
             gr.set_value("playwright", play_wright)
-
             browser_val = gr.get_value("cur_browser")
             browser_type = getattr(play_wright, browser_val)
             headless = gr.get_web_info_value("headless", True)
