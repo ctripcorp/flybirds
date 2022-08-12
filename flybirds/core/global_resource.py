@@ -268,7 +268,7 @@ def get_ele_locator(key):
         return key
     ele_locator = all_locators.get(key)
     if ele_locator is None:
-        log.info(
+        log.debug(
             f"the ele_locator.json has no element locator configuration "
             f"for [{key}]")
         return key

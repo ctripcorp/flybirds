@@ -94,6 +94,12 @@ class AppBaseStep:
     def full_screen_swipe_to_ele_aaa(self, context, param1, selector):
         step_adjust.full_screen_swipe_to_ele_aaa(context, param1, selector)
 
+    def full_screen_swipe_to_ocr_txt(self, context, param1, selector):
+        step_adjust.full_screen_swipe_to_ocr_txt(context, param1, selector)
+
+    def full_screen_swipe_to_img(self, context, param1, selector):
+        step_adjust.full_screen_swipe_to_img(context, param1, selector)
+
     def position_not_change(self, context, selector, param2):
         position_not_change(context, selector, param2)
 
