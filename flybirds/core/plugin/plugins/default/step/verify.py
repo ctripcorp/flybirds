@@ -344,22 +344,23 @@ def paddle_fix_txt(txt):
     return txt
 
 
-def img_exist(context, param):
+def img_exist(context, param, islog=True):
     start = time.time()
     step_index = context.cur_step_index - 1
     result = img_verify(context, param)
     if len(result) == 0:
-        src_path = "../../../{}".format(param)
-        data = (
-            'embeddingsTags, stepIndex={}, <image class ="screenshot"'
-            ' width="375" src="{}" />'.format(step_index, src_path)
-        )
-        context.scenario.description.append(data)
-        # context.cur_step_index += 1
+        if islog is True:
+            src_path = "../../../{}".format(param)
+            data = (
+                'embeddingsTags, stepIndex={}, <image class ="screenshot"'
+                ' width="375" src="{}" />'.format(step_index, src_path)
+            )
+            context.scenario.description.append(data)
         raise Exception("[image exist verify] image not found !")
     else:
         log.info(f"[image exist verify] cost time:{time.time() - start}")
         log.info(f"[image exist verify] result:{result}")
+        return True
 
 
 def img_not_exist(context, param):

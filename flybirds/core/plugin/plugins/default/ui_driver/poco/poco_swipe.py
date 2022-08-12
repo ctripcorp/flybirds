@@ -12,7 +12,7 @@ import flybirds.utils.point_helper as point_helper
 from flybirds.core.exceptions import FlybirdNotFoundException
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.utils import language_helper as lan
-from flybirds.core.plugin.plugins.default.step.verify import ocr, ocr_txt_contain
+from flybirds.core.plugin.plugins.default.step.verify import ocr, ocr_txt_contain, img_exist
 import flybirds.utils.flybirds_log as log
 
 
@@ -332,6 +332,59 @@ def full_screen_swipe_search_ocr(
     if not searched:
         for line in g_Context.ocr_result:
             log.info(f"[image ocr result] scan line info is:{line}")
+        message = "swipe to {} {} times，not find {}".format(
+            direction, log_count, search_dsl_str
+        )
+        raise FlybirdNotFoundException(message, {})
+
+
+def full_screen_swipe_search_img(
+    context,
+    poco,
+    search_dsl_str,
+    swipe_count,
+    direction,
+    screen_size,
+    start_x=None,
+    start_y=None,
+    distance=None,
+    duration=None,
+):
+    """
+    Full screen swipe to find
+    """
+    direction = point_helper.search_direction_switch(direction)
+    start_point = point_helper.get_swipe_search_start_point(
+        direction, start_x, start_y
+    )
+
+    if distance is None:
+        distance = 0.3
+
+    log_count = swipe_count
+    searched = False
+    while swipe_count >= 0:
+        try:
+            searched = img_exist(context, search_dsl_str, islog=False)
+            if searched is True:
+                break
+        except Exception:
+            pass
+        if swipe_count == 0:
+            break
+        air_bdd_full_screen_swipe(
+            poco, start_point, screen_size, direction, distance, duration
+        )
+        swipe_count -= 1
+    if not searched:
+        step_index = context.cur_step_index - 1
+        src_path = "../../../{}".format(search_dsl_str)
+        data = (
+            'embeddingsTags, stepIndex={}, <image class ="screenshot"'
+            ' width="375" src="{}" />'.format(step_index, src_path)
+        )
+        context.scenario.description.append(data)
+
         message = "swipe to {} {} times，not find {}".format(
             direction, log_count, search_dsl_str
         )
