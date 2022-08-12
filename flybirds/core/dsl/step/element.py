@@ -356,6 +356,32 @@ def full_screen_swipe_to_ele_aaa(context, param1=None, selector=None):
     g_Context.step.full_screen_swipe_to_ele_aaa(context, param1, selector)
 
 
+@step("from {param1} find[{selector}]text")
+@ele_wrap
+def full_screen_swipe_to_ocr_txt(context, param1=None, selector=None):
+    """
+    Full screen swipe in the specified direction to find the specified
+     selector element
+     :param context: step context
+    :param param1: slide direction (top/bottom/left/right)
+    :param selector: locator string for selector element (or None).
+    """
+    g_Context.step.full_screen_swipe_to_ocr_txt(context, param1, selector)
+
+
+@step("from {param1} find[{selector}]image")
+@ele_wrap
+def full_screen_swipe_to_img(context, param1=None, selector=None):
+    """
+    Full screen swipe in the specified direction to find the specified
+     selector element
+     :param context: step context
+    :param param1: slide direction (top/bottom/left/right)
+    :param selector: locator string for selector element (or None).
+    """
+    g_Context.step.full_screen_swipe_to_img(context, param1, selector)
+
+
 @step("clear [{selector}] and input[{param2}]")
 @ele_wrap
 def ele_clear_input(context, selector=None, param2=None):

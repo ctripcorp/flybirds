@@ -274,14 +274,17 @@ def wait_ocr_text_appear(context, param):
         ocr(context)
         txts = [line[1][0] for line in g_Context.ocr_result]
         fixed_txt = paddle_fix_txt(txts)
-        if param in fixed_txt:
-            text_exist = True
-        else:
+        for txt in fixed_txt:
+            if re.search(param, txt, flags=0) is not None:
+                text_exist = True
+        if text_exist is False:
             if time.time() - start > timeout/2:
                 time.sleep(timeout/2)
             else:
                 time.sleep(5)
         if time.time() - start > timeout:
+            for line in g_Context.ocr_result:
+                log.info(f"[image ocr result] scan line info is:{line}")
             message = "text not found in {} seconds, expect text:{}" \
                       .format(timeout, param)
             raise FlybirdVerifyException(message)
@@ -293,19 +296,24 @@ def ocr_txt_exist(context, param):
         fixed_txt = paddle_fix_txt(txts)
         verify.text_container(param, fixed_txt)
     else:
+        for line in g_Context.ocr_result:
+            log.info(f"[image ocr result] scan line info is:{line}")
         message = "ocr result is null"
         raise FlybirdVerifyException(message)
 
 
-def ocr_txt_contain(context, param):
+def ocr_txt_contain(context, param, islog=True):
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
         fixed_txt = paddle_fix_txt(txts)
-        result = None
+        result = False
         for txt in fixed_txt:
-            if param in txt:
+            if re.search(param, txt, flags=0) is not None:
                 result = True
-        if result is None:
+                return result
+        if result is False and islog is True:
+            for line in g_Context.ocr_result:
+                log.info(f"[image ocr result] scan line info is:{line}")
             message = "ocr result not contain {}".format(param)
             raise FlybirdVerifyException(message)
     else:
@@ -319,6 +327,8 @@ def ocr_txt_not_exist(context, param):
         fixed_txt = paddle_fix_txt(txts)
         verify.text_not_container(param, fixed_txt)
     else:
+        for line in g_Context.ocr_result:
+            log.info(f"[image ocr result] scan line info is:{line}")
         message = "ocr result is null"
         raise FlybirdVerifyException(message)
 
@@ -334,22 +344,23 @@ def paddle_fix_txt(txt):
     return txt
 
 
-def img_exist(context, param):
+def img_exist(context, param, islog=True):
     start = time.time()
     step_index = context.cur_step_index - 1
     result = img_verify(context, param)
     if len(result) == 0:
-        src_path = "../../../{}".format(param)
-        data = (
-            'embeddingsTags, stepIndex={}, <image class ="screenshot"'
-            ' width="375" src="{}" />'.format(step_index, src_path)
-        )
-        context.scenario.description.append(data)
-        # context.cur_step_index += 1
+        if islog is True:
+            src_path = "../../../{}".format(param)
+            data = (
+                'embeddingsTags, stepIndex={}, <image class ="screenshot"'
+                ' width="375" src="{}" />'.format(step_index, src_path)
+            )
+            context.scenario.description.append(data)
         raise Exception("[image exist verify] image not found !")
     else:
         log.info(f"[image exist verify] cost time:{time.time() - start}")
         log.info(f"[image exist verify] result:{result}")
+        return True
 
 
 def img_not_exist(context, param):

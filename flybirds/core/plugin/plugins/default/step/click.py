@@ -2,12 +2,13 @@
 """
 Step implement of element click.
 """
+import re
 import flybirds.core.global_resource as gr
 import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap \
     as find_snap
 import flybirds.utils.dsl_helper as dsl_helper
 from flybirds.core.global_context import GlobalContext as g_Context
-from flybirds.core.plugin.plugins.default.step.verify import ocr_txt_exist
+from flybirds.core.plugin.plugins.default.step.verify import ocr_txt_contain
 from flybirds.core.plugin.plugins.default.step.common import img_verify
 
 
@@ -109,9 +110,9 @@ def click_coordinates(context, x, y):
 
 
 def click_ocr_text(context, param):
-    ocr_txt_exist(context, param)
+    ocr_txt_contain(context, param)
     for line in g_Context.ocr_result:
-        if line[1][0] == param:
+        if re.search(param, line[1][0], flags=0) is not None:
             box = line[0]
             x = (box[0][0] + box[1][0]) / 2
             y = (box[0][1] + box[2][1]) / 2
