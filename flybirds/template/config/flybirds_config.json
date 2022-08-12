@@ -16,7 +16,17 @@
     "browserType": [],
     "requestInterception": true,
     "ignoreOrder": false,
-    "abortDomainList": []
+    "abortDomainList": [],
+    "emulatedDevice": null,
+    "userAgent": null,
+    "width": null,
+    "height": null,
+    "locale": null,
+    "timezone": null,
+    "deviceScaleFactor": null,
+    "hasTouch": null,
+    "geolocation": null,
+    "permissions": null
   },
   "flow_behave": {
     "beforeRunPage": "restartApp",

@@ -71,9 +71,88 @@ class Page:
                         'from custom operation')
                     return context
 
-        context = browser.new_context(record_video_dir="videos",
-                                      ignore_https_errors=True)
+        optional_config = Page.get_web_option_config()
+        if optional_config is not None:
+            context = browser.new_context(**optional_config,
+                                          record_video_dir="videos",
+                                          ignore_https_errors=True)
+        else:
+            context = browser.new_context(record_video_dir="videos",
+                                          ignore_https_errors=True)
         return context
+
+    @staticmethod
+    def get_web_option_config():
+        emulated_device = None
+        user_agent = None
+        viewport = None
+        device_scale_factor = None
+        locale = None
+        timezone = None
+        permissions = None
+        geolocation = None
+        has_touch = None
+        default_browser_type = None
+        gl_dict = {}
+        if gr.get_web_info_value("emulated_device") is not None:
+            playwright = gr.get_value("playwright")
+            emulated_device = playwright.devices[
+                gr.get_web_info_value("emulated_device")]
+        if gr.get_web_info_value("user_agent") is not None:
+            user_agent = gr.get_web_info_value("user_agent")
+        if gr.get_web_info_value("locale") is not None:
+            locale = gr.get_web_info_value("locale")
+        if gr.get_web_info_value("timezone") is not None:
+            timezone = gr.get_web_info_value("timezone")
+        if gr.get_web_info_value("permissions") is not None:
+            permissions = gr.get_web_info_value("permissions")
+        if gr.get_web_info_value("geolocation") is not None:
+            geolocation = gr.get_web_info_value("geolocation")
+        if gr.get_web_info_value("width") is not None and gr.get_web_info_value(
+                "height"):
+            viewport = {'width': gr.get_web_info_value("width"),
+                        'height': gr.get_web_info_value(
+                            "height")}
+        if gr.get_web_info_value("device_scale_factor") is not None:
+            device_scale_factor = gr.get_web_info_value("device_scale_factor")
+
+        if gr.get_web_info_value("has_touch") is not None:
+            has_touch = gr.get_web_info_value("has_touch")
+
+        if gr.get_web_info_value("default_browser_type") is not None:
+            default_browser_type = gr.get_web_info_value("default_browser_type")
+
+        if user_agent is not None:
+            gl_dict["user_agent"] = user_agent
+        if viewport is not None:
+            gl_dict["viewport"] = viewport
+        if locale is not None:
+            gl_dict["locale"] = locale
+        if timezone is not None:
+            gl_dict["timezone_id"] = timezone
+        if geolocation is not None:
+            gl_dict["geolocation"] = geolocation
+            if permissions is None:
+                permissions = ["geolocation"]
+            else:
+                if permissions.index("geolocation") < 0:
+                    permissions.append("geolocation")
+        if permissions is not None:
+            gl_dict["permissions"] = permissions
+        if device_scale_factor is not None:
+            gl_dict["device_scale_factor"] = device_scale_factor
+        if has_touch is not None:
+            gl_dict["hasTouch"] = has_touch
+        if default_browser_type is not None:
+            gl_dict["default_browser_type"] = default_browser_type
+
+        if emulated_device is not None:
+            gl_dict.update(emulated_device)
+
+        if gl_dict is not None and len(gl_dict) > 0:
+            return gl_dict
+        else:
+            return None
 
     def navigate(self, context, param):
         operation_module = gr.get_value("projectScript").custom_operation
