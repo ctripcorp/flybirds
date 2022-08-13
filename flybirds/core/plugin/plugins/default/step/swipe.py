@@ -5,6 +5,7 @@ Element swipe
 import flybirds.core.global_resource as gr
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_swipe as ps
 import flybirds.utils.dsl_helper as dsl_helper
+import flybirds.utils.point_helper as point_helper
 
 
 def ele_swipe(context, param1, param2, param3):
@@ -32,7 +33,7 @@ def ele_swipe(context, param1, param2, param3):
 
     screen_size = gr.get_device_size()
 
-    direction = param2.strip()
+    direction = point_helper.search_direction_switch(param2.strip())
 
     distance = float(param3_dict["swipeNumber"])
 
@@ -42,7 +43,7 @@ def ele_swipe(context, param1, param2, param3):
     if "duration" in param3_dict.keys():
         duration = float(param3_dict["duration"])
 
-    ready_time = gr.get_frame_config_value("swipe_ready_time", 3)
+    ready_time = gr.get_frame_config_value("swipe_ready_time", 1)
     if "readyTime" in param3_dict.keys():
         ready_time = float(param3_dict["readyTime"])
 
@@ -72,7 +73,7 @@ def full_screen_swipe(context, param1, param2):
 
     screen_size = gr.get_device_size()
 
-    direction = param1.strip()
+    direction = point_helper.search_direction_switch(param1.strip())
 
     distance = float(param2_dict["swipeNumber"])
 
@@ -82,7 +83,7 @@ def full_screen_swipe(context, param1, param2):
     if "duration" in param2_dict.keys():
         duration = float(param2_dict["duration"])
 
-    ready_time = gr.get_frame_config_value("swipe_ready_time", 3)
+    ready_time = gr.get_frame_config_value("swipe_ready_time", 1)
     if "readyTime" in param2_dict.keys():
         ready_time = float(param2_dict["readyTime"])
 
