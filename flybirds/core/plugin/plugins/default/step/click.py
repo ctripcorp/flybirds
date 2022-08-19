@@ -8,7 +8,7 @@ import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap \
     as find_snap
 import flybirds.utils.dsl_helper as dsl_helper
 from flybirds.core.global_context import GlobalContext as g_Context
-from flybirds.core.plugin.plugins.default.step.verify import ocr_txt_contain
+from flybirds.core.plugin.plugins.default.step.verify import ocr_txt_contain, paddle_fix_txt
 from flybirds.core.plugin.plugins.default.step.common import img_verify
 import flybirds.utils.flybirds_log as log
 
@@ -115,8 +115,8 @@ def click_ocr_text(context, param):
     for line in g_Context.ocr_result:
         try:
             trim_param = param.replace(" ", "")
-            trim_txt = line[1][0].replace(" ", "")
-            if trim_param in trim_txt or re.search(param, line[1][0], flags=0) is not None:
+            fixed_txt = paddle_fix_txt([line[1][0]], True)
+            if trim_param in fixed_txt[0] or re.search(param, line[1][0], flags=0) is not None:
                 log.info(f"click ocr txt: {line[1][0]}")
                 box = line[0]
                 x = (box[0][0] + box[1][0]) / 2
