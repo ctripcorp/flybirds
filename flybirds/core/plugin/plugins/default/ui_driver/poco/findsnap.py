@@ -60,7 +60,7 @@ def snap_find(source, config):
     name: name, id
     textMatches: Regular
     """
-    print("config", config)
+    # print("config", config)
     text = config.get("text")
     name = config.get("name")
     textMatches = config.get("textMatches")
