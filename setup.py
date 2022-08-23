@@ -34,6 +34,7 @@ setup(
         "behave",
     ],
     license="MIT license",
+    python_requires=">=3.7, <3.10",
     packages=find_packages(exclude=["dist", "build", "tests", "docs"]),
     include_package_data=True,
     install_requires=req,
