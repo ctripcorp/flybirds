@@ -14,11 +14,13 @@ def ocr_init(lang=None):
         ocr_lang = gr.get_app_config_value("ocr_lang")
     else:
         ocr_lang = lang
-    from paddleocr import PaddleOCR
-    # Paddleocr support languages
-    # example`ch`, `en`, `fr`, `german`, `korean`, `japan`
-    ocr = PaddleOCR(use_angle_cls=True,
-                    lang=ocr_lang)  # need to run only once to download and load model into memory
 
-    return ocr
+    if ocr_lang != "":
+        from paddleocr import PaddleOCR
+        # Paddleocr support languages
+        # example`ch`, `en`, `fr`, `german`, `korean`, `japan`
+        ocr = PaddleOCR(use_angle_cls=True,
+                        lang=ocr_lang)  # need to run only once to download and load model into memory
+
+        return ocr
 

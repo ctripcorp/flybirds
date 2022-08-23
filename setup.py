@@ -4,6 +4,7 @@
 tool setup
 """
 from setuptools import setup, find_packages
+import sys
 
 
 def parse_requirements(filename):
@@ -11,7 +12,12 @@ def parse_requirements(filename):
     get requirements list from config file
     """
     line_iter = (line.strip() for line in open(filename))
-    return [line for line in line_iter if line and not line.startswith("#")]
+    reqs = [line for line in line_iter if line and not line.startswith("#")]
+    if sys.platform == "win32":
+        reqs.remove("paddleocr>=2.5.0")
+        reqs.remove("paddlepaddle>=2.3.0")
+        reqs.remove("protobuf==3.20.1")
+    return reqs
 
 
 req = parse_requirements("requirements.txt")

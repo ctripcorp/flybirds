@@ -11,7 +11,7 @@ pyOpenSSL==19.1.0
 click==8.0.3
 jsonpath_ng>=1.5.3
 deepdiff>=5.8.1
-numpy==1.22.4
+numpy<1.23
 paddleocr>=2.5.0
 paddlepaddle>=2.3.0
 protobuf==3.20.1
