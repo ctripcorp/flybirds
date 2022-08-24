@@ -15,6 +15,7 @@ import flybirds.utils.flybirds_log as log
 import flybirds.utils.uuid_helper as uuid_helper
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.core.plugin.plugins.default.ios_snapshot import get_screen
+from flybirds.core.exceptions import FlybirdsException
 
 
 class BaseScreen:
@@ -104,6 +105,18 @@ class BaseScreen:
         """
         log.debug(f"[image ocr path] image path is:{img_path}")
         ocr = g_Context.ocr_driver_instance
+
+        if ocr is None:
+            message = "\n----------------------------------------------------\n" \
+                      "OCR engine is not start, please check following steps:\n"\
+                      "1. In windows platform, you need to download OCR requirement file from " \
+                      "https://github.com/ctripcorp/flybirds/blob/main/requirements_ml.txt\n" \
+                      "2. run command `pip install -r requirements_ml.txt`\n" \
+                      "3. Configure `ocrLang` option in flybirds_config.json, detail languages refer to \n" \
+                      "https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#ocr-opencv\n" \
+                      "----------------------------------------------------\n "
+            raise FlybirdsException(message)
+
         g_Context.ocr_result = ocr.ocr(img_path, cls=True)
         g_Context.image_size = Image(img_path).size
         log.debug(f"[image ocr path] image size is:{g_Context.image_size}")
