@@ -10,4 +10,5 @@ def screen_shot(path):
 
 
 def screen_link_to_behave(scenario, step_index, tag=None):
-    GlobalContext.screen.screen_link_to_behave(scenario, step_index, tag)
+    result = GlobalContext.screen.screen_link_to_behave(scenario, step_index, tag)
+    return result

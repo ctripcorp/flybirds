@@ -151,8 +151,8 @@ class BaseKeypoint(object):
             image = image.data
         keypoint, descriptor = self.detector.detectAndCompute(image, None)
 
-        if len(keypoint) < 2:
-            raise NoEnoughPointsError('{} detect not enough feature points in input images'.format(self.METHOD_NAME))
+        # if len(keypoint) < 2:
+        #    raise NoEnoughPointsError('{} detect not enough feature points in input images'.format(self.METHOD_NAME))
         return keypoint, descriptor
 
     @staticmethod

@@ -5,7 +5,7 @@ Device screenshot method.
 import os
 import time
 import traceback
-from baseImage import Image
+from baseImage import Image, Rect
 from base64 import b64decode
 from .ui_driver import SIFT
 
@@ -120,17 +120,6 @@ class BaseScreen:
         g_Context.ocr_result = ocr.ocr(img_path, cls=True)
         g_Context.image_size = Image(img_path).size
         log.debug(f"[image ocr path] image size is:{g_Context.image_size}")
-        # for line in g_Context.ocr_result:
-            # log.info(f"[image ocr result] scan line info is:{line}")
-            # box = line[0]
-            # log.info(f"[image ocr result] scan box info is:{box}")
-            # x = (box[0][0] + box[1][0]) / 2
-            # y = (box[0][1] + box[2][1]) / 2
-            # log.info(f"[image ocr result] scan box xy info is:{x},{y}")
-            # txt = line[1][0]
-            # log.info(f"[image ocr result] scan txt info is:{txt}")
-            # score = line[1][1]
-            # log.info(f"[image ocr result] scan score info is:{score}")
 
 
     @staticmethod
@@ -144,6 +133,25 @@ class BaseScreen:
 
         result = match.find_all_results(img_source, img_search)
         return result
+
+    @staticmethod
+    def white_screen_detect(img_path):
+        match = SIFT()
+        img = Image(img_path)
+        start_time = time.time()
+        width = img.size[1]
+        height = img.size[0]
+        range_height = height / 100
+        point_y = 0
+        white_percent = 0
+        while point_y + range_height <= height:
+            new_img = img.crop(rect=Rect(0, point_y, width, range_height))
+            kp_src, des_src = match.get_keypoint_and_descriptor(new_img)
+            point_y += range_height
+            if len(kp_src) < 3:
+                white_percent += 1
+        log.info(f"detect use time:{time.time() - start_time}")
+        return white_percent
 
 
 
