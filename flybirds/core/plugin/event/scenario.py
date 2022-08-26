@@ -9,6 +9,7 @@ import flybirds.utils.language_helper as lge
 from flybirds.core.driver import screen
 from flybirds.core.global_context import GlobalContext
 from flybirds.core.plugin.plugins.default.screen_record import link_record
+from flybirds.core.plugin.plugins.default.screen import BaseScreen
 from flybirds.utils import flybirds_log as log
 from flybirds.utils import launch_helper
 
@@ -86,9 +87,17 @@ def scenario_fail(context, scenario):
             log.info(info_log)
             log.error(f'[scenario_fail] step error msg:{step.error_message}')
             log.info("[scenario_fail] start to do failed screenshot")
-            screen.screen_link_to_behave(
+            img_path = screen.screen_link_to_behave(
                 scenario, context.cur_step_index - 1, "fail_"
             )
+            try:
+                white_percent = BaseScreen.white_screen_detect(img_path)
+                data = ("<h4 style=\"color:DodgerBlue;\">failed screenshot analysis completed：{}% is white screen</h4>"
+                        .format(white_percent))
+                scenario.description.append(data)
+                log.debug(f"[scenario_fail] screenshot white screen percent is {white_percent}")
+            except:
+                log.info(f"white screen detect fail")
             break
 
     # save screen recording
