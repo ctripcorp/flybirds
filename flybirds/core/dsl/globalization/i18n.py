@@ -112,7 +112,9 @@ step_language = {
             "元素[{selector}]位置[{param2}]秒内未变动"
         ],
         "[{selector}]slide to {param2} distance[{param3}]": [
-            "[{selector}]向{param2}滑动[{param3}]"],
+            "[{selector}]向{param2}滑动[{param3}]",
+            "[{selector}]向{param2}屏幕滑动[{param3}]",
+        ],
         "slide to {param1} distance[{param2}]": ["全屏向{param1}滑动[{param2}]"],
         "exist text[{selector}]": ["存在[{selector}]的文案"],
         "ocr exist text[{selector}]": ["扫描存在[{selector}]的文案"],
