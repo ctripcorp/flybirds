@@ -43,9 +43,6 @@ def wait_exists(poco, selector_str, optional):
                 find_success = True
                 break
 
-            # modal error detection
-            detect_error()
-
             poco_target.wait_for_appearance(timeout=search_time)
             find_success = True
             log.info(
@@ -56,11 +53,18 @@ def wait_exists(poco, selector_str, optional):
             break
         except Exception:
             if not create_success:
-                time.sleep(current_wait_second)
+                time.sleep(1)
         if current_wait_second > 3:
-            time.sleep(current_wait_second - 3)
+            # modal error detection
+            try:
+                detect_error()
+            except Exception:
+                log.info("detect_error exception")
+            time.sleep(1)
+        if current_wait_second > 4:
+            break
         timeout -= current_wait_second
-        current_wait_second += 2
+        current_wait_second += 1
     if not find_success:
         message = "during {}s time, not find {} in page".format(
             optional["timeout"], selector_str
@@ -107,9 +111,16 @@ def wait_disappear(poco, selector_str, optional):
             break
         except Exception:
             if not create_success:
-                time.sleep(current_wait_second)
+                time.sleep(1)
         if current_wait_second > 3:
-            time.sleep(current_wait_second - 3)
+            # modal error detection
+            try:
+                detect_error()
+            except Exception:
+                log.info("detect_error exception")
+            time.sleep(1)
+        if current_wait_second > 4:
+            break
         timeout -= current_wait_second
         current_wait_second += 1
     if not disappear_success:
