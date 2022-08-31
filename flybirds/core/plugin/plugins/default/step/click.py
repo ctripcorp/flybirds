@@ -116,7 +116,10 @@ def click_ocr_text(context, param):
         try:
             trim_param = param.replace(" ", "")
             fixed_txt = paddle_fix_txt([line[1][0]], True)
-            if trim_param in fixed_txt[0] or re.search(param, line[1][0], flags=0) is not None:
+            line_param = trim_param.replace("-", "")
+            line_txt = fixed_txt[0].replace("-", "")
+            if trim_param in fixed_txt[0] or re.search(param, line[1][0], flags=0) is not None\
+                    or line_param in line_txt:
                 log.info(f"click ocr txt: {line[1][0]}")
                 box = line[0]
                 x = (box[0][0] + box[1][0]) / 2
