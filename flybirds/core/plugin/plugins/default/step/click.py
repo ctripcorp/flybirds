@@ -134,10 +134,11 @@ def click_ocr_text(context, param):
 
 def click_image(context, param):
     result = img_verify(context, param)
-    x = result[0].get('rect').x + result[0].get('rect').width / 2
-    y = result[0].get('rect').y + result[0].get('rect').height / 2
-    poco_instance = gr.get_value("pocoInstance")
-    x_coordinate = float(x) / g_Context.image_size[1]
-    y_coordinate = float(y) / g_Context.image_size[0]
-    poco_instance.click([x_coordinate, y_coordinate])
+    if len(result) > 0:
+        x = result[0].get('rect').x + result[0].get('rect').width / 2
+        y = result[0].get('rect').y + result[0].get('rect').height / 2
+        poco_instance = gr.get_value("pocoInstance")
+        x_coordinate = float(x) / g_Context.image_size[1]
+        y_coordinate = float(y) / g_Context.image_size[0]
+        poco_instance.click([x_coordinate, y_coordinate])
 

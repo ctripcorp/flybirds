@@ -27,8 +27,9 @@ globalization = {
                        "text=允许",
                        "text=common update X",
                        "text=我知道了",
-                       "text=System UI isn't responding",
-                       "text=Wait"]
+                       "text=Wait"],
+        "break_list": ["text=System UI isn't responding",
+                       "text=Pixel Launcher isn't responding"]
     },
     "zh-CN": {
         "rerun failed scenario": u"\u5931\u8d25\u91cd\u65b0\u8fd0\u884c",
@@ -56,8 +57,9 @@ globalization = {
                        "text=允许",
                        "text=common update X",
                        "text=我知道了",
-                       "text=System UI isn't responding",
-                       "text=Wait"]
+                       "text=Wait"],
+        "break_list": ["text=System UI isn't responding",
+                       "text=Pixel Launcher isn't responding"]
     },
 }
 

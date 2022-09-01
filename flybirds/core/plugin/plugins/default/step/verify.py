@@ -243,7 +243,7 @@ def wait_ele_appear(context, param):
         optional["timeout"] = gr.get_frame_config_value(
             "page_render_timeout", 30
         )
-
+    optional["context"] = context
     poco_ele.wait_exists(poco_instance, selector_str, optional)
 
 
@@ -263,6 +263,7 @@ def exist_ele(context, param):
         optional["timeout"] = gr.get_frame_config_value(
             "wait_ele_timeout", 10
         )
+    optional["context"] = context
     poco_ele.wait_exists(poco_instance, selector_str, optional)
 
 
