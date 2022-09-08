@@ -27,7 +27,10 @@ globalization = {
                        "text=允许",
                        "text=common update X",
                        "text=我知道了",
-                       "text=Wait"],
+                       "text=Wait",
+                       "text=OK",
+                       "text=Allow",
+                       "text=Deny"],
         "break_list": ["text=System UI isn't responding",
                        "text=Pixel Launcher isn't responding"]
     },
@@ -57,7 +60,10 @@ globalization = {
                        "text=允许",
                        "text=common update X",
                        "text=我知道了",
-                       "text=Wait"],
+                       "text=Wait",
+                       "text=OK",
+                       "text=Allow",
+                       "text=Deny"],
         "break_list": ["text=System UI isn't responding",
                        "text=Pixel Launcher isn't responding"]
     },
