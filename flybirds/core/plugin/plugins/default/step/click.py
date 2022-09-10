@@ -116,7 +116,10 @@ def click_ocr_text(context, param):
         try:
             trim_param = param.replace(" ", "")
             fixed_txt = paddle_fix_txt([line[1][0]], True)
-            if trim_param in fixed_txt[0] or re.search(param, line[1][0], flags=0) is not None:
+            line_param = trim_param.replace("-", "")
+            line_txt = fixed_txt[0].replace("-", "")
+            if trim_param in fixed_txt[0] or re.search(param, line[1][0], flags=0) is not None\
+                    or line_param in line_txt:
                 log.info(f"click ocr txt: {line[1][0]}")
                 box = line[0]
                 x = (box[0][0] + box[1][0]) / 2
@@ -131,10 +134,11 @@ def click_ocr_text(context, param):
 
 def click_image(context, param):
     result = img_verify(context, param)
-    x = result[0].get('rect').x + result[0].get('rect').width / 2
-    y = result[0].get('rect').y + result[0].get('rect').height / 2
-    poco_instance = gr.get_value("pocoInstance")
-    x_coordinate = float(x) / g_Context.image_size[1]
-    y_coordinate = float(y) / g_Context.image_size[0]
-    poco_instance.click([x_coordinate, y_coordinate])
+    if len(result) > 0:
+        x = result[0].get('rect').x + result[0].get('rect').width / 2
+        y = result[0].get('rect').y + result[0].get('rect').height / 2
+        poco_instance = gr.get_value("pocoInstance")
+        x_coordinate = float(x) / g_Context.image_size[1]
+        y_coordinate = float(y) / g_Context.image_size[0]
+        poco_instance.click([x_coordinate, y_coordinate])
 

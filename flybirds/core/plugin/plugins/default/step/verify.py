@@ -243,7 +243,7 @@ def wait_ele_appear(context, param):
         optional["timeout"] = gr.get_frame_config_value(
             "page_render_timeout", 30
         )
-
+    optional["context"] = context
     poco_ele.wait_exists(poco_instance, selector_str, optional)
 
 
@@ -263,6 +263,7 @@ def exist_ele(context, param):
         optional["timeout"] = gr.get_frame_config_value(
             "wait_ele_timeout", 10
         )
+    optional["context"] = context
     poco_ele.wait_exists(poco_instance, selector_str, optional)
 
 
@@ -284,6 +285,11 @@ def wait_ocr_text_appear(context, param):
                     return True
             except:
                 pass
+            line_param = trim_param.replace("-", "")
+            line_txt = txt.replace("-", "")
+            if line_param in line_txt:
+                log.warn(f"[ocr txt contain line replace] param: {param} found in txt: {txt}")
+                return True
         if time.time() - start > timeout:
             for line in g_Context.ocr_result:
                 log.info(f"[image ocr result] scan line info is:{line}")
@@ -320,6 +326,11 @@ def ocr_txt_contain(context, param, islog=True):
                     return True
             except:
                 pass
+            line_param = trim_param.replace("-", "")
+            line_txt = txt.replace("-", "")
+            if line_param in line_txt:
+                log.warn(f"[ocr txt contain line replace] param: {param} found in txt: {txt}")
+                return True
         if islog is True:
             for line in g_Context.ocr_result:
                 log.info(f"[image ocr result] scan line info is:{line}")
