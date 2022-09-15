@@ -55,7 +55,8 @@
     "swipeReadyTime": 3,
     "verifyPosNotChangeCount": 5,
     "screenRecordTime": 90,
-    "useSnap": false
+    "useSnap": false,
+    "useAirtestRecord": false
   },
   "report": {},
   "log": {}
