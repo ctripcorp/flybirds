@@ -5,6 +5,8 @@ Screen recording related.
 import datetime
 import os
 import time
+import shutil
+import ffmpeg
 
 from airtest.core.android.adb import ADB
 
@@ -274,6 +276,29 @@ class ScreenRecord:
             log.info("clear record success")
         proc.terminate()
 
+    def crop_record(self, src_path):
+        if self.use_airtest_record:
+            try:
+                log.info("crop_record start")
+                screen_size = gr.get_device_size()
+                source = src_path
+                target = 'tmp.mp4'
+                shutil.copy(source, target)
+                stream = ffmpeg.input(target)
+                stream = ffmpeg.crop(stream, 0, 0, screen_size[0], screen_size[1])
+                stream = ffmpeg.output(stream, source)
+                stream = ffmpeg.overwrite_output(stream)
+                ffmpeg.run(stream)
+                os.remove(target)
+                log.info("crop_record finish success")
+            except Exception as e:
+                log.error(
+                    "Screen record crop error "
+                    "innerError:{}".format(
+                        str(e)
+                    )
+                )
+
 
 def link_record(scenario, step_index):
     """
@@ -323,3 +348,5 @@ def link_record(scenario, step_index):
         log.info(
             f'default screen_record [link_record] src_path: {src_path}')
         screen_record.copy_record(src_path)
+        screen_record.crop_record(src_path)
+
