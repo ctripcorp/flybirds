@@ -8,6 +8,7 @@ flybirds.egg-info
 build
 dist
 jenkins
+report
 **/__pycache__
 .DS_Store
 /venv/
