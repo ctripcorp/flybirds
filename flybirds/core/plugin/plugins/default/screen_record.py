@@ -348,5 +348,6 @@ def link_record(scenario, step_index):
         log.info(
             f'default screen_record [link_record] src_path: {src_path}')
         screen_record.copy_record(src_path)
-        screen_record.crop_record(src_path)
+        if gr.get_platform().lower() == "android":
+            screen_record.crop_record(src_path)
 
