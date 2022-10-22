@@ -37,7 +37,7 @@ def start_app(context, param):
     g_Context.app.wake_app(param, 10)
     gr.set_value("packageName", param)
     # Modal box error detection
-    poco_ele.detect_error()
+    # poco_ele.detect_error()
 
 
 def restart_app(context):

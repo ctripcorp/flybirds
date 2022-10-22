@@ -39,7 +39,7 @@ def create_demo():
     p_message = platform_start + platform_ending
     test_platform = typer.prompt(p_message)
     if test_platform is None or test_platform.strip().lower() not in [
-            'android', 'ios', 'web']:
+        'android', 'ios', 'web']:
         test_platform = 'android'
     test_platform = test_platform.strip().lower()
     user_dict['test_platform'] = test_platform
@@ -128,22 +128,73 @@ def create_demo():
         )
 
 
-def copy_from_template(progress, user_dict):
+def create_mini():
+    """
+    Create mini project cli
+    """
+    user_dict = {}
+
+    try:
+        typer.echo(f"Cloning into ...")
+        total = 900
+        with typer.progressbar(length=total, label="Processing") as progress:
+            demo_path = copy_from_template(progress, user_dict, os.path.normpath(os.getcwd()))
+            compare_path = os.path.join(demo_path, "compareData")
+            feat_files = get_files_from_dir(compare_path)
+
+            config_ele = os.path.join(demo_path, "config/ele_locator.json")
+            feat_files.append(config_ele)
+
+            config_schema = os.path.join(demo_path, "config/schema_url.json")
+            feat_files.append(config_schema)
+
+            config_flybirds = os.path.join(demo_path, "config/flybirds_config.json")
+            feat_files.append(config_flybirds)
+
+            interface_path = os.path.join(demo_path, "interfaceIgnoreConfig/test.json")
+            feat_files.append(interface_path)
+
+            mock_path = os.path.join(demo_path, "mockCaseData/mock_test.json")
+            feat_files.append(mock_path)
+
+            for file in feat_files:
+                os.remove(file)
+
+            feature_path = os.path.join(demo_path, "features/test")
+            shutil.rmtree(feature_path)
+
+        typer.secho(
+            f"Done it! Create Project has success!\n"
+            f"You can find it at: {demo_path}",
+            fg=typer.colors.MAGENTA,
+        )
+    except Exception as e:
+        typer.secho(
+            f"Error!! create project has error, errMsg: {e}",
+            fg=typer.colors.MAGENTA,
+            err=True,
+        )
+
+
+def copy_from_template(progress, user_dict, target=None):
     """
     Generate project files from template
     """
     # Serialization path
     src_file_path = template.__file__
     src_path = os.path.normpath(src_file_path[0: src_file_path.rfind(os.sep)])
-    target_path = os.path.normpath(
-        os.path.join(os.path.normpath(os.getcwd()),
-                     user_dict.get('project_name'))
-    )
+    if target is None:
+        target_path = os.path.normpath(
+            os.path.join(os.path.normpath(os.getcwd()),
+                         user_dict.get('project_name'))
+        )
+        if os.path.isdir(target_path):
+            # target_path is existed
+            shutil.rmtree(target_path)
+    else:
+        target_path = target
 
-    if os.path.isdir(target_path):
-        # target_path is existed
-        shutil.rmtree(target_path)
-    shutil.copytree(src_path, target_path)
+    shutil.copytree(src_path, target_path, dirs_exist_ok=True)
     progress.update(100)
 
     try:
@@ -178,7 +229,6 @@ def copy_from_template(progress, user_dict):
     progress.update(100)
 
     # modify packageName
-    package_name = user_dict.get('package_name')
     package_name = user_dict.get('package_name')
     if package_name is not None:
         replace_file_content(
