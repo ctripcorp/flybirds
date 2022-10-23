@@ -7,7 +7,7 @@ from typing import List, Optional
 import typer
 
 import flybirds.utils.flybirds_log as log
-from flybirds.cli.create_project import create_demo
+from flybirds.cli.create_project import create_demo, create_mini
 from flybirds.cli.parse_args import parse_args, default_report_path
 from flybirds.core.launch_cycle.run_manage import run_script
 
@@ -82,11 +82,22 @@ def runner(
 
 
 @app.command("create")
-def create_project():
+def create_project(
+        mini: bool = typer.Option(
+            None,
+            "--mini",
+            "-M",
+            help="create mini project",
+        )
+
+):
     """
     Generate project example
     """
-    create_demo()
+    if mini is not None:
+        create_mini()
+    else:
+        create_demo()
 
 
 if __name__ == "__main__":

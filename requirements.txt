@@ -4,7 +4,7 @@ airtest>=1.2.6
 setuptools>=47.1.0
 behave==1.2.6
 jsonpath==0.82
-typer>=0.4.0
+typer>=0.6.0
 tidevice==0.5.9
 pyasn1==0.4.8
 pyOpenSSL==19.1.0
@@ -17,3 +17,4 @@ paddlepaddle>=2.3.0
 protobuf==3.20.1
 baseImage>=2.1.1
 ffmpeg-python>=0.2.0
+rich<13.0.0,>=10.11.0
