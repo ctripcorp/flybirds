@@ -88,6 +88,7 @@ class OnBeforeAll:
           USE: behave -D browser=safari ...
         """
         log.info(f'[active_before_all] user_data:{context.config.userdata}')
+        GlobalContext.set_global_cache('userdata', context.config.userdata)
         active_tag_value_provider = active_tag_init()
         log.info(f'[active_before_all] active_tag_provider:'
                  f'{active_tag_value_provider}')
