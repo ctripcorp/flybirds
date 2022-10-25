@@ -56,7 +56,9 @@
     "verifyPosNotChangeCount": 5,
     "screenRecordTime": 90,
     "useSnap": false,
-    "useAirtestRecord": false
+    "useAirtestRecord": false,
+    "ocr_det_limit_type": "max",
+    "ocr_det_limit_side_len": 960
   },
   "report": {},
   "log": {}

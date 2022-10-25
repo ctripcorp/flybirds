@@ -19,8 +19,13 @@ def ocr_init(lang=None):
         from paddleocr import PaddleOCR
         # Paddleocr support languages
         # example`ch`, `en`, `fr`, `german`, `korean`, `japan`
+        det_limit_type = gr.get_frame_config_value("ocr_det_limit_type")
+        det_limit_side_len = gr.get_frame_config_value("ocr_det_limit_side_len")
         ocr = PaddleOCR(use_angle_cls=True,
-                        lang=ocr_lang)  # need to run only once to download and load model into memory
+                        lang=ocr_lang,
+                        det_limit_type=det_limit_type,
+                        det_limit_side_len=det_limit_side_len)
+        # need to run only once to download and load model into memory
 
         return ocr
 
