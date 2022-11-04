@@ -7,8 +7,8 @@ import json
 import time
 from urllib.parse import urlparse
 
-import flybirds.core.global_resource as global_resource
 import flybirds.core.global_resource as gr
+from flybirds.core.global_context import GlobalContext
 import flybirds.utils.flybirds_log as log
 import flybirds.utils.verify_helper as verify_helper
 from flybirds.core.plugin.plugins.default.web.interception import \
@@ -79,6 +79,16 @@ class Page:
         else:
             context = browser.new_context(record_video_dir="videos",
                                           ignore_https_errors=True)
+
+        # add user custom cookies into browser context
+        user_cookie = GlobalContext.get_global_cache("cookies")
+        if user_cookie is not None:
+            context.clear_cookies()
+            context.add_cookies(cookies=user_cookie)
+            log.info(f"this is user cookies: {context.cookies()}")
+        else:
+            log.info(f"user cookies is None")
+
         return context
 
     @staticmethod
@@ -188,7 +198,7 @@ class Page:
         if param.startswith(("http", "https")):
             target_url = param.split('?')[0]
         else:
-            schema_url = global_resource.get_page_schema_url(param)
+            schema_url = gr.get_page_schema_url(param)
             target_url = schema_url
         verify_helper.text_equal(target_url, cur_url)
 
