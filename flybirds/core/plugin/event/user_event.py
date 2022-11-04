@@ -13,7 +13,7 @@ class OnBefore:  # pylint: disable=too-few-public-methods
     """
 
     name = "On_Before_User_Hook"
-    order = 1000
+    order = 50
 
     @staticmethod
     def can(context):
