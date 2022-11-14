@@ -142,10 +142,11 @@ def detect_error(context):
     if context is not None and os.path.exists(img_path):
         images = sorted([tpl for tpl in os.listdir(img_path) if str(tpl).endswith('png')])
         for img in images:
-            result = img_verify(context, os.path.join(img_path, img))
+            path = os.path.join(img_path, img)
+            result = img_verify(context, path)
             log.info(f"in detect error method, img detect result is {result}")
             if len(result) > 0:
-                click_image(context, img_path)
+                click_image(context, path)
                 log.info("detect_error: x_button_exists: true")
                 return True
 

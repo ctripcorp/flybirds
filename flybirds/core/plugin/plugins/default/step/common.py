@@ -12,6 +12,7 @@ import flybirds.utils.flybirds_log as log
 from flybirds.core.plugin.plugins.default.screen import BaseScreen
 from flybirds.core.driver import ui_driver
 from flybirds.core.global_context import GlobalContext
+from baseImage import Image
 
 
 def sleep(context, param):
@@ -92,6 +93,7 @@ def img_verify(context, search_image_path):
     """
     step_index = context.cur_step_index - 1
     source_image_path = BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_", False)
+    GlobalContext.image_size = Image(source_image_path).size
     result = BaseScreen.image_verify(source_image_path, search_image_path)
     return result
 

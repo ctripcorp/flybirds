@@ -16,6 +16,8 @@ import flybirds.utils.uuid_helper as uuid_helper
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.core.plugin.plugins.default.ios_snapshot import get_screen
 from flybirds.core.exceptions import FlybirdsException
+from paddleocr.tools.infer.utility import draw_boxes
+from PIL import Image as Img
 
 
 class BaseScreen:
@@ -96,6 +98,16 @@ class BaseScreen:
                 scenario.description.append(data)
             screen_path = os.path.join(current_screen_dir, file_name)
             g_Context.screen.screen_shot(screen_path)
+
+            if len(g_Context.ocr_result) >= 1:
+                ocr = g_Context.ocr_driver_instance
+                result = ocr.ocr(screen_path, cls=True)
+                image = Img.open(screen_path).convert('RGB')
+                boxes = [line[0] for line in result]
+                im_show = draw_boxes(image, boxes)
+                im_show = Img.fromarray(im_show)
+                im_show.save(screen_path)
+
             return screen_path
 
     @staticmethod
