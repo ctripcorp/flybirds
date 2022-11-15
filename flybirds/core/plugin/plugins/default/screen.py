@@ -99,7 +99,7 @@ class BaseScreen:
             screen_path = os.path.join(current_screen_dir, file_name)
             g_Context.screen.screen_shot(screen_path)
 
-            if len(g_Context.ocr_result) >= 1:
+            if tag == "fail_" and len(g_Context.ocr_result) >= 1:
                 ocr = g_Context.ocr_driver_instance
                 result = ocr.ocr(screen_path, cls=True)
                 image = Img.open(screen_path).convert('RGB')
