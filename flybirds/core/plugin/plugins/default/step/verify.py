@@ -290,6 +290,12 @@ def wait_ocr_text_appear(context, param):
             if line_param in line_txt:
                 log.warn(f"[ocr txt contain line replace] param: {param} found in txt: {txt}")
                 return True
+        if time.time() - start > 10:
+            detect_start = time.time()
+            poco_ele.detect_error(context)
+            detect_end = time.time()
+            detect_cost = detect_end - detect_start
+            start = start + detect_cost
         if time.time() - start > timeout:
             for line in g_Context.ocr_result:
                 log.info(f"[image ocr result] scan line info is:{line}")
@@ -299,11 +305,14 @@ def wait_ocr_text_appear(context, param):
 
 
 def ocr_txt_exist(context, param):
+    if len(g_Context.ocr_result) < 1:
+        ocr(context)
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
         fixed_txt = paddle_fix_txt(txts, True)
         trim_param = param.replace(" ", "")
         verify.text_container(trim_param, fixed_txt)
+        log.info(f"[ocr txt exist] param: {param} found in txt: {fixed_txt}")
     else:
         for line in g_Context.ocr_result:
             log.info(f"[image ocr result] scan line info is:{line}")
@@ -312,6 +321,8 @@ def ocr_txt_exist(context, param):
 
 
 def ocr_txt_contain(context, param, islog=True):
+    if len(g_Context.ocr_result) < 1:
+        ocr(context)
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
         fixed_txt = paddle_fix_txt(txts, True)
@@ -342,11 +353,14 @@ def ocr_txt_contain(context, param, islog=True):
 
 
 def ocr_txt_not_exist(context, param):
+    if len(g_Context.ocr_result) < 1:
+        ocr(context)
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
         fixed_txt = paddle_fix_txt(txts, True)
         trim_param = param.replace(" ", "")
         verify.text_not_container(trim_param, fixed_txt)
+        log.info(f"[ocr txt not exist] param: {param} not exist")
     else:
         for line in g_Context.ocr_result:
             log.info(f"[image ocr result] scan line info is:{line}")
