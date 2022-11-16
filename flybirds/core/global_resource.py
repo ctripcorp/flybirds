@@ -305,6 +305,6 @@ def get_paddle_fix_value():
     paddle_fix_nodes = _global_dict[
         "configManage"].paddle_fix_info.paddle_fix_node
     if len(paddle_fix_nodes) == 0:
-        log.info("paddle_fix_nodes not found")
+        # log.info("paddle_fix_nodes not found")
         return None
     return paddle_fix_nodes
