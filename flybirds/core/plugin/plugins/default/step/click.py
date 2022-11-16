@@ -128,17 +128,20 @@ def click_ocr_text(context, param):
                 x_coordinate = float(x) / g_Context.image_size[1]
                 y_coordinate = float(y) / g_Context.image_size[0]
                 poco_instance.click([x_coordinate, y_coordinate])
-        except:
-            pass
+        except Exception:
+            raise Exception("[click ocr text] click ocr text error !")
 
 
 def click_image(context, param):
     result = img_verify(context, param)
-    if len(result) > 0:
-        x = result[0].get('rect').x + result[0].get('rect').width / 2
-        y = result[0].get('rect').y + result[0].get('rect').height / 2
-        poco_instance = gr.get_value("pocoInstance")
-        x_coordinate = float(x) / g_Context.image_size[1]
-        y_coordinate = float(y) / g_Context.image_size[0]
-        poco_instance.click([x_coordinate, y_coordinate])
+    try:
+        if len(result) > 0:
+            x = result[0].get('rect').x + result[0].get('rect').width / 2
+            y = result[0].get('rect').y + result[0].get('rect').height / 2
+            poco_instance = gr.get_value("pocoInstance")
+            x_coordinate = float(x) / g_Context.image_size[1]
+            y_coordinate = float(y) / g_Context.image_size[0]
+            poco_instance.click([x_coordinate, y_coordinate])
+    except Exception:
+        raise Exception("[click image] click image error !")
 
