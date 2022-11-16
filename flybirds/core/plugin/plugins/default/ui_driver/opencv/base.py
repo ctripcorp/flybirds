@@ -18,7 +18,7 @@ class BaseKeypoint(object):
     Place = None
     template = MatchTemplate()
 
-    def __init__(self, threshold=0.8, rgb=True, **kwargs):
+    def __init__(self, threshold=0.6, rgb=True, **kwargs):
         """
         init
 
