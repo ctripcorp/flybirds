@@ -143,7 +143,7 @@ def click_image(context, param):
             y_coordinate = float(y) / g_Context.image_size[0]
             poco_instance.click([x_coordinate, y_coordinate])
         else:
-            log.info(f"[click image] not found verify image")
+            raise Exception("[click image] click image error !")
     except Exception:
         raise Exception("[click image] click image error !")
 
