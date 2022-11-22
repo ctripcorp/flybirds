@@ -12,7 +12,7 @@ click==8.0.3
 jsonpath_ng>=1.5.3
 deepdiff>=5.8.1
 numpy<1.23
-paddleocr>=2.5.0
+paddleocr<=2.6.0
 paddlepaddle>=2.3.0
 protobuf==3.20.1
 baseImage>=2.1.1
