@@ -24,6 +24,14 @@ def before_scenario_extend(context, scenario):
     pass
 
 
+def on_scenario_fail(context, scenario):
+    pass
+
+
+def on_scenario_success(context, scenario):
+    pass
+
+
 def after_scenario_extend(context, scenario):
     pass
 
