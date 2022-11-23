@@ -381,14 +381,13 @@ def paddle_fix_txt(txt, trim=False):
                 origin_txt = txt[i]
                 if key in origin_txt:
                     txt[i] = origin_txt.replace(key, paddle_fix[key])
+                    log.info(f"[paddle_fix_txt] paddle fix success origin_txt: {origin_txt}, fixed txt: {txt[i]}")
     # replace  blank value
     if trim is True:
         for i in range(len(txt)):
             origin_txt = txt[i]
             txt[i] = origin_txt.replace(" ", "")
-    # add log
-    if paddle_fix is not None or trim is True:
-        log.info(f"[paddle_fix_txt] paddle fix txt got: {txt}")
+
     return txt
 
 
