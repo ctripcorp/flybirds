@@ -51,6 +51,9 @@ def ele_input(context, param1, param2):
 
 def ocr_text_input(context, param1, param2):
     click_ocr_text(context, param1)
-    after_input_wait = gr.get_frame_config_value("after_input_wait", 1)
-    time.sleep(after_input_wait)
-    g_Context.element.str_input(param2, after_input_wait)
+    try:
+        after_input_wait = gr.get_frame_config_value("after_input_wait", 1)
+        time.sleep(after_input_wait)
+        g_Context.element.str_input(param2, after_input_wait)
+    except Exception:
+        raise Exception("[ocr_text_input] ocr input text error!")

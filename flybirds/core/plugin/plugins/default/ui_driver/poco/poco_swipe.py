@@ -320,6 +320,7 @@ def full_screen_swipe_search_ocr(
             ocr(context)
             searched = ocr_txt_contain(context, search_dsl_str, islog=False)
             if searched is True:
+                log.info("[full_screen_swipe_search_ocr]txt found")
                 break
         except Exception:
             pass

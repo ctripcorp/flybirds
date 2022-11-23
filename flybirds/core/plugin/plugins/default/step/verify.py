@@ -273,6 +273,7 @@ def wait_ocr_text_appear(context, param):
     while True:
         ocr(context)
         txts = [line[1][0] for line in g_Context.ocr_result]
+        log.info(f"[wait_ocr_text_appear] ocr txt got: {txts}")
         fixed_txt = paddle_fix_txt(txts, True)
         trim_param = param.replace(" ", "")
         for txt in fixed_txt:
@@ -298,7 +299,7 @@ def wait_ocr_text_appear(context, param):
             start = start + detect_cost
         if time.time() - start > timeout:
             for line in g_Context.ocr_result:
-                log.info(f"[image ocr result] scan line info is:{line}")
+                log.info(f"[wait_ocr_text_appear] scan line info is:{line}")
             message = "text not found in {} seconds, expect text:{}" \
                 .format(timeout, param)
             raise FlybirdVerifyException(message)
@@ -309,13 +310,14 @@ def ocr_txt_exist(context, param):
         ocr(context)
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
+        log.info(f"[ocr txt exist] ocr txt got: {txts}")
         fixed_txt = paddle_fix_txt(txts, True)
         trim_param = param.replace(" ", "")
         verify.text_container(trim_param, fixed_txt)
         log.info(f"[ocr txt exist] param: {param} found in txt: {fixed_txt}")
     else:
         for line in g_Context.ocr_result:
-            log.info(f"[image ocr result] scan line info is:{line}")
+            log.info(f"[ocr txt exist] scan line info is:{line}")
         message = "ocr result is null"
         raise FlybirdVerifyException(message)
 
@@ -325,6 +327,7 @@ def ocr_txt_contain(context, param, islog=True):
         ocr(context)
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
+        log.info(f"[ocr txt contain] ocr txt got: {txts}")
         fixed_txt = paddle_fix_txt(txts, True)
         trim_param = param.replace(" ", "")
         for txt in fixed_txt:
@@ -357,6 +360,7 @@ def ocr_txt_not_exist(context, param):
         ocr(context)
     if len(g_Context.ocr_result) >= 1:
         txts = [line[1][0] for line in g_Context.ocr_result]
+        log.info(f"[ocr txt not exist] ocr txt got: {txts}")
         fixed_txt = paddle_fix_txt(txts, True)
         trim_param = param.replace(" ", "")
         verify.text_not_container(trim_param, fixed_txt)
@@ -382,6 +386,9 @@ def paddle_fix_txt(txt, trim=False):
         for i in range(len(txt)):
             origin_txt = txt[i]
             txt[i] = origin_txt.replace(" ", "")
+    # add log
+    if paddle_fix is not None or trim is True:
+        log.info(f"[paddle_fix_txt] paddle fix txt got: {txt}")
     return txt
 
 
