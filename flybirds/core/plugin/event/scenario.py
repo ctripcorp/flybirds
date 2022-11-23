@@ -100,6 +100,11 @@ def scenario_fail(context, scenario):
                 log.info(f"white screen detect fail")
             break
 
+    on_scenario_fail = launch_helper.get_hook_file(
+        "on_scenario_fail"
+    )
+    if on_scenario_fail is not None:
+        on_scenario_fail(context, scenario)
     # save screen recording
     cur_platform = GlobalContext.platform
     if need_copy_record >= 1 or context.scenario_screen_record \
@@ -123,6 +128,11 @@ def scenario_success(context, scenario):
     """
     # adjustment of the currently displayed page after the scene is successful
     log.info('[scenario_success] start!')
+    on_scenario_success = launch_helper.get_hook_file(
+        "on_scenario_success"
+    )
+    if on_scenario_success is not None:
+        on_scenario_success(context, scenario)
     if context.scenario_screen_record:
         screen_record = gr.get_value("screenRecord")
         screen_record.stop_record()
