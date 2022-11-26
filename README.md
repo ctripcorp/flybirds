@@ -130,4 +130,4 @@ Flybirds从2022年初开源至今，通过与社区内活跃用户的交流和�
 - [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)
 
 ## 技术交流
-![Chat](https://flybirds.readthedocs.io/zh_CN/latest/_images/wechat.png)
+![Chats](https://flybirds.readthedocs.io/zh_CN/latest/_images/wechat.png)
