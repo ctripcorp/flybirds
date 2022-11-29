@@ -83,6 +83,7 @@ Flybirds从2022年初开源至今，通过与社区内活跃用户的交流和�
 请给我们支持，点上一颗 Star
 
 ## 教程
+- [常见问题](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id89)
 - [环境准备](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id6)
 - [运行前检查](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id8)
 - [运行](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id10)
@@ -97,7 +98,7 @@ Flybirds从2022年初开源至今，通过与社区内活跃用户的交流和�
 - [多浏览器并发](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id84)
 - [自定义框架扩展](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id87)
 - [多语言](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id88)
-- [持续集成](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id89)
+- [持续集成](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#id90)
 - [更多细节](https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#)
 
 
