@@ -88,7 +88,7 @@ def parse_feature(feature, rerun_report_dir):
                     scenario["status"] = "failed"
                 else:
                     continue
-            if isinstance(scenario["description"], list):
+            if isinstance(scenario.get("description"), list):
                 desc_new_array = []
                 for desc_item in scenario["description"]:
                     if desc_item is None:
