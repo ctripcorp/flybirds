@@ -71,6 +71,18 @@ def click_ocr_text(context, selector=None):
     g_Context.step.click_ocr_text(context, selector)
 
 
+@step("click ocr regional[{selector}] text[{param2}]")
+@ele_wrap
+def click_ocr_regional_text(context, selector, param2):
+    """
+    Click on the ocr text element
+    :param context: step context
+    :param selector: locator string for text element (or None).
+    :param2 selector: locator string for text element (or None).
+    """
+    g_Context.step.click_regional_ocr_text(context, selector, param2)
+
+
 @step("click image[{selector}]")
 @ele_wrap
 def click_image(context, selector=None):
@@ -179,6 +191,18 @@ def ocr_text_exist(context, selector=None):
     g_Context.step.ocr_text_exist(context, selector)
 
 
+@step("ocr regional[{selector}] exist text[{param2}]")
+@ele_wrap
+def ocr_regional_text_exist(context, selector, param2):
+    """
+    The specified text element string exists in the page
+    :param context: step context
+    :param selector: locator string for text element (or None).
+    :param param2: locator string for text element (or None).
+    """
+    g_Context.step.ocr_regional_text_exist(context, selector, param2)
+
+
 @step("ocr contain text[{selector}]")
 @ele_wrap
 def ocr_text_contain(context, selector=None):
@@ -188,6 +212,18 @@ def ocr_text_contain(context, selector=None):
     :param selector: locator string for text element (or None).
     """
     g_Context.step.ocr_text_contain(context, selector)
+
+
+@step("ocr regional[{selector}] contain text[{param2}]")
+@ele_wrap
+def ocr_regional_text_contain(context, selector, param2):
+    """
+    The specified text element string exists in the page
+    :param context: step context
+    :param selector: locator string for text element (or None).
+    :param param2: locator string for text element (or None).
+    """
+    g_Context.step.ocr_regional_text_contain(context, selector, param2)
 
 
 @step("page ocr complete find text[{selector}]")

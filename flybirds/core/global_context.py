@@ -49,6 +49,8 @@ class GlobalContext:
     connector = None
     current_local = local()
     ocr_result = []
+    struct_ocr_result = []
+    ocr_regional_result = []
     image_size = []
 
     @classmethod

@@ -26,7 +26,7 @@ def screenshot(context):
 
 def ocr(context):
     step_index = context.cur_step_index - 1
-    image_path = BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_", False)
+    image_path = BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_", True)
     BaseScreen.image_ocr(image_path)
 
 
