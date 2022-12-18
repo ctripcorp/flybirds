@@ -316,8 +316,6 @@ def ocr_txt_exist(context, param):
         verify.text_container(trim_param, fixed_txt)
         log.info(f"[ocr txt exist] param: {param} found in txt: {fixed_txt}")
     else:
-        for line in g_Context.ocr_result:
-            log.info(f"[ocr txt exist] scan line info is:{line}")
         message = "ocr result is null"
         raise FlybirdVerifyException(message)
 
@@ -426,3 +424,66 @@ def img_not_exist(context, param):
         context.scenario.description.append(data)
         # context.cur_step_index += 1
         raise Exception("[image not exist verify] image found !")
+
+
+def ocr_regional_txt_exist(context, param1, param2):
+    if len(g_Context.ocr_regional_result) < 1:
+        ocr(context)
+    if len(g_Context.ocr_regional_result) >= 1:
+        param1_dict = dsl_helper.params_to_dic(param1)
+        selector_str = param1_dict["selector"]
+        if "id=" in selector_str or "ID=" in selector_str:
+            str_list = selector_str.split('=')
+        else:
+            message = "[ocr regional txt exist] please input regional id with format: id=xx"
+            raise FlybirdVerifyException(message)
+        regional_id = int(str_list[1])
+        regional_dic = list(filter(lambda item: item['id'] == regional_id, g_Context.ocr_regional_result))
+        txts = regional_dic[0]["txts"].split(",")
+        log.info(f"[ocr regional txt exist] ocr txt got: {txts}")
+        fixed_txt = paddle_fix_txt(txts, True)
+        trim_param = param2.replace(" ", "")
+        verify.text_container(trim_param, fixed_txt)
+        log.info(f"[ocr regional txt exist] param: {param2} found in txt: {fixed_txt}")
+    else:
+        message = "ocr regional result is null!"
+        raise FlybirdVerifyException(message)
+
+
+def ocr_regional_txt_contain(context, param1, param2):
+    if len(g_Context.ocr_regional_result) < 1:
+        ocr(context)
+    if len(g_Context.ocr_regional_result) >= 1:
+        param1_dict = dsl_helper.params_to_dic(param1)
+        selector_str = param1_dict["selector"]
+        if "id=" in selector_str or "ID=" in selector_str:
+            str_list = selector_str.split('=')
+        else:
+            message = "[ocr regional txt contain] please input regional id with format: id=xx"
+            raise FlybirdVerifyException(message)
+        regional_id = int(str_list[1])
+        regional_dic = list(filter(lambda item: item['id'] == regional_id, g_Context.ocr_regional_result))
+        txts = regional_dic[0]["txts"].split(",")
+        log.info(f"[ocr regional txt contain] ocr txt got: {txts}")
+        fixed_txt = paddle_fix_txt(txts, True)
+        trim_param = param2.replace(" ", "")
+        for txt in fixed_txt:
+            if trim_param in txt:
+                log.info(f"[ocr regional txt contain] param: {param2} found in txt: {txt}")
+                return True
+            try:
+                if re.search(param2, txt, flags=0) is not None:
+                    log.info(f"[ocr regional txt contain re] param: {param2} found in txt: {txt}")
+                    return True
+            except:
+                pass
+            line_param = trim_param.replace("-", "")
+            line_txt = txt.replace("-", "")
+            if line_param in line_txt:
+                log.warn(f"[ocr regional txt contain line replace] param: {param2} found in txt: {txt}")
+                return True
+        message = "ocr result not contain {}".format(param2)
+        raise FlybirdVerifyException(message)
+    else:
+        message = "[ocr txt contain] ocr result is null"
+        raise FlybirdVerifyException(message)

@@ -8,7 +8,7 @@ import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap \
     as find_snap
 import flybirds.utils.dsl_helper as dsl_helper
 from flybirds.core.global_context import GlobalContext as g_Context
-from flybirds.core.plugin.plugins.default.step.verify import ocr_txt_contain, paddle_fix_txt
+from flybirds.core.plugin.plugins.default.step.verify import paddle_fix_txt, ocr_txt_exist, ocr_regional_txt_exist
 from flybirds.core.plugin.plugins.default.step.common import img_verify
 import flybirds.utils.flybirds_log as log
 
@@ -111,15 +111,14 @@ def click_coordinates(context, x, y):
 
 
 def click_ocr_text(context, param):
-    ocr_txt_contain(context, param)
+    ocr_txt_exist(context, param)
     for line in g_Context.ocr_result:
         try:
             trim_param = param.replace(" ", "")
             fixed_txt = paddle_fix_txt([line[1][0]], True)
             line_param = trim_param.replace("-", "")
             line_txt = fixed_txt[0].replace("-", "")
-            if trim_param in fixed_txt[0] or re.search(param, line[1][0], flags=0) is not None\
-                    or line_param in line_txt:
+            if trim_param == fixed_txt[0] or line_param == line_txt:
                 log.info(f"[click ocr txt] click txt found: {line[1][0]}")
                 box = line[0]
                 x = (box[0][0] + box[1][0]) / 2
@@ -148,3 +147,28 @@ def click_image(context, param):
     except Exception:
         raise Exception("[click image] click image error !")
 
+
+def click_regional_ocr_text(context, param1, param2):
+    ocr_regional_txt_exist(context, param1, param2)
+    param1_dict = dsl_helper.params_to_dic(param1)
+    selector_str = param1_dict["selector"]
+    str_list = selector_str.split('=')
+    regional_id = int(str_list[1])
+    regional_ocr_result = list(filter(lambda item: item['regional_id'] == regional_id, g_Context.struct_ocr_result))
+    for line in regional_ocr_result:
+        try:
+            trim_param = param2.replace(" ", "")
+            fixed_txt = paddle_fix_txt([line['txt']], True)
+            line_param = trim_param.replace("-", "")
+            line_txt = fixed_txt[0].replace("-", "")
+            if trim_param == fixed_txt[0] or line_param == line_txt:
+                log.info(f"[click regional ocr txt] click txt found: {line['txt']}")
+                box = line['box']
+                x = (box[0][0] + box[1][0]) / 2
+                y = (box[0][1] + box[2][1]) / 2
+                poco_instance = gr.get_value("pocoInstance")
+                x_coordinate = float(x) / g_Context.image_size[1]
+                y_coordinate = float(y) / g_Context.image_size[0]
+                poco_instance.click([x_coordinate, y_coordinate])
+        except Exception:
+            raise Exception("[click regional ocr text] click ocr text error !")

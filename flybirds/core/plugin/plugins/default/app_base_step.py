@@ -67,6 +67,9 @@ class AppBaseStep:
     def click_ocr_text(self, context, selector):
         step_click.click_ocr_text(context, selector)
 
+    def click_regional_ocr_text(self, context, selector, param2):
+        step_click.click_regional_ocr_text(context, selector, param2)
+
     def click_image(self, context, selector):
         step_click.click_image(context, selector)
 
@@ -124,8 +127,14 @@ class AppBaseStep:
     def ocr_text_exist(self, context, selector):
         step_verify.ocr_txt_exist(context, selector)
 
+    def ocr_regional_text_exist(self, context, selector, param2):
+        step_verify.ocr_regional_txt_exist(context, selector, param2)
+
     def ocr_text_contain(self, context, selector):
         step_verify.ocr_txt_contain(context, selector)
+
+    def ocr_regional_text_contain(self, context, selector, param2):
+        step_verify.ocr_regional_txt_contain(context, selector, param2)
 
     def ocr_text_not_exist(self, context, selector):
         step_verify.ocr_txt_not_exist(context, selector)
