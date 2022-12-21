@@ -17,13 +17,13 @@ import flybirds.utils.flybirds_log as log
 
 
 def air_bdd_full_screen_swipe(
-    poco,
-    start_point,
-    screen_size,
-    direction,
-    distance,
-    duration,
-    ready_time=None,
+        poco,
+        start_point,
+        screen_size,
+        direction,
+        distance,
+        duration,
+        ready_time=None,
 ):
     """
     In the full screen range, slide from the specified starting point in one
@@ -49,15 +49,15 @@ def air_bdd_full_screen_swipe(
 
 
 def air_bdd_ele_swipe(
-    poco,
-    container_dsl_str,
-    optional,
-    start_point,
-    screen_size,
-    direction,
-    distance,
-    duration,
-    ready_time=None,
+        poco,
+        container_dsl_str,
+        optional,
+        start_point,
+        screen_size,
+        direction,
+        distance,
+        duration,
+        ready_time=None,
 ):
     """
     Slides a specified distance up, down, left, or right from a specified
@@ -75,27 +75,27 @@ def air_bdd_ele_swipe(
     target_size = poco_object.get_size()
     if start_point[0] > 1:
         start_point[0] = (
-            (target_position[0] * screen_size[0])
-            - (target_size[0] / 2 * screen_size[0])
-            + start_point[0]
-        ) / screen_size[0]
+                                 (target_position[0] * screen_size[0])
+                                 - (target_size[0] / 2 * screen_size[0])
+                                 + start_point[0]
+                         ) / screen_size[0]
     else:
         start_point[0] = (
-            target_position[0]
-            - target_size[0] / 2
-            + target_size[0] * start_point[0]
+                target_position[0]
+                - target_size[0] / 2
+                + target_size[0] * start_point[0]
         )
     if start_point[1] > 1:
         start_point[1] = (
-            (target_position[1] * screen_size[1])
-            - (target_size[1] / 2 * screen_size[1])
-            + start_point[1]
-        ) / screen_size[1]
+                                 (target_position[1] * screen_size[1])
+                                 - (target_size[1] / 2 * screen_size[1])
+                                 + start_point[1]
+                         ) / screen_size[1]
     else:
         start_point[1] = (
-            target_position[1]
-            - target_size[1] / 2
-            + target_size[1] * start_point[1]
+                target_position[1]
+                - target_size[1] / 2
+                + target_size[1] * start_point[1]
         )
 
     # get current language
@@ -103,11 +103,25 @@ def air_bdd_ele_swipe(
     direct_left = lan.parse_glb_str("left", language)
     direct_right = lan.parse_glb_str("right", language)
 
+    max_x = target_position[0] - target_size[0] / 2 + target_size[0] - 2 / screen_size[0]
+    max_y = target_position[1] - target_size[1] / 2 + target_size[1] - 2 / screen_size[1]
+
+    min_x = target_position[0] - target_size[0] / 2 + 2 / screen_size[0]
+    min_y = target_position[1] - target_size[1] / 2 + 2 / screen_size[1]
+
     if distance > 1:
         if direction == direct_left or direction == direct_right:
             distance /= screen_size[0]
+            if distance > max_x:
+                distance = max_x
+            if distance < min_x:
+                distance = min_x
         else:
             distance /= screen_size[1]
+            if distance > max_y:
+                distance = max_y
+            if distance < min_y:
+                distance = min_y
     else:
         if direction == direct_left or direction == direct_right:
             distance *= target_size[0]
@@ -118,7 +132,7 @@ def air_bdd_ele_swipe(
 
 
 def air_bdd_direction_swipe(
-    poco, start_point, direction, distance, duration=None
+        poco, start_point, direction, distance, duration=None
 ):
     """
     swipe the specified distance from the starting point to one of up, down,
@@ -179,16 +193,16 @@ def air_bdd_percent_point_swipe(poco, start_point, end_point, duration=None):
 
 
 def full_screen_swipe_search(
-    poco,
-    search_dsl_str,
-    search_optional,
-    swipe_count,
-    direction,
-    screen_size,
-    start_x=None,
-    start_y=None,
-    distance=None,
-    duration=None,
+        poco,
+        search_dsl_str,
+        search_optional,
+        swipe_count,
+        direction,
+        screen_size,
+        start_x=None,
+        start_y=None,
+        distance=None,
+        duration=None,
 ):
     """
     Full screen swipe to find
@@ -230,18 +244,18 @@ def full_screen_swipe_search(
 
 
 def air_bdd_swipe_search(
-    poco,
-    container_dsl_str,
-    container_optional,
-    search_dsl_str,
-    search_optional,
-    swipe_count,
-    screen_size,
-    direction,
-    start_x=None,
-    start_y=None,
-    distance=None,
-    duration=None,
+        poco,
+        container_dsl_str,
+        container_optional,
+        search_dsl_str,
+        search_optional,
+        swipe_count,
+        screen_size,
+        direction,
+        start_x=None,
+        start_y=None,
+        distance=None,
+        duration=None,
 ):
     """
     swipe in a certain direction in the full screen or within an element to
@@ -291,16 +305,16 @@ def air_bdd_swipe_search(
 
 
 def full_screen_swipe_search_ocr(
-    context,
-    poco,
-    search_dsl_str,
-    swipe_count,
-    direction,
-    screen_size,
-    start_x=None,
-    start_y=None,
-    distance=None,
-    duration=None,
+        context,
+        poco,
+        search_dsl_str,
+        swipe_count,
+        direction,
+        screen_size,
+        start_x=None,
+        start_y=None,
+        distance=None,
+        duration=None,
 ):
     """
     Full screen swipe to find
@@ -340,16 +354,16 @@ def full_screen_swipe_search_ocr(
 
 
 def full_screen_swipe_search_img(
-    context,
-    poco,
-    search_dsl_str,
-    swipe_count,
-    direction,
-    screen_size,
-    start_x=None,
-    start_y=None,
-    distance=None,
-    duration=None,
+        context,
+        poco,
+        search_dsl_str,
+        swipe_count,
+        direction,
+        screen_size,
+        start_x=None,
+        start_y=None,
+        distance=None,
+        duration=None,
 ):
     """
     Full screen swipe to find
@@ -390,4 +404,3 @@ def full_screen_swipe_search_img(
             direction, log_count, search_dsl_str
         )
         raise FlybirdNotFoundException(message, {})
-
