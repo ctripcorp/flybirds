@@ -125,8 +125,16 @@ def air_bdd_ele_swipe(
     else:
         if direction == direct_left or direction == direct_right:
             distance *= target_size[0]
+            if distance > max_x:
+                distance = max_x
+            if distance < min_x:
+                distance = min_x
         else:
             distance *= target_size[1]
+            if distance > max_y:
+                distance = max_y
+            if distance < min_y:
+                distance = min_y
 
     air_bdd_direction_swipe(poco, start_point, direction, distance, duration)
 
