@@ -113,7 +113,7 @@ class BaseScreen:
             return screen_path
 
     @staticmethod
-    def image_ocr(img_path):
+    def image_ocr(img_path, right_gap_max=None, left_gap_max=None, height_gap_max=None, skip_height_max=None):
         """
         Take a screenshot and ocr
         """
@@ -134,7 +134,8 @@ class BaseScreen:
         g_Context.ocr_result = ocr.ocr(img_path, cls=True)
         g_Context.image_size = Image(img_path).size
         log.debug(f"[image ocr path] image size is:{g_Context.image_size}")
-        regional_box, txts = BaseScreen.struct_ocr_result(g_Context.ocr_result)
+        regional_box, txts = BaseScreen.struct_ocr_result(g_Context.ocr_result, right_gap_max,
+                                                          left_gap_max, height_gap_max, skip_height_max)
         boxes = [regional_box[key] for key in regional_box]
         image = Img.open(img_path).convert('RGB')
         if os.path.exists('./fonts/simfang.ttf'):
@@ -179,15 +180,28 @@ class BaseScreen:
         return white_percent
 
     @staticmethod
-    def struct_ocr_result(result):
+    def struct_ocr_result(result, right_gap_max=None, left_gap_max=None, height_gap_max=None, skip_height_max=None):
         struct_ocr = []
         index = 0
         txt_list = []
-        right_gap_max = g_Context.image_size[0] * 0.3
-        left_gap_max = g_Context.image_size[0] * 0.3
-        height_gap_max = g_Context.image_size[1] * 0.06
+        if right_gap_max is None:
+            right_gap_max = g_Context.image_size[0] * 0.3
+        else:
+            right_gap_max = g_Context.image_size[0] * right_gap_max
+        if left_gap_max is None:
+            left_gap_max = g_Context.image_size[0] * 0.3
+        else:
+            left_gap_max = g_Context.image_size[0] * left_gap_max
+        if height_gap_max is None:
+            height_gap_max = g_Context.image_size[1] * 0.07
+        else:
+            height_gap_max = g_Context.image_size[1] * height_gap_max
+        if skip_height_max is None:
+            skip_height_max = g_Context.image_size[1] * 0.12
+        else:
+            skip_height_max = g_Context.image_size[1] * skip_height_max
         # remove system time icon
-        result = list((n for n in result if n[0][0][1] > g_Context.image_size[1] * 0.03
+        result = list((n for n in result if n[0][0][1] > skip_height_max
                        and n[1][0] != "0"))
         for line in result:
             struct_dic = {

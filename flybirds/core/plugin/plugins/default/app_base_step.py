@@ -70,6 +70,9 @@ class AppBaseStep:
     def click_regional_ocr_text(self, context, selector, param2):
         step_click.click_regional_ocr_text(context, selector, param2)
 
+    def click_regional_ocr(self, context, selector):
+        step_click.click_regional_ocr(context, selector)
+
     def click_image(self, context, selector):
         step_click.click_image(context, selector)
 
@@ -79,8 +82,8 @@ class AppBaseStep:
     def screenshot(self, context):
         step_common.screenshot(context)
 
-    def ocr(self, context):
-        step_common.ocr(context)
+    def ocr(self, context, param=None):
+        step_common.ocr(context, param)
 
     def prev_fail_scenario_relevance(self, context, param1, param2):
         step_common.prev_fail_scenario_relevance(context, param1, param2)

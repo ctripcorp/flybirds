@@ -24,6 +24,12 @@ def screenshot(context):
 def change_ocr_lang(context, param=None):
     g_Context.step.change_ocr_lang(context, param)
 
+
+@step("ocr [{selector}]")
+def scan(context, selector=None):
+    g_Context.step.ocr(context, selector)
+
+
 @step("ocr")
 def scan(context):
     g_Context.step.ocr(context)

@@ -83,6 +83,17 @@ def click_ocr_regional_text(context, selector, param2):
     g_Context.step.click_regional_ocr_text(context, selector, param2)
 
 
+@step("click ocr regional[{selector}]")
+@ele_wrap
+def click_regional_ocr(context, selector):
+    """
+    Click on the ocr text element
+    :param context: step context
+    :param selector: locator string for text element (or None).
+    """
+    g_Context.step.click_regional_ocr(context, selector)
+
+
 @step("click image[{selector}]")
 @ele_wrap
 def click_image(context, selector=None):
