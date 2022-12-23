@@ -111,15 +111,23 @@ def click_coordinates(context, x, y):
 
 
 def click_ocr_text(context, param):
-    ocr_txt_exist(context, param)
+    flag = False
+    param_dict = dsl_helper.params_to_dic(param)
+    selector_str = param_dict["selector"]
     for line in g_Context.ocr_result:
         try:
-            trim_param = param.replace(" ", "")
-            fixed_txt = paddle_fix_txt([line[1][0]], True)
-            line_param = trim_param.replace("-", "")
-            line_txt = fixed_txt[0].replace("-", "")
-            if trim_param == fixed_txt[0] or line_param == line_txt:
-                log.info(f"[click ocr txt] click txt found: {line[1][0]}")
+            if "fuzzyMatch" in param_dict.keys() and re.search(selector_str, line[1][0], flags=0) is not None:
+                log.info(f"[click ocr txt] click txt fuzzyMatch found: {line[1][0]}")
+                flag = True
+            else:
+                trim_param = selector_str.replace(" ", "")
+                fixed_txt = paddle_fix_txt([line[1][0]], True)
+                line_param = trim_param.replace("-", "")
+                line_txt = fixed_txt[0].replace("-", "")
+                if trim_param == fixed_txt[0] or line_param == line_txt:
+                    log.info(f"[click ocr txt] click txt found: {line[1][0]}")
+                    flag = True
+            if flag is True:
                 box = line[0]
                 x = (box[0][0] + box[1][0]) / 2
                 y = (box[0][1] + box[2][1]) / 2
@@ -127,8 +135,11 @@ def click_ocr_text(context, param):
                 x_coordinate = float(x) / g_Context.image_size[1]
                 y_coordinate = float(y) / g_Context.image_size[0]
                 poco_instance.click([x_coordinate, y_coordinate])
+                break
         except Exception:
             raise Exception("[click ocr text] click ocr text error !")
+    if flag is False:
+        raise Exception("[click ocr text] click ocr text is not found !")
 
 
 def click_image(context, param):
@@ -149,20 +160,28 @@ def click_image(context, param):
 
 
 def click_regional_ocr_text(context, param1, param2):
-    ocr_regional_txt_exist(context, param1, param2)
     param1_dict = dsl_helper.params_to_dic(param1)
     selector_str = param1_dict["selector"]
     str_list = selector_str.split('=')
     regional_id = int(str_list[1])
     regional_ocr_result = list(filter(lambda item: item['regional_id'] == regional_id, g_Context.struct_ocr_result))
+    flag = False
+    param2_dict = dsl_helper.params_to_dic(param2)
+    selector_str = param2_dict["selector"]
     for line in regional_ocr_result:
         try:
-            trim_param = param2.replace(" ", "")
-            fixed_txt = paddle_fix_txt([line['txt']], True)
-            line_param = trim_param.replace("-", "")
-            line_txt = fixed_txt[0].replace("-", "")
-            if trim_param == fixed_txt[0] or line_param == line_txt:
-                log.info(f"[click regional ocr txt] click txt found: {line['txt']}")
+            if "fuzzyMatch" in param2_dict.keys() and re.search(selector_str, line['txt'], flags=0) is not None:
+                log.info(f"[click regional ocr txt] click txt fuzzyMatch found: {line['txt']}")
+                flag = True
+            else:
+                trim_param = selector_str.replace(" ", "")
+                fixed_txt = paddle_fix_txt([line['txt']], True)
+                line_param = trim_param.replace("-", "")
+                line_txt = fixed_txt[0].replace("-", "")
+                if trim_param == fixed_txt[0] or line_param == line_txt:
+                    log.info(f"[click regional ocr txt] click txt found: {line['txt']}")
+                    flag = True
+            if flag is True:
                 box = line['box']
                 x = (box[0][0] + box[1][0]) / 2
                 y = (box[0][1] + box[2][1]) / 2
@@ -170,5 +189,27 @@ def click_regional_ocr_text(context, param1, param2):
                 x_coordinate = float(x) / g_Context.image_size[1]
                 y_coordinate = float(y) / g_Context.image_size[0]
                 poco_instance.click([x_coordinate, y_coordinate])
+                break
         except Exception:
             raise Exception("[click regional ocr text] click ocr text error !")
+    if flag is False:
+        raise Exception("[click regional ocr text] click ocr text is not found !")
+
+
+def click_regional_ocr(context, param):
+    try:
+        param_dict = dsl_helper.params_to_dic(param)
+        selector_str = param_dict["selector"]
+        str_list = selector_str.split('=')
+        regional_id = int(str_list[1])
+        regional_ocr_result = list(filter(lambda item: item['regional_id'] == regional_id, g_Context.struct_ocr_result))
+        box = regional_ocr_result[0]['regional_box']
+        log.info(f"[click regional ocr] regional box found: {box}")
+        x = (box[0][0] + box[1][0]) / 2
+        y = (box[0][1] + box[2][1]) / 2
+        poco_instance = gr.get_value("pocoInstance")
+        x_coordinate = float(x) / g_Context.image_size[1]
+        y_coordinate = float(y) / g_Context.image_size[0]
+        poco_instance.click([x_coordinate, y_coordinate])
+    except Exception:
+        raise Exception("[click regional ocr] click regional box error !")

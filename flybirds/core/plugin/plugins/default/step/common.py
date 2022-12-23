@@ -9,6 +9,7 @@ import traceback
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
+import flybirds.utils.dsl_helper as dsl_helper
 from flybirds.core.plugin.plugins.default.screen import BaseScreen
 from flybirds.core.driver import ui_driver
 from flybirds.core.global_context import GlobalContext
@@ -24,10 +25,37 @@ def screenshot(context):
     BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_")
 
 
-def ocr(context):
+def ocr(context, param=None):
     step_index = context.cur_step_index - 1
     image_path = BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_", True)
-    BaseScreen.image_ocr(image_path)
+
+    right_gap_max = None
+    left_gap_max = None
+    height_gap_max = None
+    skip_height_max = None
+    if param is not None:
+        param_dict = dsl_helper.params_to_dic(param)
+        selector_str = param_dict["selector"]
+        if "right_gap_max=" in selector_str \
+                or "left_gap_max=" in selector_str \
+                or "height_gap_max=" in selector_str \
+                or "skip_height_max=" in selector_str:
+            str_list = selector_str.split('=')
+            param_dict[str_list[0]] = str_list[1]
+        if "right_gap_max" in param_dict.keys() and 0 < float(param_dict['right_gap_max']) < 1:
+            right_gap_max = float(param_dict['right_gap_max'])
+            log.info(f"right_gap_max is {right_gap_max}")
+        if "left_gap_max" in param_dict.keys() and 0 < float(param_dict['left_gap_max']) < 1:
+            left_gap_max = float(param_dict['left_gap_max'])
+            log.info(f"left_gap_max is {left_gap_max}")
+        if "height_gap_max" in param_dict.keys() and 0 < float(param_dict['height_gap_max']) < 1:
+            height_gap_max = float(param_dict['height_gap_max'])
+            log.info(f"height_gap_max is {height_gap_max}")
+        if "skip_height_max" in param_dict.keys() and 0 < float(param_dict['skip_height_max']) < 1:
+            skip_height_max = float(param_dict['skip_height_max'])
+            log.info(f"skip_height_max is {skip_height_max}")
+
+    BaseScreen.image_ocr(image_path, right_gap_max, left_gap_max, height_gap_max, skip_height_max)
 
 
 def change_ocr_lang(context,lang=None):
