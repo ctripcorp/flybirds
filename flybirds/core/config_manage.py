@@ -200,6 +200,11 @@ class WebConfig:
             self.abort_domain_list = abort_domain_list
             return
 
+        if web_info.get("proxy") is not None:
+            self.proxy = web_info.get("proxy")
+        if web_info.get("bypass") is not None:
+            self.by_pass = web_info.get("bypass")
+
         if web_info.get("headless") is not None:
             headless = web_info.get("headless")
         if web_info.get("browserType") is not None:

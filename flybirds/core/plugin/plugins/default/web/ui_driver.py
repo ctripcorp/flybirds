@@ -24,7 +24,14 @@ class UIDriver:
             browser_val = gr.get_value("cur_browser")
             browser_type = getattr(play_wright, browser_val)
             headless = gr.get_web_info_value("headless", True)
-            browser = browser_type.launch(headless=headless)
+            browser = None
+            if gr.get_web_info_value("proxy", None) is not None:
+                launch_params = {"proxy": {"server": gr.get_web_info_value("proxy", None)}}
+                if gr.get_web_info_value("by_pass", None) is not None:
+                    launch_params.get("proxy").__setitem__("bypass", gr.get_web_info_value("by_pass", None))
+                browser = browser_type.launch(headless=headless, **launch_params)
+            else:
+                browser = browser_type.launch(headless=headless)
             log.info(f"Init browser success! browser_type:[{browser_type}]")
             gr.set_value("browser", browser)
 
