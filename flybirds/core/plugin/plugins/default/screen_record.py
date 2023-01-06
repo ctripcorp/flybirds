@@ -165,8 +165,8 @@ class ScreenRecord:
         log.info("stop_record")
         if self.use_airtest_record:
             log.info("stop_record use_airtest_record")
-            self.dev.stop_recording(output=self.output_file)
-            self.dev.adb.pull(self.recording_file, self.output_file)
+            self.dev.stop_recording(output=self.output_file, is_interrupted=True)
+            # self.dev.adb.pull(self.recording_file, self.output_file)
         else:
             if not self.support:
                 return
@@ -283,11 +283,11 @@ class ScreenRecord:
 
     def crop_record(self, src_path):
         if self.use_airtest_record:
+            target = 'tmp.mp4'
             try:
                 log.info("crop_record start")
                 screen_size = gr.get_device_size()
                 source = src_path
-                target = 'tmp.mp4'
                 shutil.copy(source, target)
                 stream = ffmpeg.input(target)
                 stream = ffmpeg.crop(stream, 0, 0, screen_size[0], screen_size[1])
@@ -303,6 +303,9 @@ class ScreenRecord:
                         str(e)
                     )
                 )
+            finally:
+                if os.path.exists(target):
+                    os.remove(target)
 
 
 def link_record(scenario, step_index):
