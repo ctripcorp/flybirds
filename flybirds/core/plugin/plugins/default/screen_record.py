@@ -29,10 +29,15 @@ class ScreenRecord:
         # 0 Just created 1 Reset state 2 Start recording
         self.status = 0
 
-        self.record_support()
         self.use_airtest_record = gr.get_frame_config_value(
             "use_airtest_record", False
         )
+
+        if self.use_airtest_record is False:
+            self.record_support()
+        else:
+            self.support = True
+
         log.info("use_airtest_record: {}".format(self.use_airtest_record))
 
         self.dev = gr.get_value("deviceInstance")
@@ -350,4 +355,3 @@ def link_record(scenario, step_index):
         screen_record.copy_record(src_path)
         if gr.get_platform().lower() == "android":
             screen_record.crop_record(src_path)
-
