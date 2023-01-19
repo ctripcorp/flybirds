@@ -430,6 +430,11 @@ class FrameConfig:
                 return_value(frame_config.get("useAirtestRecord", False),
                              False)
             )
+            self.use_detect_error = user_data.get(
+                "use_Detect_Error",
+                return_value(frame_config.get("use_Detect_Error", False),
+                             False)
+            )
             self.ocr_det_limit_type = user_data.get(
                 "ocr_det_limit_type",
                 return_value(frame_config.get("ocr_det_limit_type", "max"), "max")

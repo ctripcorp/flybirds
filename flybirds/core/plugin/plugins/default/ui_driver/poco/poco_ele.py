@@ -133,6 +133,12 @@ def wait_disappear(poco, selector_str, optional):
 
 
 def detect_error(context):
+    use_detect_error = gr.get_frame_config_value(
+        "use_detect_error", False
+    )
+    if use_detect_error is False:
+        log.info("detect error not start, return None")
+        return
     language = g_Context.get_current_language()
     modal_list = lan.parse_glb_str("modal_list", language)
     break_list = lan.parse_glb_str("break_list", language)

@@ -58,7 +58,8 @@
     "useSnap": false,
     "useAirtestRecord": false,
     "ocr_det_limit_type": "max",
-    "ocr_det_limit_side_len": 960
+    "ocr_det_limit_side_len": 960,
+    "use_Detect_Error": false
   },
   "report": {},
   "log": {}
