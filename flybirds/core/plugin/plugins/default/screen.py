@@ -352,10 +352,13 @@ class BaseScreen:
         regional_dic = {}
         regional_index = 0
         box_used = []
+        dic_used = []
         index = 0
         # calculate regional id
         for box_dic in original_list:
             if box_dic["box"] in box_used:
+                continue
+            if box_dic in dic_used:
                 continue
             dic_used = [box_dic]
             if box_dic["regional_id"] is None:
@@ -407,6 +410,8 @@ class BaseScreen:
 
     @staticmethod
     def right_box_check(box_dic, regional_index, dic_used, original_list):
+        if box_dic not in dic_used:
+            dic_used.append(box_dic)
         right_box = box_dic["right_box"]
         right_used_box = []
         while right_box is not None and right_box not in right_used_box:
@@ -419,6 +424,8 @@ class BaseScreen:
 
     @staticmethod
     def left_box_check(box_dic, regional_index, dic_used, original_list):
+        if box_dic not in dic_used:
+            dic_used.append(box_dic)
         left_box = box_dic["left_box"]
         left_used_box = []
         while left_box is not None and left_box not in left_used_box:
@@ -431,6 +438,8 @@ class BaseScreen:
 
     @staticmethod
     def bottom_box_check(box_dic, regional_index, dic_used, original_list):
+        if box_dic not in dic_used:
+            dic_used.append(box_dic)
         bottom_box = box_dic["bottom_box"]
         bottom_used_box = []
         while bottom_box is not None and bottom_box not in bottom_used_box:
@@ -443,6 +452,8 @@ class BaseScreen:
 
     @staticmethod
     def top_box_check(box_dic, regional_index, dic_used, original_list):
+        if box_dic not in dic_used:
+            dic_used.append(box_dic)
         top_box = box_dic["top_box"]
         top_used_box = []
         while top_box is not None and top_box not in top_used_box:
