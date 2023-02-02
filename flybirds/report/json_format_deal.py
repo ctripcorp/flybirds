@@ -49,8 +49,8 @@ def parse_json_data(report_dir, rerun_report_dir=None, is_parallel=False):
                     for feature in report_json:
                         parse_feature(feature, rerun_report_dir)
                         if (
-                                isinstance(feature["elements"], list)
-                                and len(feature["elements"]) > 0
+                                isinstance(feature.get("elements"), list)
+                                and len(feature.get("elements")) > 0
                         ):
                             if is_parallel and feature.get('metadata') is None:
                                 browser_name = file_item.split('.')[1]
@@ -78,9 +78,9 @@ def parse_feature(feature, rerun_report_dir):
     """
     parse feature: exclude the data with status=rerun
     """
-    if isinstance(feature["elements"], list):
+    if isinstance(feature.get("elements"), list):
         cur_scenarios = []
-        for scenario in feature["elements"]:
+        for scenario in feature.get("elements"):
             if scenario["type"] == "background":
                 continue
             if scenario["status"] == "rerun":

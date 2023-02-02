@@ -100,6 +100,7 @@ class ScreenRecord:
         if bit_rate_level > 5:
             bit_rate_level = 5
         if self.use_airtest_record:
+            self.reset()
             if not bit_rate:
                 screen_size = gr.get_device_size()
                 bit_rate = screen_size[0] * screen_size[1] * bit_rate_level
