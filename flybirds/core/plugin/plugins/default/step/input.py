@@ -70,5 +70,7 @@ def keyboard_clear(context):
     long_del = "-s {} shell input keyevent --longpress 67 67 67 67 67 67 67 67 67 67 " \
                "67 67 67 67 67 67 67 67 67 67 67".format(device_id)
     dev.start_cmd(move_end, False)
+    time.sleep(2)
     dev.start_cmd(long_del, False)
+    time.sleep(2)
 
