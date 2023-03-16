@@ -15,6 +15,30 @@ def jump_to_page(context, param=None):
     g_Context.step.jump_to_page(context, param)
 
 
+@step("set cookie name[{name}] value[{value}] url[{url}]")
+@ele_wrap
+def add_cookie(context, name, value, url):
+    g_Context.step.add_cookies(context, name, value, url)
+
+
+@step("get cookie")
+@ele_wrap
+def get_cookie(context):
+    g_Context.step.get_cookie(context)
+
+
+@step("get local storage")
+@ele_wrap
+def get_local_storage(context):
+    g_Context.step.get_local_storage(context)
+
+
+@step("get session storage")
+@ele_wrap
+def get_session_storage(context):
+    g_Context.step.get_session_storage(context)
+
+
 @step("return to previous page")
 def return_pre_page(context):
     g_Context.step.return_pre_page(context)

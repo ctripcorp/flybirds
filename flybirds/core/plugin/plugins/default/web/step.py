@@ -39,6 +39,27 @@ class Step:
         page.sleep(context, param)
 
     @classmethod
+    def add_cookies(cls, context, name, value, url):
+        page = gr.get_value("plugin_page")
+        page.add_cookies(name, value, url)
+
+    @classmethod
+    def get_cookie(cls, context):
+        page = gr.get_value("plugin_page")
+        page.get_cookie(context)
+
+    @classmethod
+    def get_local_storage(cls, context):
+        page = gr.get_value("plugin_page")
+        page.get_local_storage(context)
+
+    @classmethod
+    def get_session_storage(cls, context):
+        page = gr.get_value("plugin_page")
+        page.get_session_storage(context)
+
+
+    @classmethod
     def screenshot(cls, context):
         step_common.screenshot(context)
 
