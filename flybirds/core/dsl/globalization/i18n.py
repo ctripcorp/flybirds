@@ -86,6 +86,8 @@ step_language = {
         "start record": ["开始录屏"],
         "stop record": ["结束录屏"],
         "go to url[{param}]": ["跳转到[{param}]", "跳转页面到[{param}]"],
+        "go to url[{param1}] and wait [{param2}] seconds": ["跳转到[{param1}]并且等待[{param2}]秒",
+                                                            "跳转页面到[{param1}]并且等待[{param2}]秒"],
         "set cookie name[{name}] value[{value}] url[{url}]": ["设置cookie 名称[{name}] 值[{value}] 网址[{url}]"],
         "get cookie": ["获取cookie"],
         "get local storage": ["获取local storage"],

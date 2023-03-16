@@ -7,7 +7,16 @@ from behave import step
 
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.utils.dsl_helper import ele_wrap
+from flybirds.utils.dsl_helper import get_params
 
+@step("go to url[{param1}] and wait [{param2}] seconds")
+@ele_wrap
+def jump_to_page_waite(context, param1=None, param2=None):
+    param_1, param_2 = get_params(
+        context, (param1, "param1"), (param2, "param2")
+    )
+    g_Context.step.jump_to_page(context, param_1)
+    g_Context.step.sleep(context, param_2)
 
 @step("go to url[{param}]")
 @ele_wrap

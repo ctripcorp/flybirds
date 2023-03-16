@@ -2,6 +2,13 @@
  Feature: web click
 
    Scenario: click element
+     When go to url[百度] and wait [3] seconds
+     And click[#s-top-loginbtn]
+     And wait[3]seconds
+     Then screenshot
+
+
+   Scenario: click element
      When go to url[百度]
      And click[#s-top-loginbtn]
      And wait[3]seconds
