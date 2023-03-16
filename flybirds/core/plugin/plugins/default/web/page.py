@@ -36,6 +36,7 @@ class Page:
         if context is None or gr.get_web_info_value("browserExit") is None \
                 or gr.get_web_info_value("browserExit") is True:
             context = Page.new_browser_context()
+            gr.set_value("browser_context", context)
 
         page = context.new_page()
         request_interception = gr.get_web_info_value("request_interception",
@@ -83,7 +84,7 @@ class Page:
         # add user custom cookies into browser context
         user_cookie = GlobalContext.get_global_cache("cookies")
         if user_cookie is not None:
-            context.clear_cookies()
+            #context.clear_cookies()
             context.add_cookies(cookies=user_cookie)
             log.info(f"this is user cookies: {context.cookies()}")
         else:
@@ -201,6 +202,35 @@ class Page:
             schema_url = gr.get_page_schema_url(param)
             target_url = schema_url
         verify_helper.text_equal(target_url, cur_url)
+
+    @staticmethod
+    def add_cookies(name, value, url):
+        if name is not None and value is not None and url is not None:
+            user_cookie = [{'name': name, 'value': value, "url": url}]
+            context = gr.get_value("browser_context")
+            context.add_cookies(cookies=user_cookie)
+            log.info(f"set cookie success: {context.cookies()}")
+        else:
+            log.info(f"set cookie fail, please check param")
+
+    @staticmethod
+    def get_cookie(context):
+        context = gr.get_value("browser_context")
+        cookies = context.cookies()
+        log.info(f"get cookie success: {cookies}")
+        return cookies
+
+    @staticmethod
+    def get_local_storage(context):
+        context = gr.get_value("browser_context")
+        local_storage = context.storage_state()
+        log.info(f"get local storage success: {local_storage['origins']}")
+        return local_storage['origins']
+
+    def get_session_storage(self, context):
+        session_storage = self.page.evaluate("() => JSON.stringify(sessionStorage)")
+        log.info(f"get session storage success: {session_storage}")
+        return session_storage
 
 
 def handle_page_error(msg):
