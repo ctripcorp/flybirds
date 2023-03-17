@@ -177,7 +177,6 @@ class Page:
             log.info('[get_page_url] successfully get page_url_value '
                      'from custom operation')
             self.page.goto(page_url)
-            self.page.goto(page_url)
             return
 
         param_dict = dsl_helper.params_to_dic(param, "urlKey")
@@ -186,8 +185,10 @@ class Page:
 
         if "timeout" in param_dict.keys():
             timeout = float(param_dict["timeout"])
+            self.page.goto(schema_url_value, timeout * 1000)
+            return
 
-        self.page.goto(schema_url_value, timeout)
+        self.page.goto(schema_url_value)
 
     def return_pre_page(self, context):
         self.page.go_back()

@@ -1,19 +1,21 @@
 {
   "app_info": {
-    "packageName": "%{{packageName}}",
+    "packageName": "ctrip.android.view",
     "packagePath": "https://download2.ctrip.com/html5/Ctrip_V8.43.0_SIT4-100053_Product_9725895.apk",
     "overwriteInstallation": false,
     "uniqueTag": "",
     "ocrLang": ""
   },
   "device_info": {
-    "deviceId": "%{{deviceId}}",
-    "platform": "%{{platform}}",
-    "webDriverAgent": "%{{webDriverAgent}}"
+    "deviceId": "127.0.0.1:8200",
+    "platform": "web",
+    "webDriverAgent": "com.fd.test.WebDriverAgentLib.xctrunner"
   },
   "web_info": {
-    "headless": true,
-    "browserType": [],
+    "headless": false,
+    "browserType": [
+      "firefox"
+    ],
     "requestInterception": true,
     "ignoreOrder": false,
     "abortDomainList": [],
