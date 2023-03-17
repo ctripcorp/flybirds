@@ -177,12 +177,17 @@ class Page:
             log.info('[get_page_url] successfully get page_url_value '
                      'from custom operation')
             self.page.goto(page_url)
+            self.page.goto(page_url)
             return
 
         param_dict = dsl_helper.params_to_dic(param, "urlKey")
         url_key = param_dict["urlKey"]
         schema_url_value = gr.get_page_schema_url(url_key)
-        self.page.goto(schema_url_value)
+
+        if "timeout" in param_dict.keys():
+            timeout = float(param_dict["timeout"])
+
+        self.page.goto(schema_url_value, timeout)
 
     def return_pre_page(self, context):
         self.page.go_back()

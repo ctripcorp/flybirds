@@ -29,12 +29,6 @@ class Step:
         page.navigate(context, param)
 
     @classmethod
-    def jump_to_page_waite(cls, context, param1, param2):
-        page = gr.get_value("plugin_page")
-        page.navigate(context, param1)
-        page.sleep(context, param2)
-
-    @classmethod
     def return_pre_page(cls, context):
         page = gr.get_value("plugin_page")
         page.return_pre_page(context)
