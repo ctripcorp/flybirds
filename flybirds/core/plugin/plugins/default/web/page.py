@@ -184,7 +184,7 @@ class Page:
         schema_url_value = gr.get_page_schema_url(url_key)
 
         if "timeout" in param_dict.keys():
-            self.page.goto(schema_url_value, timeout = float(param_dict["timeout"]) * 1000)
+            self.page.goto(schema_url_value, timeout=float(param_dict["timeout"]) * 1000)
             return
 
         self.page.goto(schema_url_value)
