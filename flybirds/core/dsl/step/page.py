@@ -7,7 +7,7 @@ from behave import step
 
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.utils.dsl_helper import ele_wrap
-
+from flybirds.utils.dsl_helper import get_params
 
 @step("go to url[{param}]")
 @ele_wrap
