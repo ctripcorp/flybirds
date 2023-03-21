@@ -24,6 +24,8 @@ class Page:
 
     name = "web_page"
     instantiation_timing = "plugin"
+    path = ".\compareData"
+    jscontent = ""
 
     def __init__(self):
         page, context = self.init_page()
@@ -164,6 +166,31 @@ class Page:
             return gl_dict
         else:
             return None
+
+    def evaluateJs(self, context, param):
+        # 指定要查找的路径和文件扩展名
+        extension = param + ".js"
+
+        # 查找所有的JavaScript文件
+        javascript_files = [f for f in os.listdir(path) if f.endswith(extension)]
+
+        # 遍历所有JavaScript文件，并读取文件内容
+        for file in javascript_files:
+            with io.open(os.path.join(path, file), "r", encoding="utf-8") as f:
+                content = f.read()
+                jscontent = jscontent + content
+                # log.info("File: {}\nContent:\n{}\n".format(file, content))
+
+        s = jsContent.replace(" ", "").replace("\n", "")
+        log.info("js Case:", s)
+        s = s[s.index("{") + 1:s.rindex("}")]
+        caselist = s.split("}{")
+
+        for case in caselist:
+             self.page.evaluate('() => ' + case)
+             self.page.wait_for_timeout(float(1) * 1000)
+
+
 
     def navigate(self, context, param):
         operation_module = gr.get_value("projectScript").custom_operation

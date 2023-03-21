@@ -85,6 +85,7 @@ step_language = {
         "start recording timeout[{param}]": ["开始录屏超时[{param}]"],
         "start record": ["开始录屏"],
         "stop record": ["结束录屏"],
+        "execute js[{param}]": ["执行js[{param}]"],
         "go to url[{param}]": ["跳转到[{param}]", "跳转页面到[{param}]"],
         "set cookie name[{name}] value[{value}] url[{url}]": ["设置cookie 名称[{name}] 值[{value}] 网址[{url}]"],
         "get cookie": ["获取cookie"],

@@ -22,6 +22,11 @@ class Step:
     name = "web_step"
 
     @classmethod
+    def excute_js_page(cls, context, param):
+        page = gr.get_value("plugin_page")
+        page.evaluateJs(context, param)
+
+    @classmethod
     def jump_to_page(cls, context, param):
         # plugin_page = g_context.page
         # page = plugin_page()
