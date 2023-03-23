@@ -1,0 +1,31 @@
+<root>
+    <cityId>2</cityId>
+    <hotCities>false</hotCities>
+    <oversea>false</oversea>
+    <head>
+        <cid>12131017227555019</cid>
+        <ctok></ctok>
+        <cver>1.0</cver>
+        <lang>01</lang>
+        <sid>8888</sid>
+        <syscode>PC</syscode>
+        <auth></auth>
+        <xsid></xsid>
+        <extension>
+            <name>sdkversion</name>
+            <value>2.34.0</value>
+        </extension>
+        <extension>
+            <name>openid</name>
+            <value>ce0ae70f-9365</value>
+        </extension>
+        <extension>
+            <name>supportWebP</name>
+            <value>false</value>
+        </extension>
+        <extension>
+            <name>scene</name>
+            <value>1036</value>
+        </extension>
+    </head>
+</root>

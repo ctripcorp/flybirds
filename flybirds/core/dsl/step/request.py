@@ -78,7 +78,7 @@ def clear_all_request_mock(context):
 
 
 @step(
-    "compare service request [{service}] with json file [{target_data_path}]"
+    "compare service request [{service}] with file [{target_data_path}]"
 )
 @ele_wrap
 def request_compare(context, service=None, target_data_path=None):
@@ -111,10 +111,10 @@ def request_query_str_compare(context, service=None, target_data_path=None):
 
 
 @step(
-    "service request [{service}] request parameter [{target_json_path}] "
+    "service request [{service}] request parameter [{target_path}] "
     "is [{expect_value}]")
 @ele_wrap
-def request_compare_value(context, service=None, target_json_path=None,
+def request_compare_value(context, service=None, target_path=None,
                           expect_value=None):
     """
     compare and verify the request parameter of the service request with
@@ -125,5 +125,5 @@ def request_compare_value(context, service=None, target_json_path=None,
     :param target_json_path: json path of request parameter
     :param expect_value: expected value
     """
-    g_Context.step.request_compare_value(context, service, target_json_path,
+    g_Context.step.request_compare_value(context, service, target_path,
                                          expect_value)

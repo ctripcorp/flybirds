@@ -115,71 +115,166 @@ class Interception:
     # -------------------------------------------------------------------------
     @staticmethod
     def request_compare(operation, target_data_path):
+        # 调用 get_server_request_body() 函数获取服务器请求信息，返回一个字典对象
         request_info = get_server_request_body(operation)
         actual_request_obj = None
+
+        # 如果返回的请求信息不为 None，并且有 postData 属性，则将 postData 赋值给 actual_request_obj 变量
         if request_info is not None and request_info.get('postData'):
             actual_request_obj = request_info.get('postData')
+
+        # 在日志中输出 actual_request_obj 的信息
         log.info(f'[request_compare] actualObj:{actual_request_obj}')
+
+        # 如果 actual_request_obj 为 None，则抛出异常
         if actual_request_obj is None:
             message = f'[request_compare] not get listener data for ' \
                       f'[{operation}]'
             raise FlybirdsException(message)
-        actual_request_obj = json.loads(actual_request_obj)
+
+        # 将 actual_request_obj 反序列化成 Python 对象
+        if actual_request_obj.startswith('<?xml') or actual_request_obj.startswith('<'):
+            actual_request_obj = xmltodict.parse(actual_request_obj)
+        else:
+            actual_request_obj = json.loads(actual_request_obj)
+
+        log.info(f'[request_compare] actualObj dict:{actual_request_obj}')
+
+        # 获取文件路径
         file_path = os.path.join(os.getcwd(), target_data_path)
+
         expect_request_obj = None
+
+        # 如果文件路径存在，则从该文件中读取数据并将其赋值给 expect_request_obj
         if os.path.exists(file_path):
-            expect_request_obj = file_helper.get_json_from_file_path(file_path)
-        log.info(f'[request_compare] expectObj:{expect_request_obj}')
+
+            expect_request_obj = file_helper.read_file_from_path(file_path);
+            if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
+                expect_request_obj = xmltodict.parse(expect_request_obj)
+                # 将 expect_request_obj 解析为 字典
+            else:
+                expect_request_obj = file_helper.get_json_from_file_path(file_path)
+        else:
+            message = f'[request_compare] expect_request_obj not get file from' \
+                      f'[{file_path}]'
+            raise FlybirdsException(message)
+
+        # 在日志中输出 expect_request_obj 的信息
+        log.info(f'[request_compare] expectObj dict:{expect_request_obj}')
+
+        # 如果 expect_request_obj 为 None，则抛出异常
         if expect_request_obj is None:
             message = f'[request_compare] cannot get data form path' \
                       f'[{target_data_path}]]'
             raise FlybirdsException(message)
+
+        # 实例xml文件，多了root根目录
+        if 'root' in expect_request_obj:
+            expect_request_obj = expect_request_obj['root']
+
+            # 调用 convert_values() 函数，转换数字和布尔值
+            expect_request_obj = delete_values(expect_request_obj)
+            expect_request_obj = convert_values(expect_request_obj)
+            log.info(f'[request_compare] expectObj dict after deal:{expect_request_obj}')
+
+        # 调用 handle_diff() 函数，比较实际请求对象和期望请求对象之间的差异，并输出日志
         handle_diff(actual_request_obj, expect_request_obj, operation,
                     target_data_path)
 
     @staticmethod
     def request_query_string_compare(operation, target_data_path):
+        # 定义函数 request_query_string_compare，接收两个参数 operation 和 target_data_path
         request_info = get_server_request_body(operation)
+        # 调用 get_server_request_body 函数获取服务端请求信息，存储在 request_info 中
         actual_request_obj = None
+        # 初始化 actual_request_obj 为 None
         if request_info is not None and request_info.get('postData'):
+            # 如果 request_info 不为 None，且 request_info 包含 postData 字段
             actual_request_obj = request_info.get('postData')
+            # 将 request_info 中的 postData 赋值给 actual_request_obj
         if actual_request_obj is None:
+            # 如果 actual_request_obj 为 None
             message = f'[requestQuerystringCompare] not get listener data ' \
                       f'for [{operation}]'
             raise FlybirdsException(message)
-        actual_request_obj = parse_qs(actual_request_obj)
+            # 抛出异常，提示未获取到监听器数据
+
+        # 判断数据格式
+        if actual_request_obj.startswith('<?xml') or actual_request_obj.startswith('<'):
+            actual_request_obj = xmltodict.parse(actual_request_obj)
+            # 将 actual_request_obj 解析为 字典
+        else:
+            actual_request_obj = parse_qs(actual_request_obj)
+            # 将 actual_request_obj 解析为字典，存储在 actual_request_obj 中
 
         file_path = os.path.join(os.getcwd(), target_data_path)
+        # 获取目标数据文件的路径，存储在 file_path 中
         expect_request_obj = None
+        # 初始化 expect_request_obj 为 None
         if os.path.exists(file_path):
+            # 如果文件路径存在
             expect_request_obj = file_helper.read_file_from_path(file_path)
+            # 读取目标数据文件，存储在 expect_request_obj 中
         if expect_request_obj is None:
+            # 如果 expect_request_obj 为 None
             message = f'[requestQuerystringCompare] cannot get data form ' \
                       f'path [{target_data_path}]'
             raise FlybirdsException(message)
-        expect_request_obj = parse_qs(expect_request_obj)
+            # 抛出异常，提示无法从指定路径获取数据
+
+        # 判断数据格式
+        if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
+             expect_request_obj = xmltodict.parse(expect_request_obj)
+            # 将 expect_request_obj 解析为 字典
+        else:
+             expect_request_obj = parse_qs(expect_request_obj)
+             # 将 expect_request_obj 解析为字典，存储在 expect_request_obj 中
+
+
         handle_diff(actual_request_obj, expect_request_obj, operation,
                     target_data_path)
+        # 调用 handle_diff 函数，比较实际请求对象和期望请求对象之间的差异，并传递参数 operation 和 target_data_path
 
     @staticmethod
-    def request_compare_value(operation, target_json_path, expect_value):
+    def request_compare_value(operation, target_path, expect_value):
+        # 调用 get_server_request_body 方法获取 request_info 信息
         request_info = get_server_request_body(operation)
-        json_data = None
+
+        data = None
+        # 获取 postData 数据
         if request_info and request_info.get('postData'):
-            json_data = request_info.get('postData')
-        if json_data is None:
+            data = request_info.get('postData')
+        # 如果没有获取到 postData 数据则抛出异常
+        if data is None:
             message = f'[requestCompareValue] not get listener data for ' \
                       f'[{operation}]'
             raise FlybirdsException(message)
-        json_data = json.loads(json_data)
-        json_path_expr = parse_path(target_json_path)
-        target_values = [match.value for match in
-                         json_path_expr.find(json_data)]
-        log.info(f'[requestCompareValue] get jsonPathData: {target_values}')
+        # 判断数据格式
+        if data.startswith('<?xml') or data.startswith('<'):
+            # 如果是 XML 格式，则解析 XML
+            root = ET.fromstring(data)
+            # 解析 XML 路径表达式
+            xml_path_expr = ET.XPath(target_path)
+            # 从 XML 中获取目标数据
+            target_values = [elem.text for elem in xml_path_expr(root)]
+            # 打印日志
+            log.info(f'[requestCompareValue] get xmlPathData: {target_values}')
+        else:
+            # 否则默认为 JSON 格式，解析 JSON
+            # 将 data 解析成字典类型
+            json_data = json.loads(data)
+            # 解析 JSON 路径表达式
+            json_path_expr = parse_path(target_path)
+            # 从 JSON 中获取目标数据
+            target_values = [match.value for match in json_path_expr.find(json_data)]
+            # 打印日志
+            log.info(f'[requestCompareValue] get jsonPathData: {target_values}')
+        # 如果目标数据不存在则抛出异常
         if len(target_values) == 0:
             message = f'[requestCompareValue] cannot get the value from ' \
-                      f'path [{target_json_path}] of [{operation}]'
+                      f'path [{target_path}] of [{operation}]'
             raise FlybirdsException(message)
+
         if str(target_values[0]) != expect_value:
             message = f'value not equal, service [{operation}] request ' \
                       f'parameter [{target_json_path}] actual value:' \
@@ -270,3 +365,31 @@ def get_case_response_body(case_id):
     log.warn('[get_case_response_body] cannot get mockCaseBody from folder '
              'mockCaseData.')
     return
+
+
+# 定义函数 convert_values()，将值为数字或布尔类型的字符串转换为对应的数字或布尔值
+def convert_values(data):
+    for key, value in data.items():
+        if key !='head' and value is not None:
+            if isinstance(value, dict):
+                convert_values(value)
+            elif isinstance(value, str):
+                if value.lower() == 'true':
+                    data[key] = True
+                elif value.lower() == 'false':
+                    data[key] = False
+                elif value.isdigit():
+                    data[key] = int(value)
+    return  data
+
+
+# 定义函数 convert_values()，将值为None转为''
+def delete_values(data):
+    for key, value in data.items():
+        if value is None:
+            data[key]=''
+        elif isinstance(value, dict):
+            delete_values(value)
+        elif isinstance(value, str):
+            log.info("String dict value",value)
+    return  data

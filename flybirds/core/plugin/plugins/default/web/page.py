@@ -24,8 +24,6 @@ class Page:
 
     name = "web_page"
     instantiation_timing = "plugin"
-    path = ".\compareData"
-    jscontent = ""
 
     def __init__(self):
         page, context = self.init_page()
@@ -169,7 +167,9 @@ class Page:
 
     def evaluateJs(self, context, param):
         # 指定要查找的路径和文件扩展名
+        path = os.path.join(os.getcwd(), "compareData")
         extension = param + ".js"
+        jscontent = ''
 
         # 查找所有的JavaScript文件
         javascript_files = [f for f in os.listdir(path) if f.endswith(extension)]
@@ -181,16 +181,23 @@ class Page:
                 jscontent = jscontent + content
                 # log.info("File: {}\nContent:\n{}\n".format(file, content))
 
-        s = jsContent.replace(" ", "").replace("\n", "")
-        log.info("js Case:", s)
-        s = s[s.index("{") + 1:s.rindex("}")]
-        caselist = s.split("}{")
+        jscontent = jscontent.replace(" ", "").replace("\n", "")
+        caselistbefore = jscontent.split("{")
 
-        for case in caselist:
-             self.page.evaluate('() => ' + case)
-             self.page.wait_for_timeout(float(1) * 1000)
+        for case in caselistbefore:
+            # log.info("case:", case)
+            if (case.find('}') >= 0):
+                casecontent = case[0:case.index("}")]
 
-
+                try:
+                    self.page.evaluate('() => ' + '{' + casecontent + '}')
+                except Exception:
+                    message = '[case] excute failed "\}"'
+                    raise FlybirdsException(message)
+                    continue
+            else:
+                message = '[case] not contain "\}"'
+                raise FlybirdsException(message)
 
     def navigate(self, context, param):
         operation_module = gr.get_value("projectScript").custom_operation

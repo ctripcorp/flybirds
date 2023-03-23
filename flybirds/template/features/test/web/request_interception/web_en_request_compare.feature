@@ -9,8 +9,16 @@
       And  service request [getRecommendHotelList] request parameter [head.syscode] is [PC]
       And  service request [getRecommendHotelList] request parameter [$.cityId] is [2]
       And  service request [getRecommendHotelList] request parameter [cityId] is [2]
-      And compare service request [getRecommendHotelList] with json file [compareData/getRecommendHotelList.json]
+      And compare service request [getRecommendHotelList] with file [compareData/getRecommendHotelList.json]
 
+    Scenario: json type service request comparison
+      Given cache service request [getRecommendHotelList]
+      And go to url[携程官网]
+      Then wait[5]seconds
+      And  service request [getRecommendHotelList] request parameter [head.syscode] is [PC]
+      And  service request [getRecommendHotelList] request parameter [$.cityId] is [2]
+      And  service request [getRecommendHotelList] request parameter [cityId] is [2]
+      And compare service request [getRecommendHotelList] with file [compareData/getRecommendHotelList.xml]
 
     Scenario: Non-json type service request comparison
       Given cache service request [writecookie]
