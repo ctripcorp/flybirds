@@ -19,6 +19,12 @@
 
     场景: 输入
     假如 跳转页面到[百度]
-    而且 执行js[testCase]
+    而且 执行js[compareData/testCase.js]
+    而且 等待[3]秒
+    那么 全屏截图
+
+    场景: 输入
+    假如 跳转页面到[百度]
+    而且 执行js[compareData/testCase.js,casename=RefundApply,tag=Refund]
     而且 等待[3]秒
     那么 全屏截图

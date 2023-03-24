@@ -19,7 +19,7 @@ __open__ = ["Interception"]
 
 from flybirds.utils import file_helper
 from flybirds.utils.file_helper import read_json_data
-
+import xmltodict
 
 class Interception:
     """
@@ -115,24 +115,23 @@ class Interception:
     # -------------------------------------------------------------------------
     @staticmethod
     def request_compare(operation, target_data_path):
-        # 调用 get_server_request_body() 函数获取服务器请求信息，返回一个字典对象
+        # Call the get_server_request_body() function to get the server request information, and return a dictionary object
         request_info = get_server_request_body(operation)
         actual_request_obj = None
 
-        # 如果返回的请求信息不为 None，并且有 postData 属性，则将 postData 赋值给 actual_request_obj 变量
+        # If the returned request information is not None and has a postData attribute, assign the postData to the actual_request_obj variable
         if request_info is not None and request_info.get('postData'):
             actual_request_obj = request_info.get('postData')
 
-        # 在日志中输出 actual_request_obj 的信息
+        # Output the information of actual_request_obj in the log
         log.info(f'[request_compare] actualObj:{actual_request_obj}')
 
-        # 如果 actual_request_obj 为 None，则抛出异常
+        # If actual_request_obj is None, an exception is thrown
         if actual_request_obj is None:
-            message = f'[request_compare] not get listener data for ' \
-                      f'[{operation}]'
+            message = f'[request_compare] not get listener data for [{operation}]'
             raise FlybirdsException(message)
 
-        # 将 actual_request_obj 反序列化成 Python 对象
+        # Deserialize actual_request_obj into a Python object
         if actual_request_obj.startswith('<?xml') or actual_request_obj.startswith('<'):
             actual_request_obj = xmltodict.parse(actual_request_obj)
         else:
@@ -140,141 +139,151 @@ class Interception:
 
         log.info(f'[request_compare] actualObj dict:{actual_request_obj}')
 
-        # 获取文件路径
+        # Get the file path
         file_path = os.path.join(os.getcwd(), target_data_path)
 
         expect_request_obj = None
 
-        # 如果文件路径存在，则从该文件中读取数据并将其赋值给 expect_request_obj
+        # If the file path exists, read data from the file and assign it to expect_request_obj
         if os.path.exists(file_path):
 
             expect_request_obj = file_helper.read_file_from_path(file_path);
             if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
                 expect_request_obj = xmltodict.parse(expect_request_obj)
-                # 将 expect_request_obj 解析为 字典
             else:
                 expect_request_obj = file_helper.get_json_from_file_path(file_path)
         else:
-            message = f'[request_compare] expect_request_obj not get file from' \
-                      f'[{file_path}]'
+            message = f'[request_compare] expect_request_obj not get file from [{file_path}]'
             raise FlybirdsException(message)
 
-        # 在日志中输出 expect_request_obj 的信息
+        # Output the information of expect_request_obj in the log
         log.info(f'[request_compare] expectObj dict:{expect_request_obj}')
 
-        # 如果 expect_request_obj 为 None，则抛出异常
+        # If expect_request_obj is None, an exception is thrown
         if expect_request_obj is None:
-            message = f'[request_compare] cannot get data form path' \
-                      f'[{target_data_path}]]'
+            message = f'[request_compare] cannot get data form path [{target_data_path}]]'
             raise FlybirdsException(message)
 
-        # 实例xml文件，多了root根目录
+        # If the expect_request_obj is an xml file, and contains a root node, remove the root node
         if 'root' in expect_request_obj:
             expect_request_obj = expect_request_obj['root']
 
-            # 调用 convert_values() 函数，转换数字和布尔值
+            # Call the convert_values() function to convert numbers and boolean values
             expect_request_obj = delete_values(expect_request_obj)
             expect_request_obj = convert_values(expect_request_obj)
             log.info(f'[request_compare] expectObj dict after deal:{expect_request_obj}')
 
-        # 调用 handle_diff() 函数，比较实际请求对象和期望请求对象之间的差异，并输出日志
-        handle_diff(actual_request_obj, expect_request_obj, operation,
-                    target_data_path)
+        # Call the handle_diff() function to compare the differences between the actual request object and the expected request object, and output the log
+        handle_diff(actual_request_obj, expect_request_obj, operation, target_data_path)
 
     @staticmethod
     def request_query_string_compare(operation, target_data_path):
-        # 定义函数 request_query_string_compare，接收两个参数 operation 和 target_data_path
+        # Define function request_query_string_compare with two parameters, operation and target_data_path
+
         request_info = get_server_request_body(operation)
-        # 调用 get_server_request_body 函数获取服务端请求信息，存储在 request_info 中
+        # Call the get_server_request_body function to get server request information, and store it in request_info
+
         actual_request_obj = None
-        # 初始化 actual_request_obj 为 None
+        # Initialize actual_request_obj to None
+
         if request_info is not None and request_info.get('postData'):
-            # 如果 request_info 不为 None，且 request_info 包含 postData 字段
+            # If request_info is not None and request_info contains a 'postData' field
+
             actual_request_obj = request_info.get('postData')
-            # 将 request_info 中的 postData 赋值给 actual_request_obj
+            # Assign the value of request_info's 'postData' field to actual_request_obj
+
         if actual_request_obj is None:
-            # 如果 actual_request_obj 为 None
+            # If actual_request_obj is None
+
             message = f'[requestQuerystringCompare] not get listener data ' \
                       f'for [{operation}]'
             raise FlybirdsException(message)
-            # 抛出异常，提示未获取到监听器数据
+            # Raise an exception indicating that the listener data could not be retrieved
 
-        # 判断数据格式
+        # Check data format
         if actual_request_obj.startswith('<?xml') or actual_request_obj.startswith('<'):
             actual_request_obj = xmltodict.parse(actual_request_obj)
-            # 将 actual_request_obj 解析为 字典
+            # Parse actual_request_obj as a dictionary if it starts with '<?xml' or '<'
         else:
             actual_request_obj = parse_qs(actual_request_obj)
-            # 将 actual_request_obj 解析为字典，存储在 actual_request_obj 中
+            # Parse actual_request_obj as a dictionary and store it in actual_request_obj
 
         file_path = os.path.join(os.getcwd(), target_data_path)
-        # 获取目标数据文件的路径，存储在 file_path 中
+        # Get the path of the target data file and store it in file_path
+
         expect_request_obj = None
-        # 初始化 expect_request_obj 为 None
+        # Initialize expect_request_obj to None
+
         if os.path.exists(file_path):
-            # 如果文件路径存在
+            # If the file path exists
+
             expect_request_obj = file_helper.read_file_from_path(file_path)
-            # 读取目标数据文件，存储在 expect_request_obj 中
+            # Read the target data file and store it in expect_request_obj
+
         if expect_request_obj is None:
-            # 如果 expect_request_obj 为 None
+            # If expect_request_obj is None
+
             message = f'[requestQuerystringCompare] cannot get data form ' \
                       f'path [{target_data_path}]'
             raise FlybirdsException(message)
-            # 抛出异常，提示无法从指定路径获取数据
+            # Raise an exception indicating that data could not be retrieved from the specified path
 
-        # 判断数据格式
+        # Check data format
         if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
-             expect_request_obj = xmltodict.parse(expect_request_obj)
-            # 将 expect_request_obj 解析为 字典
+            expect_request_obj = xmltodict.parse(expect_request_obj)
+        # Parse expect_request_obj as a dictionary if it starts with '<?xml' or '<'
         else:
-             expect_request_obj = parse_qs(expect_request_obj)
-             # 将 expect_request_obj 解析为字典，存储在 expect_request_obj 中
-
+            expect_request_obj = parse_qs(expect_request_obj)
+            # Parse expect_request_obj as a dictionary and store it in expect_request_obj
 
         handle_diff(actual_request_obj, expect_request_obj, operation,
                     target_data_path)
-        # 调用 handle_diff 函数，比较实际请求对象和期望请求对象之间的差异，并传递参数 operation 和 target_data_path
+        # Call the handle_diff function to compare the difference between the actual request object and the expected request object, passing in the parameters operation and target_data_path.
 
     @staticmethod
     def request_compare_value(operation, target_path, expect_value):
-        # 调用 get_server_request_body 方法获取 request_info 信息
+        # # Call function get_server_request_body to get request_info
         request_info = get_server_request_body(operation)
 
+        # Initialize data variable as None.
         data = None
-        # 获取 postData 数据
+        # Get postData data.
         if request_info and request_info.get('postData'):
             data = request_info.get('postData')
-        # 如果没有获取到 postData 数据则抛出异常
+        # If postData data is not found, raise an exception.
         if data is None:
             message = f'[requestCompareValue] not get listener data for ' \
                       f'[{operation}]'
             raise FlybirdsException(message)
-        # 判断数据格式
+
+        # Check the data format.
         if data.startswith('<?xml') or data.startswith('<'):
-            # 如果是 XML 格式，则解析 XML
+            # If the format is XML, parse the XML.
             root = ET.fromstring(data)
-            # 解析 XML 路径表达式
+            # Parse the XML path expression.
             xml_path_expr = ET.XPath(target_path)
-            # 从 XML 中获取目标数据
+            # Get the target data from XML.
             target_values = [elem.text for elem in xml_path_expr(root)]
-            # 打印日志
+            # Print a log message.
             log.info(f'[requestCompareValue] get xmlPathData: {target_values}')
         else:
-            # 否则默认为 JSON 格式，解析 JSON
-            # 将 data 解析成字典类型
+            # If the format is not XML, it is assumed to be JSON. Parse the JSON.
+            # Parse the data into a dictionary.
             json_data = json.loads(data)
-            # 解析 JSON 路径表达式
+            # Parse the JSON path expression.
             json_path_expr = parse_path(target_path)
-            # 从 JSON 中获取目标数据
+            # Get the target data from JSON.
             target_values = [match.value for match in json_path_expr.find(json_data)]
-            # 打印日志
+            # Print a log message.
             log.info(f'[requestCompareValue] get jsonPathData: {target_values}')
-        # 如果目标数据不存在则抛出异常
+
+        # If the target data does not exist, raise an exception.
         if len(target_values) == 0:
             message = f'[requestCompareValue] cannot get the value from ' \
                       f'path [{target_path}] of [{operation}]'
             raise FlybirdsException(message)
 
+        # If the actual value is not equal to the expected value, raise an exception.
         if str(target_values[0]) != expect_value:
             message = f'value not equal, service [{operation}] request ' \
                       f'parameter [{target_json_path}] actual value:' \

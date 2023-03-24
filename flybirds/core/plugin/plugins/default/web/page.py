@@ -5,6 +5,7 @@
 # @desc : web page implement
 import json
 import time
+import os
 from urllib.parse import urlparse
 
 import flybirds.core.global_resource as gr
@@ -15,6 +16,7 @@ from flybirds.core.plugin.plugins.default.web.interception import \
     get_case_response_body
 from flybirds.utils import dsl_helper
 from flybirds.utils.dsl_helper import is_number
+from flybirds.utils import file_helper
 
 __open__ = ["Page"]
 
@@ -166,38 +168,64 @@ class Page:
             return None
 
     def evaluateJs(self, context, param):
-        # 指定要查找的路径和文件扩展名
-        path = os.path.join(os.getcwd(), "compareData")
-        extension = param + ".js"
-        jscontent = ''
 
-        # 查找所有的JavaScript文件
-        javascript_files = [f for f in os.listdir(path) if f.endswith(extension)]
+        # Convert parameter string to dictionary
+        param_dict = dsl_helper.params_to_dic(param, "path")
 
-        # 遍历所有JavaScript文件，并读取文件内容
-        for file in javascript_files:
-            with io.open(os.path.join(path, file), "r", encoding="utf-8") as f:
-                content = f.read()
-                jscontent = jscontent + content
-                # log.info("File: {}\nContent:\n{}\n".format(file, content))
+        # Get path from dictionary
+        path = param_dict["path"]
 
-        jscontent = jscontent.replace(" ", "").replace("\n", "")
-        caselistbefore = jscontent.split("{")
+        # Specify path and file extension to look for
+        path = os.path.join(os.getcwd(), path)
 
-        for case in caselistbefore:
-            # log.info("case:", case)
-            if (case.find('}') >= 0):
-                casecontent = case[0:case.index("}")]
+        # Check if path has .js extension
+        if (path.find('.js') < 0):
+            message = '[path] could not find js'
+            raise FlybirdsException(message)
+            return
 
+        # Read JavaScript content from file
+        jscontent = file_helper.read_file_from_path(path)
+
+        # Split JavaScript content into a list of test cases
+        caselist = None
+        casename = ''
+        priority = ''
+        tag = ''
+        if "casename" in param_dict.keys():
+            casename = param_dict["casename"]
+
+        if "priority" in param_dict.keys():
+            priority = param_dict["priority"]
+
+        if "tag" in param_dict.keys():
+            tag = param_dict["tag"]
+
+        caselist = split_string(jscontent)
+        caseactuallist = []
+
+        # Process each test case and append executable ones to a list
+        for case in caselist:
+            isadd, outproperty, outValue = process_string(case, casename, priority, tag)
+            if isadd:
+                caseactuallist.append((isadd, outproperty, outValue))
+
+        # Check if there are any executable test cases in the list
+        if len(caseactuallist) == 0:
+            message = '[caseactuallist] could not find excuteable case list'
+            raise FlybirdsException(message)
+            return
+
+        # Execute each executable test case and log the result
+        for item in caseactuallist:
+            if item[0]:
                 try:
-                    self.page.evaluate('() => ' + '{' + casecontent + '}')
+                    self.page.evaluate('() => ' + item[2])
+                    log.info("evaluate Js Case:", item[1])
                 except Exception:
-                    message = '[case] excute failed "\}"'
-                    raise FlybirdsException(message)
+                    message = '[case] excute failed:' + item[1]
+                    raise FlybirdsException(item[1])
                     continue
-            else:
-                message = '[case] not contain "\}"'
-                raise FlybirdsException(message)
 
     def navigate(self, context, param):
         operation_module = gr.get_value("projectScript").custom_operation
@@ -333,3 +361,57 @@ def handle_route(route):
                           body=mock_body)
     else:
         route.continue_()
+
+def split_string(input_str):
+    result = []
+    start = input_str.find("/*")# find the index of the first occurrence of '/' in the input string
+    # continue to search for the next occurrence of '/*' in the input string
+    # until no more occurrences can be found
+    while start != -1:
+        end = input_str.find("}", start)  # find the index of the first occurrence of '}' after '/*'
+        if end != -1:
+            result.append(input_str[start:end + 1])  # append the substring enclosed by '/*' and '}' to the result list
+            start = input_str.find("/*", end)  # search for the next occurrence of '/*' after the current '}' index
+        else:
+            break  # if no more '}' character can be found, break out of the loop
+
+    return result
+
+def process_string(input_str, casename, priority, tag):
+    # Split input string by newline character
+    str_list = input_str.split('\n')
+
+    # Extract first and second line of input string
+    s = str_list[0]
+    outvalue = str_list[1]
+
+    # Check if input string has case properties defined using /* */
+    case_found = True
+    if s.startswith('/*') and s.endswith('*/'):
+        # Remove /* */ characters from string and split by whitespace
+        s = s[2:-2].strip()
+        properties = s.split()
+
+        # Loop through each property and check if it matches given input
+        for p in properties:
+            if casename != '':
+                if p.find('casename') > -1:
+                    if p.split('=')[1].find(casename) == -1:
+                        case_found = False
+                        break
+            if priority != '':
+                if p.find('priority') > -1:
+                    if p.split('=')[1].find(priority) == -1:
+                        case_found = False
+                        break
+            if tag != '':
+                if p.find('tag') > -1:
+                    if p.split('=')[1].find(tag) == -1:
+                        case_found = False
+                        break
+    else:
+        # Raise exception if case properties are not defined using /* */
+        message = '[Case property] do not sign as /* */'
+        output_list = False
+        raise FlybirdsException(message)
+    return case_found, s, outvalue

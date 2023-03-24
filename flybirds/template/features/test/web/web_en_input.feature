@@ -18,6 +18,12 @@
 
    Scenario: input
      When go to url[百度]
-     And execute js[testCase]
+     And execute js[compareData/testCase.js]
+     And wait[3]seconds
+     Then screenshot
+
+   Scenario: input
+     When go to url[百度]
+     And execute js[compareData/testCase.js,casename=RefundApply,tag=Refund]
      And wait[3]seconds
      Then screenshot
