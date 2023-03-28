@@ -9,9 +9,11 @@ import re
 import cv2
 from urllib.parse import parse_qs
 
+from flybirds.utils import dsl_helper
 from deepdiff import DeepDiff
 from jsonpath_ng import parse as parse_path
 
+import xml.etree.ElementTree as ET
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 from flybirds.core.exceptions import FlybirdsException
@@ -290,7 +292,7 @@ class Interception:
         # If the actual value is not equal to the expected value, raise an exception.
         if str(target_values[0]) != expect_value:
             message = f'value not equal, service [{operation}] request ' \
-                      f'parameter [{target_json_path}] actual value:' \
+                      f'parameter [{target_path}] actual value:' \
                       f'[{target_values[0]}], but expect value:' \
                       f'[{expect_value}]'
             raise FlybirdsException(message)
