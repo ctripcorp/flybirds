@@ -6,6 +6,7 @@
 import json
 import os
 import re
+import cv2
 from urllib.parse import parse_qs
 
 from deepdiff import DeepDiff
