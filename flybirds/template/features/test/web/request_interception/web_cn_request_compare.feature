@@ -19,7 +19,7 @@
     而且 验证服务[getRecommendHotelList]的请求参数[head.syscode]与[PC]一致
     而且 验证服务[getRecommendHotelList]的请求参数[$.cityId]与[2]一致
     而且 验证服务[getRecommendHotelList]的请求参数[cityId]与[2]一致
-    而且 验证服务请求[getRecommendHotelList]与[compareData/getRecommendHotelList.xml]一致
+    而且 验证服务请求[getRecommendHotelList]与xml路径[compareData/getRecommendHotelList.xml]一致
 
 
     场景: 非json类型服务请求比对

@@ -6,6 +6,7 @@
 import json
 import time
 import os
+import re
 from urllib.parse import urlparse
 
 import flybirds.core.global_resource as gr
@@ -201,14 +202,25 @@ class Page:
         if "tag" in param_dict.keys():
             tag = param_dict["tag"]
 
-        caselist = split_string(jscontent)
-        caseactuallist = []
+        pattern = r'/\*\*(.*?)\}(\s*)\n'
+        caselist = split_string_rx(jscontent, pattern)
 
-        # Process each test case and append executable ones to a list
-        for case in caselist:
-            isadd, outproperty, outValue = process_string(case, casename, priority, tag)
-            if isadd:
-                caseactuallist.append((isadd, outproperty, outValue))
+        # Check if there are any executable test cases in the list
+        if len(caselist) == 0:
+            message = '[caselist] could not find excuteable case list'
+            raise FlybirdsException(message)
+            return
+
+        # Format test cases content
+        caseformatlist = format_case(caselist)
+
+        # Check if there are any executable test cases in the list
+        if len(caseformatlist) == 0:
+            message = '[caseformatlist] the content of case list is empty or format is wrong'
+            raise FlybirdsException(message)
+            return
+
+        caseactuallist = process_caselist(caseformatlist, casename, priority, tag)
 
         # Check if there are any executable test cases in the list
         if len(caseactuallist) == 0:
@@ -218,14 +230,14 @@ class Page:
 
         # Execute each executable test case and log the result
         for item in caseactuallist:
-            if item[0]:
-                try:
-                    self.page.evaluate('() => ' + item[2])
-                    log.info("evaluate Js Case:", item[1])
-                except Exception:
-                    message = '[case] excute failed:' + item[1]
-                    raise FlybirdsException(item[1])
-                    continue
+            contentcase = item[2]
+            try:
+                self.page.evaluate('() => ' + contentcase)
+                log.info("evaluate Js Case:", contentcase)
+            except Exception:
+                message = '[case] excute failed:' + contentcase
+                raise FlybirdsException(contentcase)
+                continue
 
     def navigate(self, context, param):
         operation_module = gr.get_value("projectScript").custom_operation
@@ -362,56 +374,84 @@ def handle_route(route):
     else:
         route.continue_()
 
-def split_string(input_str):
-    result = []
-    start = input_str.find("/*")# find the index of the first occurrence of '/' in the input string
-    # continue to search for the next occurrence of '/*' in the input string
-    # until no more occurrences can be found
-    while start != -1:
-        end = input_str.find("}", start)  # find the index of the first occurrence of '}' after '/*'
-        if end != -1:
-            result.append(input_str[start:end + 1])  # append the substring enclosed by '/*' and '}' to the result list
-            start = input_str.find("/*", end)  # search for the next occurrence of '/*' after the current '}' index
-        else:
-            break  # if no more '}' character can be found, break out of the loop
+def split_string_rx(input_str,pattern):
+    matches = re.findall(pattern, input_str, re.DOTALL)
+    return matches
 
-    return result
+def match_string_rx(pattern, input_str):
+    ismatch = False
+    result = None
+    match = re.search(pattern, input_str, re.DOTALL)
 
-def process_string(input_str, casename, priority, tag):
-    # Split input string by newline character
-    str_list = input_str.split('\n')
+    if match:
+        result = match.group(1)
+        ismatch=True
 
-    # Extract first and second line of input string
-    s = str_list[0]
-    outvalue = str_list[1]
+    return ismatch,result
 
-    # Check if input string has case properties defined using /* */
-    case_found = True
-    if s.startswith('/*') and s.endswith('*/'):
-        # Remove /* */ characters from string and split by whitespace
-        s = s[2:-2].strip()
-        properties = s.split()
+def match_param_rx(input_str):
+    pattern = r'@param \{.*?\} (\w+)=([\w\W]*?)\n'
+    matches = re.findall(pattern, input_str)
 
-        # Loop through each property and check if it matches given input
-        for p in properties:
-            if casename != '':
-                if p.find('casename') > -1:
-                    if p.split('=')[1].find(casename) == -1:
-                        case_found = False
-                        break
-            if priority != '':
-                if p.find('priority') > -1:
-                    if p.split('=')[1].find(priority) == -1:
-                        case_found = False
-                        break
-            if tag != '':
-                if p.find('tag') > -1:
-                    if p.split('=')[1].find(tag) == -1:
-                        case_found = False
-                        break
-    else:
-        # Raise exception if case properties are not defined using /* */
-        message = '[Case property] do not sign as /* */'
-        output_list = False
-        raise FlybirdsException(message)
-    return case_found, s, outvalue
+    return [f"{match[0]}={match[1]}" for match in matches]
+
+def format_case(caselist):
+    caseactuallist = []
+    # Process each test case and append executable ones to a list
+    for case in caselist:
+        paramlistascase = []
+        caseProperty = {}
+
+        if len(case) > 0:
+            case = case[0]
+
+        patternname = r'\@constructor=(\w+)'
+        ismatchname, casenameproperty = match_string_rx(patternname, case)
+        caseProperty.update({'casename': casenameproperty})
+
+        patternpriority = r'@property\s+priority\s*=\s*(\w+)'
+        ismatchpriority, casepriorityproperty = match_string_rx(patternpriority, case)
+        caseProperty.update({'priority': casepriorityproperty})
+
+        patterntag = r'@property\s+tag\s*=\s*(\w+)'
+        ismatchtag, casetagproperty = match_string_rx(patterntag, case)
+        caseProperty.update({'tag': casetagproperty})
+
+        paramlistascase = match_param_rx(case)
+
+        parts = case.split('{')
+        casecontent = '{' + parts[-1] + '}'
+        caseactuallist.append((caseProperty, paramlistascase, casecontent))
+
+        # isadd, outproperty, outValue = process_string(case, casename, priority, tag)
+        # if isadd:
+        #     caseactuallist.append((isadd, outproperty, outValue))
+
+    return caseactuallist
+
+def process_caselist(caseformatlist, casename, priority, tag):
+    actualcaselist=[]
+    for item in caseformatlist:
+        case_found = True
+        propertycase = item[0]
+
+        if casename != '':
+            if propertycase['casename'] is not None:
+                if propertycase['casename'].find(casename) == -1:
+                    case_found = False
+                    continue
+        if priority != '':
+            if propertycase['priority'] is not None:
+                if propertycase['priority'].find(priority) == -1:
+                    case_found = False
+                    continue
+        if tag != '':
+            if propertycase['tag'] is not None:
+                if propertycase['tag'].find(tag) == -1:
+                    case_found = False
+                    continue
+
+        if case_found:
+            actualcaselist.append(item)
+
+    return actualcaselist

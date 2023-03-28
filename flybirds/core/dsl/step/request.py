@@ -78,7 +78,7 @@ def clear_all_request_mock(context):
 
 
 @step(
-    "compare service request [{service}] with file [{target_data_path}]"
+    "compare service request [{service}] with json file [{target_data_path}]"
 )
 @ele_wrap
 def request_compare(context, service=None, target_data_path=None):
@@ -92,6 +92,20 @@ def request_compare(context, service=None, target_data_path=None):
     g_Context.step.request_compare_from_path(context, service,
                                              target_data_path)
 
+@step(
+    "compare service request [{service}] with xml file [{target_data_xml_path}]"
+)
+@ele_wrap
+def request_compare(context, service=None, target_data_xml_path=None):
+    """
+    compare and verify the request's post body with the data of the target path
+
+    :param context: step context
+    :param service: service request name. (string or None).
+    :param target_data_path: path of target data to be compared
+    """
+    g_Context.step.request_compare_from_path(context, service,
+                                             target_data_xml_path)
 
 @step(
     "compare service non-json request [{service}] with non-json "
@@ -111,10 +125,10 @@ def request_query_str_compare(context, service=None, target_data_path=None):
 
 
 @step(
-    "service request [{service}] request parameter [{target_path}] "
+    "service request [{service}] request parameter [{target_json_path}] "
     "is [{expect_value}]")
 @ele_wrap
-def request_compare_value(context, service=None, target_path=None,
+def request_compare_value(context, service=None, target_json_path=None,
                           expect_value=None):
     """
     compare and verify the request parameter of the service request with
@@ -125,5 +139,5 @@ def request_compare_value(context, service=None, target_path=None,
     :param target_json_path: json path of request parameter
     :param expect_value: expected value
     """
-    g_Context.step.request_compare_value(context, service, target_path,
+    g_Context.step.request_compare_value(context, service, target_json_path,
                                          expect_value)
