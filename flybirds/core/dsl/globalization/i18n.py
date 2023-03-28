@@ -192,7 +192,9 @@ step_language = {
         "service request [{service}] request parameter [{target_json_path}] "
         "is [{expect_value}]": [
             "验证服务[{service}]的请求参数[{target_json_path}]"
-            "与[{expect_value}]一致"]
-
+            "与[{expect_value}]一致"],
+        "compare target picture [{target_picture_path}] with compared picture "
+        "[{compared_picture_path}] ": [
+            "对比目标图片[{target_picture_path}]和比较图片[{compared_picture_path}]"]
     },
 }

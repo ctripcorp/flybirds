@@ -78,6 +78,22 @@ def clear_all_request_mock(context):
 
 
 @step(
+    "compare target picture [{target_picture_path}] with compared picture [{compared_picture_path}]"
+)
+@ele_wrap
+def picture_compare(context, target_picture_path, compared_picture_path):
+    """
+    compare and verify the target picture with compared picture path
+
+    :param context: step context
+    :param target_picture_path: target picture path.
+    :param compared_picture_path: compared picture path
+    """
+    g_Context.step.picture_compare_from_path(context, target_picture_path,
+                                             compared_picture_path)
+
+
+@step(
     "compare service request [{service}] with json file [{target_data_path}]"
 )
 @ele_wrap

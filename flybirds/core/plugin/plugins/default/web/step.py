@@ -267,3 +267,10 @@ class Step:
                               expect_value):
         request_op.request_compare_value(operation, target_json_path,
                                          expect_value)
+
+
+    @staticmethod
+    def picture_compare_from_path(context, target_picture_path,
+                                             compared_picture_path):
+        request_op.compare_images(target_picture_path,
+                                             compared_picture_path)

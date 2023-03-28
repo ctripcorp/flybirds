@@ -294,6 +294,83 @@ class Interception:
                       f'[{expect_value}]'
             raise FlybirdsException(message)
 
+    @staticmethod
+    def compare_images(target_picture_path, compared_picture_path):
+        # default threshold value
+        threshold = 0.95
+
+        # Convert parameter string to dictionary
+        param_dict = dsl_helper.params_to_dic(target_picture_path, "target_picture_path")
+
+        # Get path from dictionary
+        target_picture_path = param_dict["target_picture_path"]
+
+        if "threshold" in param_dict.keys():
+            threshold = param_dict["threshold"]
+
+            try:
+                threshold = float(threshold)
+            except ValueError:
+                message = f'[threshold] is not int or float value'
+                raise FlybirdsException(message)
+
+        file_path1 = os.path.join(os.getcwd(), target_picture_path)
+        file_path2 = os.path.join(os.getcwd(), compared_picture_path)
+
+        similar = False
+        # Read images
+        image1 = cv2.imread(file_path1)
+        if image1 is None:
+            message = f'[target_picture_path] is invalid'
+            raise FlybirdsException(message)
+
+        image2 = cv2.imread(file_path2)
+        if image2 is None:
+            message = f'[target_picture_path] is invalid'
+            raise FlybirdsException(message)
+
+        # Convert images to grayscale
+        gray1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
+        gray2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
+
+        # Calculate histograms
+        hist1 = cv2.calcHist([gray1], [0], None, [256], [0, 256])
+        hist2 = cv2.calcHist([gray2], [0], None, [256], [0, 256])
+
+        # Calculate histogram similarity
+        hist_diff = cv2.compareHist(hist1, hist2, cv2.HISTCMP_CORREL)
+
+        # Check if images are similar based on threshold
+        if hist_diff >= threshold:
+            similar = True
+            log.info("Image diff percent is more than threshold:", threshold)
+
+        else:
+            # Calculate difference image
+            diff = cv2.absdiff(gray1, gray2)
+
+            # Threshold the difference image
+            threshold_value, threshold_diff = cv2.threshold(diff, 50, 255, cv2.THRESH_BINARY)
+
+            # Find contours in the threshold image
+            contours, hierarchy = cv2.findContours(threshold_diff, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+            # Mark the difference regions in image2 with rectangles
+            for contour in contours:
+                x, y, w, h = cv2.boundingRect(contour)
+                cv2.rectangle(image2, (x, y), (x + w, y + h), (0, 0, 255), 2)
+
+            # Display the marked image
+            cv2.imshow("Image Difference", image2)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
+
+            # save diff in image2
+            cv2.imwrite(file_path2, image2)
+            log.info("Image diff percent is less than threshold:", threshold)
+
+        return similar, image2
+
 
 def get_server_request_body(service):
     interception_request = gr.get_value('interceptionRequest')
