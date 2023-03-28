@@ -92,6 +92,7 @@ def request_compare(context, service=None, target_data_path=None):
     g_Context.step.request_compare_from_path(context, service,
                                              target_data_path)
 
+
 @step(
     "compare service request [{service}] with xml file [{target_data_xml_path}]"
 )
@@ -102,10 +103,11 @@ def request_compare(context, service=None, target_data_xml_path=None):
 
     :param context: step context
     :param service: service request name. (string or None).
-    :param target_data_path: path of target data to be compared
+    :param target_data_xml_path: path of target data to be compared
     """
     g_Context.step.request_compare_from_path(context, service,
                                              target_data_xml_path)
+
 
 @step(
     "compare service non-json request [{service}] with non-json "

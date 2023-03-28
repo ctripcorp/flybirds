@@ -63,7 +63,6 @@ class Step:
         page = gr.get_value("plugin_page")
         page.get_session_storage(context)
 
-
     @classmethod
     def screenshot(cls, context):
         step_common.screenshot(context)

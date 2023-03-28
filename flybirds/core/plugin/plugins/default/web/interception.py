@@ -21,6 +21,7 @@ from flybirds.utils import file_helper
 from flybirds.utils.file_helper import read_json_data
 import xmltodict
 
+
 class Interception:
     """
     web interception impl
@@ -115,11 +116,13 @@ class Interception:
     # -------------------------------------------------------------------------
     @staticmethod
     def request_compare(operation, target_data_path):
-        # Call the get_server_request_body() function to get the server request information, and return a dictionary object
+        # Call the get_server_request_body() function to get the server request information,
+        # and return a dictionary object
         request_info = get_server_request_body(operation)
         actual_request_obj = None
 
-        # If the returned request information is not None and has a postData attribute, assign the postData to the actual_request_obj variable
+        # If the returned request information is not None and has a postData attribute,
+        # assign the postData to the actual_request_obj variable
         if request_info is not None and request_info.get('postData'):
             actual_request_obj = request_info.get('postData')
 
@@ -142,12 +145,10 @@ class Interception:
         # Get the file path
         file_path = os.path.join(os.getcwd(), target_data_path)
 
-        expect_request_obj = None
-
         # If the file path exists, read data from the file and assign it to expect_request_obj
         if os.path.exists(file_path):
 
-            expect_request_obj = file_helper.read_file_from_path(file_path);
+            expect_request_obj = file_helper.read_file_from_path(file_path)
             if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
                 expect_request_obj = xmltodict.parse(expect_request_obj)
             else:
@@ -164,7 +165,7 @@ class Interception:
             message = f'[request_compare] cannot get data form path [{target_data_path}]]'
             raise FlybirdsException(message)
 
-        # If the expect_request_obj is an xml file, and contains a root node, remove the root node
+        # If the expect_request_obj is xml file, and contains a root node, remove the root node
         if 'root' in expect_request_obj:
             expect_request_obj = expect_request_obj['root']
 
@@ -173,7 +174,8 @@ class Interception:
             expect_request_obj = convert_values(expect_request_obj)
             log.info(f'[request_compare] expectObj dict after deal:{expect_request_obj}')
 
-        # Call the handle_diff() function to compare the differences between the actual request object and the expected request object, and output the log
+        # Call the handle_diff() function to compare the differences between the actual request object
+        # and the expected request object, and output the log
         handle_diff(actual_request_obj, expect_request_obj, operation, target_data_path)
 
     @staticmethod
@@ -238,7 +240,8 @@ class Interception:
 
         handle_diff(actual_request_obj, expect_request_obj, operation,
                     target_data_path)
-        # Call the handle_diff function to compare the difference between the actual request object and the expected request object, passing in the parameters operation and target_data_path.
+        # Call the handle_diff function to compare the difference between the actual request object
+        # and the expected request object, passing in the parameters operation and target_data_path.
 
     @staticmethod
     def request_compare_value(operation, target_path, expect_value):
@@ -316,7 +319,7 @@ def handle_ignore_node(service):
                 level_item = level_item.strip()
                 item_is_array = re.search(r"([^\[\]]+)\[(\d+)\]",
                                           level_item) is not None
-                item_str = ''
+
                 if item_is_array:
                     property_name = "['" + re.search(r"([^\[\]]+)\[(\d+)\]",
                                                      level_item).group(
@@ -379,7 +382,7 @@ def get_case_response_body(case_id):
 # 定义函数 convert_values()，将值为数字或布尔类型的字符串转换为对应的数字或布尔值
 def convert_values(data):
     for key, value in data.items():
-        if key !='head' and value is not None:
+        if key != 'head' and value is not None:
             if isinstance(value, dict):
                 convert_values(value)
             elif isinstance(value, str):
@@ -389,16 +392,16 @@ def convert_values(data):
                     data[key] = False
                 elif value.isdigit():
                     data[key] = int(value)
-    return  data
+    return data
 
 
 # 定义函数 convert_values()，将值为None转为''
 def delete_values(data):
     for key, value in data.items():
         if value is None:
-            data[key]=''
+            data[key] = ''
         elif isinstance(value, dict):
             delete_values(value)
         elif isinstance(value, str):
-            log.info("String dict value",value)
-    return  data
+            log.info("String dict value", value)
+    return data
