@@ -264,24 +264,36 @@ class Interception:
 
         # Check the data format.
         if data.startswith('<?xml') or data.startswith('<'):
-            # If the format is XML, parse the XML.
-            root = ET.fromstring(data)
-            # Parse the XML path expression.
-            xml_path_expr = ET.XPath(target_path)
-            # Get the target data from XML.
-            target_values = [elem.text for elem in xml_path_expr(root)]
-            # Print a log message.
-            log.info(f'[requestCompareValue] get xmlPathData: {target_values}')
+            try:
+                # If the format is XML, parse the XML.
+                root = ET.fromstring(data)
+
+                # Parse the XML path expression.
+                xml_path_expr = root.findall(target_path)
+                # Get the target data from XML.
+                target_values = [elem.text for elem in xml_path_expr(root)]
+                # Print a log message.
+                log.info(f'[requestCompareValue] get xmlPathData: {target_values}')
+
+            except ValueError:
+                message = f'[xml convert] format is wrong, data:' + data
+                raise FlybirdsException(message)
+
         else:
-            # If the format is not XML, it is assumed to be JSON. Parse the JSON.
-            # Parse the data into a dictionary.
-            json_data = json.loads(data)
-            # Parse the JSON path expression.
-            json_path_expr = parse_path(target_path)
-            # Get the target data from JSON.
-            target_values = [match.value for match in json_path_expr.find(json_data)]
-            # Print a log message.
-            log.info(f'[requestCompareValue] get jsonPathData: {target_values}')
+            try:
+                # If the format is not XML, it is assumed to be JSON. Parse the JSON.
+                # Parse the data into a dictionary.
+                json_data = json.loads(data)
+                # Parse the JSON path expression.
+                json_path_expr = parse_path(target_path)
+                # Get the target data from JSON.
+                target_values = [match.value for match in json_path_expr.find(json_data)]
+                # Print a log message.
+                log.info(f'[requestCompareValue] get jsonPathData: {target_values}')
+
+            except ValueError:
+                message = f'[json convert] format is wrong, data:' + data
+                raise FlybirdsException(message)
 
         # If the target data does not exist, raise an exception.
         if len(target_values) == 0:
@@ -346,7 +358,9 @@ class Interception:
         # Check if images are similar based on threshold
         if hist_diff >= threshold:
             similar = True
-            log.info("Image diff percent is more than threshold:", threshold)
+            message = f'Image diff percent [{hist_diff}] request ' \
+                      f'is more than threshold [{threshold}]'
+            log.info(message)
 
         else:
             # Calculate difference image

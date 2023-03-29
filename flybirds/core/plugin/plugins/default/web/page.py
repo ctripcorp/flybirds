@@ -18,6 +18,7 @@ from flybirds.core.plugin.plugins.default.web.interception import \
 from flybirds.utils import dsl_helper
 from flybirds.utils.dsl_helper import is_number
 from flybirds.utils import file_helper
+from flybirds.core.exceptions import FlybirdsException
 
 __open__ = ["Page"]
 
@@ -60,9 +61,8 @@ class Page:
     @staticmethod
     def new_browser_context():
         browser = gr.get_value('browser')
-
         operation_module = gr.get_value("projectScript").custom_operation
-        context = None
+
         if operation_module is not None and \
                 hasattr(operation_module, "create_browser_context"):
             create_browser_context = getattr(operation_module,
@@ -87,7 +87,7 @@ class Page:
         # add user custom cookies into browser context
         user_cookie = GlobalContext.get_global_cache("cookies")
         if user_cookie is not None:
-            #context.clear_cookies()
+            # context.clear_cookies()
             context.add_cookies(cookies=user_cookie)
             log.info(f"this is user cookies: {context.cookies()}")
         else:
@@ -168,7 +168,7 @@ class Page:
         else:
             return None
 
-    def evaluateJs(self, context, param):
+    def evaluatejs(self, context, param):
 
         # Convert parameter string to dictionary
         param_dict = dsl_helper.params_to_dic(param, "path")
@@ -180,16 +180,14 @@ class Page:
         path = os.path.join(os.getcwd(), path)
 
         # Check if path has .js extension
-        if (path.find('.js') < 0):
+        if path.find('.js') < 0:
             message = '[path] could not find js'
             raise FlybirdsException(message)
-            return
 
         # Read JavaScript content from file
         jscontent = file_helper.read_file_from_path(path)
 
         # Split JavaScript content into a list of test cases
-        caselist = None
         casename = ''
         priority = ''
         tag = ''
@@ -209,7 +207,6 @@ class Page:
         if len(caselist) == 0:
             message = '[caselist] could not find excuteable case list'
             raise FlybirdsException(message)
-            return
 
         # Format test cases content
         caseformatlist = format_case(caselist)
@@ -218,7 +215,6 @@ class Page:
         if len(caseformatlist) == 0:
             message = '[caseformatlist] the content of case list is empty or format is wrong'
             raise FlybirdsException(message)
-            return
 
         caseactuallist = process_caselist(caseformatlist, casename, priority, tag)
 
@@ -226,7 +222,6 @@ class Page:
         if len(caseactuallist) == 0:
             message = '[caseactuallist] could not find excuteable case list'
             raise FlybirdsException(message)
-            return
 
         # Execute each executable test case and log the result
         for item in caseactuallist:
@@ -236,8 +231,7 @@ class Page:
                 log.info("evaluate Js Case:", contentcase)
             except Exception:
                 message = '[case] excute failed:' + contentcase
-                raise FlybirdsException(contentcase)
-                continue
+                raise FlybirdsException(message)
 
     def navigate(self, context, param):
         operation_module = gr.get_value("projectScript").custom_operation
@@ -374,9 +368,11 @@ def handle_route(route):
     else:
         route.continue_()
 
-def split_string_rx(input_str,pattern):
+
+def split_string_rx(input_str, pattern):
     matches = re.findall(pattern, input_str, re.DOTALL)
     return matches
+
 
 def match_string_rx(pattern, input_str):
     ismatch = False
@@ -385,15 +381,17 @@ def match_string_rx(pattern, input_str):
 
     if match:
         result = match.group(1)
-        ismatch=True
+        ismatch = True
 
-    return ismatch,result
+    return ismatch, result
+
 
 def match_param_rx(input_str):
     pattern = r'@param \{.*?\} (\w+)=([\w\W]*?)\n'
     matches = re.findall(pattern, input_str)
 
     return [f"{match[0]}={match[1]}" for match in matches]
+
 
 def format_case(caselist):
     caseactuallist = []
@@ -429,8 +427,9 @@ def format_case(caselist):
 
     return caseactuallist
 
+
 def process_caselist(caseformatlist, casename, priority, tag):
-    actualcaselist=[]
+    actualcaselist = []
     for item in caseformatlist:
         case_found = True
         propertycase = item[0]
@@ -438,17 +437,14 @@ def process_caselist(caseformatlist, casename, priority, tag):
         if casename != '':
             if propertycase['casename'] is not None:
                 if propertycase['casename'].find(casename) == -1:
-                    case_found = False
                     continue
         if priority != '':
             if propertycase['priority'] is not None:
                 if propertycase['priority'].find(priority) == -1:
-                    case_found = False
                     continue
         if tag != '':
             if propertycase['tag'] is not None:
                 if propertycase['tag'].find(tag) == -1:
-                    case_found = False
                     continue
 
         if case_found:

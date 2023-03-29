@@ -24,7 +24,7 @@ class Step:
     @classmethod
     def excute_js_page(cls, context, param):
         page = gr.get_value("plugin_page")
-        page.evaluateJs(context, param)
+        page.evaluatejs(context, param)
 
     @classmethod
     def jump_to_page(cls, context, param):
