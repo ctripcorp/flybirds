@@ -397,29 +397,28 @@ def format_case(caselist):
     caseactuallist = []
     # Process each test case and append executable ones to a list
     for case in caselist:
-        paramlistascase = []
-        caseProperty = {}
+        caseproperty = {}
 
         if len(case) > 0:
             case = case[0]
 
         patternname = r'\@constructor=(\w+)'
         ismatchname, casenameproperty = match_string_rx(patternname, case)
-        caseProperty.update({'casename': casenameproperty})
+        caseproperty.update({'casename': casenameproperty})
 
         patternpriority = r'@property\s+priority\s*=\s*(\w+)'
         ismatchpriority, casepriorityproperty = match_string_rx(patternpriority, case)
-        caseProperty.update({'priority': casepriorityproperty})
+        caseproperty.update({'priority': casepriorityproperty})
 
         patterntag = r'@property\s+tag\s*=\s*(\w+)'
         ismatchtag, casetagproperty = match_string_rx(patterntag, case)
-        caseProperty.update({'tag': casetagproperty})
+        caseproperty.update({'tag': casetagproperty})
 
         paramlistascase = match_param_rx(case)
 
         parts = case.split('{')
         casecontent = '{' + parts[-1] + '}'
-        caseactuallist.append((caseProperty, paramlistascase, casecontent))
+        caseactuallist.append((caseproperty, paramlistascase, casecontent))
 
         # isadd, outproperty, outValue = process_string(case, casename, priority, tag)
         # if isadd:
