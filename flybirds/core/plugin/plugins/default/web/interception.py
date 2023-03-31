@@ -308,9 +308,9 @@ class Interception:
                 root = et.fromstring(data)
 
                 # Parse the XML path expression.
-                xml_path_expr = root.findall(target_path)
+                target_elements = root.findall(target_path)
                 # Get the target data from XML.
-                target_values = [elem.text for elem in xml_path_expr(root)]
+                target_values = [elem.text for elem in target_elements]
                 # Print a log message.
                 log.info(f'[requestCompareValue] get xmlPathData: {target_values}')
 
