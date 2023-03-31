@@ -182,6 +182,7 @@ step_language = {
         "remove all service listeners": ["移除所有服务监听"],
         "compare service request [{service}] with json file "
         "[{target_data_path}]": [
+            "验证服务请求[{service}]与[{target_data_path}]一致",
             "验证服务请求[{service}]与json路径[{target_data_path}]一致"],
         "compare service request [{service}] with xml file "
         "[{target_data_xml_path}]": [
