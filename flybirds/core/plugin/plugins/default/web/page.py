@@ -187,6 +187,11 @@ class Page:
         # Read JavaScript content from file
         jscontent = file_helper.read_file_from_path(path)
 
+        # Check if there are any executable test cases in the list
+        if jscontent is None:
+            message = '[casecontent] could not find in ' + path
+            raise FlybirdsException(message)
+
         # Split JavaScript content into a list of test cases
         casename = ''
         priority = ''

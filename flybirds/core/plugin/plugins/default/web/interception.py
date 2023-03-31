@@ -13,7 +13,7 @@ from flybirds.utils import dsl_helper
 from deepdiff import DeepDiff
 from jsonpath_ng import parse as parse_path
 
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as et
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 from flybirds.core.exceptions import FlybirdsException
@@ -139,9 +139,21 @@ class Interception:
 
         # Deserialize actual_request_obj into a Python object
         if actual_request_obj.startswith('<?xml') or actual_request_obj.startswith('<'):
-            actual_request_obj = xmltodict.parse(actual_request_obj)
+
+            try:
+                # If the format is XML, parse the XML.
+                actual_request_obj = xmltodict.parse(actual_request_obj)
+            except ValueError:
+                message = f'[xml convert] format is wrong, data:' + actual_request_obj
+                raise FlybirdsException(message)
+
         else:
-            actual_request_obj = json.loads(actual_request_obj)
+            try:
+                # If the format is json, parse the json.
+                actual_request_obj = json.loads(actual_request_obj)
+            except ValueError:
+                message = f'[json convert] format is wrong, data:' + actual_request_obj
+                raise FlybirdsException(message)
 
         log.info(f'[request_compare] actualObj dict:{actual_request_obj}')
 
@@ -153,9 +165,21 @@ class Interception:
 
             expect_request_obj = file_helper.read_file_from_path(file_path)
             if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
-                expect_request_obj = xmltodict.parse(expect_request_obj)
+                try:
+                    # If the format is XML, parse the XML.
+                    expect_request_obj = xmltodict.parse(expect_request_obj)
+                except ValueError:
+                    message = f'[xml convert] format is wrong, data:' + expect_request_obj
+                    raise FlybirdsException(message)
+
             else:
-                expect_request_obj = file_helper.get_json_from_file_path(file_path)
+                try:
+                    # If the format is json, parse the json.
+                    expect_request_obj = file_helper.get_json_from_file_path(file_path)
+                except ValueError:
+                    message = f'[json convert] format is wrong, data:' + expect_request_obj
+                    raise FlybirdsException(message)
+
         else:
             message = f'[request_compare] expect_request_obj not get file from [{file_path}]'
             raise FlybirdsException(message)
@@ -199,7 +223,6 @@ class Interception:
 
         if actual_request_obj is None:
             # If actual_request_obj is None
-
             message = f'[requestQuerystringCompare] not get listener data ' \
                       f'for [{operation}]'
             raise FlybirdsException(message)
@@ -207,11 +230,19 @@ class Interception:
 
         # Check data format
         if actual_request_obj.startswith('<?xml') or actual_request_obj.startswith('<'):
-            actual_request_obj = xmltodict.parse(actual_request_obj)
-            # Parse actual_request_obj as a dictionary if it starts with '<?xml' or '<'
+            try:
+                # If the format is XML, parse the XML.
+                actual_request_obj = xmltodict.parse(actual_request_obj)
+            except ValueError:
+                message = f'[xml convert] format is wrong, data:' + actual_request_obj
+                raise FlybirdsException(message)
         else:
-            actual_request_obj = parse_qs(actual_request_obj)
-            # Parse actual_request_obj as a dictionary and store it in actual_request_obj
+            try:
+                # If the format is json, parse the json.
+                actual_request_obj = parse_qs(actual_request_obj)
+            except ValueError:
+                message = f'[json convert] format is wrong, data:' + actual_request_obj
+                raise FlybirdsException(message)
 
         file_path = os.path.join(os.getcwd(), target_data_path)
         # Get the path of the target data file and store it in file_path
@@ -233,13 +264,21 @@ class Interception:
             raise FlybirdsException(message)
             # Raise an exception indicating that data could not be retrieved from the specified path
 
-        # Check data format
         if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
-            expect_request_obj = xmltodict.parse(expect_request_obj)
-        # Parse expect_request_obj as a dictionary if it starts with '<?xml' or '<'
+            try:
+                # If the format is XML, parse the XML.
+                expect_request_obj = xmltodict.parse(expect_request_obj)
+            except ValueError:
+                message = f'[xml convert] format is wrong, data:' + expect_request_obj
+                raise FlybirdsException(message)
+
         else:
-            expect_request_obj = parse_qs(expect_request_obj)
-            # Parse expect_request_obj as a dictionary and store it in expect_request_obj
+            try:
+                # If the format is json, parse the json.
+                expect_request_obj = parse_qs(expect_request_obj)
+            except ValueError:
+                message = f'[json convert] format is wrong, data:' + expect_request_obj
+                raise FlybirdsException(message)
 
         handle_diff(actual_request_obj, expect_request_obj, operation,
                     target_data_path)
@@ -266,7 +305,7 @@ class Interception:
         if data.startswith('<?xml') or data.startswith('<'):
             try:
                 # If the format is XML, parse the XML.
-                root = ET.fromstring(data)
+                root = et.fromstring(data)
 
                 # Parse the XML path expression.
                 xml_path_expr = root.findall(target_path)
@@ -378,7 +417,7 @@ class Interception:
                 cv2.rectangle(image2, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
             # Display the marked image
-            cv2.imshow("Image Difference", image2)
+            # cv2.imshow("Image Difference", image2)
             # cv2.waitKey(0)
             # cv2.destroyAllWindows()
 
