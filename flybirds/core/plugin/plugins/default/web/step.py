@@ -268,9 +268,14 @@ class Step:
         request_op.request_compare_value(operation, target_json_path,
                                          expect_value)
 
+    @staticmethod
+    def picture_compare_from_path(context, target_picture_path, compared_picture_path):
+        request_op.compare_images(target_picture_path, compared_picture_path)
 
     @staticmethod
-    def picture_compare_from_path(context, target_picture_path,
-                                             compared_picture_path):
-        request_op.compare_images(target_picture_path,
-                                             compared_picture_path)
+    def dom_ele_compare_from_path(context, target_url, target_ele, compared_url, compared_ele):
+        request_op.compare_dom_element_text(target_url, target_ele, compared_url, compared_ele)
+
+    @staticmethod
+    def call_external_party_api(context, method, url, data, headers):
+        request_op.call_external_party_api(method, url, data, headers)

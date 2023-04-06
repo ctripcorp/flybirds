@@ -427,6 +427,172 @@ class Interception:
 
         return similar, image2
 
+    @staticmethod
+    def compare_dom_element_text(target_url, target_ele, compared_url, compared_ele):
+        same = False
+        diff = ''
+
+        # Convert parameter string to dictionary
+        target_param_dict = dsl_helper.params_to_dic(target_ele, "target_ele")
+
+        # Get target_ele from dictionary
+        target_ele = target_param_dict["target_ele"]
+
+        target_regexp = False
+        if "regexp" in target_param_dict.keys():
+            regexp = target_param_dict["regexp"]
+            if regexp.lower() == "true":
+                target_regexp = True
+
+        page1_soup = None
+        # Get the first page's DOM element
+        try:
+            page1_response = requests.get(target_url)
+            page1_response.raise_for_status()  # check for any HTTP errors
+            page1_soup = BeautifulSoup(page1_response.text, "html.parser")
+        except requests.exceptions.RequestException as e:
+            message = f"Error occurred while making a request to {target_url}: {e}"
+            raise FlybirdsException(message)
+        except Exception as e:
+            message = f"Error occurred while parsing the HTML response of {target_url}: {e}"
+            raise FlybirdsException(message)
+
+        if page1_soup is None:
+            message = f'[compared_url] could not change to html element :' \
+                      f'[{compared_url}]. '
+            raise FlybirdsException(message)
+
+        page1_element = None
+        try:
+            params1 = json.loads(target_ele)
+
+            if target_regexp:
+                key = list(params1.keys())[0]
+                value = list(params1.values())[0]
+                textreg = re.compile(value)
+                params1[key] = textreg
+            page1_element = page1_soup.find(**params1)
+        except ValueError:
+            message = f'[target_ele] is not json value'
+            raise FlybirdsException(message)
+
+        if page1_element is None:
+            message = f'[target_element] could not find in path' \
+                      f'[{target_ele}]. '
+            raise FlybirdsException(message)
+
+        text1 = page1_element.get_text().strip()
+
+        # Convert parameter string to dictionary
+        compared_param_dict = dsl_helper.params_to_dic(compared_ele, "compared_ele")
+
+        # Get path from dictionary
+        compared_ele = compared_param_dict["compared_ele"]
+
+        compared_regexp = False
+        if "regexp" in compared_param_dict.keys():
+            regexp = compared_param_dict["regexp"]
+            if regexp.lower() == "true":
+                compared_regexp = True
+
+        page2_soup = None
+        # Get the second page's DOM element
+        try:
+            page2_response = requests.get(compared_url)
+            page2_response.raise_for_status()  # check for any HTTP errors
+            page2_soup = BeautifulSoup(page2_response.text, "html.parser")
+        except requests.exceptions.RequestException as e:
+            message = f"Error occurred while making a request to {compared_url}: {e}"
+            raise FlybirdsException(message)
+        except Exception as e:
+            message = f"Error occurred while parsing the HTML response of {compared_url}: {e}"
+            raise FlybirdsException(message)
+
+        if page2_soup is None:
+            message = f'[compared_url] could not change to html element :' \
+                      f'[{compared_url}]. '
+            raise FlybirdsException(message)
+
+        page2_element = None
+        try:
+            params2 = json.loads(compared_ele)
+            if compared_regexp:
+                key = list(params2.keys())[0]
+                value = list(params2.values())[0]
+                textreg = re.compile(value)
+                params2[key] = textreg
+            page2_element = page2_soup.find(**params2)
+        except ValueError:
+            message = f'[target_ele] is not json value'
+            raise FlybirdsException(message)
+
+        if page2_element is None:
+            message = f'[target_element] could not find in path' \
+                      f'[{compared_ele}]. '
+            raise FlybirdsException(message)
+
+        text2 = page2_element.get_text().strip()
+
+        # Compare the text content of the two DOM elements
+        if text1 == text2:
+            same = True
+        else:
+            message = f'The contents of the two pages are different as' \
+                      f' [{target_url}] - [{target_path}] - [{text1}]:' \
+                      f' [{compared_url}] - [{compared_path}] - [{text2}]:'
+            diff = message
+            log.info(message)
+        return same, diff
+
+    @staticmethod
+    def call_external_party_api(method, url, data=None, headers=None):
+        # Initialize variables to hold the content and headers
+        datacontent = None
+        dataheaders = None
+
+        # Try to parse the data and headers as JSON
+        try:
+            datacontent = json.loads(data)
+            dataheaders = json.loads(headers)
+        except ValueError:
+            message = f'The content of data and headers is not json format: ' \
+                      f' [{data}] - [{headers}]'
+            raise FlybirdsException(message)
+
+        # Set the content and headers to None if they are empty
+        if len(datacontent) == 0:
+            datacontent = None
+
+        if len(dataheaders) == 0:
+            dataheaders = None
+
+        # Make a GET request if the method is GET
+        if method.upper() == 'GET':
+            try:
+                response = requests.get(url, params=datacontent, headers=dataheaders, verify=False)
+            except ValueError:
+                message = f'The contents get is invalid: ' \
+                          f' [{url}] - [{datacontent}] - [{dataheaders}]:'
+                raise FlybirdsException(message)
+        # Make a POST request if the method is POST
+        elif method.upper() == 'POST':
+            try:
+                response = requests.post(url, json=data, headers=dataheaders)
+            except ValueError:
+                message = f'The contents post is invalid: ' \
+                          f' [{url}] - [{datacontent}] - [{dataheaders}]:'
+                raise FlybirdsException(message)
+        # Raise an exception if the method is not GET or POST
+        else:
+            message = f"Unsupported method: {method}"
+            raise FlybirdsException(message)
+
+        # Check if the response was successful
+        response.raise_for_status()
+
+        # Return the response text
+        return response.text
+
 
 def get_server_request_body(service):
     interception_request = gr.get_value('interceptionRequest')

@@ -94,6 +94,42 @@ def picture_compare(context, target_picture_path, compared_picture_path):
 
 
 @step(
+    "compare target element of target url[{target_url}] in target element [{target_ele}] with compared element of "
+    "compared url[{compared_url}] in compared element [{compared_ele}]"
+)
+@ele_wrap
+def dom_ele_text_compare(context, target_url, target_ele, compared_url, compared_ele):
+    """
+    compare and verify the html's dom element with the text of the target path and compared path
+
+    :param target_url: target  url
+    :param target_ele: target xpath from html root element
+    :param compared_url: compared  url
+    :param compared_ele: compared xpath from html root element
+    """
+    g_Context.step.dom_ele_compare_from_path(context, target_url, target_ele,
+                                             compared_url, compared_ele)
+
+
+@step(
+    "call external party api of method[{method}] and url[{url}] and data[{data}] and headers[{headers}]"
+)
+@ele_wrap
+def call_external_party_api(context, method, url, data, headers=None):
+    """
+    This function is used to call an external API from within a Python script.
+
+    :param url: a string representing the URL of the external API to call.
+    :param data:  a dictionary containing the data to be sent in the request body. This can be in JSON or XML format.
+    :param headers: a dictionary containing the headers to be sent with the request. This can include information
+                   such as the content type, authorization, and API key.
+    :param method: a string representing the HTTP method to be used for the request.
+                   This can be 'GET', 'POST', 'PUT', 'DELETE', etc.
+    """
+    g_Context.step.call_external_party_api(context, method, url, data, headers)
+
+
+@step(
     "compare service request [{service}] with json file [{target_data_path}]"
 )
 @ele_wrap
