@@ -7,7 +7,11 @@ import json
 import os
 import re
 import cv2
+import requests
+
 from urllib.parse import parse_qs
+
+from bs4 import BeautifulSoup
 
 from flybirds.utils import dsl_helper
 from deepdiff import DeepDiff
