@@ -7,6 +7,8 @@ import os
 import time
 import shutil
 import ffmpeg
+import airtest
+import sys
 
 from airtest.core.android.adb import ADB
 
@@ -110,7 +112,14 @@ class ScreenRecord:
                     max_time, bit_rate
                 )
             )
-            self.dev.start_recording(max_time, bit_rate)
+
+            airtestversion = airtest.__version__
+            v1 = tuple(map(int, airtestversion.split('.')))
+            v2 = tuple(map(int, "1.2.9".split('.')))
+            if v1 >= v2:
+                self.dev.start_recording(max_time=max_time, bit_rate=bit_rate)
+            else:
+                self.dev.start_recording(max_time, bit_rate)
         else:
             if not self.support:
                 return
