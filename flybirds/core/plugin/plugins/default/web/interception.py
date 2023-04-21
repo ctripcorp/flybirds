@@ -542,8 +542,8 @@ class Interception:
             same = True
         else:
             message = f'The contents of the two pages are different as' \
-                      f' [{target_url}] - [{target_path}] - [{text1}]:' \
-                      f' [{compared_url}] - [{compared_path}] - [{text2}]:'
+                      f' [{target_url}] - [{target_ele}] - [{text1}]:' \
+                      f' [{compared_url}] - [{compared_ele}] - [{text2}]:'
             diff = message
             log.info(message)
         return same, diff
@@ -570,32 +570,17 @@ class Interception:
         if len(dataheaders) == 0:
             dataheaders = None
 
-        # Make a GET request if the method is GET
-        if method.upper() == 'GET':
-            try:
-                response = requests.get(url, params=datacontent, headers=dataheaders, verify=False)
-            except ValueError:
-                message = f'The contents get is invalid: ' \
-                          f' [{url}] - [{datacontent}] - [{dataheaders}]:'
-                raise FlybirdsException(message)
-        # Make a POST request if the method is POST
-        elif method.upper() == 'POST':
-            try:
-                response = requests.post(url, json=data, headers=dataheaders)
-            except ValueError:
-                message = f'The contents post is invalid: ' \
-                          f' [{url}] - [{datacontent}] - [{dataheaders}]:'
-                raise FlybirdsException(message)
-        # Raise an exception if the method is not GET or POST
-        else:
-            message = f"Unsupported method: {method}"
+        try:
+            response = requests.request(method.upper(), url, params=datacontent, json=data, headers=dataheaders,
+                                        verify=False)
+            # Check if the response was successful
+            response.raise_for_status()
+            # Return the response text
+            return response.text
+        except ValueError:
+            message = f'The contents post is invalid: ' \
+                      f' [{url}] - [{data}] - [{headers}]:'
             raise FlybirdsException(message)
-
-        # Check if the response was successful
-        response.raise_for_status()
-
-        # Return the response text
-        return response.text
 
 
 def get_server_request_body(service):
