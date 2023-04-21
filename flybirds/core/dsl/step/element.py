@@ -38,6 +38,17 @@ def ele_attr_equal(context, selector=None, param2=None, param3=None):
     g_Context.step.ele_attr_equal(context, selector, param2, param3)
 
 
+@step("hover[{selector}]")
+@ele_wrap
+def hover_ele(context, selector=None):
+    """
+    Hover on the selector element
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    """
+    g_Context.step.hover_ele(context, selector)
+
+
 @step("click[{selector}]")
 @ele_wrap
 def click_ele(context, selector=None):
@@ -270,6 +281,7 @@ def ocr_text_not_exist(context, selector=None):
     """
     g_Context.step.ocr_text_not_exist(context, selector)
 
+
 @step("text[{selector}]disappear")
 @ele_wrap
 def wait_text_disappear(context, selector=None):
@@ -468,6 +480,7 @@ def find_text_from_parent(context, p_selector=None, c_selector=None,
     g_Context.step.find_text_from_parent(context, p_selector, c_selector,
                                          param3)
 
+
 @step("exist image [{param}]")
 def img_exist(context, param):
     g_Context.step.img_exist(context, param)
@@ -476,4 +489,3 @@ def img_exist(context, param):
 @step("not exist image [{param}]")
 def img_not_exist(context, param):
     g_Context.step.img_not_exist(context, param)
-

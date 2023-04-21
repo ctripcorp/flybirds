@@ -93,6 +93,11 @@ class Step:
         return True
 
     @classmethod
+    def hover_ele(cls, context, selector):
+        ele = gr.get_value("plugin_ele")
+        ele.ele_hover(context, selector)
+
+    @classmethod
     def click_ele(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.ele_click(context, selector)

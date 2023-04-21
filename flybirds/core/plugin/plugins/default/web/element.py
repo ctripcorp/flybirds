@@ -90,6 +90,10 @@ class Element:
                 e_text = ""
         return e_text
 
+    def ele_hover(self, context, param):
+        locator, timeout = self.get_ele_locator(param)
+        locator.hover(timeout=timeout)
+
     def ele_click(self, context, param):
         locator, timeout = self.get_ele_locator(param)
         locator.click(timeout=timeout)

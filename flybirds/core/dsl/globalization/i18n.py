@@ -113,6 +113,7 @@ step_language = {
         "element[{selector}]property[{param2}]is {param3}": [
             "元素[{selector}]的属性[{param2}]为{param3}"
         ],
+        "hover[{selector}]": ["悬浮[{selector}]"],
         "click[{selector}]": ["点击[{selector}]"],
         "click text[{selector}]": ["点击文案[{selector}]"],
         "click ocr text[{selector}]": ["点击扫描文案[{selector}]"],
