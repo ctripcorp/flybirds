@@ -117,7 +117,7 @@ class ScreenRecord:
             v1 = tuple(map(int, airtestversion.split('.')))
             v2 = tuple(map(int, "1.2.9".split('.')))
             if v1 >= v2:
-                self.dev.start_recording(max_time=max_time, bit_rate=bit_rate)
+                self.dev.start_recording(max_time=max_time, bit_rate=bit_rate, mode= "ffmpeg")
             else:
                 self.dev.start_recording(max_time, bit_rate)
         else:
