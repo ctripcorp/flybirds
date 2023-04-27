@@ -22,6 +22,11 @@ class Step:
     name = "web_step"
 
     @classmethod
+    def excute_js_page(cls, context, param):
+        page = gr.get_value("plugin_page")
+        page.evaluatejs(context, param)
+
+    @classmethod
     def jump_to_page(cls, context, param):
         # plugin_page = g_context.page
         # page = plugin_page()
@@ -58,7 +63,6 @@ class Step:
         page = gr.get_value("plugin_page")
         page.get_session_storage(context)
 
-
     @classmethod
     def screenshot(cls, context):
         step_common.screenshot(context)
@@ -87,6 +91,11 @@ class Step:
     @classmethod
     def has_page_changed(cls, context):
         return True
+
+    @classmethod
+    def hover_ele(cls, context, selector):
+        ele = gr.get_value("plugin_ele")
+        ele.ele_hover(context, selector)
 
     @classmethod
     def click_ele(cls, context, selector):
@@ -263,3 +272,15 @@ class Step:
                               expect_value):
         request_op.request_compare_value(operation, target_json_path,
                                          expect_value)
+
+    @staticmethod
+    def picture_compare_from_path(context, target_picture_path, compared_picture_path):
+        request_op.compare_images(target_picture_path, compared_picture_path)
+
+    @staticmethod
+    def dom_ele_compare_from_path(context, target_url, target_ele, compared_url, compared_ele):
+        request_op.compare_dom_element_text(target_url, target_ele, compared_url, compared_ele)
+
+    @staticmethod
+    def call_external_party_api(context, method, url, data, headers):
+        request_op.call_external_party_api(method, url, data, headers)

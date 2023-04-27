@@ -6,11 +6,18 @@
 import json
 import os
 import re
+import cv2
+import requests
+
 from urllib.parse import parse_qs
 
+from bs4 import BeautifulSoup
+
+from flybirds.utils import dsl_helper
 from deepdiff import DeepDiff
 from jsonpath_ng import parse as parse_path
 
+import xml.etree.ElementTree as et
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 from flybirds.core.exceptions import FlybirdsException
@@ -19,6 +26,7 @@ __open__ = ["Interception"]
 
 from flybirds.utils import file_helper
 from flybirds.utils.file_helper import read_json_data
+import xmltodict
 
 
 class Interception:
@@ -115,76 +123,463 @@ class Interception:
     # -------------------------------------------------------------------------
     @staticmethod
     def request_compare(operation, target_data_path):
+        # Call the get_server_request_body() function to get the server request information,
+        # and return a dictionary object
         request_info = get_server_request_body(operation)
         actual_request_obj = None
+
+        # If the returned request information is not None and has a postData attribute,
+        # assign the postData to the actual_request_obj variable
         if request_info is not None and request_info.get('postData'):
             actual_request_obj = request_info.get('postData')
+
+        # Output the information of actual_request_obj in the log
         log.info(f'[request_compare] actualObj:{actual_request_obj}')
+
+        # If actual_request_obj is None, an exception is thrown
         if actual_request_obj is None:
-            message = f'[request_compare] not get listener data for ' \
-                      f'[{operation}]'
+            message = f'[request_compare] not get listener data for [{operation}]'
             raise FlybirdsException(message)
-        actual_request_obj = json.loads(actual_request_obj)
+
+        # Deserialize actual_request_obj into a Python object
+        if actual_request_obj.startswith('<?xml') or actual_request_obj.startswith('<'):
+
+            try:
+                # If the format is XML, parse the XML.
+                actual_request_obj = xmltodict.parse(actual_request_obj)
+            except ValueError:
+                message = f'[xml convert] format is wrong, data:' + actual_request_obj
+                raise FlybirdsException(message)
+
+        else:
+            try:
+                # If the format is json, parse the json.
+                actual_request_obj = json.loads(actual_request_obj)
+            except ValueError:
+                message = f'[json convert] format is wrong, data:' + actual_request_obj
+                raise FlybirdsException(message)
+
+        log.info(f'[request_compare] actualObj dict:{actual_request_obj}')
+
+        # Get the file path
         file_path = os.path.join(os.getcwd(), target_data_path)
-        expect_request_obj = None
+
+        # If the file path exists, read data from the file and assign it to expect_request_obj
         if os.path.exists(file_path):
-            expect_request_obj = file_helper.get_json_from_file_path(file_path)
-        log.info(f'[request_compare] expectObj:{expect_request_obj}')
-        if expect_request_obj is None:
-            message = f'[request_compare] cannot get data form path' \
-                      f'[{target_data_path}]]'
+
+            expect_request_obj = file_helper.read_file_from_path(file_path)
+            if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
+                try:
+                    # If the format is XML, parse the XML.
+                    expect_request_obj = xmltodict.parse(expect_request_obj)
+                except ValueError:
+                    message = f'[xml convert] format is wrong, data:' + expect_request_obj
+                    raise FlybirdsException(message)
+
+            else:
+                try:
+                    # If the format is json, parse the json.
+                    expect_request_obj = file_helper.get_json_from_file_path(file_path)
+                except ValueError:
+                    message = f'[json convert] format is wrong, data:' + expect_request_obj
+                    raise FlybirdsException(message)
+
+        else:
+            message = f'[request_compare] expect_request_obj not get file from [{file_path}]'
             raise FlybirdsException(message)
-        handle_diff(actual_request_obj, expect_request_obj, operation,
-                    target_data_path)
+
+        # Output the information of expect_request_obj in the log
+        log.info(f'[request_compare] expectObj dict:{expect_request_obj}')
+
+        # If expect_request_obj is None, an exception is thrown
+        if expect_request_obj is None:
+            message = f'[request_compare] cannot get data form path [{target_data_path}]]'
+            raise FlybirdsException(message)
+
+        # If the expect_request_obj is xml file, and contains a root node, remove the root node
+        if 'root' in expect_request_obj:
+            expect_request_obj = expect_request_obj['root']
+
+            # Call the convert_values() function to convert numbers and boolean values
+            expect_request_obj = delete_values(expect_request_obj)
+            expect_request_obj = convert_values(expect_request_obj)
+            log.info(f'[request_compare] expectObj dict after deal:{expect_request_obj}')
+
+        # Call the handle_diff() function to compare the differences between the actual request object
+        # and the expected request object, and output the log
+        handle_diff(actual_request_obj, expect_request_obj, operation, target_data_path)
 
     @staticmethod
     def request_query_string_compare(operation, target_data_path):
+        # Define function request_query_string_compare with two parameters, operation and target_data_path
+
         request_info = get_server_request_body(operation)
+        # Call the get_server_request_body function to get server request information, and store it in request_info
+
         actual_request_obj = None
+        # Initialize actual_request_obj to None
+
         if request_info is not None and request_info.get('postData'):
+            # If request_info is not None and request_info contains a 'postData' field
+
             actual_request_obj = request_info.get('postData')
+            # Assign the value of request_info's 'postData' field to actual_request_obj
+
         if actual_request_obj is None:
+            # If actual_request_obj is None
             message = f'[requestQuerystringCompare] not get listener data ' \
                       f'for [{operation}]'
             raise FlybirdsException(message)
-        actual_request_obj = parse_qs(actual_request_obj)
+            # Raise an exception indicating that the listener data could not be retrieved
+
+        # Check data format
+        if actual_request_obj.startswith('<?xml') or actual_request_obj.startswith('<'):
+            try:
+                # If the format is XML, parse the XML.
+                actual_request_obj = xmltodict.parse(actual_request_obj)
+            except ValueError:
+                message = f'[xml convert] format is wrong, data:' + actual_request_obj
+                raise FlybirdsException(message)
+        else:
+            try:
+                # If the format is json, parse the json.
+                actual_request_obj = parse_qs(actual_request_obj)
+            except ValueError:
+                message = f'[json convert] format is wrong, data:' + actual_request_obj
+                raise FlybirdsException(message)
 
         file_path = os.path.join(os.getcwd(), target_data_path)
+        # Get the path of the target data file and store it in file_path
+
         expect_request_obj = None
+        # Initialize expect_request_obj to None
+
         if os.path.exists(file_path):
+            # If the file path exists
+
             expect_request_obj = file_helper.read_file_from_path(file_path)
+            # Read the target data file and store it in expect_request_obj
+
         if expect_request_obj is None:
+            # If expect_request_obj is None
+
             message = f'[requestQuerystringCompare] cannot get data form ' \
                       f'path [{target_data_path}]'
             raise FlybirdsException(message)
-        expect_request_obj = parse_qs(expect_request_obj)
+            # Raise an exception indicating that data could not be retrieved from the specified path
+
+        if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
+            try:
+                # If the format is XML, parse the XML.
+                expect_request_obj = xmltodict.parse(expect_request_obj)
+            except ValueError:
+                message = f'[xml convert] format is wrong, data:' + expect_request_obj
+                raise FlybirdsException(message)
+
+        else:
+            try:
+                # If the format is json, parse the json.
+                expect_request_obj = parse_qs(expect_request_obj)
+            except ValueError:
+                message = f'[json convert] format is wrong, data:' + expect_request_obj
+                raise FlybirdsException(message)
+
         handle_diff(actual_request_obj, expect_request_obj, operation,
                     target_data_path)
+        # Call the handle_diff function to compare the difference between the actual request object
+        # and the expected request object, passing in the parameters operation and target_data_path.
 
     @staticmethod
-    def request_compare_value(operation, target_json_path, expect_value):
+    def request_compare_value(operation, target_path, expect_value):
+        # # Call function get_server_request_body to get request_info
         request_info = get_server_request_body(operation)
-        json_data = None
+
+        # Initialize data variable as None.
+        data = None
+        # Get postData data.
         if request_info and request_info.get('postData'):
-            json_data = request_info.get('postData')
-        if json_data is None:
+            data = request_info.get('postData')
+        # If postData data is not found, raise an exception.
+        if data is None:
             message = f'[requestCompareValue] not get listener data for ' \
                       f'[{operation}]'
             raise FlybirdsException(message)
-        json_data = json.loads(json_data)
-        json_path_expr = parse_path(target_json_path)
-        target_values = [match.value for match in
-                         json_path_expr.find(json_data)]
-        log.info(f'[requestCompareValue] get jsonPathData: {target_values}')
+
+        # Check the data format.
+        if data.startswith('<?xml') or data.startswith('<'):
+            try:
+                # If the format is XML, parse the XML.
+                root = et.fromstring(data)
+
+                # Parse the XML path expression.
+                target_elements = root.findall(target_path)
+                # Get the target data from XML.
+                target_values = [elem.text for elem in target_elements]
+                # Print a log message.
+                log.info(f'[requestCompareValue] get xmlPathData: {target_values}')
+
+            except ValueError:
+                message = f'[xml convert] format is wrong, data:' + data
+                raise FlybirdsException(message)
+
+        else:
+            try:
+                # If the format is not XML, it is assumed to be JSON. Parse the JSON.
+                # Parse the data into a dictionary.
+                json_data = json.loads(data)
+                # Parse the JSON path expression.
+                json_path_expr = parse_path(target_path)
+                # Get the target data from JSON.
+                target_values = [match.value for match in json_path_expr.find(json_data)]
+                # Print a log message.
+                log.info(f'[requestCompareValue] get jsonPathData: {target_values}')
+
+            except ValueError:
+                message = f'[json convert] format is wrong, data:' + data
+                raise FlybirdsException(message)
+
+        # If the target data does not exist, raise an exception.
         if len(target_values) == 0:
             message = f'[requestCompareValue] cannot get the value from ' \
-                      f'path [{target_json_path}] of [{operation}]'
+                      f'path [{target_path}] of [{operation}]'
             raise FlybirdsException(message)
+
+        # If the actual value is not equal to the expected value, raise an exception.
         if str(target_values[0]) != expect_value:
             message = f'value not equal, service [{operation}] request ' \
-                      f'parameter [{target_json_path}] actual value:' \
+                      f'parameter [{target_path}] actual value:' \
                       f'[{target_values[0]}], but expect value:' \
                       f'[{expect_value}]'
+            raise FlybirdsException(message)
+
+    @staticmethod
+    def compare_images(target_picture_path, compared_picture_path):
+        # default threshold value
+        threshold = 0.95
+
+        # Convert parameter string to dictionary
+        param_dict = dsl_helper.params_to_dic(target_picture_path, "target_picture_path")
+
+        # Get path from dictionary
+        target_picture_path = param_dict["target_picture_path"]
+
+        if "threshold" in param_dict.keys():
+            threshold = param_dict["threshold"]
+
+            try:
+                threshold = float(threshold)
+            except ValueError:
+                message = f'[threshold] is not int or float value'
+                raise FlybirdsException(message)
+
+        file_path1 = os.path.join(os.getcwd(), target_picture_path)
+        file_path2 = os.path.join(os.getcwd(), compared_picture_path)
+
+        similar = False
+        # Read images
+        image1 = cv2.imread(file_path1)
+        if image1 is None:
+            message = f'[target_picture_path] is invalid'
+            raise FlybirdsException(message)
+
+        image2 = cv2.imread(file_path2)
+        if image2 is None:
+            message = f'[target_picture_path] is invalid'
+            raise FlybirdsException(message)
+
+        # Convert images to grayscale
+        gray1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
+        gray2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
+
+        # Calculate histograms
+        hist1 = cv2.calcHist([gray1], [0], None, [256], [0, 256])
+        hist2 = cv2.calcHist([gray2], [0], None, [256], [0, 256])
+
+        # Calculate histogram similarity
+        hist_diff = cv2.compareHist(hist1, hist2, cv2.HISTCMP_CORREL)
+
+        # Check if images are similar based on threshold
+        if hist_diff >= threshold:
+            similar = True
+            message = f'Image diff percent [{hist_diff}] request ' \
+                      f'is more than threshold [{threshold}]'
+            log.info(message)
+
+        else:
+            # Calculate difference image
+            diff = cv2.absdiff(gray1, gray2)
+
+            # Threshold the difference image
+            threshold_value, threshold_diff = cv2.threshold(diff, 50, 255, cv2.THRESH_BINARY)
+
+            # Find contours in the threshold image
+            contours, hierarchy = cv2.findContours(threshold_diff, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+            # Mark the difference regions in image2 with rectangles
+            for contour in contours:
+                x, y, w, h = cv2.boundingRect(contour)
+                cv2.rectangle(image2, (x, y), (x + w, y + h), (0, 0, 255), 2)
+
+            # Display the marked image
+            # cv2.imshow("Image Difference", image2)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
+
+            # save diff in image2
+            cv2.imwrite(file_path2, image2)
+            log.info("Image diff percent is less than threshold:", threshold)
+
+        return similar, image2
+
+    @staticmethod
+    def compare_dom_element_text(target_url, target_ele, compared_url, compared_ele):
+        same = False
+        diff = ''
+
+        # Convert parameter string to dictionary
+        target_param_dict = dsl_helper.params_to_dic(target_ele, "target_ele")
+
+        # Get target_ele from dictionary
+        target_ele = target_param_dict["target_ele"]
+
+        target_regexp = False
+        if "regexp" in target_param_dict.keys():
+            regexp = target_param_dict["regexp"]
+            if regexp.lower() == "true":
+                target_regexp = True
+
+        page1_soup = None
+        # Get the first page's DOM element
+        try:
+            page1_response = requests.get(target_url)
+            page1_response.raise_for_status()  # check for any HTTP errors
+            page1_soup = BeautifulSoup(page1_response.text, "html.parser")
+        except requests.exceptions.RequestException as e:
+            message = f"Error occurred while making a request to {target_url}: {e}"
+            raise FlybirdsException(message)
+        except Exception as e:
+            message = f"Error occurred while parsing the HTML response of {target_url}: {e}"
+            raise FlybirdsException(message)
+
+        if page1_soup is None:
+            message = f'[compared_url] could not change to html element :' \
+                      f'[{compared_url}]. '
+            raise FlybirdsException(message)
+
+        page1_element = None
+        try:
+            params1 = json.loads(target_ele)
+
+            if target_regexp:
+                key = list(params1.keys())[0]
+                value = list(params1.values())[0]
+                textreg = re.compile(value)
+                params1[key] = textreg
+            page1_element = page1_soup.find(**params1)
+        except ValueError:
+            message = f'[target_ele] is not json value'
+            raise FlybirdsException(message)
+
+        if page1_element is None:
+            message = f'[target_element] could not find in path' \
+                      f'[{target_ele}]. '
+            raise FlybirdsException(message)
+
+        text1 = page1_element.get_text().strip()
+
+        # Convert parameter string to dictionary
+        compared_param_dict = dsl_helper.params_to_dic(compared_ele, "compared_ele")
+
+        # Get path from dictionary
+        compared_ele = compared_param_dict["compared_ele"]
+
+        compared_regexp = False
+        if "regexp" in compared_param_dict.keys():
+            regexp = compared_param_dict["regexp"]
+            if regexp.lower() == "true":
+                compared_regexp = True
+
+        page2_soup = None
+        # Get the second page's DOM element
+        try:
+            page2_response = requests.get(compared_url)
+            page2_response.raise_for_status()  # check for any HTTP errors
+            page2_soup = BeautifulSoup(page2_response.text, "html.parser")
+        except requests.exceptions.RequestException as e:
+            message = f"Error occurred while making a request to {compared_url}: {e}"
+            raise FlybirdsException(message)
+        except Exception as e:
+            message = f"Error occurred while parsing the HTML response of {compared_url}: {e}"
+            raise FlybirdsException(message)
+
+        if page2_soup is None:
+            message = f'[compared_url] could not change to html element :' \
+                      f'[{compared_url}]. '
+            raise FlybirdsException(message)
+
+        page2_element = None
+        try:
+            params2 = json.loads(compared_ele)
+            if compared_regexp:
+                key = list(params2.keys())[0]
+                value = list(params2.values())[0]
+                textreg = re.compile(value)
+                params2[key] = textreg
+            page2_element = page2_soup.find(**params2)
+        except ValueError:
+            message = f'[target_ele] is not json value'
+            raise FlybirdsException(message)
+
+        if page2_element is None:
+            message = f'[target_element] could not find in path' \
+                      f'[{compared_ele}]. '
+            raise FlybirdsException(message)
+
+        text2 = page2_element.get_text().strip()
+
+        # Compare the text content of the two DOM elements
+        if text1 == text2:
+            same = True
+        else:
+            message = f'The contents of the two pages are different as' \
+                      f' [{target_url}] - [{target_ele}] - [{text1}]:' \
+                      f' [{compared_url}] - [{compared_ele}] - [{text2}]:'
+            diff = message
+            log.info(message)
+        return same, diff
+
+    @staticmethod
+    def call_external_party_api(method, url, data=None, headers=None):
+        # Initialize variables to hold the content and headers
+        datacontent = None
+        dataheaders = None
+
+        # Try to parse the data and headers as JSON
+        try:
+            datacontent = json.loads(data)
+            dataheaders = json.loads(headers)
+        except ValueError:
+            message = f'The content of data and headers is not json format: ' \
+                      f' [{data}] - [{headers}]'
+            raise FlybirdsException(message)
+
+        # Set the content and headers to None if they are empty
+        if len(datacontent) == 0:
+            datacontent = None
+
+        if len(dataheaders) == 0:
+            dataheaders = None
+
+        try:
+            response = requests.request(method.upper(), url, params=datacontent, json=data, headers=dataheaders,
+                                        verify=False)
+            # Check if the response was successful
+            response.raise_for_status()
+            # Return the response text
+            return response.text
+        except ValueError:
+            message = f'The contents post is invalid: ' \
+                      f' [{url}] - [{data}] - [{headers}]:'
             raise FlybirdsException(message)
 
 
@@ -212,7 +607,7 @@ def handle_ignore_node(service):
                 level_item = level_item.strip()
                 item_is_array = re.search(r"([^\[\]]+)\[(\d+)\]",
                                           level_item) is not None
-                item_str = ''
+
                 if item_is_array:
                     property_name = "['" + re.search(r"([^\[\]]+)\[(\d+)\]",
                                                      level_item).group(
@@ -270,3 +665,31 @@ def get_case_response_body(case_id):
     log.warn('[get_case_response_body] cannot get mockCaseBody from folder '
              'mockCaseData.')
     return
+
+
+# 定义函数 convert_values()，将值为数字或布尔类型的字符串转换为对应的数字或布尔值
+def convert_values(data):
+    for key, value in data.items():
+        if key != 'head' and value is not None:
+            if isinstance(value, dict):
+                convert_values(value)
+            elif isinstance(value, str):
+                if value.lower() == 'true':
+                    data[key] = True
+                elif value.lower() == 'false':
+                    data[key] = False
+                elif value.isdigit():
+                    data[key] = int(value)
+    return data
+
+
+# 定义函数 convert_values()，将值为None转为''
+def delete_values(data):
+    for key, value in data.items():
+        if value is None:
+            data[key] = ''
+        elif isinstance(value, dict):
+            delete_values(value)
+        elif isinstance(value, str):
+            log.info("String dict value", value)
+    return data

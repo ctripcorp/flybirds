@@ -9,6 +9,12 @@ from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.utils.dsl_helper import ele_wrap
 from flybirds.utils.dsl_helper import get_params
 
+
+@step("execute js[{param}]")
+@ele_wrap
+def execute_js_page(context, param=None):
+    g_Context.step.excute_js_page(context, param)
+
 @step("go to url[{param}]")
 @ele_wrap
 def jump_to_page(context, param=None):

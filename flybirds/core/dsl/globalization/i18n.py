@@ -85,6 +85,7 @@ step_language = {
         "start recording timeout[{param}]": ["开始录屏超时[{param}]"],
         "start record": ["开始录屏"],
         "stop record": ["结束录屏"],
+        "execute js[{param}]": ["执行js[{param}]"],
         "go to url[{param}]": ["跳转到[{param}]", "跳转页面到[{param}]"],
         "set cookie name[{name}] value[{value}] url[{url}]": ["设置cookie 名称[{name}] 值[{value}] 网址[{url}]"],
         "get cookie": ["获取cookie"],
@@ -112,6 +113,7 @@ step_language = {
         "element[{selector}]property[{param2}]is {param3}": [
             "元素[{selector}]的属性[{param2}]为{param3}"
         ],
+        "hover[{selector}]": ["悬浮[{selector}]"],
         "click[{selector}]": ["点击[{selector}]"],
         "click text[{selector}]": ["点击文案[{selector}]"],
         "click ocr text[{selector}]": ["点击扫描文案[{selector}]"],
@@ -181,14 +183,26 @@ step_language = {
         "remove all service listeners": ["移除所有服务监听"],
         "compare service request [{service}] with json file "
         "[{target_data_path}]": [
-            "验证服务请求[{service}]与[{target_data_path}]一致"],
+            "验证服务请求[{service}]与[{target_data_path}]一致",
+            "验证服务请求[{service}]与json路径[{target_data_path}]一致"],
+        "compare service request [{service}] with xml file "
+        "[{target_data_xml_path}]": [
+            "验证服务请求[{service}]与xml路径[{target_data_xml_path}]一致"],
         "compare service non-json request [{service}] with non-json file "
         "[{target_data_path}]": [
             "验证服务非json请求[{service}]与[{target_data_path}]一致"],
         "service request [{service}] request parameter [{target_json_path}] "
         "is [{expect_value}]": [
             "验证服务[{service}]的请求参数[{target_json_path}]"
-            "与[{expect_value}]一致"]
-
+            "与[{expect_value}]一致"],
+        "compare target picture [{target_picture_path}] with compared picture "
+        "[{compared_picture_path}] ": [
+            "对比目标图片[{target_picture_path}]和比较图片[{compared_picture_path}]"],
+        "compare target element of target url[{target_url}] in target element [{target_ele}] with compared element of "
+        "compared url[{compared_url}] in compared element [{compared_ele}]": [
+            "对比目标元素的链接[{target_url}]与属性[{target_ele}]和比较元素的链接[{compared_url}]与属性[{compared_ele}]",
+            "对比目标元素的链接[{target_url}]与文本内容[{target_ele}]和比较元素的链接[{compared_url}]与文本匹配内容[{compared_ele}]"],
+        "call external party api of method[{method}] and url[{url}] and data[{data}] and headers[{headers}]": [
+            "调外部接口并传参请求方式[{method}]与请求链接[{url}]与请求内容[{data}]与请求标头[{headers}]"]
     },
 }
