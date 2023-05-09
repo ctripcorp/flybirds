@@ -167,6 +167,7 @@ step_language = {
         "unblock the current page": ["解除当前页面限制"],
         "current page is [{param}]": ["当前页面是[{param}]"],
         "current page is not last page": ["当前页面已不是上一个指定页面"],
+        "switch to target page title[{title}] url[{url}]": ["切换目标页面标题[{title}]链接[{url}]"],
         "from [{selector}] select [{param2}]": ["在[{selector}]中选择[{param2}]"],
         "exist [{p_selector}] subNode [{c_selector}] element": [
             "存在[{p_selector}]的[{c_selector}]的元素"],
