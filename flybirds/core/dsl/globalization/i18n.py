@@ -167,6 +167,7 @@ step_language = {
         "unblock the current page": ["解除当前页面限制"],
         "current page is [{param}]": ["当前页面是[{param}]"],
         "current page is not last page": ["当前页面已不是上一个指定页面"],
+        "switch to target page title[{title}] url[{url}]": ["切换目标页面标题[{title}]链接[{url}]"],
         "from [{selector}] select [{param2}]": ["在[{selector}]中选择[{param2}]"],
         "exist [{p_selector}] subNode [{c_selector}] element": [
             "存在[{p_selector}]的[{c_selector}]的元素"],
@@ -195,8 +196,7 @@ step_language = {
         "is [{expect_value}]": [
             "验证服务[{service}]的请求参数[{target_json_path}]"
             "与[{expect_value}]一致"],
-        "compare target picture [{target_picture_path}] with compared picture "
-        "[{compared_picture_path}] ": [
+        "compare target picture [{target_picture_path}] with compared picture [{compared_picture_path}]": [
             "对比目标图片[{target_picture_path}]和比较图片[{compared_picture_path}]"],
         "compare target element of target url[{target_url}] in target element [{target_ele}] with compared element of "
         "compared url[{compared_url}] in compared element [{compared_ele}]": [

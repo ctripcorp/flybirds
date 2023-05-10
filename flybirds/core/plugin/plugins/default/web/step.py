@@ -12,6 +12,7 @@ from flybirds.core.plugin.plugins.default.step.record import \
     stop_screen_record
 from flybirds.core.plugin.plugins.default.web.interception import \
     Interception as request_op
+from flybirds.core.exceptions import FlybirdsException
 
 __open__ = ["Step"]
 
@@ -32,6 +33,45 @@ class Step:
         # page = plugin_page()
         page = gr.get_value("plugin_page")
         page.navigate(context, param)
+
+    @classmethod
+    def switch_target_page(cls, context, title, url):
+        # Get the current page from global registry
+        page = gr.get_value("plugin_page")
+
+        # Get all pages from the current page's context
+        pages = page.context.pages
+
+        # Set the target page to the first page by default
+        target = pages[0]
+
+        # Loop through all pages to find the target page
+        for item_page in pages:
+            # Check if the URL matches the target URL
+            if url:
+                item_page_url_value = item_page.url
+                if item_page_url_value[-1] == '/':
+                    item_page_url_value = item_page_url_value[:-1]
+
+                if url == item_page.url or url == item_page_url_value:
+                    target = item_page
+                    break
+
+            # Check if the title matches the target title
+            if title:
+                item_page_title = item_page.title()
+                if title == item_page_title:
+                    target = item_page
+                    break
+
+        # If the target page is not found, log an error message
+        else:
+            message = f'Url or title could not match any tab page in this browser.'
+            raise FlybirdsException(message)
+
+        # Bring the target page to the front and return its URL
+        target_url = target.url
+        target.bring_to_front()
 
     @classmethod
     def return_pre_page(cls, context):

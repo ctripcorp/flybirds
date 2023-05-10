@@ -15,10 +15,17 @@ from flybirds.utils.dsl_helper import get_params
 def execute_js_page(context, param=None):
     g_Context.step.excute_js_page(context, param)
 
+
 @step("go to url[{param}]")
 @ele_wrap
 def jump_to_page(context, param=None):
     g_Context.step.jump_to_page(context, param)
+
+
+@step("switch to target page title[{title}] url[{url}]")
+@ele_wrap
+def switch_target_page(context, title, url):
+    g_Context.step.switch_target_page(context, title, url)
 
 
 @step("set cookie name[{name}] value[{value}] url[{url}]")
