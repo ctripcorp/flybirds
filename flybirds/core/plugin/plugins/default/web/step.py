@@ -12,6 +12,7 @@ from flybirds.core.plugin.plugins.default.step.record import \
     stop_screen_record
 from flybirds.core.plugin.plugins.default.web.interception import \
     Interception as request_op
+from flybirds.core.exceptions import FlybirdsException
 
 __open__ = ["Step"]
 
@@ -49,7 +50,7 @@ class Step:
             # Check if the URL matches the target URL
             if url:
                 item_page_url_value = item_page.url
-                if item_page_url_value == '/':
+                if item_page_url_value[-1] == '/':
                     item_page_url_value = item_page_url_value[:-1]
 
                 if url == item_page.url or url == item_page_url_value:
@@ -65,7 +66,8 @@ class Step:
 
         # If the target page is not found, log an error message
         else:
-            log.error("not found title or url")
+            message = f'Url or title could not match any tab page in this browser.'
+            raise FlybirdsException(message)
 
         # Bring the target page to the front and return its URL
         target_url = target.url
