@@ -1,5 +1,5 @@
   # language: en
-  Feature: Validate and compare service requests
+  Feature: Compare dom element
 
     Scenario: compare text of two dom element text by Attrs
       When go to url[百度]
