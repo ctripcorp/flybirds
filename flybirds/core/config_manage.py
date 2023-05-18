@@ -430,6 +430,10 @@ class FrameConfig:
                 return_value(frame_config.get("useAirtestRecord", False),
                              False)
             )
+            self.airtest_record_mode = user_data.get(
+                "airtestRecordMode",
+                return_value(frame_config.get("airtestRecordMode", "ffmpeg"), "ffmpeg")
+            )
             self.use_detect_error = user_data.get(
                 "use_Detect_Error",
                 return_value(frame_config.get("use_Detect_Error", False),

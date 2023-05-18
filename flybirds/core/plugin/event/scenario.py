@@ -218,6 +218,10 @@ class OnAfter:  # pylint: disable=too-few-public-methods
         )
         if after_scenario_extend is not None:
             after_scenario_extend(context, scenario)
+        try:
+            GlobalContext.set_global_cache("current_record_path", None)
+        except:
+            pass
 
 
 # add scenario event to global processor
