@@ -237,18 +237,21 @@ class ScreenRecord:
 
         copy_target_file = None
 
-        if self.airtest_version_high:
-            if self.airtest_record_mode == 'ffmpeg':
-                source_file = self.output_ffmpeg_file
-                target_file = save_path
-                shutil.copy(source_file, target_file)
+        if self.use_airtest_record:
+            if self.airtest_version_high:
+                if self.airtest_record_mode == 'ffmpeg':
+                    source_file = self.output_ffmpeg_file
+                    target_file = save_path
+                    shutil.copy(source_file, target_file)
 
-                if os.path.exists(target_file):
-                    os.remove(source_file)
-                return
+                    if os.path.exists(target_file):
+                        os.remove(source_file)
+                    return
 
-            elif self.airtest_record_mode == 'yosemite':
-                copy_target_file = self.dev.yosemite_recorder.recording_file
+                elif self.airtest_record_mode == 'yosemite':
+                    copy_target_file = self.dev.yosemite_recorder.recording_file
+            else:
+                copy_target_file = self.recording_file
         else:
             copy_target_file = self.recording_file
 
