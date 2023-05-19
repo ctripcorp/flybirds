@@ -57,6 +57,7 @@
     "screenRecordTime": 90,
     "useSnap": false,
     "useAirtestRecord": false,
+    "airtestRecordMode": "ffmpeg",
     "ocr_det_limit_type": "max",
     "ocr_det_limit_side_len": 960,
     "use_Detect_Error": false

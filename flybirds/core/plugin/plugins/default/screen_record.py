@@ -8,8 +8,6 @@ import time
 import shutil
 import ffmpeg
 import airtest
-import sys
-
 from airtest.core.android.adb import ADB
 
 import flybirds.core.global_resource as gr
@@ -18,6 +16,7 @@ import flybirds.utils.flybirds_log as log
 import flybirds.utils.snippet as cmd_helper
 import flybirds.utils.uuid_helper as uuid_helper
 from flybirds.core.exceptions import ScreenRecordException
+from flybirds.core.global_context import GlobalContext as g_context
 
 airtest_adb_path = ADB.builtin_adb_path()
 
@@ -35,6 +34,8 @@ class ScreenRecord:
             "use_airtest_record", False
         )
 
+        self.airtest_record_mode = gr.get_frame_config_value("airtest_record_mode")
+
         if self.use_airtest_record is False:
             self.record_support()
         else:
@@ -47,6 +48,8 @@ class ScreenRecord:
             # Use airtest to record screen
             self.recording_file = "/sdcard/test.mp4"
             self.output_file = "screen.mp4"
+            self.airtest_version_high = False
+            self.output_ffmpeg_file = None
         else:
             self.recording_file = "/sdcard/flybirds.mp4"
 
@@ -112,12 +115,15 @@ class ScreenRecord:
                     max_time, bit_rate
                 )
             )
-
-            airtestversion = airtest.__version__
-            v1 = tuple(map(int, airtestversion.split('.')))
+            airtest_version = airtest.__version__
+            v1 = tuple(map(int, airtest_version.split('.')))
             v2 = tuple(map(int, "1.2.9".split('.')))
             if v1 >= v2:
-                self.dev.start_recording(max_time=max_time, bit_rate=bit_rate, mode= "ffmpeg")
+                self.airtest_version_high = True
+                self.output_ffmpeg_file = os.path.join(
+                    "screen_%s.mp4" % (time.strftime("%Y%m%d%H%M%S", time.localtime())))
+                self.dev.start_recording(max_time=max_time, bit_rate=bit_rate, bit_rate_level=bit_rate_level,
+                                         mode=self.airtest_record_mode, output=self.output_ffmpeg_file)
             else:
                 self.dev.start_recording(max_time, bit_rate)
         else:
@@ -228,8 +234,29 @@ class ScreenRecord:
         Copy the screen recording from the mobile phone to the current client
         """
         device_id = gr.get_device_id()
+
+        copy_target_file = None
+
+        if self.airtest_version_high:
+            if self.airtest_record_mode == 'ffmpeg':
+                source_file = self.output_ffmpeg_file
+                target_file = save_path
+                shutil.copy(source_file, target_file)
+
+                if os.path.exists(target_file):
+                    os.remove(source_file)
+                return
+
+            elif self.airtest_record_mode == 'yosemite':
+                copy_target_file = self.dev.yosemite_recorder.recording_file
+        else:
+            copy_target_file = self.recording_file
+
+        if copy_target_file is None:
+            raise "Could not find copy target mp4 file"
+
         cmd = "{} -s {} pull {} {}".format(airtest_adb_path,
-                                           device_id, self.recording_file,
+                                           device_id, copy_target_file,
                                            save_path
                                            )
         # sub process start time
@@ -368,3 +395,8 @@ def link_record(scenario, step_index):
         screen_record.copy_record(src_path)
         if gr.get_platform().lower() == "android":
             screen_record.crop_record(src_path)
+
+        try:
+            g_context.set_global_cache('current_record_path', src_path)
+        except:
+            pass
