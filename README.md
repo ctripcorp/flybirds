@@ -34,8 +34,8 @@ Flybirds从2022年初开源至今，通过与社区内活跃用户的交流和�
 ![Arc](https://flybirds.readthedocs.io/zh_CN/latest/_images/flybirds.png)
 
 * 基于Behave，实现BDD中“自然语言测试用例文档”和“自动化测试代码”关联所需要用到的支持BDD工具。
-* 基于Airtest，实现BDD中“测试用例能在自动化测试平台上执行”所需要用到的UI自动化测试框架。
-* 基于Playwright, 实现BDD中“测试用例能在自动化测试平台上执行”需要用到Web端UI自动化测试框架。
+* 基于Airtest，实现BDD中“测试用例能在自动化测试平台上执行”所需要用到的APP端UI自动化测试能力。
+* 基于Playwright, 实现BDD中“测试用例能在自动化测试平台上执行”需要用到Web端UI自动化测试能力。
 * 基于PaddleOCR和OpenCV, 实现BDD中“测试用例能在自动化测试平台上执行”需要用到的OCR和图像识别能力。
 * 基于Multiple-cucumber-html-reporter，实现可视化的测试报告
 
