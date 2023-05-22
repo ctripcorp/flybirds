@@ -48,8 +48,14 @@ class ScreenRecord:
             # Use airtest to record screen
             self.recording_file = "/sdcard/test.mp4"
             self.output_file = "screen.mp4"
-            self.airtest_version_high = False
             self.output_ffmpeg_file = None
+            self.airtest_version_high = False
+
+            airtest_version = airtest.__version__
+            v1 = tuple(map(int, airtest_version.split('.')))
+            v2 = tuple(map(int, "1.2.9".split('.')))
+            if v1 >= v2:
+                self.airtest_version_high = True
         else:
             self.recording_file = "/sdcard/flybirds.mp4"
 
@@ -115,15 +121,39 @@ class ScreenRecord:
                     max_time, bit_rate
                 )
             )
-            airtest_version = airtest.__version__
-            v1 = tuple(map(int, airtest_version.split('.')))
-            v2 = tuple(map(int, "1.2.9".split('.')))
-            if v1 >= v2:
-                self.airtest_version_high = True
+
+            if self.airtest_version_high:
                 self.output_ffmpeg_file = os.path.join(
                     "screen_%s.mp4" % (time.strftime("%Y%m%d%H%M%S", time.localtime())))
                 self.dev.start_recording(max_time=max_time, bit_rate=bit_rate, bit_rate_level=bit_rate_level,
                                          mode=self.airtest_record_mode, output=self.output_ffmpeg_file)
+                if self.airtest_record_mode == 'yosemite':
+                    if self.dev.yosemite_recorder.recording_file is not None:
+                        device_id = gr.get_device_id()
+                        copy_target_file = self.dev.yosemite_recorder.recording_file
+                        dirs = get_all_dir(copy_target_file)
+
+                        target_exist_code = len(dirs) - 1
+                        for i, dir_path in enumerate(reversed(dirs)):
+                            if dir_path != '':
+                                cmd = "{} -s {} shell ls {}".format(airtest_adb_path, device_id, dir_path)
+                                check_exists_code = execute_cmd(cmd, False)
+
+                                if check_exists_code == 0:
+                                    target_exist_code = len(dirs) - 1 - i
+                                    break
+
+                        if target_exist_code < len(dirs) - 1:
+                            for i, dir_path in enumerate(dirs):
+                                if dir_path != '':
+                                    if i > target_exist_code:
+                                        if i == len(dirs) - 1:
+                                            cmd = "{} -s {} shell touch {}".format(airtest_adb_path, device_id,
+                                                                                   dir_path)
+                                        else:
+                                            cmd = "{} -s {} shell mkdir -p {}".format(airtest_adb_path, device_id,
+                                                                                      dir_path)
+                                        execute_cmd(cmd, False)
             else:
                 self.dev.start_recording(max_time, bit_rate)
         else:
@@ -244,10 +274,9 @@ class ScreenRecord:
                     target_file = save_path
                     shutil.copy(source_file, target_file)
 
-                    if os.path.exists(target_file):
-                        os.remove(source_file)
+                    if not os.path.exists(target_file):
+                        shutil.copy(source_file, target_file)
                     return
-
                 elif self.airtest_record_mode == 'yosemite':
                     copy_target_file = self.dev.yosemite_recorder.recording_file
             else:
@@ -255,56 +284,40 @@ class ScreenRecord:
         else:
             copy_target_file = self.recording_file
 
-        if copy_target_file is None:
-            raise "Could not find copy target mp4 file"
-
         cmd = "{} -s {} pull {} {}".format(airtest_adb_path,
                                            device_id, copy_target_file,
                                            save_path
                                            )
-        # sub process start time
-        start_time = datetime.datetime.now()
-        proc = cmd_helper.create_sub_process(cmd)
-        message = ""
-        try:
-            proc.communicate(timeout=30)
-        except Exception as e:
-            message = "cp screenshot {} not end " \
-                      "in 30 seconds," \
-                      " innerError:{}".format(self.recording_file, str(e))
-        proc_code = proc.poll()
-
-        # time out
-        while proc.poll() is None:
-            end_time = datetime.datetime.now()
-            diff = end_time - start_time
-            if diff.seconds > (60 * 2):
-                log.warn("copy record running timeout")
-                if proc.poll() is None:
-                    # proc_code=5 means kill sub process
-                    proc_code = 5
-                break
-
-        if int(proc_code) == 0:
-            log.info("copy record success")
-        else:
-            log.warn(
-                "copy_record not copy_success message: {}".format(message)
-            )
-            if proc is not None:
-                proc.terminate()
-
-            raise ScreenRecordException(message)
-
-        proc.terminate()
+        execute_cmd(cmd, True)
 
     def clear_record(self):
         """
         Delete the existing screen recording file
         """
         device_id = gr.get_device_id()
+
+        copy_target_file = None
+
+        if self.use_airtest_record:
+            if self.airtest_version_high:
+                if self.airtest_record_mode == 'ffmpeg':
+                    if self.output_ffmpeg_file is not None:
+                        os.remove(self.output_ffmpeg_file)
+                    return
+                elif self.airtest_record_mode == 'yosemite':
+                    if self.dev.yosemite_recorder.recording_file is not None:
+                        # reset methond
+                        copy_target_file = self.dev.yosemite_recorder.recording_file
+                    else:
+                        # destroy methond
+                        copy_target_file = self.recording_file
+            else:
+                copy_target_file = self.recording_file
+        else:
+            copy_target_file = self.recording_file
+
         cmd = "{} -s {} shell rm -r {}".format(airtest_adb_path, device_id,
-                                               self.recording_file)
+                                               copy_target_file)
         proc = cmd_helper.create_sub_process(cmd)
         # message = ""
         try:
@@ -403,3 +416,54 @@ def link_record(scenario, step_index):
             g_context.set_global_cache('current_record_path', src_path)
         except:
             pass
+
+
+def get_all_dir(file_path):
+    if not file_path:
+        return []
+
+    dir_path = file_path[:file_path.rfind('/')]
+    dirs = get_all_dir(dir_path)
+    dirs.append(file_path)
+    return dirs
+
+
+def execute_cmd(cmd, outerr):
+    proc_code = 5
+    # sub process start time
+    start_time = datetime.datetime.now()
+    proc = cmd_helper.create_sub_process(cmd)
+    message = ""
+    try:
+        proc.communicate(timeout=30)
+    except Exception as e:
+        message = "cp screenshot {} not end " \
+                  "in 30 seconds," \
+                  " innerError:{}".format(cmd, str(e))
+    proc_code = proc.poll()
+
+    # time out
+    while proc.poll() is None:
+        end_time = datetime.datetime.now()
+        diff = end_time - start_time
+        if diff.seconds > (60 * 2):
+            log.warn("execute cmd:{} running timeout", cmd)
+            if proc.poll() is None:
+                # proc_code=5 means kill sub process
+                proc_code = 5
+            break
+
+    if int(proc_code) == 0:
+        log.info("execute cmd:{} success", cmd)
+    else:
+        log.warn(
+            "execute cmd:{} not copy_success message: {}".format(cmd, message)
+        )
+        if proc is not None:
+            proc.terminate()
+
+        if outerr:
+            raise ScreenRecordException(message)
+
+    proc.terminate()
+    return proc_code
