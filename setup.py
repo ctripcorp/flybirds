@@ -35,6 +35,7 @@ def parse_requirements(filename):
                     need_remove_list.append(req)
                 if "protobuf<" in req and req.index("protobuf<") == 0:
                     need_remove_list.append(req)
+        need_remove_list = []
         if len(need_remove_list) > 0:
             for rem in need_remove_list:
                 reqs.remove(rem)

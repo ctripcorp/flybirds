@@ -132,18 +132,28 @@ class ScreenRecord:
                         device_id = gr.get_device_id()
                         copy_target_file = self.dev.yosemite_recorder.recording_file
                         dirs = get_all_dir(copy_target_file)
-                        for i, dir_path in enumerate(dirs):
+
+                        target_exist_code = len(dirs) - 1
+                        for i, dir_path in enumerate(reversed(dirs)):
                             if dir_path != '':
                                 cmd = "{} -s {} shell ls {}".format(airtest_adb_path, device_id, dir_path)
                                 check_exists_code = execute_cmd(cmd, False)
 
-                                if check_exists_code != 0:
-                                    if i == len(dirs) - 1:
-                                        cmd = "{} -s {} shell touch {}".format(airtest_adb_path, device_id, dir_path)
-                                    else:
-                                        cmd = "{} -s {} shell mkdir -p {}".format(airtest_adb_path, device_id, dir_path)
-                                    execute_cmd(cmd, False)
+                                if check_exists_code == 0:
+                                    target_exist_code = len(dirs) - 1 - i
+                                    break
 
+                        if target_exist_code < len(dirs) - 1:
+                            for i, dir_path in enumerate(dirs):
+                                if dir_path != '':
+                                    if i > target_exist_code:
+                                        if i == len(dirs) - 1:
+                                            cmd = "{} -s {} shell touch {}".format(airtest_adb_path, device_id,
+                                                                                   dir_path)
+                                        else:
+                                            cmd = "{} -s {} shell mkdir -p {}".format(airtest_adb_path, device_id,
+                                                                                      dir_path)
+                                        execute_cmd(cmd, False)
             else:
                 self.dev.start_recording(max_time, bit_rate)
         else:
