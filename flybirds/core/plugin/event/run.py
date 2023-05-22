@@ -62,11 +62,14 @@ class OnBefore:  # pylint: disable=too-few-public-methods
         """
         init ocr
         """
-        ocr_instance = ui_driver.init_ocr()
-        gr.set_value("ocrInstance", ocr_instance)
-        context.ocr_instance = ocr_instance
-        GlobalContext.ocr_driver_instance = ocr_instance
-        log.info("ocr object initialize complete")
+        try:
+            ocr_instance = ui_driver.init_ocr()
+            gr.set_value("ocrInstance", ocr_instance)
+            context.ocr_instance = ocr_instance
+            GlobalContext.ocr_driver_instance = ocr_instance
+            log.info("ocr object initialize complete")
+        except Exception:
+            pass
 
     @staticmethod
     def run(context):
