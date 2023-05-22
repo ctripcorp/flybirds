@@ -132,10 +132,18 @@ class ScreenRecord:
                         device_id = gr.get_device_id()
                         copy_target_file = self.dev.yosemite_recorder.recording_file
                         dirs = get_all_dir(copy_target_file)
-                        for dir_path in dirs:
+                        for i, dir_path in enumerate(dirs):
                             if dir_path != '':
-                                cmd = "{} -s {} shell mkdir -p {}".format(airtest_adb_path, device_id, dir_path)
-                                execute_cmd(cmd, False)
+                                cmd = "{} -s {} shell ls {}".format(airtest_adb_path, device_id, dir_path)
+                                check_exists_code = execute_cmd(cmd, False)
+
+                                if check_exists_code != 0:
+                                    if i == len(dirs) - 1:
+                                        cmd = "{} -s {} shell touch {}".format(airtest_adb_path, device_id, dir_path)
+                                    else:
+                                        cmd = "{} -s {} shell mkdir -p {}".format(airtest_adb_path, device_id, dir_path)
+                                    execute_cmd(cmd, False)
+
             else:
                 self.dev.start_recording(max_time, bit_rate)
         else:
@@ -406,11 +414,12 @@ def get_all_dir(file_path):
 
     dir_path = file_path[:file_path.rfind('/')]
     dirs = get_all_dir(dir_path)
-    dirs.append(dir_path)
+    dirs.append(file_path)
     return dirs
 
 
 def execute_cmd(cmd, outerr):
+    proc_code = 5
     # sub process start time
     start_time = datetime.datetime.now()
     proc = cmd_helper.create_sub_process(cmd)
@@ -447,3 +456,4 @@ def execute_cmd(cmd, outerr):
             raise ScreenRecordException(message)
 
     proc.terminate()
+    return proc_code
