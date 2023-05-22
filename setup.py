@@ -13,10 +13,31 @@ def parse_requirements(filename):
     """
     line_iter = (line.strip() for line in open(filename))
     reqs = [line for line in line_iter if line and not line.startswith("#")]
+    need_remove_list = []
     if sys.platform == "win32":
-        reqs.remove("paddleocr>=2.5.0")
-        reqs.remove("paddlepaddle>=2.3.0")
-        reqs.remove("protobuf==3.20.1")
+        for req in reqs:
+            if req is not None:
+                if "paddleocr>" in req and req.index("paddleocr>") == 0:
+                    need_remove_list.append(req)
+                if "paddleocr<" in req and req.index("paddleocr<") == 0:
+                    need_remove_list.append(req)
+                if "paddleocr=" in req and req.index("paddleocr=") == 0:
+                    need_remove_list.append(req)
+                if "paddlepaddle>" in req and req.index("paddlepaddle>") == 0:
+                    need_remove_list.append(req)
+                if "paddlepaddle=" in req and req.index("paddlepaddle=") == 0:
+                    need_remove_list.append(req)
+                if "paddlepaddle<" in req and req.index("paddlepaddle<") == 0:
+                    need_remove_list.append(req)
+                if "protobuf=" in req and req.index("protobuf=") == 0:
+                    need_remove_list.append(req)
+                if "protobuf>" in req and req.index("protobuf>") == 0:
+                    need_remove_list.append(req)
+                if "protobuf<" in req and req.index("protobuf<") == 0:
+                    need_remove_list.append(req)
+        if len(need_remove_list) > 0:
+            for rem in need_remove_list:
+                reqs.remove(rem)
     return reqs
 
 
