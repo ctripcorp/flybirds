@@ -335,7 +335,7 @@ class ScreenRecord:
         proc.terminate()
 
     def crop_record(self, src_path):
-        if self.use_airtest_record and self.airtest_version_high is False:
+        if self.use_airtest_record and self.airtest_record_mode != 'ffmpeg':
             target = 'tmp.mp4'
             try:
                 log.info("crop_record start")
