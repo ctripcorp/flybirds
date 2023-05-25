@@ -38,7 +38,7 @@ def ele_attr_equal(context, selector=None, param2=None, param3=None):
     g_Context.step.ele_attr_equal(context, selector, param2, param3)
 
 
-@step("hover[{selector}]")
+@step("mouse hover[{selector}]")
 @ele_wrap
 def hover_ele(context, selector=None):
     """
