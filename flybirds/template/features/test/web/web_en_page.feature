@@ -2,6 +2,11 @@
  Feature: Page Operation
 
 
+   Scenario: Set web page's size
+     When go to url[百度]
+     Then set web page with width[1280] and height[760]
+
+
    Scenario: Return to previous page
      When go to url[百度]
      And  click[//*[@id="hotsearch-content-wrapper"]/li[1]/a/span[2]]
