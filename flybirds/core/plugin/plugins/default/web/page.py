@@ -262,6 +262,9 @@ class Page:
 
         self.page.goto(schema_url_value)
 
+    def set_web_page_size(self, context, width, height):
+        self.page.set_viewport_size({"width": int(width), "height": int(height)})
+
     def return_pre_page(self, context):
         self.page.go_back()
 
