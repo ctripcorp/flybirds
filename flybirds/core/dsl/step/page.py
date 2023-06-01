@@ -22,6 +22,12 @@ def jump_to_page(context, param=None):
     g_Context.step.jump_to_page(context, param)
 
 
+@step("set web page with width[{width}] and height[{height}]")
+@ele_wrap
+def set_web_page_size(context, width, height):
+    g_Context.step.set_web_page_size(context, width, height)
+
+
 @step("switch to target page title[{title}] url[{url}]")
 @ele_wrap
 def switch_target_page(context, title, url):

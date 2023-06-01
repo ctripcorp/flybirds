@@ -35,6 +35,11 @@ class Step:
         page.navigate(context, param)
 
     @classmethod
+    def set_web_page_size(cls, context, width, height):
+        page = gr.get_value("plugin_page")
+        page.set_web_page_size(context, width, height)
+
+    @classmethod
     def switch_target_page(cls, context, title, url):
         # Get the current page from global registry
         page = gr.get_value("plugin_page")
