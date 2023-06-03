@@ -3,6 +3,7 @@
 when behave start run hook will trigger this
 """
 import traceback
+import importlib
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
@@ -80,7 +81,11 @@ class OnBefore:  # pylint: disable=too-few-public-methods
         try:
             log.info("init device and screen config")
             OnBefore.init_ui_driver(context)
-            OnBefore.init_ocr_driver(context)
+            try:
+                importlib.import_module("paddleocr")
+                OnBefore.init_ocr_driver(context)
+            except Exception as e:
+                log.info("paddleocr not installed")
             # get the global object used to record the screen
             screen_record = GlobalContext.screen_record()
             gr.set_value("screenRecord", screen_record)
