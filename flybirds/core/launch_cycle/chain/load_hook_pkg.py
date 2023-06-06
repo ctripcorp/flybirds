@@ -1,7 +1,6 @@
 import os
-from flybirds.utils.flybirds_log import logger
 from flybirds.core.launch_cycle.run_manage import RunManage
-from flybirds.utils.pkg_helper import find_package, load_pkg_by_ns
+from flybirds.utils.pkg_helper import load_pkg_by_ns
 
 
 class HookFinder:
