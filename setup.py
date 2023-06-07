@@ -14,7 +14,7 @@ def parse_requirements(filename):
     line_iter = (line.strip() for line in open(filename))
     reqs = [line for line in line_iter if line and not line.startswith("#")]
     need_remove_list = []
-    if sys.platform == "win32":
+    if "win" in sys.platform:
         for req in reqs:
             if req is not None:
                 if "paddleocr>" in req and req.index("paddleocr>") == 0:
@@ -62,7 +62,7 @@ setup(
         "behave",
     ],
     license="MIT license",
-    python_requires=">=3.7, <3.10",
+    python_requires=">=3.8, <=3.10",
     packages=find_packages(exclude=["dist", "build", "tests", "docs"]),
     include_package_data=True,
     install_requires=req,
@@ -72,7 +72,6 @@ setup(
     """,
     url="https://github.com/ctripcorp/flybirds",
     classifiers=[
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
     ],
