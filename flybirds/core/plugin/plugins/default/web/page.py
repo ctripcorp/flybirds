@@ -46,10 +46,10 @@ class Page:
         request_interception = gr.get_web_info_value("request_interception",
                                                      True)
         if request_interception:
-            page.route("**/*", handle_route)
+            context.route("**/*", handle_route)
             # request listening events
-            page.on("request", handle_request)
-        page.on("console", handle_page_error)
+            context.on("request", handle_request)
+        context.on("console", handle_page_error)
 
         ele_wait_time = gr.get_frame_config_value("wait_ele_timeout", 30)
         page_render_timeout = gr.get_frame_config_value("page_render_timeout",

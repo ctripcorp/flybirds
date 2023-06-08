@@ -107,6 +107,13 @@ def scenario_fail(context, scenario):
         on_scenario_fail(context, scenario)
     # save screen recording
     cur_platform = GlobalContext.platform
+    if cur_platform.lower() == "web":
+        try:
+            GlobalContext.step.clear_all_request_body(context)
+            GlobalContext.step.clear_all_request_mock(context)
+        except:
+            log.info("failed to remove mock and cache")
+
     if need_copy_record >= 1 or context.scenario_screen_record \
             or cur_platform.strip().lower() == "web":
         screen_record = gr.get_value("screenRecord")
@@ -137,6 +144,13 @@ def scenario_success(context, scenario):
         screen_record = gr.get_value("screenRecord")
         screen_record.stop_record()
 
+    cur_platform = GlobalContext.platform
+    if cur_platform.lower() == "web":
+        try:
+            GlobalContext.step.clear_all_request_body(context)
+            GlobalContext.step.clear_all_request_mock(context)
+        except:
+            log.info("failed to remove mock and cache")
     launch_helper.app_start("scenario_success_page")
 
 
