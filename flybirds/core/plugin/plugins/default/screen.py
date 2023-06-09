@@ -125,7 +125,7 @@ class BaseScreen:
                       "OCR engine is not start, please check following steps:\n" \
                       "1. In windows platform, you need to download OCR requirement file from " \
                       "https://github.com/ctripcorp/flybirds/blob/main/requirements_ml.txt\n" \
-                      "2. run command `pip install -r requirements_ml.txt`\n" \
+                      "2. run command `pip3 install -r requirements_ml.txt`\n" \
                       "3. Configure `ocrLang` option in flybirds_config.json, detail languages refer to \n" \
                       "https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#ocr-opencv\n" \
                       "----------------------------------------------------\n "
@@ -142,7 +142,12 @@ class BaseScreen:
             im_show = draw_ocr(image, boxes, txts, font_path='./fonts/simfang.ttf')
         else:
             log.warn("draw ocr required ttf file is not found!")
-            im_show = draw_boxes(image, boxes)
+            try:
+                from paddleocr.tools.infer.utility import draw_boxes
+                im_show = draw_boxes(image, boxes)
+            except Exception as e:
+                log.error(f"ocr draw box error: {e}")
+                im_show = image
         im_show = Img.fromarray(im_show)
         im_show.save(img_path)
 
