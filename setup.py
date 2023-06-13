@@ -62,7 +62,7 @@ setup(
         "behave",
     ],
     license="MIT license",
-    python_requires=">=3.8, <=3.10",
+    python_requires=">=3.8, <3.11",
     packages=find_packages(exclude=["dist", "build", "tests", "docs"]),
     include_package_data=True,
     install_requires=req,
@@ -74,5 +74,6 @@ setup(
     classifiers=[
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
 )
