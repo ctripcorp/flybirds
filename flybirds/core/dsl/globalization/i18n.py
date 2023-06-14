@@ -197,12 +197,10 @@ step_language = {
         "is [{expect_value}]": [
             "验证服务[{service}]的请求参数[{target_json_path}]"
             "与[{expect_value}]一致"],
-        "compare target picture [{target_picture_path}] with compared picture [{compared_picture_path}]": [
-            "对比目标图片[{target_picture_path}]和比较图片[{compared_picture_path}]"],
-        "compare target element of target url[{target_url}] in target element [{target_ele}] with compared element of "
-        "compared url[{compared_url}] in compared element [{compared_ele}]": [
-            "对比目标元素的链接[{target_url}]与属性[{target_ele}]和比较元素的链接[{compared_url}]与属性[{compared_ele}]",
-            "对比目标元素的链接[{target_url}]与文本内容[{target_ele}]和比较元素的链接[{compared_url}]与文本匹配内容[{compared_ele}]"],
+        "compare target element [{target_element}] with compared picture [{compared_picture_path}]": [
+            "对比图片元素[{target_element}]和基准图片[{compared_picture_path}]"],
+        "compare target element[{target_ele}] with compared text path of [{compared_text_path}]": [
+            "对比目标元素[{target_ele}]和比较文本路径[{compared_text_path}]"],
         "call external party api of method[{method}] and url[{url}] and data[{data}] and headers[{headers}]": [
             "调外部接口并传参请求方式[{method}]与请求链接[{url}]与请求内容[{data}]与请求标头[{headers}]"]
     },

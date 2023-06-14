@@ -2,7 +2,9 @@
 """
 web step implements class
 """
-
+from PIL import Image
+import io
+import os
 import flybirds.core.global_resource as gr
 import flybirds.core.plugin.plugins.default.step.common as step_common
 import flybirds.utils.flybirds_log as log
@@ -13,6 +15,7 @@ from flybirds.core.plugin.plugins.default.step.record import \
 from flybirds.core.plugin.plugins.default.web.interception import \
     Interception as request_op
 from flybirds.core.exceptions import FlybirdsException
+from flybirds.utils import dsl_helper, uuid_helper
 
 __open__ = ["Step"]
 
@@ -319,12 +322,55 @@ class Step:
                                          expect_value)
 
     @staticmethod
-    def picture_compare_from_path(context, target_picture_path, compared_picture_path):
-        request_op.compare_images(target_picture_path, compared_picture_path)
+    def picture_compare_from_path(context, target_element, compared_picture_path):
+        # default threshold value
+        threshold = 0.95
+
+        # Convert parameter string to dictionary
+        param_dict = dsl_helper.params_to_dic(target_element, "target_element")
+
+        # Get path from dictionary
+        target_element = param_dict["target_element"]
+
+        if "threshold" in param_dict.keys():
+            threshold = param_dict["threshold"]
+
+            try:
+                threshold = float(threshold)
+            except ValueError:
+                message = f'[threshold] is not int or float value'
+                raise FlybirdsException(message)
+
+        ele = gr.get_value("plugin_ele")
+        locator, timeout = ele.wait_for_ele(context, target_element)
+        target_image = locator.screenshot()
+        target_image_io = Image.open(io.BytesIO(target_image))
+
+        file_path = os.path.join(os.getcwd(), compared_picture_path)
+        directory = os.path.dirname(file_path)
+        filename = os.path.basename(file_path)
+
+        uuid = uuid_helper.create_uuid()
+
+        old_filename = f"{os.path.splitext(filename)[0]}_{uuid}_old.png"
+        target_image_path = os.path.join(directory, old_filename)
+        target_image_io.save(target_image_path)
+        request_op.compare_images(context,target_image_path, compared_picture_path, threshold)
+
 
     @staticmethod
-    def dom_ele_compare_from_path(context, target_url, target_ele, compared_url, compared_ele):
-        request_op.compare_dom_element_text(target_url, target_ele, compared_url, compared_ele)
+    def dom_ele_compare_from_path(context, target_ele, compared_text_path):
+        # Convert parameter string to dictionary
+        param_dict = dsl_helper.params_to_dic(target_ele, "target_element")
+
+        # Get path from dictionary
+        target_element = param_dict["target_element"]
+
+        ele = gr.get_value("plugin_ele")
+        locator, timeout = ele.wait_for_ele(context, target_element)
+        target_text = locator.inner_text()
+
+        request_op.compare_dom_element_text(target_text, compared_text_path)
 
     @staticmethod
     def call_external_party_api(context, method, url, data, headers):

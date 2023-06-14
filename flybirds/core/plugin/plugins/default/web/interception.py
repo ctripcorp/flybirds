@@ -6,6 +6,7 @@
 import json
 import os
 import re
+
 import cv2
 import requests
 
@@ -13,6 +14,7 @@ from urllib.parse import parse_qs
 
 from bs4 import BeautifulSoup
 
+from flybirds.core.plugin.plugins.default.screen import BaseScreen
 from flybirds.utils import dsl_helper
 from deepdiff import DeepDiff
 from jsonpath_ng import parse as parse_path
@@ -353,26 +355,12 @@ class Interception:
             raise FlybirdsException(message)
 
     @staticmethod
-    def compare_images(target_picture_path, compared_picture_path):
-        # default threshold value
-        threshold = 0.95
+    def compare_images(context,target_picture_path, compared_picture_path, threshold=None):
 
-        # Convert parameter string to dictionary
-        param_dict = dsl_helper.params_to_dic(target_picture_path, "target_picture_path")
+        if threshold is None:
+            threshold = 0.95
 
-        # Get path from dictionary
-        target_picture_path = param_dict["target_picture_path"]
-
-        if "threshold" in param_dict.keys():
-            threshold = param_dict["threshold"]
-
-            try:
-                threshold = float(threshold)
-            except ValueError:
-                message = f'[threshold] is not int or float value'
-                raise FlybirdsException(message)
-
-        file_path1 = os.path.join(os.getcwd(), target_picture_path)
+        file_path1 = target_picture_path
         file_path2 = os.path.join(os.getcwd(), compared_picture_path)
 
         similar = False
@@ -387,9 +375,25 @@ class Interception:
             message = f'[target_picture_path] is invalid'
             raise FlybirdsException(message)
 
+        image1_width = image1.shape[1]
+        image1_height = image1.shape[0]
+
+        image2_width = image2.shape[1]
+        image2_height = image2.shape[0]
+
+        width_diff = abs(image1_width - image2_width)
+        height_diff = abs(image1_height - image2_height)
+
+        desired_width = max(image1_width, image2_width)
+        desired_height = max(image1_height, image2_height)
+
+        # Resize images to a unified resolution
+        resized_image1 = cv2.resize(image1, (desired_width, desired_height))
+        resized_image2 = cv2.resize(image2, (desired_width, desired_height))
+
         # Convert images to grayscale
-        gray1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
-        gray2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
+        gray1 = cv2.cvtColor(resized_image1, cv2.COLOR_BGR2GRAY)
+        gray2 = cv2.cvtColor(resized_image2, cv2.COLOR_BGR2GRAY)
 
         # Calculate histograms
         hist1 = cv2.calcHist([gray1], [0], None, [256], [0, 256])
@@ -404,8 +408,13 @@ class Interception:
             message = f'Image diff percent [{hist_diff}] request ' \
                       f'is more than threshold [{threshold}]'
             log.info(message)
-
         else:
+            directory = os.path.dirname(file_path2)
+            filename = os.path.basename(file_path2)
+            diff_filename = f"{os.path.splitext(filename)[0]}_diff.png"
+            diff_file_path = os.path.join(directory, diff_filename)
+            step_index = context.cur_step_index - 1
+            diff_file_path = BaseScreen.screen_link_to_behave_step(context.scenario, step_index, "screen_", True)
             # Calculate difference image
             diff = cv2.absdiff(gray1, gray2)
 
@@ -420,132 +429,54 @@ class Interception:
                 x, y, w, h = cv2.boundingRect(contour)
                 cv2.rectangle(image2, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
-            # Display the marked image
-            # cv2.imshow("Image Difference", image2)
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()
+            cv2.imencode('.png',image2)[1].tofile(diff_file_path)
+            message = f'Diff percentage of image [{threshold}] ' \
+                      f'has been saved in path [{diff_file_path}]'
 
-            # save diff in image2
-            cv2.imwrite(file_path2, image2)
-            log.info("Image diff percent is less than threshold:", threshold)
+            raise FlybirdsException(message)
 
         return similar, image2
 
     @staticmethod
-    def compare_dom_element_text(target_url, target_ele, compared_url, compared_ele):
+    def compare_dom_element_text(target_text, compared_text_path):
         same = False
         diff = ''
 
-        # Convert parameter string to dictionary
-        target_param_dict = dsl_helper.params_to_dic(target_ele, "target_ele")
+        text1 = target_text
 
-        # Get target_ele from dictionary
-        target_ele = target_param_dict["target_ele"]
+        file_path = os.path.join(os.getcwd(), compared_text_path)
+        # Get the path of the target data file and store it in file_path
 
-        target_regexp = False
-        if "regexp" in target_param_dict.keys():
-            regexp = target_param_dict["regexp"]
-            if regexp.lower() == "true":
-                target_regexp = True
+        text2 = None
+        # Initialize expect_request_obj to None
 
-        page1_soup = None
-        # Get the first page's DOM element
-        try:
-            page1_response = requests.get(target_url)
-            page1_response.raise_for_status()  # check for any HTTP errors
-            page1_soup = BeautifulSoup(page1_response.text, "html.parser")
-        except requests.exceptions.RequestException as e:
-            message = f"Error occurred while making a request to {target_url}: {e}"
+        if os.path.exists(file_path):
+            # If the file path exists
+
+            text2 = file_helper.read_file_from_path(file_path)
+            # Read the target data file and store it in expect_request_obj
+
+        if text2 is None:
+            # If expect_request_obj is None
+
+            message = f'[requestQuerystringCompare] cannot get data form ' \
+                      f'path [{compared_text_path}]'
             raise FlybirdsException(message)
-        except Exception as e:
-            message = f"Error occurred while parsing the HTML response of {target_url}: {e}"
-            raise FlybirdsException(message)
-
-        if page1_soup is None:
-            message = f'[compared_url] could not change to html element :' \
-                      f'[{compared_url}]. '
-            raise FlybirdsException(message)
-
-        page1_element = None
-        try:
-            params1 = json.loads(target_ele)
-
-            if target_regexp:
-                key = list(params1.keys())[0]
-                value = list(params1.values())[0]
-                textreg = re.compile(value)
-                params1[key] = textreg
-            page1_element = page1_soup.find(**params1)
-        except ValueError:
-            message = f'[target_ele] is not json value'
-            raise FlybirdsException(message)
-
-        if page1_element is None:
-            message = f'[target_element] could not find in path' \
-                      f'[{target_ele}]. '
-            raise FlybirdsException(message)
-
-        text1 = page1_element.get_text().strip()
-
-        # Convert parameter string to dictionary
-        compared_param_dict = dsl_helper.params_to_dic(compared_ele, "compared_ele")
-
-        # Get path from dictionary
-        compared_ele = compared_param_dict["compared_ele"]
-
-        compared_regexp = False
-        if "regexp" in compared_param_dict.keys():
-            regexp = compared_param_dict["regexp"]
-            if regexp.lower() == "true":
-                compared_regexp = True
-
-        page2_soup = None
-        # Get the second page's DOM element
-        try:
-            page2_response = requests.get(compared_url)
-            page2_response.raise_for_status()  # check for any HTTP errors
-            page2_soup = BeautifulSoup(page2_response.text, "html.parser")
-        except requests.exceptions.RequestException as e:
-            message = f"Error occurred while making a request to {compared_url}: {e}"
-            raise FlybirdsException(message)
-        except Exception as e:
-            message = f"Error occurred while parsing the HTML response of {compared_url}: {e}"
-            raise FlybirdsException(message)
-
-        if page2_soup is None:
-            message = f'[compared_url] could not change to html element :' \
-                      f'[{compared_url}]. '
-            raise FlybirdsException(message)
-
-        page2_element = None
-        try:
-            params2 = json.loads(compared_ele)
-            if compared_regexp:
-                key = list(params2.keys())[0]
-                value = list(params2.values())[0]
-                textreg = re.compile(value)
-                params2[key] = textreg
-            page2_element = page2_soup.find(**params2)
-        except ValueError:
-            message = f'[target_ele] is not json value'
-            raise FlybirdsException(message)
-
-        if page2_element is None:
-            message = f'[target_element] could not find in path' \
-                      f'[{compared_ele}]. '
-            raise FlybirdsException(message)
-
-        text2 = page2_element.get_text().strip()
+            # Raise an exception indicating that data could not be retrieved from the specified path
 
         # Compare the text content of the two DOM elements
         if text1 == text2:
             same = True
-        else:
-            message = f'The contents of the two pages are different as' \
-                      f' [{target_url}] - [{target_ele}] - [{text1}]:' \
-                      f' [{compared_url}] - [{compared_ele}] - [{text2}]:'
-            diff = message
+            message = f'The text of the two UI elements are the same'\
+                      f' [{text1}]:' \
+                      f' [{compared_text_path}] - [{text2}]:'
             log.info(message)
+        else:
+            message = f'The text of the two pages are different as' \
+                      f' [{text1}]:' \
+                      f' [{compared_text_path}] - [{text2}]:'
+            raise FlybirdsException(message)
+
         return same, diff
 
     @staticmethod
