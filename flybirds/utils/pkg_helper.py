@@ -21,6 +21,14 @@ def load_pkg_by_ns(pkg_ns):
             raise e
 
 
+def load_pkg_by_ns_file(pkg_ns, file_name):
+    """
+    py ns load
+    """
+    base = importlib.import_module(f"{pkg_ns}.{file_name}")
+    return base
+
+
 def find_package(pkg_query):
     if pkg_query is not None and pkg_query != "":
         working_set = pkg_resources.WorkingSet()
