@@ -353,7 +353,13 @@ def handle_route(route):
     if abort_domain_list and domain in abort_domain_list:
         route.abort()
         return
-
+    if GlobalContext.get_global_cache("enableWebContextHook"):
+        if hasattr(route, "fetch") and gr.get_value("web_context_hook") is not None:
+            web_context_hook = gr.get_value("web_context_hook")
+            if hasattr(web_context_hook, "handle_route"):
+                result = web_context_hook.handle_route(route)
+                if result:
+                    return
     resource_type = route.request.resource_type
     if resource_type != 'fetch' and resource_type != 'xhr':
         route.continue_()
