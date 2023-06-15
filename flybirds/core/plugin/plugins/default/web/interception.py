@@ -12,10 +12,7 @@ import requests
 
 from urllib.parse import parse_qs
 
-from bs4 import BeautifulSoup
-
 from flybirds.core.plugin.plugins.default.screen import BaseScreen
-from flybirds.utils import dsl_helper
 from deepdiff import DeepDiff
 from jsonpath_ng import parse as parse_path
 
