@@ -158,6 +158,7 @@ class Element:
     def wait_for_ele(self, context, param):
         locator, timeout = self.get_ele_locator(param)
         locator.wait_for(timeout=timeout, state='visible')
+        return locator, timeout
 
     def ele_input_text(self, context, param_1, param_2):
         locator, timeout = self.get_ele_locator(param_1)

@@ -113,6 +113,58 @@ class BaseScreen:
             return screen_path
 
     @staticmethod
+    def screen_link_to_behave_step(scenario, step_index, tag=None, link=True, diff_discription="差异图片：",
+                                   fail_discription="失败截图："):
+        """
+        screenshot address and linked to the <scr> tag
+        The label information is placed in the description of the scene,
+        and the json report is processed after all the runs are finished,
+        and the <scr> information in the description is converted into
+        embeddings information in the step.
+        """
+        feature_name = file_helper.valid_file_name(scenario.feature.name)
+        scenario_name = file_helper.valid_file_name(scenario.name)
+
+        step_len = len(scenario.steps)
+        if scenario is not None and hasattr(scenario, "background_steps") and \
+                len(scenario.background_steps) > 0:
+            step_len = step_len + len(scenario.background_steps)
+
+        if step_len > step_index >= 0:
+            file_name = None
+            if not (tag is None):
+                file_name = tag
+            file_name += (
+                    scenario_name
+                    + uuid_helper.create_short_uuid()
+                    + str(int(round(time.time() * 1000)))
+                    + ".png"
+            )
+
+            screen_shot_dir = gr.get_screen_save_dir()
+            if not (screen_shot_dir is None):
+                current_screen_dir = os.path.join(screen_shot_dir,
+                                                  feature_name)
+            else:
+                current_screen_dir = os.path.join(feature_name)
+            log.debug(f"[screen_link_to_behave] screen_shot_dir path :"
+                      f"{screen_shot_dir} and "
+                      f"current_screen_dir path: {current_screen_dir}")
+            file_helper.create_dirs_path_object(current_screen_dir)
+
+            src_path = "../screenshot/{}/{}".format(feature_name, file_name)
+            log.debug("[screen_link_to_behave] src_path: {}".format(src_path))
+            data = (
+                'embeddingsTags, stepIndex={}, <a style="display: block;">{}</a><image class ="screenshot"'
+                ' width="375" src="{}" /><a style="display: block;">{}</a>'.format(step_index, diff_discription, src_path, fail_discription)
+            )
+            if link is True:
+                scenario.description.append(data)
+            screen_path = os.path.join(current_screen_dir, file_name)
+
+            return screen_path
+
+    @staticmethod
     def image_ocr(img_path, right_gap_max=None, left_gap_max=None, height_gap_max=None, skip_height_max=None):
         """
         Take a screenshot and ocr
@@ -150,8 +202,6 @@ class BaseScreen:
                 im_show = image
         im_show = Img.fromarray(im_show)
         im_show.save(img_path)
-
-
 
     @staticmethod
     def image_verify(img_source_path, img_search_path):

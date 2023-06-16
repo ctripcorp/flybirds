@@ -185,7 +185,7 @@ def read_file_from_path(path):
     """
     Get the content of the file by path
     """
-    with open(path, 'r') as f:
+    with open(path, 'r', encoding='utf-8') as f:
         data = f.read()
     return data
 

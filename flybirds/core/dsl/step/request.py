@@ -78,37 +78,33 @@ def clear_all_request_mock(context):
 
 
 @step(
-    "compare target picture [{target_picture_path}] with compared picture [{compared_picture_path}]"
+    "compare target element [{target_element}] with compared picture [{compared_picture_path}]"
 )
 @ele_wrap
-def picture_compare(context, target_picture_path, compared_picture_path):
+def picture_compare(context, target_element, compared_picture_path):
     """
     compare and verify the target picture with compared picture path
 
     :param context: step context
-    :param target_picture_path: target picture path.
+    :param target_element: target UI element.
     :param compared_picture_path: compared picture path
     """
-    g_Context.step.picture_compare_from_path(context, target_picture_path,
+    g_Context.step.picture_compare_from_path(context, target_element,
                                              compared_picture_path)
 
 
 @step(
-    "compare target element of target url[{target_url}] in target element [{target_ele}] with compared element of "
-    "compared url[{compared_url}] in compared element [{compared_ele}]"
+    "compare target element[{target_ele}] with compared text path of [{compared_text_path}]"
 )
 @ele_wrap
-def dom_ele_text_compare(context, target_url, target_ele, compared_url, compared_ele):
+def dom_ele_text_compare(context, target_ele, compared_text_path):
     """
     compare and verify the html's dom element with the text of the target path and compared path
 
-    :param target_url: target  url
     :param target_ele: target xpath from html root element
-    :param compared_url: compared  url
-    :param compared_ele: compared xpath from html root element
+    :param compared_text_path: compared  text path
     """
-    g_Context.step.dom_ele_compare_from_path(context, target_url, target_ele,
-                                             compared_url, compared_ele)
+    g_Context.step.dom_ele_compare_from_path(context, target_ele, compared_text_path)
 
 
 @step(
