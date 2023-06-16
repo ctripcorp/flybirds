@@ -34,7 +34,8 @@ def init_glb():
         "plugin_page": None,
         "interceptionRequest": {},
         "interceptionValues": {},
-        "browser_context": None
+        "browser_context": None,
+        "web_context_hook": None
     }
 
 

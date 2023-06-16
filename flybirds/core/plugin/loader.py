@@ -5,7 +5,7 @@ load event
 import base64
 import os
 
-from flybirds.utils.pkg_helper import load_pkg_by_ns
+from flybirds.utils.pkg_helper import load_pkg_by_ns, load_pkg_by_ns_file
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
@@ -117,6 +117,19 @@ class ExtendPluginLoader:
                             load_pkg_by_ns(f"{pkg}.hook")
         except Exception as load_ex:
             logger.debug(f"no extend hook to be loaded--{load_ex}")
+
+        try:
+            if os.environ.get("extend_pkg_list") is not None:
+                extend_pkg = os.environ.get("extend_pkg_list")
+                extend_pkg_list = extend_pkg.split(",")
+                if len(extend_pkg_list) > 0:
+                    for pkg in extend_pkg_list:
+                        if pkg is not None and pkg != "":
+                            web_context_hook = load_pkg_by_ns_file(f"{pkg}.web_context_hook", "web_hook")
+                            if web_context_hook is not None:
+                                gr.set_value("web_context_hook", web_context_hook)
+        except Exception:
+            pass
 
 
 # add plugin load event to global processor
