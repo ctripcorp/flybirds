@@ -8,7 +8,6 @@ import os
 import flybirds.core.global_resource as gr
 import flybirds.core.plugin.plugins.default.step.common as step_common
 import flybirds.utils.flybirds_log as log
-from flybirds.core.plugin.event.run import OnBefore
 from flybirds.core.plugin.plugins.default.step.app \
     import to_app_home, app_login, app_logout
 from flybirds.core.plugin.plugins.default.step.record import \
@@ -17,7 +16,7 @@ from flybirds.core.plugin.plugins.default.web.interception import \
     Interception as request_op
 from flybirds.core.exceptions import FlybirdsException
 from flybirds.utils import dsl_helper, uuid_helper
-from flybirds.core.global_context import GlobalContext as g_Context
+from flybirds.core.global_context import GlobalContext
 
 __open__ = ["Step"]
 
@@ -450,3 +449,18 @@ class Step:
     @staticmethod
     def call_external_party_api(context, method, url, data, headers):
         request_op.call_external_party_api(method, url, data, headers)
+
+    @staticmethod
+    def open_web_mock(context, service_str, mock_case_id_str):
+        request_mock_key_value = GlobalContext.get_global_cache("request_mock_key_value")
+        if request_mock_key_value is None:
+            request_mock_key_value = []
+            GlobalContext.set_global_cache("request_mock_key_value", request_mock_key_value)
+        request_op.open_web_mock(service_str, mock_case_id_str, request_mock_key_value)
+
+    @staticmethod
+    def remove_web_mock(context):
+        request_mock_key_value = GlobalContext.get_global_cache("request_mock_key_value")
+        if request_mock_key_value is not None:
+            del request_mock_key_value
+        GlobalContext.set_global_cache("request_mock_key_value", None)

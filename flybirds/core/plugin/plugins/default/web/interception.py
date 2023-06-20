@@ -16,7 +16,6 @@ from deepdiff import DeepDiff
 from jsonpath_ng import parse as parse_path
 
 import xml.etree.ElementTree as et
-
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 from flybirds.core.exceptions import FlybirdsException
@@ -94,6 +93,53 @@ class Interception:
             interception_values[service.strip()] = mock_case_id_list[i].strip()
 
         gr.set_value('interceptionValues', interception_values)
+
+    @staticmethod
+    def open_web_mock(service_str, mock_case_id_str, request_mock_key_value: list):
+        if service_str is None or mock_case_id_str is None:
+            log.error('[addSomeInterceptionMock] param can not be none. ')
+            return
+
+        service_list = service_str.strip().split(',')
+        mock_case_id_list = mock_case_id_str.strip().split(',')
+        if len(service_list) != len(mock_case_id_list):
+            message = f"serviceCount[{service_str}] not equal " \
+                      f"mockCaseCount[{mock_case_id_str}]"
+            raise FlybirdsException(message)
+
+        interception_values = request_mock_key_value
+        for i, service in enumerate(service_list):
+            if service is not None and len(service.strip()) > 0:
+                if ":" in service:
+                    split_service = service.split(":")
+                    if split_service[0].strip() == "reg":
+                        interception_values.append({
+                            "max": 1,
+                            "key": split_service[1].strip(),
+                            "value": mock_case_id_list[i].strip(),
+                            "method": "reg"
+                        })
+                    elif split_service[0].strip() == "equ":
+                        interception_values.append({
+                            "max": 1,
+                            "key": split_service[1].strip(),
+                            "value": mock_case_id_list[i].strip(),
+                            "method": "equ"
+                        })
+                    else:
+                        interception_values.append({
+                            "max": 1,
+                            "key": service.strip(),
+                            "value": mock_case_id_list[i].strip(),
+                            "method": "contains"
+                        })
+                else:
+                    interception_values.append({
+                        "max": 1,
+                        "key": service.strip(),
+                        "value": mock_case_id_list[i].strip(),
+                        "method": "contains"
+                    })
 
     @staticmethod
     def remove_some_interception_mock(service_str):

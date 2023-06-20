@@ -202,6 +202,8 @@ step_language = {
         "compare target element[{target_ele}] with compared text path of [{compared_text_path}]": [
             "对比文本元素[{target_ele}]和基准文本路径[{compared_text_path}]"],
         "call external party api of method[{method}] and url[{url}] and data[{data}] and headers[{headers}]": [
-            "调外部接口并传参请求方式[{method}]与请求链接[{url}]与请求内容[{data}]与请求标头[{headers}]"]
+            "调外部接口并传参请求方式[{method}]与请求链接[{url}]与请求内容[{data}]与请求标头[{headers}]"],
+        "open service [{service}] bind mockCase[{mock_case_id}]": [
+            "开启服务[{service}]绑定MockCase[{mock_case_id}]"],
     },
 }
