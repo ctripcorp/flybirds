@@ -19,8 +19,13 @@ from flybirds.utils import dsl_helper
 from flybirds.utils.dsl_helper import is_number
 from flybirds.utils import file_helper
 from flybirds.core.exceptions import FlybirdsException
+import urllib.parse
+import threading
+from urllib.parse import urlsplit, urlunsplit
 
 __open__ = ["Page"]
+
+mock_lock: threading.Lock = threading.Lock()
 
 
 class Page:
@@ -346,6 +351,46 @@ def handle_request(request):
             gr.set_value("interceptionRequest", interception_request)
 
 
+def mock_rules(url: str, request_mock_key_value: list):
+    if url is None or len(url.strip()) <= 0:
+        return None
+    scheme, netloc, path, query, fragment = urlsplit(url)
+    temp_path = urlunsplit(("", "", path, query, fragment))
+    if temp_path is None or len(temp_path.strip()) <= 0:
+        return None
+    if path is None or len(path.strip()) <= 0:
+        return None
+    match_mock_key = None
+    with mock_lock:
+        for mock_rule in request_mock_key_value:
+            mock_find = False
+            if mock_rule is not None and mock_rule.get("key") and mock_rule.get("value") and mock_rule.get("max"):
+                if mock_rule.get("key") is not None and len(mock_rule.get("key").strip()) > 0 and len(
+                        mock_rule.get("value").strip()) > 0:
+                    if mock_rule.get("max") <= 0:
+                        continue
+                    method = mock_rule.get("method", None)
+                    if method is None or method == "contains":
+                        if mock_rule.get("key").strip() in temp_path:
+                            mock_find = True
+                    elif method == "equ":
+                        if mock_rule.get("key").strip().strip("/").strip("\\") == path.lower().strip().strip("/").strip(
+                                "\\"):
+                            mock_find = True
+                    elif method == "reg":
+                        match = re.search(mock_rule.get("key").strip(), temp_path)
+                        if match:
+                            mock_find = True
+                    else:
+                        if mock_rule.get("key").strip() in temp_path:
+                            mock_find = True
+                    if mock_find:
+                        match_mock_key = mock_rule
+                        mock_rule["max"] = mock_rule.get("max") - 1
+                        break
+    return match_mock_key
+
+
 def handle_route(route):
     abort_domain_list = gr.get_web_info_value("abort_domain_list", [])
     parsed_uri = urlparse(route.request.url)
@@ -361,6 +406,32 @@ def handle_route(route):
                 if result:
                     return
     resource_type = route.request.resource_type
+    # pass options
+    if route.request.method.lower() == "options":
+        route.continue_()
+        return
+    # mock response
+    request_mock_key_value = GlobalContext.get_global_cache("request_mock_key_value")
+    if request_mock_key_value is not None and len(request_mock_key_value) > 0:
+        try:
+            mock_rule = mock_rules(route.request.url, request_mock_key_value)
+            if mock_rule is not None:
+                log.info(
+                    f"url:{route.request.url}===== match mock key:{mock_rule.get('key')} mock case "
+                    f":{mock_rule.get('value')}===================")
+                mock_body = get_case_response_body(mock_rule.get("value"))
+                if mock_body:
+                    if not isinstance(mock_body, str):
+                        mock_body = json.dumps(mock_body)
+                    route.fulfill(status=200,
+                                  content_type="application/json;charset=utf-8",
+                                  body=mock_body)
+                    return
+
+        except Exception as mock_error:
+            log.info("find mock info error", mock_error)
+        finally:
+            pass
     if resource_type != 'fetch' and resource_type != 'xhr':
         route.continue_()
         return
