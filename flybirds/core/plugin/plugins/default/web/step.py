@@ -16,6 +16,7 @@ from flybirds.core.plugin.plugins.default.web.interception import \
     Interception as request_op
 from flybirds.core.exceptions import FlybirdsException
 from flybirds.utils import dsl_helper, uuid_helper
+from flybirds.core.global_context import GlobalContext
 
 __open__ = ["Step"]
 
@@ -355,8 +356,7 @@ class Step:
         old_filename = f"{os.path.splitext(filename)[0]}_{uuid}_old.png"
         target_image_path = os.path.join(directory, old_filename)
         target_image_io.save(target_image_path)
-        request_op.compare_images(context,target_image_path, compared_picture_path, threshold)
-
+        request_op.compare_images(context, target_image_path, compared_picture_path, threshold)
 
     @staticmethod
     def dom_ele_compare_from_path(context, target_ele, compared_text_path):
@@ -375,3 +375,18 @@ class Step:
     @staticmethod
     def call_external_party_api(context, method, url, data, headers):
         request_op.call_external_party_api(method, url, data, headers)
+
+    @staticmethod
+    def open_web_mock(context, service_str, mock_case_id_str):
+        request_mock_key_value = GlobalContext.get_global_cache("request_mock_key_value")
+        if request_mock_key_value is None:
+            request_mock_key_value = []
+            GlobalContext.set_global_cache("request_mock_key_value", request_mock_key_value)
+        request_op.open_web_mock(service_str, mock_case_id_str, request_mock_key_value)
+
+    @staticmethod
+    def remove_web_mock(context):
+        request_mock_key_value = GlobalContext.get_global_cache("request_mock_key_value")
+        if request_mock_key_value is not None:
+            del request_mock_key_value
+        GlobalContext.set_global_cache("request_mock_key_value", None)

@@ -191,3 +191,9 @@ def request_compare_value(context, service=None, target_json_path=None,
     """
     g_Context.step.request_compare_value(context, service, target_json_path,
                                          expect_value)
+
+
+@step("open service [{service}] bind mockCase[{mock_case_id}]")
+@ele_wrap
+def open_request_mock(context, service, mock_case_id):
+    g_Context.step.open_web_mock(context, service, mock_case_id)
