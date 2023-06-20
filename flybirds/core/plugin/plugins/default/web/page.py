@@ -387,8 +387,6 @@ def mock_rules(url: str, request_mock_key_value: list):
                     if mock_find:
                         match_mock_key = mock_rule
                         mock_rule["max"] = mock_rule.get("max") - 1
-                        log.info(
-                            f"{path} match mock case: key f{mock_rule.get('key')}----value {mock_rule.get('value')}")
                         break
     return match_mock_key
 
