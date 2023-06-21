@@ -6,7 +6,6 @@
 import json
 import os
 import re
-
 import cv2
 import requests
 
@@ -17,6 +16,7 @@ from deepdiff import DeepDiff
 from jsonpath_ng import parse as parse_path
 
 import xml.etree.ElementTree as et
+
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 from flybirds.core.exceptions import FlybirdsException
@@ -352,7 +352,7 @@ class Interception:
             raise FlybirdsException(message)
 
     @staticmethod
-    def compare_images(context,target_picture_path, compared_picture_path, threshold=None):
+    def compare_images(context, target_picture_path, compared_picture_path, threshold=None):
 
         if threshold is None:
             threshold = 0.95
@@ -406,8 +406,8 @@ class Interception:
                       f'is more than threshold [{threshold}]'
             log.info(message)
         else:
-            directory = os.path.dirname(file_path2)
-            filename = os.path.basename(file_path2)
+            directory = os.path.dirname(file_path1)
+            filename = os.path.basename(file_path1)
             diff_filename = f"{os.path.splitext(filename)[0]}_diff.png"
             diff_file_path = os.path.join(directory, diff_filename)
             step_index = context.cur_step_index - 1
@@ -424,15 +424,13 @@ class Interception:
             # Mark the difference regions in image2 with rectangles
             for contour in contours:
                 x, y, w, h = cv2.boundingRect(contour)
-                cv2.rectangle(image2, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                cv2.rectangle(resized_image1, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
-            cv2.imencode('.png',image2)[1].tofile(diff_file_path)
+            cv2.imencode('.png', resized_image1)[1].tofile(diff_file_path)
             message = f'Diff percentage of image [{threshold}] ' \
                       f'has been saved in path [{diff_file_path}]'
 
-            raise FlybirdsException(message)
-
-        return similar, image2
+        return similar, resized_image1
 
     @staticmethod
     def compare_dom_element_text(target_text, compared_text_path):

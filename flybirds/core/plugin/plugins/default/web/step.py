@@ -8,6 +8,7 @@ import os
 import flybirds.core.global_resource as gr
 import flybirds.core.plugin.plugins.default.step.common as step_common
 import flybirds.utils.flybirds_log as log
+from flybirds.core.plugin.event.run import OnBefore
 from flybirds.core.plugin.plugins.default.step.app \
     import to_app_home, app_login, app_logout
 from flybirds.core.plugin.plugins.default.step.record import \
@@ -16,6 +17,7 @@ from flybirds.core.plugin.plugins.default.web.interception import \
     Interception as request_op
 from flybirds.core.exceptions import FlybirdsException
 from flybirds.utils import dsl_helper, uuid_helper
+from flybirds.core.global_context import GlobalContext as g_Context
 
 __open__ = ["Step"]
 
@@ -355,8 +357,81 @@ class Step:
         old_filename = f"{os.path.splitext(filename)[0]}_{uuid}_old.png"
         target_image_path = os.path.join(directory, old_filename)
         target_image_io.save(target_image_path)
-        request_op.compare_images(context,target_image_path, compared_picture_path, threshold)
 
+        OnBefore.init_ocr_driver(context)
+        ocr = g_Context.ocr_driver_instance
+
+        if ocr is None:
+            message = "\n----------------------------------------------------\n" \
+                      "OCR engine is not start, please check following steps:\n" \
+                      "1. In windows platform, you need to download OCR requirement file from " \
+                      "https://github.com/ctripcorp/flybirds/blob/main/requirements_ml.txt\n" \
+                      "2. run command `pip3 install -r requirements_ml.txt`\n" \
+                      "3. Configure `ocrLang` option in flybirds_config.json, detail languages refer to \n" \
+                      "https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#ocr-opencv\n" \
+                      "----------------------------------------------------\n "
+            raise FlybirdsException(message)
+
+        textList1 = ocr.ocr(target_image_path, cls=True)
+
+        text1 = []
+        for i in textList1:
+            if isinstance(i[1][0], str):
+                content = i[1][0]
+            else:
+                content = ''
+            text1.append(content)
+
+        textList2 = ocr.ocr(compared_picture_path, cls=True)
+
+        text2 = []
+        for i in textList2:
+            if isinstance(i[1][0], str):
+                content = i[1][0]
+            else:
+                content = ''
+            text2.append(content)
+
+
+        text3 = []
+        # 遍历text1中的每个字符串
+        match_count = 0
+        for s1 in text2:
+            isfit = False
+            # 对字符串进行分割
+            items = s1.split()
+
+            match_item_count = 0
+            # 遍历分割后的每个元素
+            for item in items:
+                isitemfit = False
+                # 遍历text2中的每个字符串
+                for s2 in text1:
+                    # 如果item能够匹配到s2，则认为匹配成功
+                    if item in s2:
+                        isitemfit = True
+                        break
+
+                if isitemfit:
+                    match_item_count += 1
+                    if match_item_count == len(items):
+                        isfit = True
+                        match_count += 1
+                        break
+
+            if not isfit:
+                text3.append(s1)
+
+        # 计算匹配成功的比例
+        similarity = match_count / len(text2)
+        # 根据相似度排序
+        if similarity > threshold:
+            message = f'Image text compare similarity:{similarity} is more than thresold:{threshold}, skip compare image'
+            log.info(message)
+        else:
+            message = f'Image text compare similarity is less than thresold:{threshold} with diff:{text3}, do compare image'
+            log.info(message)
+            request_op.compare_images(context, target_image_path, compared_picture_path, threshold)
 
     @staticmethod
     def dom_ele_compare_from_path(context, target_ele, compared_text_path):

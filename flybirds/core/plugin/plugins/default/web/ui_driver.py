@@ -7,6 +7,8 @@ from playwright.sync_api import sync_playwright
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
+from flybirds.core.plugin.plugins.default.ui_driver.paddleocr.ocr_manage import \
+    ocr_init
 
 __open__ = ["UIDriver"]
 
@@ -15,6 +17,10 @@ class UIDriver:
     """web UI driver Class"""
 
     name = "web_ui_driver"
+
+    @staticmethod
+    def init_ocr(lang=None):
+        return ocr_init(lang)
 
     @staticmethod
     def init_driver():
