@@ -374,7 +374,7 @@ def mock_rules(url: str, request_mock_key_value: list):
                         if mock_rule.get("key").strip() in temp_path:
                             mock_find = True
                     elif method == "equ":
-                        if mock_rule.get("key").strip().strip("/").strip("\\") == path.lower().strip().strip("/").strip(
+                        if mock_rule.get("key").strip().strip("/").strip("\\") == path.strip().strip("/").strip(
                                 "\\"):
                             mock_find = True
                     elif method == "reg":
