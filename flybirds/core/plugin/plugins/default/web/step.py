@@ -5,6 +5,9 @@ web step implements class
 from PIL import Image
 import io
 import os
+
+from flybirds.core.plugin.event.run import OnBefore
+
 import flybirds.core.global_resource as gr
 import flybirds.core.plugin.plugins.default.step.common as step_common
 import flybirds.utils.flybirds_log as log
@@ -358,7 +361,7 @@ class Step:
         target_image_io.save(target_image_path)
 
         OnBefore.init_ocr_driver(context)
-        ocr = g_Context.ocr_driver_instance
+        ocr = GlobalContext.ocr_driver_instance
 
         if ocr is None:
             message = "\n----------------------------------------------------\n" \
@@ -431,6 +434,7 @@ class Step:
             message = f'Image text compare similarity is less than thresold:{threshold} with diff:{text3}, do compare image'
             log.info(message)
             request_op.compare_images(context, target_image_path, compared_picture_path, threshold)
+
 
     @staticmethod
     def dom_ele_compare_from_path(context, target_ele, compared_text_path):

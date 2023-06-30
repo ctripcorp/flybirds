@@ -473,6 +473,7 @@ class Interception:
                 cv2.rectangle(resized_image1, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
             cv2.imencode('.png', resized_image1)[1].tofile(diff_file_path)
+
             message = f'Diff percentage of image [{threshold}] ' \
                       f'has been saved in path [{diff_file_path}]'
 
@@ -508,7 +509,7 @@ class Interception:
         # Compare the text content of the two DOM elements
         if text1 == text2:
             same = True
-            message = f'The text of the two UI elements are the same'\
+            message = f'The text of the two UI elements are the same' \
                       f' [{text1}]:' \
                       f' [{compared_text_path}] - [{text2}]:'
             log.info(message)
