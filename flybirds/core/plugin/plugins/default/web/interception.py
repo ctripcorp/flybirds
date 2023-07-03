@@ -8,7 +8,9 @@ import os
 import re
 import cv2
 import requests
-
+from PIL import Image
+import io
+from flybirds.utils import dsl_helper, uuid_helper
 from urllib.parse import parse_qs
 
 from flybirds.core.plugin.plugins.default.screen import BaseScreen
@@ -398,12 +400,45 @@ class Interception:
             raise FlybirdsException(message)
 
     @staticmethod
-    def compare_images(context, target_picture_path, compared_picture_path, threshold=None):
+    def compare_images(context, target_element, compared_picture_path, threshold=None):
+
+        # default threshold value
+        threshold = 0.95
+
+        # Convert parameter string to dictionary
+        param_dict = dsl_helper.params_to_dic(target_element, "target_element")
+
+        # Get path from dictionary
+        target_element = param_dict["target_element"]
+
+        if "threshold" in param_dict.keys():
+            threshold = param_dict["threshold"]
+
+            try:
+                threshold = float(threshold)
+            except ValueError:
+                message = f'[threshold] is not int or float value'
+                raise FlybirdsException(message)
+
+        ele = gr.get_value("plugin_ele")
+        locator, timeout = ele.wait_for_ele(context, target_element)
+        target_image = locator.screenshot()
+        target_image_io = Image.open(io.BytesIO(target_image))
+
+        file_path = os.path.join(os.getcwd(), compared_picture_path)
+        directory = os.path.dirname(file_path)
+        filename = os.path.basename(file_path)
+
+        uuid = uuid_helper.create_uuid()
+
+        old_filename = f"{os.path.splitext(filename)[0]}_{uuid}_old.png"
+        target_image_path = os.path.join(directory, old_filename)
+        target_image_io.save(target_image_path)
 
         if threshold is None:
             threshold = 0.95
 
-        file_path1 = target_picture_path
+        file_path1 = target_image_path
         file_path2 = os.path.join(os.getcwd(), compared_picture_path)
 
         similar = False
@@ -480,9 +515,19 @@ class Interception:
         return similar, resized_image1
 
     @staticmethod
-    def compare_dom_element_text(target_text, compared_text_path):
+    def compare_dom_element_text(context, target_ele, compared_text_path):
         same = False
         diff = ''
+
+        # Convert parameter string to dictionary
+        param_dict = dsl_helper.params_to_dic(target_ele, "target_element")
+
+        # Get path from dictionary
+        target_element = param_dict["target_element"]
+
+        ele = gr.get_value("plugin_ele")
+        locator, timeout = ele.wait_for_ele(context, target_element)
+        target_text = locator.inner_text()
 
         text1 = target_text
 

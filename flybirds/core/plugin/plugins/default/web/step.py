@@ -2,12 +2,6 @@
 """
 web step implements class
 """
-from PIL import Image
-import io
-import os
-
-from flybirds.core.plugin.event.run import OnBefore
-
 import flybirds.core.global_resource as gr
 import flybirds.core.plugin.plugins.default.step.common as step_common
 import flybirds.utils.flybirds_log as log
@@ -18,7 +12,7 @@ from flybirds.core.plugin.plugins.default.step.record import \
 from flybirds.core.plugin.plugins.default.web.interception import \
     Interception as request_op
 from flybirds.core.exceptions import FlybirdsException
-from flybirds.utils import dsl_helper, uuid_helper
+
 from flybirds.core.global_context import GlobalContext
 
 __open__ = ["Step"]
@@ -327,128 +321,12 @@ class Step:
 
     @staticmethod
     def picture_compare_from_path(context, target_element, compared_picture_path):
-        # default threshold value
-        threshold = 0.95
-
-        # Convert parameter string to dictionary
-        param_dict = dsl_helper.params_to_dic(target_element, "target_element")
-
-        # Get path from dictionary
-        target_element = param_dict["target_element"]
-
-        if "threshold" in param_dict.keys():
-            threshold = param_dict["threshold"]
-
-            try:
-                threshold = float(threshold)
-            except ValueError:
-                message = f'[threshold] is not int or float value'
-                raise FlybirdsException(message)
-
-        ele = gr.get_value("plugin_ele")
-        locator, timeout = ele.wait_for_ele(context, target_element)
-        target_image = locator.screenshot()
-        target_image_io = Image.open(io.BytesIO(target_image))
-
-        file_path = os.path.join(os.getcwd(), compared_picture_path)
-        directory = os.path.dirname(file_path)
-        filename = os.path.basename(file_path)
-
-        uuid = uuid_helper.create_uuid()
-
-        old_filename = f"{os.path.splitext(filename)[0]}_{uuid}_old.png"
-        target_image_path = os.path.join(directory, old_filename)
-        target_image_io.save(target_image_path)
-
-        OnBefore.init_ocr_driver(context)
-        ocr = GlobalContext.ocr_driver_instance
-
-        if ocr is None:
-            message = "\n----------------------------------------------------\n" \
-                      "OCR engine is not start, please check following steps:\n" \
-                      "1. In windows platform, you need to download OCR requirement file from " \
-                      "https://github.com/ctripcorp/flybirds/blob/main/requirements_ml.txt\n" \
-                      "2. run command `pip3 install -r requirements_ml.txt`\n" \
-                      "3. Configure `ocrLang` option in flybirds_config.json, detail languages refer to \n" \
-                      "https://flybirds.readthedocs.io/zh_CN/latest/BDD-UI-Testing-Flybirds.html#ocr-opencv\n" \
-                      "----------------------------------------------------\n "
-            raise FlybirdsException(message)
-
-        textList1 = ocr.ocr(target_image_path, cls=True)
-
-        text1 = []
-        for i in textList1:
-            if isinstance(i[1][0], str):
-                content = i[1][0]
-            else:
-                content = ''
-            text1.append(content)
-
-        textList2 = ocr.ocr(compared_picture_path, cls=True)
-
-        text2 = []
-        for i in textList2:
-            if isinstance(i[1][0], str):
-                content = i[1][0]
-            else:
-                content = ''
-            text2.append(content)
-
-
-        text3 = []
-        # 遍历text1中的每个字符串
-        match_count = 0
-        for s1 in text2:
-            isfit = False
-            # 对字符串进行分割
-            items = s1.split()
-
-            match_item_count = 0
-            # 遍历分割后的每个元素
-            for item in items:
-                isitemfit = False
-                # 遍历text2中的每个字符串
-                for s2 in text1:
-                    # 如果item能够匹配到s2，则认为匹配成功
-                    if item in s2:
-                        isitemfit = True
-                        break
-
-                if isitemfit:
-                    match_item_count += 1
-                    if match_item_count == len(items):
-                        isfit = True
-                        match_count += 1
-                        break
-
-            if not isfit:
-                text3.append(s1)
-
-        # 计算匹配成功的比例
-        similarity = match_count / len(text2)
-        # 根据相似度排序
-        if similarity > threshold:
-            message = f'Image text compare similarity:{similarity} is more than thresold:{threshold}, skip compare image'
-            log.info(message)
-        else:
-            message = f'Image text compare similarity is less than thresold:{threshold} with diff:{text3}, do compare image'
-            log.info(message)
-            request_op.compare_images(context, target_image_path, compared_picture_path, threshold)
+        request_op.compare_images(context, target_element, compared_picture_path)
 
 
     @staticmethod
     def dom_ele_compare_from_path(context, target_ele, compared_text_path):
-        # Convert parameter string to dictionary
-        param_dict = dsl_helper.params_to_dic(target_ele, "target_element")
-
-        # Get path from dictionary
-        target_element = param_dict["target_element"]
-
-        ele = gr.get_value("plugin_ele")
-        locator, timeout = ele.wait_for_ele(context, target_element)
-        target_text = locator.inner_text()
-
-        request_op.compare_dom_element_text(target_text, compared_text_path)
+        request_op.compare_dom_element_text(context, target_ele, compared_text_path)
 
     @staticmethod
     def call_external_party_api(context, method, url, data, headers):
