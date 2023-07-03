@@ -121,7 +121,7 @@ step_language = {
         "click ocr regional[{selector}]": ["点击区域[{selector}]"],
         "click image[{selector}]": ["点击图像[{selector}]"],
         "click position[{x},{y}]": ["点击屏幕位置[{x},{y}]"],
-        "set web page with width[{width}] and height[{height}]": ["设置浏览器高度[{width}]和宽度[{height}]"],
+        "set web page with width[{width}] and height[{height}]": ["设置浏览器宽度[{width}]和高度[{height}]"],
         "in[{selector}]input[{param2}]": ["在[{selector}]中输入[{param2}]"],
         "in ocr[{selector}]input[{param2}]": ["在扫描文字[{selector}]中输入[{param2}]"],
         "clear [{selector}] and input[{param2}]": [
