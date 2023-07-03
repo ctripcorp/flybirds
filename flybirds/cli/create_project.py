@@ -148,8 +148,8 @@ def create_mini():
             config_schema = os.path.join(demo_path, "config/schema_url.json")
             feat_files.append(config_schema)
 
-            config_flybirds = os.path.join(demo_path, "config/flybirds_config.json")
-            feat_files.append(config_flybirds)
+            # config_flybirds = os.path.join(demo_path, "config/flybirds_config.json")
+            # feat_files.append(config_flybirds)
 
             interface_path = os.path.join(demo_path, "interfaceIgnoreConfig/test.json")
             feat_files.append(interface_path)
@@ -158,7 +158,8 @@ def create_mini():
             feat_files.append(mock_path)
 
             for file in feat_files:
-                os.remove(file)
+                if os.path.exists(file):
+                    os.remove(file)
 
             feature_path = os.path.join(demo_path, "features/test")
             shutil.rmtree(feature_path)
