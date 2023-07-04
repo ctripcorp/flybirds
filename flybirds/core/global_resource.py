@@ -140,7 +140,13 @@ def get_page_schema_url(page_name):
     """
     get the schema url of the page
     """
-    all_schema_url = _global_dict["configManage"].schema_info.all_schema_url
+    schema_info = _global_dict["configManage"].schema_info
+    all_schema_url = None
+    if hasattr(schema_info, "all_schema_url") is not None and getattr(schema_info, "all_schema_url", None) is not None:
+        all_schema_url = schema_info.all_schema_url
+    else:
+        log.warn("[get_page_schema_url] cannot find schema_url.json file")
+        return page_name
     if all_schema_url is None:
         log.warn("[get_page_schema_url] cannot find schema_url.json file")
         return page_name
