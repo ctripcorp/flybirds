@@ -145,8 +145,8 @@ def create_mini():
             config_ele = os.path.join(demo_path, "config/ele_locator.json")
             feat_files.append(config_ele)
 
-            config_schema = os.path.join(demo_path, "config/schema_url.json")
-            feat_files.append(config_schema)
+            # config_schema = os.path.join(demo_path, "config/schema_url.json")
+            # feat_files.append(config_schema)
 
             # config_flybirds = os.path.join(demo_path, "config/flybirds_config.json")
             # feat_files.append(config_flybirds)
