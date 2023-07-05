@@ -13,8 +13,9 @@ jsonpath_ng>=1.5.3
 deepdiff>=5.8.1
 paddleocr<=2.6.0
 paddlepaddle>=2.3.0
-baseImage>=2.1.1
 ffmpeg-python>=0.2.0
 rich<13.0.0,>=10.11.0
 xmltodict==0.13.0
 requests==2.31.0
+pydantic==1.9.1
+baseImage>=2.1.1
