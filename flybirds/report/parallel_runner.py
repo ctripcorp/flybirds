@@ -106,7 +106,7 @@ def execute_parallel_feature(feature, behave_cmd, feature_path, browser_type):
 
     p = Popen(cmd, stdout=PIPE, shell=True)
     code = p.wait()
-    p.communicate()
+    output, error = p.communicate()
 
     status = 'Passed' if code == 0 else 'Failed'
     logging.info('{0:50}: {1}!!'.format(feature, status))
@@ -117,6 +117,14 @@ def execute_parallel_feature(feature, behave_cmd, feature_path, browser_type):
                 f'{feature_end_time};'
                 f'{end_timer - start_timer};'
                 f'{status}')
+    try:
+        if status == 'Failed':
+            if error is not None:
+                log.info("exe error", error)
+            if output is not None:
+                log.info("exe error", output)
+    except:
+        log.info("get log error")
     return status
 
 
