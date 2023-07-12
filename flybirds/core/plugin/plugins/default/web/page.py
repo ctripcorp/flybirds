@@ -84,11 +84,11 @@ class Page:
         if optional_config is not None:
             context = browser.new_context(**optional_config,
                                           record_video_dir="videos",
-                                          record_video_size={"width": 1920, "height": 1080},
+                                          record_video_size={"width": 1280, "height": 720},
                                           ignore_https_errors=True)
         else:
             context = browser.new_context(record_video_dir="videos",
-                                          record_video_size={"width": 1920, "height": 1080},
+                                          record_video_size={"width": 1280, "height": 720},
                                           ignore_https_errors=True)
 
         # add user custom cookies into browser context
