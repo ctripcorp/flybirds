@@ -2,7 +2,6 @@ import os
 import platform
 import cv2
 import numpy as np
-import paddle
 from PIL import Image, ImageDraw, ImageFont
 import math
 
@@ -23,23 +22,6 @@ def get_output_tensors(args, mode, predictor):
             output_tensor = predictor.get_output_handle(output_name)
             output_tensors.append(output_tensor)
     return output_tensors
-
-
-def get_infer_gpuid():
-    sysstr = platform.system()
-    if sysstr == "Windows":
-        return 0
-
-    if not paddle.fluid.core.is_compiled_with_rocm():
-        cmd = "env | grep CUDA_VISIBLE_DEVICES"
-    else:
-        cmd = "env | grep HIP_VISIBLE_DEVICES"
-    env_cuda = os.popen(cmd).readlines()
-    if len(env_cuda) == 0:
-        return 0
-    else:
-        gpu_id = env_cuda[0].strip().split("=")[1]
-        return int(gpu_id[0])
 
 
 def draw_e2e_res(dt_boxes, strs, img_path):
@@ -304,10 +286,3 @@ def get_minarea_rect_crop(img, points):
     box = [points[index_a], points[index_b], points[index_c], points[index_d]]
     crop_img = get_rotate_crop_image(img, np.array(box))
     return crop_img
-
-
-def check_gpu(use_gpu):
-    if use_gpu and not paddle.is_compiled_with_cuda():
-        use_gpu = False
-    return use_gpu
-
