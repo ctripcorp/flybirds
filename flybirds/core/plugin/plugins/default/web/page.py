@@ -425,15 +425,18 @@ def handle_route(route):
                 if mock_body:
                     if not isinstance(mock_body, str):
                         mock_body = json.dumps(mock_body)
-                    route.fulfill(status=200,
-                                  content_type="application/json;charset=utf-8",
-                                  body=mock_body)
+                    if route.request.headers.get("content-type"):
+                        route.fulfill(status=200,
+                                      content_type=route.request.headers.get("content-type"),
+                                      body=mock_body)
+                    else:
+                        route.fulfill(status=200,
+                                      content_type=None,
+                                      body=mock_body)
                     return
 
         except Exception as mock_error:
             log.info("find mock info error", mock_error)
-        finally:
-            pass
 
     if GlobalContext.get_global_cache("enableWebContextHook"):
         if gr.get_value("web_context_hook") is not None:
