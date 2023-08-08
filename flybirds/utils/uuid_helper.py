@@ -32,14 +32,16 @@ def create_short_timestamp_uuid():
 
 
 def report_name(feature, browser_type):
+    uuid_file_name = str(uuid.uuid5(uuid.uuid4(), feature))
     # name_of_feature.chrome.1495298685509.json
     if '/' in feature:
         feature = feature.split('/')[-1]
     elif os.sep in feature:
         feature = feature.split(os.sep)[-1]
     feature_name = remove_suffix(feature, '.feature')
-    millis = int(round(time.time() * 1000))
-    return f"{feature_name}.{browser_type}.{millis}.json"
+    # millis = int(round(time.time() * 1000))
+
+    return f"{feature_name}.{browser_type}.{uuid_file_name}.json"
 
 
 def remove_suffix(s: str, suffix: str) -> str:
