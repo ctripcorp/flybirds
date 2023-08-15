@@ -323,7 +323,6 @@ class Step:
     def picture_compare_from_path(context, target_element, compared_picture_path):
         request_op.compare_images(context, target_element, compared_picture_path)
 
-
     @staticmethod
     def dom_ele_compare_from_path(context, target_ele, compared_text_path):
         request_op.compare_dom_element_text(context, target_ele, compared_text_path)
@@ -346,3 +345,13 @@ class Step:
         if request_mock_key_value is not None:
             del request_mock_key_value
         GlobalContext.set_global_cache("request_mock_key_value", None)
+
+    @classmethod
+    def ele_touch(cls, context, selector):
+        ele = gr.get_value("plugin_ele")
+        ele.ele_touch(context, selector)
+
+    @classmethod
+    def touch_text(cls, context, selector):
+        ele = gr.get_value("plugin_ele")
+        ele.touch_text(context, selector)

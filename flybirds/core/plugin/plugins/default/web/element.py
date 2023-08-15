@@ -269,3 +269,13 @@ class Element:
         if e_text is None or e_text.strip() == '':
             e_text = sub_locator.get_attribute('value', timeout=c_timeout)
         verify_helper.text_equal(target_text, e_text)
+
+    def ele_touch(self, context, param):
+        locator, timeout = self.get_ele_locator(param)
+        locator.tap(timeout=timeout)
+
+    def touch_text(self, context, param):
+        if 'text=' not in param:
+            param = "text=" + param
+        locator, timeout = self.get_ele_locator(param)
+        locator.tap(timeout=timeout)

@@ -489,3 +489,25 @@ def img_exist(context, param):
 @step("not exist image [{param}]")
 def img_not_exist(context, param):
     g_Context.step.img_not_exist(context, param)
+
+
+@step("touch[{selector}]")
+@ele_wrap
+def touch_ele(context, selector=None):
+    """
+    Click on the selector element
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    """
+    g_Context.step.ele_touch(context, selector)
+
+
+@step("touch text[{selector}]")
+@ele_wrap
+def touch_text(context, selector=None):
+    """
+    Click on the selector element
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    """
+    g_Context.step.touch_text(context, selector)
