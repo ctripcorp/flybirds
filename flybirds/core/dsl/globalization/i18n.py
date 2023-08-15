@@ -73,6 +73,8 @@ step_language = {
     "en": {
         "install app[{param}]": ["install app[{param}]"],
         "start app[{param}]": ["start app[{param}]"],
+        "touch[{selector}]": ["touch[{selector}]"],
+        "touch text[{selector}]": ["touch text[{selector}]"],
     },
     "zh-CN": {
         "install app[{selector}]": ["安装APP[{selector}]"],
@@ -205,5 +207,7 @@ step_language = {
             "调外部接口并传参请求方式[{method}]与请求链接[{url}]与请求内容[{data}]与请求标头[{headers}]"],
         "open service [{service}] bind mockCase[{mock_case_id}]": [
             "开启服务[{service}]绑定MockCase[{mock_case_id}]"],
+        "touch[{selector}]": ["点触[{selector}]"],
+        "touch text[{selector}]": ["点触文本[{selector}]"],
     },
 }
