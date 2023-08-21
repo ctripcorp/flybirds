@@ -51,10 +51,15 @@ class Page:
         request_interception = gr.get_web_info_value("request_interception",
                                                      True)
         if request_interception:
-            context.route("**/*", handle_route)
+            if not gr.get_value("hook_on_page", None):
+                context.route("**/*", handle_route)
+            else:
+                log.info("use page route=====")
+                page.route("**/*", handle_route)
             # request listening events
             context.on("request", handle_request)
         context.on("console", handle_page_error)
+        context.on("page", handle_popup)
 
         ele_wait_time = gr.get_frame_config_value("wait_ele_timeout", 30)
         page_render_timeout = gr.get_frame_config_value("page_render_timeout",
@@ -391,6 +396,14 @@ def mock_rules(url: str, request_mock_key_value: list):
                         mock_rule["max"] = mock_rule.get("max") - 1
                         break
     return match_mock_key
+
+
+def handle_popup(page):
+    log.info(f"============open new page============, url: {page.url}")
+    if gr.get_value("web_context_hook") is not None:
+        web_context_hook = gr.get_value("web_context_hook")
+        if hasattr(web_context_hook, "handle_popup"):
+            web_context_hook.handle_popup(page)
 
 
 def handle_route(route):
