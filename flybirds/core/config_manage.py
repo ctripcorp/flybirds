@@ -171,7 +171,6 @@ class DeviceConfig:
                 platform = device_info["platform"]
             if device_info.__contains__("webDriverAgent"):
                 device_driver = device_info["webDriverAgent"]
-
             self.platform = user_data.get("platform", platform).lower()
             self.web_driver_agent = device_driver
             self.screen_size = None
@@ -428,6 +427,16 @@ class FrameConfig:
             self.use_airtest_record = user_data.get(
                 "useAirtestRecord",
                 return_value(frame_config.get("useAirtestRecord", False),
+                             False)
+            )
+            self.record_mjpeg_port = user_data.get(
+                "recordMjpegPort",
+                return_value(frame_config.get("recordMjpegPort", False),
+                             False)
+            )
+            self.ios_daemon_server_port = user_data.get(
+                "iosDaemonServerPort",
+                return_value(frame_config.get("iosDaemonServerPort", False),
                              False)
             )
             self.airtest_record_mode = user_data.get(
