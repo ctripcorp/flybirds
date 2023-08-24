@@ -9,6 +9,7 @@ from tidevice._wdaproxy import WDAService
 from airtest.core.api import connect_device
 from flybirds.utils.flybirds_log import logger
 from flybirds.core.global_context import GlobalContext
+import flybirds.core.global_resource as gr
 
 __open__ = ["Device"]
 
@@ -71,7 +72,12 @@ class PC:
         try:
             dev = None
             if PC.check_ip(device_id):
-                dev = connect_device(f"ios:///{device_id}")
+                use_airtest_record = gr.get_frame_config_value("use_airtest_record", False)
+                record_mjpeg_port =  gr.get_frame_config_value("record_mjpeg_port", 9100)
+                if use_airtest_record and record_mjpeg_port:
+                    dev = connect_device(f"ios:///{device_id}?mjpeg_port={record_mjpeg_port}")
+                else:
+                    dev = connect_device(f"ios:///{device_id}")
             else:
                 dev = connect_device(f"ios:///http+usbmux://{device_id}")
             return dev
@@ -84,7 +90,12 @@ class PC:
         try:
             dev = None
             if PC.check_ip(device_id):
-                dev = connect_device(f"ios:///{device_id}")
+                use_airtest_record = gr.get_frame_config_value("use_airtest_record", False)
+                record_mjpeg_port =  gr.get_frame_config_value("record_mjpeg_port", 9100)
+                if use_airtest_record and record_mjpeg_port:
+                    dev = connect_device(f"ios:///{device_id}?mjpeg_port={record_mjpeg_port}")
+                else:
+                    dev = connect_device(f"ios:///{device_id}")
             else:
                 dev = connect_device(f"ios:///http+usbmux://{device_id}")
             return dev
