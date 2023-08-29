@@ -342,7 +342,7 @@ def handle_page_error(msg):
 def handle_request(request):
     # interception request handle
     parsed_uri = urlparse(request.url)
-    operation = parsed_uri.path.split('/')[-1]
+    operation = get_operation(parsed_uri)
     if operation is not None:
         interception_request = gr.get_value('interceptionRequest')
         request_body = interception_request.get(operation)
@@ -562,3 +562,13 @@ def process_caselist(caseformatlist, casename, priority, tag):
             actualcaselist.append(item)
 
     return actualcaselist
+
+
+def get_operation(parsed_uri):
+    operation_module = gr.get_value("projectScript").custom_operation
+    if operation_module is not None and hasattr(operation_module, "get_operation"):
+        get_operation = getattr(operation_module, "get_operation")
+        operation = get_operation(parsed_uri)
+        if operation is not None:
+            return operation
+    return parsed_uri.path.split('/')[-1]
