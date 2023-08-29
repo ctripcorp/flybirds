@@ -567,8 +567,8 @@ def process_caselist(caseformatlist, casename, priority, tag):
 def get_operation(parsed_uri):
     operation_module = gr.get_value("projectScript").custom_operation
     if operation_module is not None and hasattr(operation_module, "get_operation"):
-        get_operation = getattr(operation_module, "get_operation")
-        operation = get_operation(parsed_uri)
+        get_operation_customer = getattr(operation_module, "get_operation")
+        operation = get_operation_customer(parsed_uri)
         if operation is not None:
             return operation
     return parsed_uri.path.split('/')[-1]
