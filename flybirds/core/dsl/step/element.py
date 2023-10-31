@@ -523,4 +523,4 @@ def click_ele_point(context, selector, x=None, y=None):
     :param x: Coordinate x-axis
     :param y: Coordinate y-axis.
     """
-    g_Context.step.click_ele_point(context, selector, x, y)
+    g_Context.step.click_ele_point(context, selector, int(float(x)), int(float(y)))
