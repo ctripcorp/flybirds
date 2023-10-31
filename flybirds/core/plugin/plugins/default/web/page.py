@@ -253,6 +253,13 @@ class Page:
     def navigate(self, context, param):
         operation_module = gr.get_value("projectScript").custom_operation
         page_url = None
+        user_header = GlobalContext.get_global_cache("user_header")
+        if user_header:
+            self.page.set_extra_http_headers(user_header)
+            log.info(f'user_header: {user_header}')
+            # self.page.on("request",
+            #                    lambda request: log.info('page header request', request.url,
+            #                                             request.headers))
         if hasattr(operation_module, "get_page_url"):
             get_page_url = getattr(operation_module,
                                    "get_page_url")
