@@ -209,5 +209,6 @@ step_language = {
             "开启服务[{service}]绑定MockCase[{mock_case_id}]"],
         "touch[{selector}]": ["点触[{selector}]"],
         "touch text[{selector}]": ["点触文本[{selector}]"],
+        "click ele [{selector}] position[{x},{y}]": ["点击元素[{selector}]位置[{x},{y}]"],
     },
 }

@@ -355,3 +355,8 @@ class Step:
     def touch_text(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.touch_text(context, selector)
+
+    @classmethod
+    def click_ele_point(cls, context, selector, x, y):
+        ele = gr.get_value("plugin_ele")
+        ele.ele_click_point(context, selector, x, y)
