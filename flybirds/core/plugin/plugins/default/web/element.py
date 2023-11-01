@@ -279,3 +279,7 @@ class Element:
             param = "text=" + param
         locator, timeout = self.get_ele_locator(param)
         locator.tap(timeout=timeout)
+
+    def ele_click_point(self, context, param, x, y):
+        locator, timeout = self.get_ele_locator(param)
+        locator.click(timeout=timeout, position={"x": x, "y": y})

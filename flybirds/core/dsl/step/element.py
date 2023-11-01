@@ -511,3 +511,16 @@ def touch_text(context, selector=None):
     :param selector: locator string for selector element (or None).
     """
     g_Context.step.touch_text(context, selector)
+
+
+@step("click ele [{selector}] position[{x},{y}]")
+@ele_wrap
+def click_ele_point(context, selector, x=None, y=None):
+    """
+    Click on the screen coordinates
+    :param context: step context
+    :param selector: locator string for selector element (or None)
+    :param x: Coordinate x-axis
+    :param y: Coordinate y-axis.
+    """
+    g_Context.step.click_ele_point(context, selector, int(float(x)), int(float(y)))
