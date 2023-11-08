@@ -34,17 +34,17 @@ class Page:
     name = "web_page"
     instantiation_timing = "plugin"
 
-    def __init__(self):
-        page, context = self.init_page()
+    def __init__(self, dic=None):
+        page, context = self.init_page(dic)
         self.page = page
         self.context = context
 
     @staticmethod
-    def init_page():
+    def init_page(dic=None):
         context = gr.get_value("browser_context")
         if context is None or gr.get_web_info_value("browserExit") is None \
                 or gr.get_web_info_value("browserExit") is True:
-            context = Page.new_browser_context()
+            context = Page.new_browser_context(dic)
             gr.set_value("browser_context", context)
 
         page = context.new_page()
@@ -69,7 +69,7 @@ class Page:
         return page, context
 
     @staticmethod
-    def new_browser_context():
+    def new_browser_context(dic=None):
         browser = gr.get_value('browser')
         operation_module = gr.get_value("projectScript").custom_operation
 
@@ -85,7 +85,7 @@ class Page:
                         'from custom operation')
                     return context
 
-        optional_config = Page.get_web_option_config()
+        optional_config = Page.get_web_option_config(dic)
         if optional_config is not None:
             context = browser.new_context(**optional_config,
                                           record_video_dir="videos",
@@ -108,7 +108,7 @@ class Page:
         return context
 
     @staticmethod
-    def get_web_option_config():
+    def get_web_option_config(dic=None):
         emulated_device = None
         user_agent = None
         viewport = None
@@ -124,6 +124,11 @@ class Page:
             playwright = gr.get_value("playwright")
             emulated_device = playwright.devices[
                 gr.get_web_info_value("emulated_device")]
+        if dic is not None and dic.get("emulated_device") is not None:
+            playwright = gr.get_value("playwright")
+            emulated_device = playwright.devices[
+                dic.get("emulated_device")]
+            del dic["emulated_device"]
         if gr.get_web_info_value("user_agent") is not None:
             user_agent = gr.get_web_info_value("user_agent")
         if gr.get_web_info_value("locale") is not None:
@@ -176,9 +181,11 @@ class Page:
             gl_dict.update(emulated_device)
 
         if gl_dict is not None and len(gl_dict) > 0:
+            if dic is not None and len(dic) > 0:
+                gl_dict.update(dic)
             return gl_dict
         else:
-            return None
+            return dic
 
     def evaluatejs(self, context, param):
 
