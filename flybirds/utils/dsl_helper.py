@@ -170,6 +170,18 @@ def ele_wrap(func):
                 ele_key = v.split(',')[0]
                 ele_value = gr.get_ele_locator(ele_key)
                 v = selector_str.replace(ele_key, ele_value, 1)
+                older = v
+                if gr.get_platform() and gr.get_platform().lower() == 'web':
+                    # jquery path change to playwright path
+                    pattern = re.compile(r'(:eq\((\d+)\))')
+                    all_match = pattern.findall(v)
+                    if all_match and len(all_match) > 0:
+                        for mtch in all_match:
+                            re_key = mtch[0]
+                            re_value = ">> nth=" + mtch[1]
+                            v = v.replace(re_key, re_value)
+                        log.info(f"=============find jquery path {older} ==== change to {v}")
+
             new_v = get_global_value(v)
             if new_v is not None:
                 v = new_v
