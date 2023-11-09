@@ -178,8 +178,9 @@ def ele_wrap(func):
                     if all_match and len(all_match) > 0:
                         for mtch in all_match:
                             re_key = mtch[0]
-                            re_value = ">> nth=" + mtch[1]
+                            re_value = ">> nth=" + mtch[1] + " >>"
                             v = v.replace(re_key, re_value)
+                        v = v.strip(">>")
                         log.info(f"=============find jquery path {older} ==== change to {v}")
 
             new_v = get_global_value(v)
