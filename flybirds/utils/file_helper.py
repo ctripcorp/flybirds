@@ -100,7 +100,7 @@ def valid_file_name(o_name):
     """
     Replace the illegal string in the file
     """
-    in_valid_chars = "|\\?*<\":>+[]/',"
+    in_valid_chars = "|\\?*<\":>+[]/', \t,\n"
     for c in in_valid_chars:
         o_name = o_name.replace(c, "_")
     return o_name.replace(" ", "_")
