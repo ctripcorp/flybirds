@@ -7,6 +7,7 @@ import json
 import time
 import os
 import re
+import uuid
 from urllib.parse import urlparse
 
 import flybirds.core.global_resource as gr
@@ -22,6 +23,7 @@ from flybirds.core.exceptions import FlybirdsException
 import urllib.parse
 import threading
 from urllib.parse import urlsplit, urlunsplit
+import datetime
 
 __open__ = ["Page"]
 
@@ -354,6 +356,16 @@ def handle_page_error(msg):
 
 
 def handle_request(request):
+    if gr.get_value("network_collect") is not None:
+        network_key = uuid.uuid4()
+        network_key = f"{network_key}_{time.time_ns()}"
+        setattr(request, "network_key", network_key)
+        gr.get_value("network_collect")[network_key] = {
+            "key": network_key,
+            "url": request.url,
+            "start": str(datetime.datetime.now())
+        }
+
     # interception request handle
     parsed_uri = urlparse(request.url)
     operation = get_operation(parsed_uri, request.post_data)
