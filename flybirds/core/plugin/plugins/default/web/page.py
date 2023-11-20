@@ -368,8 +368,13 @@ def handle_request(request):
 
     # interception request handle
     parsed_uri = urlparse(request.url)
-    operation = get_operation(parsed_uri, request.post_data)
-    if operation is not None:
+    post_data = None
+    try:
+        post_data = request.post_data
+    except Exception as ex:
+        log.info("try to get post data from request")
+    operation = get_operation(parsed_uri, post_data)
+    if operation is not None and len(operation.strip()) > 0:
         interception_request = gr.get_value('interceptionRequest')
         request_body = interception_request.get(operation)
 
