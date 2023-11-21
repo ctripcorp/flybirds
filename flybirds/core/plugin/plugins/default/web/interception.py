@@ -392,6 +392,8 @@ class Interception:
             raise FlybirdsException(message)
 
         # If the actual value is not equal to the expected value, raise an exception.
+        if expect_value == "[@@空@@]" or expect_value == "@@空@@":
+            expect_value = ""
         if str(target_values[0]) != expect_value:
             message = f'value not equal, service [{operation}] request ' \
                       f'parameter [{target_path}] actual value:' \
