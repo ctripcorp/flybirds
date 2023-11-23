@@ -92,6 +92,11 @@ class Element:
 
     def ele_hover(self, context, param):
         locator, timeout = self.get_ele_locator(param)
+        try:
+            self.page.mouse.move(1, 1)
+            self.page.wait_for_timeout(50)
+        except Exception as e:
+            log.info(f'ele_hover error: {e}')
         locator.hover(timeout=timeout)
 
     def ele_click(self, context, param):
