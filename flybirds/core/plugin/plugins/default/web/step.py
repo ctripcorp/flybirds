@@ -164,6 +164,11 @@ class Step:
         ele.ele_text_include(context, selector, param_2)
 
     @classmethod
+    def ele_text_not_container(cls, context, selector, param_2):
+        ele = gr.get_value("plugin_ele")
+        ele.ele_text_not_include(context, selector, param_2)
+
+    @classmethod
     def wait_text_exist(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.find_text(context, selector)

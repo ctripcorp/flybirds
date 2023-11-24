@@ -152,6 +152,9 @@ step_language = {
         "the text of element[{selector}]include[{param2}]": [
             "[{selector}]的文案包含[{param2}]"
         ],
+        "the text of element[{selector}]not include[{param2}]": [
+            "[{selector}]的文案不包含[{param2}]"
+        ],
         "page rendering complete appears element[{selector}]": [
             "页面渲染完成出现元素[{selector}]"],
         "page ocr complete find text[{selector}]": [
