@@ -364,6 +364,17 @@ def ele_text_container(context, selector=None, param2=None):
     """
     g_Context.step.ele_text_container(context, selector, param2)
 
+@step("the text of element[{selector}]not include[{param2}]")
+@ele_wrap
+def ele_text_not_container(context, selector=None, param2=None):
+    """
+   Check if the value of the text of the selector element param1 include param2
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param param2: expected value
+    """
+    g_Context.step.ele_text_not_container(context, selector, param2)
+
 
 @step("page rendering complete appears element[{selector}]")
 @ele_wrap

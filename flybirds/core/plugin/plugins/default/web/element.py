@@ -116,6 +116,10 @@ class Element:
         e_text = self.get_ele_text(param_1)
         verify_helper.text_container(param_2, e_text)
 
+    def ele_text_not_include(self, context, param_1, param_2):
+        e_text = self.get_ele_text(param_1)
+        verify_helper.text_not_container(param_2, e_text)
+
     def find_text(self, context, param):
         param_temp = handle_str(param)
         param_dict = params_to_dic(param_temp)
