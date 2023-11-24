@@ -314,6 +314,9 @@ class Page:
 
     @staticmethod
     def add_cookies(name, value, url):
+        if GlobalContext.get_global_cache("step_cookies") is None:
+            GlobalContext.set_global_cache("step_cookies", [])
+        GlobalContext.get_global_cache("step_cookies").append({'name': name, 'value': value, "url": url})
         if name is not None and value is not None and url is not None:
             user_cookie = [{'name': name, 'value': value, "url": url}]
             context = gr.get_value("browser_context")
