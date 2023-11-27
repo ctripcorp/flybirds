@@ -451,6 +451,16 @@ def full_screen_swipe_to_img(context, param1=None, selector=None):
     """
     g_Context.step.full_screen_swipe_to_img(context, param1, selector)
 
+@step("move element[{selector}]to view")
+@ele_wrap
+def scroll_ele_into_view(context, selector=None):
+    """
+    Full screen swipe in the specified direction to find the specified
+     selector element
+     :param context: step context
+    :param selector: locator string for selector element (or None).
+    """
+    g_Context.step.scroll_ele_into_view(context, selector)
 
 @step("clear [{selector}] and input[{param2}]")
 @ele_wrap

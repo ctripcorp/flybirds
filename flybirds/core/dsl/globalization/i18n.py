@@ -170,6 +170,7 @@ step_language = {
             "向{param1}扫描[{selector}]的文案"],
         "from {param1} find[{selector}]image": [
             "向{param1}查找[{selector}]的图像"],
+        "move element[{selector}]to view": ["移动元素[{selector}]至可视区域"],
         "unblock the current page": ["解除当前页面限制"],
         "current page is [{param}]": ["当前页面是[{param}]"],
         "current page is not last page": ["当前页面已不是上一个指定页面"],
@@ -202,6 +203,7 @@ step_language = {
         "is [{expect_value}]": [
             "验证服务[{service}]的请求参数[{target_json_path}]"
             "与[{expect_value}]一致"],
+        "page not requested [{service}]": ["页面没有请求[{service}]"],
         "compare target element [{target_element}] with compared picture [{compared_picture_path}]": [
             "对比图片元素[{target_element}]和基准图片路径[{compared_picture_path}]"],
         "compare target element[{target_ele}] with compared text path of [{compared_text_path}]": [
