@@ -140,6 +140,18 @@ def request_compare(context, service=None, target_data_path=None):
     g_Context.step.request_compare_from_path(context, service,
                                              target_data_path)
 
+@step(
+    "page not requested [{service}]"
+)
+@ele_wrap
+def page_not_requested(context, service=None):
+    """
+    compare and verify the request's post body with the data of the target path
+
+    :param context: step context
+    :param service: service request name. (string or None).
+    """
+    g_Context.step.page_not_requested(context, service)
 
 @step(
     "compare service request [{service}] with xml file [{target_data_xml_path}]"

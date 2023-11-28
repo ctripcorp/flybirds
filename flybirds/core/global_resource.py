@@ -35,7 +35,8 @@ def init_glb():
         "interceptionRequest": {},
         "interceptionValues": {},
         "browser_context": None,
-        "web_context_hook": None
+        "web_context_hook": None,
+        "operate_record": {},
     }
 
 

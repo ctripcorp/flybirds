@@ -240,6 +240,14 @@ class Step:
         ele.find_full_screen_slide(context, param_1, selector)
 
     @classmethod
+    def scroll_ele_into_view(cls, context, selector):
+        """
+        from {param1} find[{param2}]element
+        """
+        ele = gr.get_value("plugin_ele")
+        ele.find_full_screen_slide(context, None, selector)
+
+    @classmethod
     def ele_attr_equal(cls, context, selector, param2, param3):
         ele = gr.get_value("plugin_ele")
         ele.is_ele_attr_equal(context, selector, param2, param3)
@@ -312,6 +320,11 @@ class Step:
     @staticmethod
     def request_compare_from_path(context, operation, target_data_path):
         request_op.request_compare(operation, target_data_path)
+    
+    @staticmethod
+    def page_not_requested(context, operation):
+        request_op.page_not_requested(operation)
+
 
     @staticmethod
     def request_query_str_compare_from_path(context, operation,

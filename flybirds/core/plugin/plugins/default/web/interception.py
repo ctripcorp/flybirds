@@ -255,6 +255,13 @@ class Interception:
         # Call the handle_diff() function to compare the differences between the actual request object
         # and the expected request object, and output the log
         handle_diff(actual_request_obj, expect_request_obj, operation, target_data_path)
+    
+    @staticmethod
+    def page_not_requested(operation):
+        request_info = get_server_request_opetate(operation)
+        if request_info:
+            message = f'[pageNotRequested] the request [{operation}] has been requested'
+            raise FlybirdsException(message)
 
     @staticmethod
     def request_query_string_compare(operation, target_data_path):
@@ -609,6 +616,11 @@ def get_server_request_body(service):
         return interception_request.get(service)
     return None
 
+def get_server_request_opetate(service):
+    operate_record = gr.get_value('operate_record')
+    if operate_record:
+        return operate_record.get(service)
+    return None
 
 def handle_ignore_node(service):
     exclude_paths = []

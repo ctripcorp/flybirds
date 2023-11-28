@@ -380,7 +380,15 @@ def handle_request(request):
     if operation is not None and len(operation.strip()) > 0:
         interception_request = gr.get_value('interceptionRequest')
         request_body = interception_request.get(operation)
-
+        # 记录页面请求
+        operate_record = gr.get_value('operate_record')
+        operate_record[operation] = {
+            'method': request.method,
+            'postData': request.post_data,
+            'url': request.url,
+            'updateTimeStamp': int(round(time.time() * 1000))
+        }
+        gr.set_value("operate_record", operate_record)
         if request_body is not None:
             log.info(
                 f'[handle_request] start cache service：{operation}')
