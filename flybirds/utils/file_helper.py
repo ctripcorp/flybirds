@@ -203,3 +203,19 @@ def read_json_data(root_dir_path):
                 for key, value in json_data.items():
                     all_json_data[key] = value
     return all_json_data
+
+
+def read_json_data_by_key(root_dir_path, case_id):
+    all_json_data = {}
+    if not os.path.exists(root_dir_path):
+        log.warn(f'[read_json_data] does not exists path:{root_dir_path}')
+        return all_json_data
+    for main_dir, dirs, file_name_list in os.walk(root_dir_path):
+        for file in file_name_list:
+            file_path = os.path.join(main_dir, file)
+            if re.search(r"\.json", str(file_path)) is not None:
+                json_data = get_json_from_file_path(file_path)
+                for key, value in json_data.items():
+                    if case_id == key:
+                        all_json_data[key] = value
+    return all_json_data

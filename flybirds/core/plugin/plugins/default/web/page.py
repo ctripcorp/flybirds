@@ -24,10 +24,12 @@ import urllib.parse
 import threading
 from urllib.parse import urlsplit, urlunsplit
 import datetime
+from jsonpath_ng import parse as parse_path
 
 __open__ = ["Page"]
 
 mock_lock: threading.Lock = threading.Lock()
+mock_req_lock: threading.Lock = threading.Lock()
 
 
 class Page:
@@ -448,6 +450,62 @@ def handle_popup(page):
             web_context_hook.handle_popup(page)
 
 
+def mock_rules_req_body(url: str, request_mock_key_value: list, request_body_real):
+    if url is None or len(url.strip()) <= 0 or request_mock_key_value is None or len(
+            request_mock_key_value) <= 0 or request_body_real is None:
+        return None
+    scheme, netloc, path, query, fragment = urlsplit(url)
+    temp_path = urlunsplit(("", "", path, query, fragment))
+    if temp_path is None or len(temp_path.strip()) <= 0:
+        return None
+    if path is None or len(path.strip()) <= 0:
+        return None
+    match_mock_key = None
+    with mock_req_lock:
+        for mock_rule in request_mock_key_value:
+            mock_find = False
+            if mock_rule is not None and mock_rule.get("key") and mock_rule.get("value") and mock_rule.get("max"):
+                if mock_rule.get("key") is not None and len(mock_rule.get("key").strip()) > 0 and len(
+                        mock_rule.get("value").strip()) > 0:
+                    if mock_rule.get("max") <= 0:
+                        continue
+                    method = mock_rule.get("method", None)
+                    if method is None or method == "contains":
+                        if mock_rule.get("key").strip() in temp_path:
+                            mock_find = True
+                    elif method == "equ":
+                        if mock_rule.get("key").strip().strip("/").strip("\\") == path.strip().strip("/").strip(
+                                "\\"):
+                            mock_find = True
+                    elif method == "reg":
+                        match = re.search(mock_rule.get("key").strip(), temp_path)
+                        if match:
+                            mock_find = True
+                    else:
+                        if mock_rule.get("key").strip() in temp_path:
+                            mock_find = True
+                    if mock_find:
+                        mock_reqeust_find = False
+                        if mock_rule.get("mockType", None) == "request" and mock_rule.get("requestPathes",
+                                                                                          None) is not None and len(
+                            mock_rule.get("requestPathes", None)) > 0 and request_body_real is not None:
+                            request_pathes = mock_rule.get("requestPathes",
+                                                           None)
+                            for request_path in request_pathes:
+                                j_path = parse_path(f"$.{request_path}")
+                                real = [match.value for match in j_path.find(request_body_real)]
+                                except_value = [match.value for match in j_path.find(mock_rule.get("requestBody"))]
+                                if json.dumps(real) == json.dumps(except_value):
+                                    mock_reqeust_find = True
+                                break
+                        if mock_reqeust_find:
+                            match_mock_key = mock_rule
+                            mock_rule["max"] = mock_rule.get("max") - 1
+                            break
+
+    return match_mock_key
+
+
 def handle_route(route):
     abort_domain_list = gr.get_web_info_value("abort_domain_list", [])
     parsed_uri = urlparse(route.request.url)
@@ -469,6 +527,37 @@ def handle_route(route):
         return
     # mock response
     request_mock_key_value = GlobalContext.get_global_cache("request_mock_key_value")
+    request_mock_request_key_value = GlobalContext.get_global_cache("request_mock_request_key_value")
+
+    # request body match mock
+    if request_mock_request_key_value is not None and len(request_mock_request_key_value) > 0:
+        try:
+            mock_rule_request = mock_rules_req_body(route.request.url, request_mock_request_key_value,
+                                                    route.request.post_data_json)
+            if mock_rule_request is not None:
+                log.info(
+                    f"url:{route.request.url}===== match request mock url:{mock_rule_request.get('key')} and mock key :{mock_rule_request.get('requestPathes')} mock case "
+                    f":{mock_rule_request.get('value')}===================")
+                mock_body_request = get_case_response_body(mock_rule_request.get("value"))
+                if mock_body_request:
+                    if mock_body_request.get("flybirdsMockResponse") is not None:
+                        mock_body_request = mock_body_request.get("flybirdsMockResponse")
+                    if not isinstance(mock_body_request, str):
+                        mock_body_request = json.dumps(mock_body_request)
+                    if route.request.headers.get("content-type"):
+                        route.fulfill(status=200,
+                                      content_type=route.request.headers.get("content-type"),
+                                      body=mock_body_request)
+                    else:
+                        route.fulfill(status=200,
+                                      content_type=None,
+                                      body=mock_body_request)
+                    return
+
+        except Exception as mock_error:
+            log.info("find requst mock info error", mock_error)
+
+    # request url match mock
     if request_mock_key_value is not None and len(request_mock_key_value) > 0:
         try:
             mock_rule = mock_rules(route.request.url, request_mock_key_value)
@@ -478,6 +567,8 @@ def handle_route(route):
                     f":{mock_rule.get('value')}===================")
                 mock_body = get_case_response_body(mock_rule.get("value"))
                 if mock_body:
+                    if mock_body.get("flybirdsMockResponse") is not None:
+                        mock_body = mock_body.get("flybirdsMockResponse")
                     if not isinstance(mock_body, str):
                         mock_body = json.dumps(mock_body)
                     if route.request.headers.get("content-type"):
