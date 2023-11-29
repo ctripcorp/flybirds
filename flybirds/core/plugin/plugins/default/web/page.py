@@ -567,6 +567,8 @@ def handle_route(route):
                     f":{mock_rule.get('value')}===================")
                 mock_body = get_case_response_body(mock_rule.get("value"))
                 if mock_body:
+                    if mock_body.get("flybirdsMockResponse") is not None:
+                        mock_body = mock_body.get("flybirdsMockResponse")
                     if not isinstance(mock_body, str):
                         mock_body = json.dumps(mock_body)
                     if route.request.headers.get("content-type"):
