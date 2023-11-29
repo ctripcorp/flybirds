@@ -140,6 +140,7 @@ def request_compare(context, service=None, target_data_path=None):
     g_Context.step.request_compare_from_path(context, service,
                                              target_data_path)
 
+
 @step(
     "page not requested [{service}]"
 )
@@ -152,6 +153,7 @@ def page_not_requested(context, service=None):
     :param service: service request name. (string or None).
     """
     g_Context.step.page_not_requested(context, service)
+
 
 @step(
     "compare service request [{service}] with xml file [{target_data_xml_path}]"
@@ -209,3 +211,9 @@ def request_compare_value(context, service=None, target_json_path=None,
 @ele_wrap
 def open_request_mock(context, service, mock_case_id):
     g_Context.step.open_web_mock(context, service, mock_case_id)
+
+
+@step("open mock request service [{service}] match pathList [{path_list}] and bind mockCase[{mock_case_id}]")
+@ele_wrap
+def open_request_body_mock(context, service, path_list, mock_case_id):
+    g_Context.step.open_web_request_mock(context, service, path_list, mock_case_id)

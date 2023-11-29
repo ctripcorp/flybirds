@@ -320,11 +320,10 @@ class Step:
     @staticmethod
     def request_compare_from_path(context, operation, target_data_path):
         request_op.request_compare(operation, target_data_path)
-    
+
     @staticmethod
     def page_not_requested(context, operation):
         request_op.page_not_requested(operation)
-
 
     @staticmethod
     def request_query_str_compare_from_path(context, operation,
@@ -378,3 +377,11 @@ class Step:
     def click_ele_point(cls, context, selector, x, y):
         ele = gr.get_value("plugin_ele")
         ele.ele_click_point(context, selector, x, y)
+
+    @staticmethod
+    def open_web_request_mock(context, service_str, path_list, mock_case_id_str):
+        request_mock_key_value = GlobalContext.get_global_cache("request_mock_request_key_value")
+        if request_mock_key_value is None:
+            request_mock_key_value = []
+            GlobalContext.set_global_cache("request_mock_request_key_value", request_mock_key_value)
+        request_op.open_web_request_mock(service_str, mock_case_id_str, path_list, request_mock_key_value)

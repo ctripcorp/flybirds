@@ -25,7 +25,7 @@ from flybirds.core.exceptions import FlybirdsException
 __open__ = ["Interception"]
 
 from flybirds.utils import file_helper
-from flybirds.utils.file_helper import read_json_data
+from flybirds.utils.file_helper import read_json_data, read_json_data_by_key
 import xmltodict
 
 
@@ -255,7 +255,7 @@ class Interception:
         # Call the handle_diff() function to compare the differences between the actual request object
         # and the expected request object, and output the log
         handle_diff(actual_request_obj, expect_request_obj, operation, target_data_path)
-    
+
     @staticmethod
     def page_not_requested(operation):
         request_info = get_server_request_opetate(operation)
@@ -609,6 +609,86 @@ class Interception:
                       f' [{url}] - [{data}] - [{headers}]:'
             raise FlybirdsException(message)
 
+    @staticmethod
+    def open_web_request_mock(service_str, mock_case_id_str, mock_key_list_str, request_mock_key_value: list):
+        if service_str is None or mock_case_id_str is None or mock_key_list_str is None:
+            log.error('[addSomeInterceptionMock] param can not be none. ')
+            return
+
+        service_list = service_str.strip().split(',')
+        mock_case_id_list = mock_case_id_str.strip().split(',')
+        mock_path_list = mock_key_list_str.strip().split('|||')
+
+        mock_data_path = os.path.join(os.getcwd(), "mockCaseData")
+        if len(service_list) != len(mock_case_id_list):
+            message = f"serviceCount[{service_str}] not equal " \
+                      f"mockCaseCount[{mock_case_id_str}]"
+            raise FlybirdsException(message)
+
+        if len(service_list) != len(mock_path_list):
+            message = f"serviceCount[{service_str}] not equal " \
+                      f"pathCount[{mock_case_id_str}]"
+            raise FlybirdsException(message)
+
+        interception_values = request_mock_key_value
+        for i, service in enumerate(service_list):
+            mock_data = read_json_data_by_key(mock_data_path, mock_case_id_list[i].strip()).get(
+                mock_case_id_list[i].strip())
+            if mock_data is None:
+                log.info(f"open request body match mock case:{mock_case_id_list[i]} failed, mock data is None")
+                continue
+            if mock_data.get("flybirdsMockResponse") is None:
+                log.info(
+                    f"open request body match mock case:{mock_case_id_list[i]} failed, mock data response is None")
+                continue
+            if mock_data.get("flybirdsMockRequest") is None:
+                log.info(
+                    f"open request body match mock case:{mock_case_id_list[i]} failed, mock data request is None")
+                continue
+            if service is not None and len(service.strip()) > 0:
+                if ":" in service:
+                    split_service = service.split(":")
+                    if split_service[0].strip() == "reg":
+                        interception_values.append({
+                            "max": 1,
+                            "key": split_service[1].strip(),
+                            "value": mock_case_id_list[i].strip(),
+                            "method": "reg",
+                            "mockType": "request",
+                            "requestPathes": mock_path_list[i].strip().split(','),
+                            "requestBody": mock_data.get("flybirdsMockRequest")
+                        })
+                    elif split_service[0].strip() == "equ":
+                        interception_values.append({
+                            "max": 1,
+                            "key": split_service[1].strip(),
+                            "value": mock_case_id_list[i].strip(),
+                            "method": "equ",
+                            "mockType": "request",
+                            "requestPathes": mock_path_list[i].strip().split(','),
+                            "requestBody": mock_data.get("flybirdsMockRequest")
+                        })
+                    else:
+                        interception_values.append({
+                            "max": 1,
+                            "key": service.strip(),
+                            "value": mock_case_id_list[i].strip(),
+                            "method": "contains",
+                            "mockType": "request",
+                            "requestPathes": mock_path_list[i].strip().split(','),
+                            "requestBody": mock_data.get("flybirdsMockRequest")
+                        })
+                else:
+                    interception_values.append({
+                        "max": 1,
+                        "key": service.strip(),
+                        "value": mock_case_id_list[i].strip(),
+                        "method": "contains",
+                        "mockType": "request",
+                        "requestPathes": mock_path_list[i].strip().split(','),
+                        "requestBody": mock_data.get("flybirdsMockRequest")
+                    })
+
 
 def get_server_request_body(service):
     interception_request = gr.get_value('interceptionRequest')
@@ -616,11 +696,13 @@ def get_server_request_body(service):
         return interception_request.get(service)
     return None
 
+
 def get_server_request_opetate(service):
     operate_record = gr.get_value('operate_record')
     if operate_record:
         return operate_record.get(service)
     return None
+
 
 def handle_ignore_node(service):
     exclude_paths = []

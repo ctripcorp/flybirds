@@ -215,5 +215,7 @@ step_language = {
         "touch[{selector}]": ["点触[{selector}]"],
         "touch text[{selector}]": ["点触文本[{selector}]"],
         "click ele [{selector}] position[{x},{y}]": ["点击元素[{selector}]位置[{x},{y}]"],
+        "open mock request service [{service}] match pathList [{path_list}] and bind mockCase[{mock_case_id}]": [
+            "开启服务[{service}]匹配请求报文路径[{path_list}]并绑定MockCase[{mock_case_id}]"]
     },
 }
