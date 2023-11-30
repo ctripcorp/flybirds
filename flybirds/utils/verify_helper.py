@@ -11,6 +11,9 @@ def text_equal(o_text, t_text):
     """
     if o_text == "[@@空@@]" or o_text == "@@空@@":
         o_text = ""
+    if "(@#@换行#符号@#@)" in o_text:
+        o_text = o_text.replace("(@#@换行#符号@#@)", "\n")
+
     if o_text != t_text:
         message = "text not equal, expect value:{}, actual value:{}".format(
             o_text, t_text
@@ -22,6 +25,9 @@ def text_container(o_text, t_text):
     """
     Determine whether the text is included
     """
+
+    if "(@#@换行#符号@#@)" in o_text:
+        o_text = o_text.replace("(@#@换行#符号@#@)", "\n")
     if not (o_text in t_text):
         message = "text not contain, expect value include:{}," \
                   " actual value:{}".format(o_text, t_text)
@@ -32,6 +38,8 @@ def text_not_container(o_text, t_text):
     """
     Determine whether the text is included
     """
+    if "(@#@换行#符号@#@)" in o_text:
+        o_text = o_text.replace("(@#@换行#符号@#@)", "\n")
     if o_text in t_text:
         message = "text contain, expect value not include:{}," \
                   " actual value:{}".format(o_text, t_text)
@@ -44,7 +52,6 @@ def attr_equal(o_attr, t_attr):
     """
     if o_attr == "[@@空@@]" or o_attr == "@@空@@":
         o_attr = ""
-
     if str(o_attr) != str(t_attr):
         message = "attr not equal, expect value:{}, actual value:{}".format(
             o_attr, t_attr
