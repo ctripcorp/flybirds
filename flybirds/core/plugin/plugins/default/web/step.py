@@ -217,6 +217,11 @@ class Step:
         ele.clear_and_input(context, selector, param_2)
 
     @classmethod
+    def clear_input(cls, context, selector):
+        ele = gr.get_value("plugin_ele")
+        ele.clear_input(context, selector)
+
+    @classmethod
     def ele_swipe(cls, context, selector, param_2, param_3):
         ele = gr.get_value("plugin_ele")
         ele.ele_slide(context, selector, param_2, param_3)

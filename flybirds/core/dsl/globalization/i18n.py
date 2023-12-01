@@ -128,6 +128,8 @@ step_language = {
         "in ocr[{selector}]input[{param2}]": ["在扫描文字[{selector}]中输入[{param2}]"],
         "clear [{selector}] and input[{param2}]": [
             "在[{selector}]中清空并输入[{param2}]"],
+         "clear input[{selector}]": [
+            "清空输入框[{selector}]"],    
         "element[{selector}]position not change in[{param2}]seconds": [
             "元素[{selector}]位置[{param2}]秒内未变动"
         ],
