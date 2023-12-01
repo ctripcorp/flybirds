@@ -474,6 +474,17 @@ def ele_clear_input(context, selector=None, param2=None):
     g_Context.step.ele_clear_input(context, selector, param2)
 
 
+@step("clear input[{selector}]")
+@ele_wrap
+def clear_input(context, selector=None):
+    """
+    Empty the selector element param1 and enter the value param2
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    """
+    g_Context.step.clear_input(context, selector)
+
+
 @step("from [{selector}] select [{param2}]")
 @ele_wrap
 def ele_select(context, selector=None, param2=None):

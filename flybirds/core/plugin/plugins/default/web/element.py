@@ -182,6 +182,13 @@ class Element:
         locator.fill(param_2, timeout=timeout)
         return self.page.wait_for_timeout(100)
 
+    def clear_input(self, context, param_1):
+        locator, timeout = self.get_ele_locator(param_1)
+        locator.click(timeout=timeout)
+        locator.fill('', timeout=timeout)
+        return self.page.wait_for_timeout(100)
+
+
     def ele_slide(self, context, param_1, param_2, param_3):
         locator, timeout = self.get_ele_locator(param_1)
         box = locator.bounding_box(timeout=timeout)
