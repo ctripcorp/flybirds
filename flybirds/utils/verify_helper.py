@@ -13,7 +13,8 @@ def text_equal(o_text, t_text):
         o_text = ""
     if "(@#@换行#符号@#@)" in o_text:
         o_text = o_text.replace("(@#@换行#符号@#@)", "\n")
-
+    if t_text is not None:
+        t_text = t_text.replace(chr(160), " ")
     if o_text != t_text:
         message = "text not equal, expect value:{}, actual value:{}".format(
             o_text, t_text
@@ -28,6 +29,8 @@ def text_container(o_text, t_text):
 
     if "(@#@换行#符号@#@)" in o_text:
         o_text = o_text.replace("(@#@换行#符号@#@)", "\n")
+    if t_text is not None:
+        t_text = t_text.replace(chr(160), " ")
     if not (o_text in t_text):
         message = "text not contain, expect value include:{}," \
                   " actual value:{}".format(o_text, t_text)
@@ -40,6 +43,8 @@ def text_not_container(o_text, t_text):
     """
     if "(@#@换行#符号@#@)" in o_text:
         o_text = o_text.replace("(@#@换行#符号@#@)", "\n")
+    if t_text is not None:
+        t_text = t_text.replace(chr(160), " ")
     if o_text in t_text:
         message = "text contain, expect value not include:{}," \
                   " actual value:{}".format(o_text, t_text)
