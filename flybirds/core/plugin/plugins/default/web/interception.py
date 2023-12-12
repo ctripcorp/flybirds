@@ -207,34 +207,7 @@ class Interception:
                 raise FlybirdsException(message)
 
         log.info(f'[request_compare] actualObj dict:{actual_request_obj}')
-
-        # Get the file path
-        file_path = os.path.join(os.getcwd(), target_data_path)
-
-        # If the file path exists, read data from the file and assign it to expect_request_obj
-        if os.path.exists(file_path):
-
-            expect_request_obj = file_helper.read_file_from_path(file_path)
-            if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
-                try:
-                    # If the format is XML, parse the XML.
-                    expect_request_obj = xmltodict.parse(expect_request_obj)
-                except ValueError:
-                    message = f'[xml convert] format is wrong, data:' + expect_request_obj
-                    raise FlybirdsException(message)
-
-            else:
-                try:
-                    # If the format is json, parse the json.
-                    expect_request_obj = file_helper.get_json_from_file_path(file_path)
-                except ValueError:
-                    message = f'[json convert] format is wrong, data:' + expect_request_obj
-                    raise FlybirdsException(message)
-
-        else:
-            message = f'[request_compare] expect_request_obj not get file from [{file_path}]'
-            raise FlybirdsException(message)
-
+        expect_request_obj = get_operate_actual_request_body(target_data_path)
         # Output the information of expect_request_obj in the log
         log.info(f'[request_compare] expectObj dict:{expect_request_obj}')
 
@@ -688,6 +661,37 @@ class Interception:
                         "requestPathes": mock_path_list[i].strip().split(','),
                         "requestBody": mock_data.get("flybirdsMockRequest")
                     })
+
+def get_operate_actual_request_body(target_data_path):
+
+        expect_request_obj = None
+        # Get the file path
+        file_path = os.path.join(os.getcwd(), target_data_path)
+
+        # If the file path exists, read data from the file and assign it to expect_request_obj
+        if os.path.exists(file_path):
+
+            expect_request_obj = file_helper.read_file_from_path(file_path)
+            if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
+                try:
+                    # If the format is XML, parse the XML.
+                    expect_request_obj = xmltodict.parse(expect_request_obj)
+                except ValueError:
+                    message = f'[xml convert] format is wrong, data:' + expect_request_obj
+                    raise FlybirdsException(message)
+
+            else:
+                try:
+                    # If the format is json, parse the json.
+                    expect_request_obj = file_helper.get_json_from_file_path(file_path)
+                except ValueError:
+                    message = f'[json convert] format is wrong, data:' + expect_request_obj
+                    raise FlybirdsException(message)
+
+        else:
+            message = f'[request_compare] expect_request_obj not get file from [{file_path}]'
+            raise FlybirdsException(message)
+        return expect_request_obj
 
 
 def get_server_request_body(service):
