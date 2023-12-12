@@ -22,6 +22,7 @@ def scenario_init(context, scenario):
     # the information added to the description will
     # take effect in this scenario
     log.info('[scenario_init] start!')
+    GlobalContext.set_global_cache("verifyStepCount", 0)
     scenario.description.append("initialization description_")
     # Initialize the sequence of steps to be executed
     # which is required for subsequent associated screenshots
@@ -213,6 +214,11 @@ class OnAfter:  # pylint: disable=too-few-public-methods
         exe scenario after
         """
         try:
+            if context._runner is not None and context._runner.formatters is not None and len(
+                    context._runner.formatters) > 0:
+                formatter = context._runner.formatters[0]
+                if formatter is not None and formatter.current_feature_element is not None:
+                    formatter.current_feature_element["verifyCount"] = GlobalContext.get_global_cache("verifyStepCount")
             log.info('[scenario_OnAfter] start!')
             if scenario.status == "failed":
                 scenario_fail(context, scenario)
