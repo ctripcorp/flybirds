@@ -5,10 +5,11 @@ This module defines the steps related to the UI element.
 from behave import step
 
 from flybirds.core.global_context import GlobalContext as g_Context
-from flybirds.utils.dsl_helper import ele_wrap
+from flybirds.utils.dsl_helper import ele_wrap, VerifyStep
 
 
 @step("text[{selector}]property[{param2}]is {param3}")
+@VerifyStep()
 @ele_wrap
 def text_attr_equal(context, selector=None, param2=None, param3=None):
     """
@@ -24,6 +25,7 @@ def text_attr_equal(context, selector=None, param2=None, param3=None):
 
 
 @step("element[{selector}]property[{param2}]is {param3}")
+@VerifyStep()
 @ele_wrap
 def ele_attr_equal(context, selector=None, param2=None, param3=None):
     """
@@ -153,6 +155,7 @@ def ocr_text_input(context, selector=None, param2=None):
 
 
 @step("element[{selector}]position not change in[{param2}]seconds")
+@VerifyStep()
 @ele_wrap
 def position_not_change(context, selector=None, param2=None):
     """
@@ -192,6 +195,7 @@ def full_screen_swipe(context, param1=None, param2=None):
 
 
 @step("exist text[{selector}]")
+@VerifyStep()
 @ele_wrap
 def wait_text_exist(context, selector=None):
     """
@@ -203,6 +207,7 @@ def wait_text_exist(context, selector=None):
 
 
 @step("ocr exist text[{selector}]")
+@VerifyStep()
 @ele_wrap
 def ocr_text_exist(context, selector=None):
     """
@@ -214,6 +219,7 @@ def ocr_text_exist(context, selector=None):
 
 
 @step("ocr regional[{selector}] exist text[{param2}]")
+@VerifyStep()
 @ele_wrap
 def ocr_regional_text_exist(context, selector, param2):
     """
@@ -226,6 +232,7 @@ def ocr_regional_text_exist(context, selector, param2):
 
 
 @step("ocr contain text[{selector}]")
+@VerifyStep()
 @ele_wrap
 def ocr_text_contain(context, selector=None):
     """
@@ -237,6 +244,7 @@ def ocr_text_contain(context, selector=None):
 
 
 @step("ocr regional[{selector}] contain text[{param2}]")
+@VerifyStep()
 @ele_wrap
 def ocr_regional_text_contain(context, selector, param2):
     """
@@ -249,6 +257,7 @@ def ocr_regional_text_contain(context, selector, param2):
 
 
 @step("page ocr complete find text[{selector}]")
+@VerifyStep()
 @ele_wrap
 def wait_ocr_text_appear(context, selector=None):
     """
@@ -261,6 +270,7 @@ def wait_ocr_text_appear(context, selector=None):
 
 
 @step("not exist text[{selector}]")
+@VerifyStep()
 @ele_wrap
 def text_not_exist(context, selector=None):
     """
@@ -272,6 +282,7 @@ def text_not_exist(context, selector=None):
 
 
 @step("ocr not exist text[{selector}]")
+@VerifyStep()
 @ele_wrap
 def ocr_text_not_exist(context, selector=None):
     """
@@ -295,6 +306,7 @@ def wait_text_disappear(context, selector=None):
 
 
 @step("exist [{p_selector}] subNode [{c_selector}] element")
+@VerifyStep()
 @ele_wrap
 def find_child_from_parent(context, p_selector=None, c_selector=None):
     """
@@ -308,6 +320,7 @@ def find_child_from_parent(context, p_selector=None, c_selector=None):
 
 
 @step("exist[{selector}]element")
+@VerifyStep()
 @ele_wrap
 def wait_ele_exit(context, selector=None):
     """
@@ -319,6 +332,7 @@ def wait_ele_exit(context, selector=None):
 
 
 @step("not exist element[{selector}]")
+@VerifyStep()
 @ele_wrap
 def ele_not_exit(context, selector=None):
     """
@@ -342,6 +356,7 @@ def wait_ele_disappear(context, selector=None):
 
 
 @step("the text of element[{selector}]is[{param2}]")
+@VerifyStep()
 @ele_wrap
 def ele_text_equal(context, selector=None, param2=None):
     """
@@ -354,6 +369,7 @@ def ele_text_equal(context, selector=None, param2=None):
 
 
 @step("the text of element[{selector}]include[{param2}]")
+@VerifyStep()
 @ele_wrap
 def ele_text_container(context, selector=None, param2=None):
     """
@@ -364,7 +380,9 @@ def ele_text_container(context, selector=None, param2=None):
     """
     g_Context.step.ele_text_container(context, selector, param2)
 
+
 @step("the text of element[{selector}]not include[{param2}]")
+@VerifyStep()
 @ele_wrap
 def ele_text_not_container(context, selector=None, param2=None):
     """
@@ -389,6 +407,7 @@ def wait_ele_appear(context, selector=None):
 
 
 @step("existing element[{selector}]")
+@VerifyStep()
 @ele_wrap
 def exist_ele(context, selector=None):
     """
@@ -400,6 +419,7 @@ def exist_ele(context, selector=None):
 
 
 @step("in[{p_selector}]from {param2} find[{c_selector}]element")
+@VerifyStep()
 @ele_wrap
 def swipe_to_ele(context, p_selector=None, param2=None, c_selector=None):
     """
@@ -414,6 +434,7 @@ def swipe_to_ele(context, p_selector=None, param2=None, c_selector=None):
 
 
 @step("from {param1} find[{selector}]element")
+@VerifyStep()
 @ele_wrap
 def full_screen_swipe_to_ele_aaa(context, param1=None, selector=None):
     """
@@ -427,6 +448,7 @@ def full_screen_swipe_to_ele_aaa(context, param1=None, selector=None):
 
 
 @step("from {param1} find[{selector}]text")
+@VerifyStep()
 @ele_wrap
 def full_screen_swipe_to_ocr_txt(context, param1=None, selector=None):
     """
@@ -440,6 +462,7 @@ def full_screen_swipe_to_ocr_txt(context, param1=None, selector=None):
 
 
 @step("from {param1} find[{selector}]image")
+@VerifyStep()
 @ele_wrap
 def full_screen_swipe_to_img(context, param1=None, selector=None):
     """
@@ -451,6 +474,7 @@ def full_screen_swipe_to_img(context, param1=None, selector=None):
     """
     g_Context.step.full_screen_swipe_to_img(context, param1, selector)
 
+
 @step("move element[{selector}]to view")
 @ele_wrap
 def scroll_ele_into_view(context, selector=None):
@@ -461,6 +485,7 @@ def scroll_ele_into_view(context, selector=None):
     :param selector: locator string for selector element (or None).
     """
     g_Context.step.scroll_ele_into_view(context, selector)
+
 
 @step("clear [{selector}] and input[{param2}]")
 @ele_wrap
@@ -499,6 +524,7 @@ def ele_select(context, selector=None, param2=None):
 
 @step(
     "the text of element [{p_selector}] subNode [{c_selector}] is [{param3}]")
+@VerifyStep()
 @ele_wrap
 def find_text_from_parent(context, p_selector=None, c_selector=None,
                           param3=None):
@@ -514,11 +540,13 @@ def find_text_from_parent(context, p_selector=None, c_selector=None,
 
 
 @step("exist image [{param}]")
+@VerifyStep()
 def img_exist(context, param):
     g_Context.step.img_exist(context, param)
 
 
 @step("not exist image [{param}]")
+@VerifyStep()
 def img_not_exist(context, param):
     g_Context.step.img_not_exist(context, param)
 

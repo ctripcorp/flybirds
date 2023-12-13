@@ -9,8 +9,10 @@ from functools import wraps
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 
-
 # generate result_dic
+from flybirds.core.global_context import GlobalContext
+
+
 def add_res_dic(dsl_params, functin_pattern, def_key):
     result_dic = {}
     match_obj = re.match(functin_pattern, dsl_params)
@@ -211,3 +213,20 @@ def get_global_value(v):
                 if rp is not None:
                     return rp
     return None
+
+
+class VerifyStep:
+    def __init__(self, *args, **kwargs):  # 类装饰器参数
+        self.verify = True
+        self.num_calls = 0
+
+    def __call__(self, func):  # 被装饰函数
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if GlobalContext.get_global_cache("verifyStepCount") is not None:
+                GlobalContext.set_global_cache("verifyStepCount",
+                                               GlobalContext.get_global_cache(
+                                                   "verifyStepCount") + 1)
+            return func(*args, **kwargs)
+
+        return wrapper

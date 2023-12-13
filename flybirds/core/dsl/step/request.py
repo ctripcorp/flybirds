@@ -6,7 +6,7 @@ This module defines the steps related to the web network request.
 from behave import step
 
 from flybirds.core.global_context import GlobalContext as g_Context
-from flybirds.utils.dsl_helper import ele_wrap
+from flybirds.utils.dsl_helper import ele_wrap, VerifyStep
 
 
 @step("cache service request [{service}]")
@@ -80,6 +80,7 @@ def clear_all_request_mock(context):
 @step(
     "compare target element [{target_element}] with compared picture [{compared_picture_path}]"
 )
+@VerifyStep()
 @ele_wrap
 def picture_compare(context, target_element, compared_picture_path):
     """
@@ -96,6 +97,7 @@ def picture_compare(context, target_element, compared_picture_path):
 @step(
     "compare target element[{target_ele}] with compared text path of [{compared_text_path}]"
 )
+@VerifyStep()
 @ele_wrap
 def dom_ele_text_compare(context, target_ele, compared_text_path):
     """
@@ -128,6 +130,7 @@ def call_external_party_api(context, method, url, data, headers=None):
 @step(
     "compare service request [{service}] with json file [{target_data_path}]"
 )
+@VerifyStep()
 @ele_wrap
 def request_compare(context, service=None, target_data_path=None):
     """
@@ -144,6 +147,7 @@ def request_compare(context, service=None, target_data_path=None):
 @step(
     "page not requested [{service}]"
 )
+@VerifyStep()
 @ele_wrap
 def page_not_requested(context, service=None):
     """
@@ -158,6 +162,7 @@ def page_not_requested(context, service=None):
 @step(
     "compare service request [{service}] with xml file [{target_data_xml_path}]"
 )
+@VerifyStep()
 @ele_wrap
 def request_compare(context, service=None, target_data_xml_path=None):
     """
@@ -174,6 +179,7 @@ def request_compare(context, service=None, target_data_xml_path=None):
 @step(
     "compare service non-json request [{service}] with non-json "
     "file [{target_data_path}]")
+@VerifyStep()
 @ele_wrap
 def request_query_str_compare(context, service=None, target_data_path=None):
     """
@@ -191,6 +197,7 @@ def request_query_str_compare(context, service=None, target_data_path=None):
 @step(
     "service request [{service}] request parameter [{target_json_path}] "
     "is [{expect_value}]")
+@VerifyStep()
 @ele_wrap
 def request_compare_value(context, service=None, target_json_path=None,
                           expect_value=None):
