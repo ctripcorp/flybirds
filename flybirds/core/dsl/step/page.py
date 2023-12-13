@@ -6,7 +6,7 @@ This module defines the steps related to the page.
 from behave import step
 
 from flybirds.core.global_context import GlobalContext as g_Context
-from flybirds.utils.dsl_helper import ele_wrap
+from flybirds.utils.dsl_helper import ele_wrap, VerifyStep
 from flybirds.utils.dsl_helper import get_params
 
 
@@ -85,11 +85,13 @@ def unblock_page(context):
 
 
 @step("current page is [{param}]")
+@VerifyStep()
 @ele_wrap
 def cur_page_is(context, param=None):
     g_Context.step.cur_page_is(context, param)
 
 
 @step("current page is not last page")
+@VerifyStep()
 def has_page_changed(context):
     g_Context.step.has_page_changed(context)
