@@ -5,6 +5,7 @@ behave cannot get language from json report,use this to change the behave func
 
 import six
 from behave.formatter.json import JSONFormatter
+from behave.i18n import languages
 from behave.step_registry import StepRegistry
 from flybirds.core.extend.step import load_steps
 
@@ -70,7 +71,16 @@ def step_registry_add_step_wreap(self, keyword, step_text, func):
     step_registry_add_step(self, keyword, step_text, func)
 
 
+def inject_behave_language():
+    try:
+        languages.get('zh-CN').get('and').append(u"同时")
+        languages.get('zh-CN').get('and').append(u"并且")
+    except Exception as es:
+        log.info("inject behave language error: %s" % es)
+
+
 # start inject
+inject_behave_language()
 inject_behave()
 
 # load step
