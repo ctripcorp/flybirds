@@ -129,6 +129,10 @@ class AppConfig:
                 "ocrLang",
                 app_config.get("ocrLang", "ch")
             )
+            self.finger_direction_switch = user_data.get(
+                "fingerDirectionSwitch",
+                app_config.get("fingerDirectionSwitch", None)
+            )
 
             self.run_id = user_data.get("runId", None)
             self.build_id = user_data.get("buildId", None)
