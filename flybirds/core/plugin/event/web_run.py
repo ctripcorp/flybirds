@@ -90,17 +90,20 @@ class OnAfter:
 
     @staticmethod
     def run(context):
-        log.info('[web run] OnAfter run event!')
-        # clear cache
-        GlobalContext.set_global_cache("request_mock_key_value", None)
-        GlobalContext.set_global_cache("request_mock_request_key_value", None)
-        # close browser
-        ui_driver.close_driver()
+        try:
+            log.info('[web run] OnAfter run event!')
+            # clear cache
+            GlobalContext.set_global_cache("request_mock_key_value", None)
+            GlobalContext.set_global_cache("request_mock_request_key_value", None)
+            # close browser
+            ui_driver.close_driver()
 
-        # hook extend by tester
-        after_all_extend = launch_helper.get_hook_file("after_all_extend")
-        if after_all_extend is not None:
-            after_all_extend(context)
+            # hook extend by tester
+            after_all_extend = launch_helper.get_hook_file("after_all_extend")
+            if after_all_extend is not None:
+                after_all_extend(context)
+        except Exception as after_error:
+            log.info("destroy web driver error", traceback.format_exc())
 
 
 hook1 = GlobalContext.join("before_run_processor", OnBefore, 1)
