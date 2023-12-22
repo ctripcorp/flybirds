@@ -95,7 +95,7 @@ class AppBaseStep:
         ocr_text_input(context, selector, param2)
 
     def swipe_to_ele(self, context, p_selector, param2, c_selector):
-        step_adjust.swipe_to_ele(context, p_selector, param2, c_selector)
+        step_adjust.swipe_to_ele(context, p_selector, param2, c_selector, True)
 
     def full_screen_swipe_to_ele_aaa(self, context, param1, selector):
         step_adjust.full_screen_swipe_to_ele_aaa(context, param1, selector)

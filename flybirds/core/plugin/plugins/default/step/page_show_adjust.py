@@ -9,7 +9,7 @@ import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_swipe as ps
 import flybirds.utils.dsl_helper as dsl_helper
 
 
-def swipe_to_ele(context, param1, param2, param3):
+def swipe_to_ele(context, param1, param2, param3, in_ele=False):
     poco_instance = gr.get_value("pocoInstance")
 
     param1_dict = dsl_helper.params_to_dic(param1)
@@ -77,6 +77,7 @@ def swipe_to_ele(context, param1, param2, param3):
         start_y,
         distance,
         duration,
+        in_ele
     )
 
 

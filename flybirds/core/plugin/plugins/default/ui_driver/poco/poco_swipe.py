@@ -58,6 +58,7 @@ def air_bdd_ele_swipe(
         distance,
         duration,
         ready_time=None,
+        in_ele=False,
 ):
     """
     Slides a specified distance up, down, left, or right from a specified
@@ -112,35 +113,36 @@ def air_bdd_ele_swipe(
     if distance > 1:
         if direction == direct_left or direction == direct_right:
             distance /= screen_size[0]
-            if distance > max_x:
-                distance = max_x
-            if distance < min_x:
-                distance = min_x
+            # if distance > max_x:
+            #     distance = max_x
+            # if distance < min_x:
+            #     distance = min_x
         else:
             distance /= screen_size[1]
-            if distance > max_y:
-                distance = max_y
-            if distance < min_y:
-                distance = min_y
+            # if distance > max_y:
+            #     distance = max_y
+            # if distance < min_y:
+            #     distance = min_y
     else:
         if direction == direct_left or direction == direct_right:
             distance *= target_size[0]
-            if distance > max_x:
-                distance = max_x
-            if distance < min_x:
-                distance = min_x
+            # if distance > max_x:
+            #     distance = max_x
+            # if distance < min_x:
+            #     distance = min_x
         else:
             distance *= target_size[1]
-            if distance > max_y:
-                distance = max_y
-            if distance < min_y:
-                distance = min_y
+            # if distance > max_y:
+            #     distance = max_y
+            # if distance < min_y:
+            #     distance = min_y
 
-    air_bdd_direction_swipe(poco, start_point, direction, distance, duration)
+    air_bdd_direction_swipe(poco, start_point, direction, distance, duration, in_ele, max_x, min_x, max_y, min_y)
 
 
 def air_bdd_direction_swipe(
-        poco, start_point, direction, distance, duration=None
+        poco, start_point, direction, distance, duration=None, in_ele=False, max_x=None, min_x=None, max_y=None,
+        min_y=None
 ):
     """
     swipe the specified distance from the starting point to one of up, down,
@@ -150,6 +152,11 @@ def air_bdd_direction_swipe(
     :param direction:
     :param distance:
     :param duration:
+    :param in_ele:
+    :param max_x:
+    :param min_x:
+    :param max_y:
+    :param min_y:
     :return:
     """
     # get current language
@@ -162,24 +169,40 @@ def air_bdd_direction_swipe(
     end_point = [start_point[0], start_point[1]]
     if direction == direct_left:
         end_point[0] -= distance
-        if end_point[0] < 0.0:
-            end_point[0] = 0
-            start_point[0] = distance
+        if not in_ele:
+            if end_point[0] < 0.0:
+                end_point[0] = 0
+                start_point[0] = distance
+        else:
+            if end_point[0] < min_x:
+                end_point[0] = min_x
     elif direction == direct_right:
         end_point[0] += distance
-        if end_point[0] > 1.0:
-            end_point[0] = 1
-            start_point[0] = 1 - distance
+        if not in_ele:
+            if end_point[0] > 1.0:
+                end_point[0] = 1
+                start_point[0] = 1 - distance
+        else:
+            if end_point[0] > max_x:
+                end_point[0] = max_x
     elif direction == direct_up:
         end_point[1] -= distance
-        if end_point[1] < 0:
-            end_point[1] = 0
-            start_point[1] = distance
+        if not in_ele:
+            if end_point[1] < 0:
+                end_point[1] = 0
+                start_point[1] = distance
+        else:
+            if end_point[1] < min_y:
+                end_point[1] = min_y
     elif direction == direct_down:
         end_point[1] += distance
-        if end_point[1] > 1:
-            end_point[1] = 1
-            start_point[1] = 1 - distance
+        if not in_ele:
+            if end_point[1] > 1:
+                end_point[1] = 1
+                start_point[1] = 1 - distance
+        else:
+            if end_point[1] > max_y:
+                end_point[1] = max_y
     air_bdd_percent_point_swipe(poco, start_point, end_point, duration)
 
 
@@ -264,6 +287,7 @@ def air_bdd_swipe_search(
         start_y=None,
         distance=None,
         duration=None,
+        in_ele=False
 ):
     """
     swipe in a certain direction in the full screen or within an element to
@@ -301,6 +325,7 @@ def air_bdd_swipe_search(
             direction,
             distance,
             duration,
+            in_ele
         )
         swipe_count -= 1
     if not searched:
