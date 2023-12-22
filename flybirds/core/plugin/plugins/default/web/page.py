@@ -532,8 +532,10 @@ def handle_route(route):
     # request body match mock
     if request_mock_request_key_value is not None and len(request_mock_request_key_value) > 0:
         try:
-            mock_rule_request = mock_rules_req_body(route.request.url, request_mock_request_key_value,
-                                                    route.request.post_data_json)
+            mock_rule_request = None
+            if route.request.resource_type == 'xhr' or route.request.resource_type == 'fetch':
+                mock_rule_request = mock_rules_req_body(route.request.url, request_mock_request_key_value,
+                                                        route.request.post_data_json)
             if mock_rule_request is not None:
                 log.info(
                     f"url:{route.request.url}===== match request mock url:{mock_rule_request.get('key')} and mock key :{mock_rule_request.get('requestPathes')} mock case "
@@ -560,7 +562,9 @@ def handle_route(route):
     # request url match mock
     if request_mock_key_value is not None and len(request_mock_key_value) > 0:
         try:
-            mock_rule = mock_rules(route.request.url, request_mock_key_value)
+            mock_rule = None
+            if route.request.resource_type == 'xhr' or route.request.resource_type == 'fetch':
+                mock_rule = mock_rules(route.request.url, request_mock_key_value)
             if mock_rule is not None:
                 log.info(
                     f"url:{route.request.url}===== match mock key:{mock_rule.get('key')} mock case "
