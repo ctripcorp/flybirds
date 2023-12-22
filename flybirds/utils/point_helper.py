@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.utils import language_helper as lan
-import flybirds.core.global_resource as g_res
 
 
 def get_swipe_search_start_point(direction, start_x=None, start_y=None):
@@ -43,8 +42,6 @@ def search_direction_switch(direction):
     you have to slide in a certain direction
     to change the direction parameter
     """
-    if g_res is not None and g_res.get_app_config_value("finger_direction_switch", False):
-        return direction
     # get current language
     language = g_Context.get_current_language()
     direct_left = lan.parse_glb_str("left", language)

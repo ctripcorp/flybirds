@@ -6,6 +6,7 @@ import flybirds.core.global_resource as gr
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_swipe as ps
 import flybirds.utils.dsl_helper as dsl_helper
 import flybirds.utils.point_helper as point_helper
+import flybirds.core.global_resource as g_res
 
 
 def ele_swipe(context, param1, param2, param3):
@@ -32,8 +33,9 @@ def ele_swipe(context, param1, param2, param3):
         start_point[1] = float(param3_dict["startY"])
 
     screen_size = gr.get_device_size()
-
-    direction = point_helper.search_direction_switch(param2.strip())
+    direction = param2.strip()
+    if g_res is None or not g_res.get_app_config_value("finger_direction_switch", False):
+        direction = point_helper.search_direction_switch(param2.strip())
 
     distance = float(param3_dict["swipeNumber"])
 
@@ -72,9 +74,10 @@ def full_screen_swipe(context, param1, param2):
         start_point[1] = float(param2_dict["startY"])
 
     screen_size = gr.get_device_size()
-
+    # direction = param1.strip()
+    # if g_res is None or not g_res.get_app_config_value("finger_direction_switch", False):
+    #     direction = point_helper.search_direction_switch(param1.strip())
     direction = point_helper.search_direction_switch(param1.strip())
-
     distance = float(param2_dict["swipeNumber"])
 
     duration = None
