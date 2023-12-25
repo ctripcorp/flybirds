@@ -172,7 +172,8 @@ def air_bdd_direction_swipe(
         if not in_ele:
             if end_point[0] < 0.0:
                 end_point[0] = 0
-                start_point[0] = distance
+                # if distance < 1:
+                #     start_point[0] = distance
         else:
             if end_point[0] < min_x:
                 end_point[0] = min_x
@@ -181,7 +182,7 @@ def air_bdd_direction_swipe(
         if not in_ele:
             if end_point[0] > 1.0:
                 end_point[0] = 1
-                start_point[0] = 1 - distance
+                # start_point[0] = 1 - distance
         else:
             if end_point[0] > max_x:
                 end_point[0] = max_x
@@ -256,7 +257,9 @@ def full_screen_swipe_search(
             )
             if search_poco_object.exists():
                 searched = True
-                break
+                # 防止底部被遮盖
+                if search_poco_object.get_position()[1] <= 0.8:
+                    break
         except Exception:
             pass
         if swipe_count == 0:
