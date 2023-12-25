@@ -172,8 +172,8 @@ def air_bdd_direction_swipe(
         if not in_ele:
             if end_point[0] < 0.0:
                 end_point[0] = 0
-                if distance < 1:
-                    start_point[0] = distance
+                # if distance < 1:
+                #     start_point[0] = distance
         else:
             if end_point[0] < min_x:
                 end_point[0] = min_x
@@ -182,7 +182,7 @@ def air_bdd_direction_swipe(
         if not in_ele:
             if end_point[0] > 1.0:
                 end_point[0] = 1
-                start_point[0] = 1 - distance
+                # start_point[0] = 1 - distance
         else:
             if end_point[0] > max_x:
                 end_point[0] = max_x
