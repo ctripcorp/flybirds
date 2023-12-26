@@ -24,6 +24,37 @@ def text_attr_equal(context, selector=None, param2=None, param3=None):
     g_Context.step.text_attr_equal(context, selector, param2, param3)
 
 
+@step("text[{selector}]property[{param2}]include {param3}")
+@VerifyStep()
+@ele_wrap
+def text_attr_container(context, selector=None, param2=None, param3=None):
+    """
+    Check if the value of the attribute param2 of the text element param1 in
+     the page is param3
+
+    :param context: step context
+    :param selector: locator string for text element (or None).
+    :param param2: attribute Name
+    :param param3: expected Value
+    """
+    g_Context.step.text_attr_container(context, selector, param2, param3)
+
+@step("text[{selector}]property[{param2}]not include {param3}")
+@VerifyStep()
+@ele_wrap
+def text_attr_not_container(context, selector=None, param2=None, param3=None):
+    """
+    Check if the value of the attribute param2 of the text element param1 in
+     the page is param3
+
+    :param context: step context
+    :param selector: locator string for text element (or None).
+    :param param2: attribute Name
+    :param param3: expected Value
+    """
+    g_Context.step.text_attr_not_container(context, selector, param2, param3)
+
+
 @step("element[{selector}]property[{param2}]is {param3}")
 @VerifyStep()
 @ele_wrap
@@ -38,6 +69,37 @@ def ele_attr_equal(context, selector=None, param2=None, param3=None):
     :param param3: expected Value
     """
     g_Context.step.ele_attr_equal(context, selector, param2, param3)
+
+@step("element[{selector}]property[{param2}]include {param3}")
+@VerifyStep()
+@ele_wrap
+def ele_attr_container(context, selector=None, param2=None, param3=None):
+    """
+    Check if the value of the attribute param2 of the selector element param1
+     in the page is param3
+
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param param2: attribute Name
+    :param param3: expected Value
+    """
+    g_Context.step.ele_attr_container(context, selector, param2, param3)
+
+
+@step("element[{selector}]property[{param2}]not include {param3}")
+@VerifyStep()
+@ele_wrap
+def ele_attr_not_container(context, selector=None, param2=None, param3=None):
+    """
+    Check if the value of the attribute param2 of the selector element param1
+     in the page is param3
+
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param param2: attribute Name
+    :param param3: expected Value
+    """
+    g_Context.step.ele_attr_not_container(context, selector, param2, param3)
 
 
 @step("mouse hover[{selector}]")

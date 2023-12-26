@@ -298,6 +298,9 @@ class Page:
     def return_pre_page(self, context):
         self.page.go_back()
 
+    def page_go_forward(self, context):
+        self.page.go_forward()
+
     def sleep(self, context, param):
         if is_number(param):
             self.page.wait_for_timeout(float(param) * 1000)

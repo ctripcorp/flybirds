@@ -62,6 +62,10 @@ def get_session_storage(context):
 def return_pre_page(context):
     g_Context.step.return_pre_page(context)
 
+@step("browser forward")
+def page_go_forward(context):
+    g_Context.step.page_go_forward(context)
+
 
 @step("go to home page")
 def to_app_home(context):

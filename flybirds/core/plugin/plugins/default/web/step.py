@@ -85,6 +85,12 @@ class Step:
         page.return_pre_page(context)
 
     @classmethod
+    def page_go_forward(cls, context):
+        page = gr.get_value("plugin_page")
+        page.page_go_forward(context)
+
+
+    @classmethod
     def sleep(cls, context, param):
         page = gr.get_value("plugin_page")
         page.sleep(context, param)
@@ -256,11 +262,31 @@ class Step:
     def ele_attr_equal(cls, context, selector, param2, param3):
         ele = gr.get_value("plugin_ele")
         ele.is_ele_attr_equal(context, selector, param2, param3)
+    @classmethod
+    def ele_attr_container(cls, context, selector, param2, param3):
+        ele = gr.get_value("plugin_ele")
+        ele.is_ele_attr_container(context, selector, param2, param3)
+
+    @classmethod
+    def ele_attr_not_container(cls, context, selector, param2, param3):
+        ele = gr.get_value("plugin_ele")
+        ele.is_ele_attr_not_container(context, selector, param2, param3)
 
     @classmethod
     def text_attr_equal(cls, context, selector, param2, param3):
         ele = gr.get_value("plugin_ele")
         ele.is_text_attr_equal(context, selector, param2, param3)
+
+    @classmethod
+    def text_attr_container(cls, context, selector, param2, param3):
+        ele = gr.get_value("plugin_ele")
+        ele.is_text_attr_container(context, selector, param2, param3)
+
+    @classmethod
+    def text_attr_not_container(cls, context, selector, param2, param3):
+        ele = gr.get_value("plugin_ele")
+        ele.is_text_attr_not_container(context, selector, param2, param3)
+
 
     @classmethod
     def find_child_from_parent(cls, context, p_selector, c_selector):

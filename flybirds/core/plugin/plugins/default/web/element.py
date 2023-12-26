@@ -253,11 +253,52 @@ class Element:
                                      deal_method)
         verify_helper.attr_equal(target_val, ele_attr)
 
+    def is_ele_attr_container(self, context, selector, attr_name, target_val):
+        param2_dict = params_to_dic(attr_name, "attrName")
+        target_attr = param2_dict["attrName"]
+
+        deal_method = None
+        params_deal_module = None
+        if "dealMethod" in param2_dict.keys():
+            deal_method = param2_dict["dealMethod"]
+            params_deal_module = gr.get_value("projectScript").params_deal
+
+        ele_attr = self.get_ele_attr(selector, target_attr, params_deal_module,
+                                     deal_method)
+        verify_helper.attr_container(target_val, ele_attr)
+
+    def is_ele_attr_not_container(self, context, selector, attr_name, target_val):
+        param2_dict = params_to_dic(attr_name, "attrName")
+        target_attr = param2_dict["attrName"]
+
+        deal_method = None
+        params_deal_module = None
+        if "dealMethod" in param2_dict.keys():
+            deal_method = param2_dict["dealMethod"]
+            params_deal_module = gr.get_value("projectScript").params_deal
+
+        ele_attr = self.get_ele_attr(selector, target_attr, params_deal_module,
+                                     deal_method)
+        verify_helper.attr_not_container(target_val, ele_attr)
+
+
     def is_text_attr_equal(self, context, text_selector, attr_name,
                            target_val):
         if 'text=' not in text_selector:
             text_selector = "text=" + text_selector
         self.is_ele_attr_equal(context, text_selector, attr_name, target_val)
+
+    def is_text_attr_container(self, context, text_selector, attr_name,
+                           target_val):
+        if 'text=' not in text_selector:
+            text_selector = "text=" + text_selector
+        self.is_ele_attr_container(context, text_selector, attr_name, target_val)
+
+    def is_text_attr_not_container(self, context, text_selector, attr_name,
+                           target_val):
+        if 'text=' not in text_selector:
+            text_selector = "text=" + text_selector
+        self.is_ele_attr_not_container(context, text_selector, attr_name, target_val)
 
     def is_parent_exist_child(self, context, parent_selector, child_selector):
         parent_locator, p_timeout = self.get_ele_locator(parent_selector)
