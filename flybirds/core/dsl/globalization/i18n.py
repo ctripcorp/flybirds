@@ -93,7 +93,8 @@ step_language = {
         "get cookie": ["获取cookie"],
         "get local storage": ["获取local storage"],
         "get session storage": ["获取session storage"],
-        "return to previous page": ["返回上一页"],
+        "return to previous page": ["返回上一页", "浏览器后退"],
+        "browser forward": ["浏览器前进"],
         "go to home page": ["回到首页"],
         "logon account[{selector1}]password[{selector2}]": [
             "登录账号[{selector1}]密码[{selector2}]",
@@ -112,8 +113,20 @@ step_language = {
         "text[{selector}]property[{param2}]is {param3}": [
             "文案[{selector}]的属性[{param2}]为{param3}"
         ],
+        "text[{selector}]property[{param2}]include {param3}": [
+            "文案[{selector}]的属性[{param2}]包含{param3}"
+        ],
+        "text[{selector}]property[{param2}]not include {param3}": [
+            "文案[{selector}]的属性[{param2}]不包含{param3}"
+        ],
         "element[{selector}]property[{param2}]is {param3}": [
             "元素[{selector}]的属性[{param2}]为{param3}"
+        ],
+         "element[{selector}]property[{param2}]include {param3}": [
+            "元素[{selector}]的属性[{param2}]包含{param3}"
+        ],
+         "element[{selector}]property[{param2}]not include {param3}": [
+            "元素[{selector}]的属性[{param2}]不包含{param3}"
         ],
         "mouse hover[{selector}]": ["鼠标悬浮[{selector}]"],
         "click[{selector}]": ["点击[{selector}]"],

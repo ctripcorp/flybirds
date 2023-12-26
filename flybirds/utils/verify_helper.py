@@ -62,3 +62,27 @@ def attr_equal(o_attr, t_attr):
             o_attr, t_attr
         )
         raise FlybirdVerifyException(message)
+
+def attr_container(o_attr, t_attr):
+    """
+    Determine whether the attributes are equal
+    """
+    if o_attr == "[@@空@@]" or o_attr == "@@空@@":
+        o_attr = ""
+
+    if not (str(o_attr) in str(t_attr)):
+        message = "attr not contain, expect value include:{}," \
+                  " actual value:{}".format(str(o_attr), str(t_attr))
+        raise FlybirdVerifyException(message)
+
+def attr_not_container(o_attr, t_attr):
+    """
+    Determine whether the attributes are equal
+    """
+    if o_attr == "[@@空@@]" or o_attr == "@@空@@":
+        o_attr = ""
+
+    if (str(o_attr) in str(t_attr)):
+        message = "attr contain, expect value not include:{}," \
+                  " actual value:{}".format(str(o_attr), str(t_attr))
+        raise FlybirdVerifyException(message)
