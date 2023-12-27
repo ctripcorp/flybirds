@@ -2,8 +2,12 @@
 """
 equal includ helper
 """
+import re
 from flybirds.core.exceptions import FlybirdVerifyException
 
+def replace_func(match):
+    n = int(match.group(1))
+    return ' ' * n
 
 def text_equal(o_text, t_text):
     """
@@ -11,6 +15,13 @@ def text_equal(o_text, t_text):
     """
     if o_text == "[@@空@@]" or o_text == "@@空@@":
         o_text = ""
+        
+    # 正则替换前后空格
+    # 定义正则表达式和替换函数
+    pattern = re.compile(r'@@空,\s*(\d+)@@')
+    # 使用 sub 函数进行正则替换
+    o_text = pattern.sub(replace_func, o_text)
+
     if "(@#@换行#符号@#@)" in o_text:
         o_text = o_text.replace("(@#@换行#符号@#@)", "\n")
     if t_text is not None:
