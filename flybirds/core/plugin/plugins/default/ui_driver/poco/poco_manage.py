@@ -40,4 +40,12 @@ def create_poco_object_by_dsl(poco, select_dsl_str, optional):
         poco_object = pc.create_poco_object(
             poco, msd.create_single_selector(select_dsl_str)
         )
+    try:
+        if poco_object is not None and len(poco_object) > 1:
+            for item in poco_object:
+                if item is not None and hasattr(item, "get_text") and item.get_text() is not None:
+                    poco_object = item
+                    break
+    except Exception as ex:
+        print("find none text error", ex)
     return poco_object
