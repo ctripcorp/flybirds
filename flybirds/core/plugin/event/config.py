@@ -2,6 +2,7 @@
 """
 it is triggered when behave before all
 """
+import json
 import traceback
 
 import flybirds.core.global_resource as gr
@@ -60,6 +61,13 @@ class OnConfigLoad:  # pylint: disable=too-few-public-methods
             gr.set_value("projectScript", project_script)
             context.project_script = project_script
             log.info("the python script in the project is read")
+
+            if user_data is not None and user_data.get("otherParam") is not None and len(
+                    user_data.get("otherParam")) > 0:
+                other_param = json.loads(user_data.get("otherParam"))
+                if other_param is not None and "1" == other_param.get("debug"):
+                    gr.set_value("debug", True)
+                    log.info("debug mode is turned on")
 
         except Exception as e_out:
             log.info("global initialization error", traceback.format_exc())
