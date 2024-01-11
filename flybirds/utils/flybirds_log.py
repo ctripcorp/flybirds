@@ -3,6 +3,8 @@
 log helper
 """
 import logging
+from flybirds.core.global_context import GlobalContext
+import flybirds.core.global_resource as gr
 
 # create logger
 logger = logging.getLogger("flybirds_log")
@@ -24,10 +26,24 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
+def debug_debug(*args, level):
+    try:
+        if gr.get_value("debug", False):
+            if hasattr(GlobalContext, "debug_console"):
+                data = ""
+                for arg in args:
+                    if isinstance(arg, str):
+                        data = data + arg
+                GlobalContext.debug_console.set_case_step_log(data, level)
+    except Exception as e:
+        print(e)
+
+
 def debug(*args):
     """
     log debug
     """
+    debug_debug(*args, level=2)
     for arg in args:
         logger.debug(arg)
 
@@ -36,6 +52,7 @@ def info(*args):
     """
     log info
     """
+    debug_debug(*args, level=0)
     for arg in args:
         logger.info(arg)
 
@@ -44,6 +61,7 @@ def warn(*args):
     """
     warn log
     """
+    debug_debug(*args, level=3)
     for arg in args:
         logger.warning(arg)
 
@@ -52,5 +70,6 @@ def error(*args):
     """
     error log
     """
+    debug_debug(*args, level=1)
     for arg in args:
         logger.error(arg)

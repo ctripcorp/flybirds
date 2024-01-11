@@ -6,11 +6,19 @@ import base64
 import re
 from functools import wraps
 
+import six
+
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 
 # generate result_dic
 from flybirds.core.global_context import GlobalContext
+
+if six.PY2:
+    # -- USE PYTHON3 BACKPORT: With unicode traceback support.
+    import traceback2 as traceback
+else:
+    import traceback
 
 
 def add_res_dic(dsl_params, functin_pattern, def_key):
@@ -158,38 +166,50 @@ def get_use_define_param(context, param_name):
 def ele_wrap(func):
     @wraps(func)
     def wrapper_func(*args, **kwargs):
-        context = args[0]
-        for (k, v) in kwargs.items():
-            if v is None:
-                if hasattr(context, k):
-                    v = getattr(context, k)
-                else:
-                    log.warn(f'[ele_wrap] step param:[{k}] is none.')
-                    continue
-            v = replace_str(v)
-            if 'selector' in k:
-                selector_str = v
-                ele_key = v.split(',')[0]
-                ele_value = gr.get_ele_locator(ele_key)
-                v = selector_str.replace(ele_key, ele_value, 1)
-                older = v
-                if gr.get_platform() and gr.get_platform().lower() == 'web':
-                    # jquery path change to playwright path
-                    pattern = re.compile(r'(:eq\((\d+)\))')
-                    all_match = pattern.findall(v)
-                    if all_match and len(all_match) > 0:
-                        for mtch in all_match:
-                            re_key = mtch[0]
-                            re_value = ">> nth=" + mtch[1] + " >>"
-                            v = v.replace(re_key, re_value)
-                        v = v.strip(">>")
-                        log.info(f"=============find jquery path {older} ==== change to {v}")
+        try:
+            context = args[0]
+            for (k, v) in kwargs.items():
+                if v is None:
+                    if hasattr(context, k):
+                        v = getattr(context, k)
+                    else:
+                        log.warn(f'[ele_wrap] step param:[{k}] is none.')
+                        continue
+                v = replace_str(v)
+                if 'selector' in k:
+                    selector_str = v
+                    ele_key = v.split(',')[0]
+                    ele_value = gr.get_ele_locator(ele_key)
+                    v = selector_str.replace(ele_key, ele_value, 1)
+                    older = v
+                    if gr.get_platform() and gr.get_platform().lower() == 'web':
+                        # jquery path change to playwright path
+                        pattern = re.compile(r'(:eq\((\d+)\))')
+                        all_match = pattern.findall(v)
+                        if all_match and len(all_match) > 0:
+                            for mtch in all_match:
+                                re_key = mtch[0]
+                                re_value = ">> nth=" + mtch[1] + " >>"
+                                v = v.replace(re_key, re_value)
+                            v = v.strip(">>")
+                            log.info(f"=============find jquery path {older} ==== change to {v}")
 
-            new_v = get_global_value(v)
-            if new_v is not None:
-                v = new_v
-            kwargs[k] = v
-        func(*args, **kwargs)
+                new_v = get_global_value(v)
+                if new_v is not None:
+                    v = new_v
+                kwargs[k] = v
+            func(*args, **kwargs)
+            if gr.get_value("debug", False):
+                if hasattr(GlobalContext, "debug_console"):
+                    GlobalContext.debug_console.set_step_status("pass")
+        except Exception as e:
+            if not gr.get_value("debug", False):
+                raise e
+            else:
+                log.info(f'ele_wrap error: {traceback.format_exc()}')
+                if hasattr(GlobalContext, "debug_server_thread"):
+                    GlobalContext.debug_server_thread.start_debug()
+
         # Do something after the function.
 
     return wrapper_func
