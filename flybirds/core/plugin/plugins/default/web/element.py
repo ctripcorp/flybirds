@@ -121,8 +121,8 @@ class Element:
         verify_helper.text_not_container(param_2, e_text)
 
     def find_text(self, context, param):
-        param_temp = handle_str(param)
-        param_dict = params_to_dic(param_temp)
+        # param_temp = handle_str(param)
+        param_dict = params_to_dic(param)
         selector_str = param_dict["selector"]
 
         p_content = self.page.content()
@@ -134,8 +134,8 @@ class Element:
             raise FlybirdVerifyException(message)
 
     def find_no_text(self, context, param):
-        param_temp = handle_str(param)
-        param_dict = params_to_dic(param_temp)
+        # param_temp = handle_str(param)
+        param_dict = params_to_dic(param)
         selector_str = param_dict["selector"]
 
         p_content = self.page.content()
