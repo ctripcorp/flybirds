@@ -555,7 +555,7 @@ def handle_route(route):
                                       body=mock_body_request)
                     else:
                         route.fulfill(status=200,
-                                      content_type=None,
+                                      content_type="application/json",
                                       body=mock_body_request)
                     return
 
@@ -584,7 +584,7 @@ def handle_route(route):
                                       body=mock_body)
                     else:
                         route.fulfill(status=200,
-                                      content_type=None,
+                                      content_type="application/json",
                                       body=mock_body)
                     return
 
