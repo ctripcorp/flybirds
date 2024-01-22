@@ -359,8 +359,7 @@ def handle_page_error(msg):
             need_log = True
         if need_log:
             if hasattr(msg, "text"):
-                log.info(
-                    f"=====================page console==================:\n {msg.text}")
+                print(f"=====================page console==================:\n {msg.text}")
 
 
 def handle_request(request):
