@@ -90,15 +90,28 @@ class Page:
                     return context
 
         optional_config = Page.get_web_option_config(dic)
-        if optional_config is not None:
-            context = browser.new_context(**optional_config,
-                                          record_video_dir="videos",
-                                          record_video_size={"width": 1280, "height": 720},
-                                          ignore_https_errors=True)
+        launch_params = {"proxy": {"server": gr.get_web_info_value("proxy", None)}}
+        if gr.get_web_info_value("by_pass", None) is not None:
+            launch_params.get("proxy").__setitem__("bypass", gr.get_web_info_value("by_pass", None))
+            if optional_config is not None:
+                context = browser.new_context(**optional_config,
+                                              record_video_dir="videos",
+                                              record_video_size={"width": 1280, "height": 720},
+                                              ignore_https_errors=True, proxy=launch_params.get("proxy"))
+            else:
+                context = browser.new_context(record_video_dir="videos",
+                                              record_video_size={"width": 1280, "height": 720},
+                                              ignore_https_errors=True, proxy=launch_params.get("proxy"))
         else:
-            context = browser.new_context(record_video_dir="videos",
-                                          record_video_size={"width": 1280, "height": 720},
-                                          ignore_https_errors=True)
+            if optional_config is not None:
+                context = browser.new_context(**optional_config,
+                                              record_video_dir="videos",
+                                              record_video_size={"width": 1280, "height": 720},
+                                              ignore_https_errors=True)
+            else:
+                context = browser.new_context(record_video_dir="videos",
+                                              record_video_size={"width": 1280, "height": 720},
+                                              ignore_https_errors=True)
 
         # add user custom cookies into browser context
         user_cookie = GlobalContext.get_global_cache("cookies")
