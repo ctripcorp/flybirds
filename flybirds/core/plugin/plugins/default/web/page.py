@@ -590,6 +590,10 @@ def handle_route(route):
                         mock_body = mock_body.get("flybirdsMockResponse")
                     if not isinstance(mock_body, str):
                         mock_body = json.dumps(mock_body)
+                        route.fulfill(status=200,
+                                      content_type="application/json;charset=UTF-8",
+                                      body=mock_body)
+                        return
                     if route.request.headers.get("content-type"):
                         route.fulfill(status=200,
                                       content_type=route.request.headers.get("content-type"),
