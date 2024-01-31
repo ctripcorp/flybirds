@@ -59,7 +59,7 @@ def wait_exists(poco, selector_str, optional):
             break
         except Exception:
             if not create_success:
-                time.sleep(1)
+                time.sleep(current_wait_second)
         if current_wait_second == 3:
             # modal error detection
             try:
@@ -70,8 +70,8 @@ def wait_exists(poco, selector_str, optional):
             except Exception:
                 log.info("detect_error exception")
             time.sleep(1)
-        if current_wait_second > 4:
-            break
+        if current_wait_second > 3:
+            time.sleep(current_wait_second - 3)
         timeout -= current_wait_second
         current_wait_second += 1
     if not find_success:
@@ -120,9 +120,9 @@ def wait_disappear(poco, selector_str, optional):
             break
         except Exception:
             if not create_success:
-                time.sleep(1)
-        if current_wait_second > 4:
-            break
+                time.sleep(current_wait_second)
+        if current_wait_second > 3:
+            time.sleep(current_wait_second - 3)
         timeout -= current_wait_second
         current_wait_second += 1
     if not disappear_success:
