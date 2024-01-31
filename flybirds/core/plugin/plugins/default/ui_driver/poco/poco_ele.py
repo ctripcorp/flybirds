@@ -53,7 +53,7 @@ def wait_exists(poco, selector_str, optional):
             find_success = True
             log.info(
                 "wait_for_appearance: find_success: {}, timeout: {}".format(
-                    find_success, search_time
+                    find_success, timeout
                 )
             )
             break
