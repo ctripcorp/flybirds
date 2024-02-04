@@ -6,16 +6,18 @@ This module defines the common steps.
 from behave import step
 
 from flybirds.core.global_context import GlobalContext as g_Context
-from flybirds.utils.dsl_helper import get_params
+from flybirds.utils.dsl_helper import get_params, ele_wrap
 
 
 @step("wait[{param}]seconds")
+@ele_wrap
 def sleep(context, param=None):
     (param_1,) = get_params(context, (param, "param"))
     g_Context.step.sleep(context, param_1)
 
 
 @step("screenshot")
+@ele_wrap
 def screenshot(context):
     g_Context.step.screenshot(context)
 
