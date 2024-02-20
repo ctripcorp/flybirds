@@ -91,28 +91,35 @@ class Page:
 
         optional_config = Page.get_web_option_config(dic)
         launch_params = {"proxy": {"server": gr.get_web_info_value("proxy", None)}}
+        launch_config = {
+            "record_video_dir": "videos",
+            "record_video_size": {"width": 1280, "height": 720},
+            "ignore_https_errors": True
+        }
+
+        if gr.get_value("debug", False):
+            launch_config["record_video_dir"] = None
+
         if gr.get_web_info_value("by_pass", None) is not None:
             launch_params.get("proxy").__setitem__("bypass", gr.get_web_info_value("by_pass", None))
             if optional_config is not None:
-                context = browser.new_context(**optional_config,
-                                              record_video_dir="videos",
-                                              record_video_size={"width": 1280, "height": 720},
-                                              ignore_https_errors=True, proxy=launch_params.get("proxy"))
+                launch_config = {
+                    **launch_config,
+                    "proxy": launch_params.get("proxy"),
+                    **optional_config
+                }
             else:
-                context = browser.new_context(record_video_dir="videos",
-                                              record_video_size={"width": 1280, "height": 720},
-                                              ignore_https_errors=True, proxy=launch_params.get("proxy"))
-        else:
-            if optional_config is not None:
-                context = browser.new_context(**optional_config,
-                                              record_video_dir="videos",
-                                              record_video_size={"width": 1280, "height": 720},
-                                              ignore_https_errors=True)
-            else:
-                context = browser.new_context(record_video_dir="videos",
-                                              record_video_size={"width": 1280, "height": 720},
-                                              ignore_https_errors=True)
+                launch_config = {
+                    **launch_config,
+                    "proxy": launch_params.get("proxy")
+                }
+        elif optional_config is not None:
+            launch_config = {
+                **launch_config,
+                **optional_config
+            }
 
+        context = browser.new_context(**launch_config)
         # add user custom cookies into browser context
         user_cookie = GlobalContext.get_global_cache("cookies")
         if user_cookie is not None:
