@@ -251,8 +251,8 @@ def ele_direction_swipe(context, selector=None, param2=None, param3=None):
     slides the specified distance param3
     :param context: step context
     :param selector: locator string for selector element (or None).
-    :param param2: slide direction (top/bottom/left/right)
-    :param param3: slide distance
+    :param param2: slide direction (horizontal/vertical)
+    :param param3: slide distance => direct set the distance to srcollLeft or scrollTop
     """
     g_Context.step.ele_direction_swipe(context, selector, param2, param3)
 
