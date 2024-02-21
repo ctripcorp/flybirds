@@ -45,6 +45,7 @@ def direct_default(x, y, diff):
     return to_x, to_y
 
 
+
 direct_dict = {
     'left': direct_left,
     'right': direct_right,
@@ -52,6 +53,12 @@ direct_dict = {
     'down': direct_down
 }
 
+direct_dict_to = {
+    'left': direct_left,
+    'right': direct_right,
+    'up': direct_up,
+    'down': direct_down
+}
 
 class Element:
     """Web Element Class"""
@@ -191,17 +198,52 @@ class Element:
 
     def ele_slide(self, context, param_1, param_2, param_3):
         locator, timeout = self.get_ele_locator(param_1)
-        box = locator.bounding_box(timeout=timeout)
-        x = box["x"] + box["width"] / 2
-        y = box["y"] + box["height"] / 2
+
         # get scroll direction
         language = g_Context.get_current_language()
         direct = lan.get_glb_key(param_2, language)
+        if self.is_in_h5_mode(context):
+            result = locator.evaluate('(element) => ({ x: element.scrollLeft, y: element.scrollTop,scrollWidth: element.scrollWidth, scrollHeight: element.scrollHeight, clientWidth: element.clientWidth, clientHeight: element.clientHeight, })', timeout=timeout)
 
-        fun = direct_dict.get(direct, direct_default)
-        to_x, to_y = fun(x, y, float(param_3))
+            log.info(f"element scrollinfo result: {result}")
+            x = result['x']
+            y = result['y']
+            fun = direct_dict.get(direct, direct_default)
+            to_x, to_y = fun(x, y, float(param_3))
+            result = locator.evaluate(
+                '(element,object) =>{element&&element.scrollBy(object.x,object.y); console.log(111,object.x,object.y)}',
+                timeout=timeout, arg={'x': to_x, 'y': to_y})
+        else:
+            box = locator.bounding_box(timeout=timeout)
+            x = box["x"] + box["width"] / 2
+            y = box["y"] + box["height"] / 2
+            fun = direct_dict.get(direct, direct_default)
+            to_x, to_y = fun(x, y, float(param_3))
+            self.page.evaluate(f"window.scrollTo({to_x}, {to_y})")
 
-        self.page.evaluate(f"window.scrollTo({to_x}, {to_y})")
+    def ele_direction_slide(self, context, param_1, param_2, param_3):
+        locator, timeout = self.get_ele_locator(param_1)
+
+        # get scroll direction
+        language = g_Context.get_current_language()
+        direct = lan.get_glb_key(param_2, language)
+        if self.is_in_h5_mode(context):
+            pass
+        result = locator.evaluate(
+            '(element) => ({ x: element.scrollLeft, y: element.scrollTop,scrollWidth: element.scrollWidth, scrollHeight: element.scrollHeight, clientWidth: element.clientWidth, clientHeight: element.clientHeight, })',
+            timeout=timeout)
+
+        log.info(f"element scrollinfo result: {result}")
+        # 直接设置scrollLeft和scrollTop
+        if direct == 'horizontal':
+            result = locator.evaluate(
+                '(element,object) =>{element&&element.scrollLeft = object.distance; console.log(object.distance)}',
+                timeout=timeout, arg={'distance': param_3})
+        else:
+            result = locator.evaluate(
+            '(element,object) =>{element&&element.scrollTop = object.distance; console.log(object.distance)}',
+            timeout=timeout, arg={'distance': param_3})
+
 
     def full_screen_slide(self, context, param_1, param_2):
         # get scroll direction
@@ -340,3 +382,10 @@ class Element:
     def ele_click_point(self, context, param, x, y):
         locator, timeout = self.get_ele_locator(param)
         locator.click(timeout=timeout, position={"x": x, "y": y})
+
+    def is_in_h5_mode(self, context):
+        user_agent = self.page.evaluate("navigator.userAgent")
+        if 'Mobile' in user_agent or 'Android' in user_agent:
+            return True
+        else:
+            return False

@@ -17,6 +17,8 @@ globalization = {
         "down": "down",
         "left": "left",
         "right": "right",
+        "horizontal": "horizontal",
+        "vertical": "vertical",
         "modal_list": ["name=同意并继续",
                        "name=使用App时允许",
                        "name=允许",
@@ -50,6 +52,8 @@ globalization = {
         "down": u"下",
         "left": u"左",
         "right": u"右",
+        "horizontal": u"水平",
+        "vertical": u"垂直",
         "modal_list": ["name=同意并继续",
                        "name=使用App时允许",
                        "name=允许",
@@ -148,6 +152,9 @@ step_language = {
         ],
         "[{selector}]slide to {param2} distance[{param3}]": [
             "[{selector}]向{param2}滑动[{param3}]",
+        ],
+        "[{selector}][{param2}] direction slide [{param3}]": [
+            "[{selector}][{param2}]方向滑动[{param3}]",
         ],
         "slide to {param1} distance[{param2}]": ["全屏向{param1}滑动[{param2}]", "向{param1}滑动[{param2}]"],
         "exist text[{selector}]": ["存在[{selector}]的文案"],
