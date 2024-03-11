@@ -253,11 +253,11 @@ class Element:
         # 直接设置scrollLeft和scrollTop
         if direct == 'horizontal':
             result = locator.evaluate(
-                '(element,object) =>{element&&element.scrollLeft = object.distance; console.log(object.distance)}',
+                '(element,object) =>{element&&(element.scrollLeft = object.distance;) console.log(object.distance)}',
                 timeout=timeout, arg={'distance': param_3})
         else:
             result = locator.evaluate(
-            '(element,object) =>{element&&element.scrollTop = object.distance; console.log(object.distance)}',
+            '(element,object) =>{element&&(element.scrollTop = object.distance;) console.log(object.distance)}',
             timeout=timeout, arg={'distance': param_3})
 
 
