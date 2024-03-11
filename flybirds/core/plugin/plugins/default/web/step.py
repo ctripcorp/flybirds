@@ -78,6 +78,10 @@ class Step:
         # Bring the target page to the front and return its URL
         target_url = target.url
         target.bring_to_front()
+        ele = gr.get_value("plugin_ele")
+        # need to fix plugin_ele and plugin_page, both pages mount page objects
+        ele.page = target
+        page.page = target
 
     @classmethod
     def return_pre_page(cls, context):
