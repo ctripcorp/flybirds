@@ -13,7 +13,7 @@ from flybirds.core.exceptions import FlybirdVerifyException, \
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.utils import language_helper as lan
 from flybirds.utils.dsl_helper import handle_str, params_to_dic
-
+import re
 
 def direct_left(x, y, diff):
     to_x = x - diff
@@ -59,6 +59,20 @@ direct_dict_to = {
     'up': direct_up,
     'down': direct_down
 }
+
+# Defines a mapping table for HTML escape characters
+html_escapes = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+}
+
+def escaped_text(param):
+    # Use regular expressions to search for specific characters in a string and use mapping tables to replace them
+    escaped_string = re.sub('[&<>\"\']', lambda match: html_escapes[match.group(0)], param)
+    return escaped_string
 
 class Element:
     """Web Element Class"""
@@ -131,9 +145,10 @@ class Element:
         # param_temp = handle_str(param)
         param_dict = params_to_dic(param)
         selector_str = param_dict["selector"]
-
+        escaped_selector_str = escaped_text(selector_str)
+        log.info(f'find_text: [{selector_str}], escaped_text[{escaped_selector_str}]')
         p_content = self.page.content()
-        if selector_str in p_content:
+        if escaped_selector_str in p_content:
             log.info(f'find_text: [{selector_str}] is success!')
         else:
             message = f"expect to find the text [{selector_str}] in the " \
@@ -144,9 +159,10 @@ class Element:
         # param_temp = handle_str(param)
         param_dict = params_to_dic(param)
         selector_str = param_dict["selector"]
-
+        escaped_selector_str = escaped_text(selector_str)
+        log.info(f'find_text: [{selector_str}], escaped_text[{escaped_selector_str}]')
         p_content = self.page.content()
-        if selector_str in p_content:
+        if escaped_selector_str in p_content:
             message = f"except text [{selector_str}] not exists in page, " \
                       f"but actual has find it."
             raise FlybirdVerifyException(message)
