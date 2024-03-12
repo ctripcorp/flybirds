@@ -60,7 +60,7 @@ direct_dict_to = {
     'down': direct_down
 }
 
-# 定义 HTML 转义字符的映射表
+# Defines a mapping table for HTML escape characters
 html_escapes = {
     '&': '&amp;',
     '<': '&lt;',
@@ -70,7 +70,7 @@ html_escapes = {
 }
 
 def escaped_text(param):
-    # 使用正则表达式搜索字符串中的特定字符，并使用映射表进行替换
+    # Use regular expressions to search for specific characters in a string and use mapping tables to replace them
     escaped_string = re.sub('[&<>\"\']', lambda match: html_escapes[match.group(0)], param)
     return escaped_string
 
