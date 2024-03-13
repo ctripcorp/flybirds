@@ -153,8 +153,8 @@ step_language = {
         "[{selector}]slide to {param2} distance[{param3}]": [
             "[{selector}]向{param2}滑动[{param3}]",
         ],
-        "[{selector}][{param2}] direction slide [{param3}]": [
-            "[{selector}][{param2}]方向滑动[{param3}]",
+        "[{selector}]slide to[{left},{top}]": [
+            "[{selector}]滑动[{left},{top}]",
         ],
         "slide to {param1} distance[{param2}]": ["全屏向{param1}滑动[{param2}]", "向{param1}滑动[{param2}]"],
         "exist text[{selector}]": ["存在[{selector}]的文案"],

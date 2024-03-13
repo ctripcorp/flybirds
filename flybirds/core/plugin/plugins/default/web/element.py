@@ -237,12 +237,11 @@ class Element:
             to_x, to_y = fun(x, y, float(param_3))
             self.page.evaluate(f"window.scrollTo({to_x}, {to_y})")
 
-    def ele_direction_slide(self, context, param_1, param_2, param_3):
+    def ele_swipe_to(self, context, param_1, param_left, param_top):
         locator, timeout = self.get_ele_locator(param_1)
 
         # get scroll direction
         language = g_Context.get_current_language()
-        direct = lan.get_glb_key(param_2, language)
         if self.is_in_h5_mode(context):
             pass
         result = locator.evaluate(
@@ -251,14 +250,9 @@ class Element:
 
         log.info(f"element scrollinfo result: {result}")
         # 直接设置scrollLeft和scrollTop
-        if direct == 'horizontal':
-            result = locator.evaluate(
-                '(element,object) =>{element&&(element.scrollLeft = object.distance;) console.log(object.distance)}',
-                timeout=timeout, arg={'distance': param_3})
-        else:
-            result = locator.evaluate(
-            '(element,object) =>{element&&(element.scrollTop = object.distance;) console.log(object.distance)}',
-            timeout=timeout, arg={'distance': param_3})
+        result = locator.evaluate(
+            '(element,object) =>{element&&(element.scrollTo({ top: object.top,left: object.left,behavior: "smooth"}));console.log({ top: object.top,left: object.left})}',
+            timeout=timeout, arg={'top': param_top, 'left': param_left})
 
 
     def full_screen_slide(self, context, param_1, param_2):

@@ -237,9 +237,9 @@ class Step:
         ele.ele_slide(context, selector, param_2, param_3)
 
     @classmethod
-    def ele_direction_swipe(cls, context, selector, param_2, param_3):
+    def ele_swipe_to(cls, context, selector, param_left, param_top):
         ele = gr.get_value("plugin_ele")
-        ele.ele_direction_slide(context, selector, param_2, param_3)
+        ele.ele_swipe_to(context, selector, param_left, param_top)
 
     @classmethod
     def full_screen_swipe(cls, context, param_1, param_2):
