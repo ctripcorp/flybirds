@@ -29,8 +29,8 @@ def get_json_from_file_path(path):
         f = open(path, "r", errors='ignore', encoding="utf-8")
         json_str = f.read().strip().replace('\r\n', '\\r\\n')
         result = json.loads(json_str, strict=False)
-    except JSONDecodeError:
-        log.warn('get_json_from_file_path has error.')
+    except JSONDecodeError as e:
+        log.warn(f'get_json_from_file_path has error.{path}===txt:{json_str}', e)
     finally:
         if f:
             f.close()
