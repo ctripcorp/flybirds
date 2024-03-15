@@ -3,6 +3,7 @@
 hold global config
 """
 import logging
+import uuid
 
 import flybirds.utils.flybirds_log as log
 
@@ -316,3 +317,16 @@ def get_paddle_fix_value():
         # log.info("paddle_fix_nodes not found")
         return None
     return paddle_fix_nodes
+
+
+def set_mock_base_path():
+    mock_base_path = str(uuid.uuid4())
+    set_value("mockBasePath", mock_base_path.replace(".", "_"))
+
+
+def get_mock_base_path():
+    return get_value("mockBasePath", None)
+
+
+def remove_mock_base_path():
+    set_value("mockBasePath", None)
