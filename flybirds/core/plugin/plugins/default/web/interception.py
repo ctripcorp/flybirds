@@ -593,6 +593,8 @@ class Interception:
         mock_path_list = mock_key_list_str.strip().split('|||')
 
         mock_data_path = os.path.join(os.getcwd(), "mockCaseData")
+        if gr.get_mock_base_path() is not None and len(gr.get_mock_base_path().strip()) > 0:
+            mock_data_path = os.path.join(mock_data_path, gr.get_mock_base_path())
         if len(service_list) != len(mock_case_id_list):
             message = f"serviceCount[{service_str}] not equal " \
                       f"mockCaseCount[{mock_case_id_str}]"
@@ -662,36 +664,36 @@ class Interception:
                         "requestBody": mock_data.get("flybirdsMockRequest")
                     })
 
+
 def get_operate_actual_request_body(target_data_path):
+    expect_request_obj = None
+    # Get the file path
+    file_path = os.path.join(os.getcwd(), target_data_path)
 
-        expect_request_obj = None
-        # Get the file path
-        file_path = os.path.join(os.getcwd(), target_data_path)
+    # If the file path exists, read data from the file and assign it to expect_request_obj
+    if os.path.exists(file_path):
 
-        # If the file path exists, read data from the file and assign it to expect_request_obj
-        if os.path.exists(file_path):
-
-            expect_request_obj = file_helper.read_file_from_path(file_path)
-            if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
-                try:
-                    # If the format is XML, parse the XML.
-                    expect_request_obj = xmltodict.parse(expect_request_obj)
-                except ValueError:
-                    message = f'[xml convert] format is wrong, data:' + expect_request_obj
-                    raise FlybirdsException(message)
-
-            else:
-                try:
-                    # If the format is json, parse the json.
-                    expect_request_obj = file_helper.get_json_from_file_path(file_path)
-                except ValueError:
-                    message = f'[json convert] format is wrong, data:' + expect_request_obj
-                    raise FlybirdsException(message)
+        expect_request_obj = file_helper.read_file_from_path(file_path)
+        if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
+            try:
+                # If the format is XML, parse the XML.
+                expect_request_obj = xmltodict.parse(expect_request_obj)
+            except ValueError:
+                message = f'[xml convert] format is wrong, data:' + expect_request_obj
+                raise FlybirdsException(message)
 
         else:
-            message = f'[request_compare] expect_request_obj not get file from [{file_path}]'
-            raise FlybirdsException(message)
-        return expect_request_obj
+            try:
+                # If the format is json, parse the json.
+                expect_request_obj = file_helper.get_json_from_file_path(file_path)
+            except ValueError:
+                message = f'[json convert] format is wrong, data:' + expect_request_obj
+                raise FlybirdsException(message)
+
+    else:
+        message = f'[request_compare] expect_request_obj not get file from [{file_path}]'
+        raise FlybirdsException(message)
+    return expect_request_obj
 
 
 def get_server_request_body(service):
@@ -775,6 +777,8 @@ def get_case_response_body(case_id):
              'operation. Now try to get from the folder mockCaseData.')
     # read from folder mockCaseData
     mock_data_path = os.path.join(os.getcwd(), "mockCaseData")
+    if gr.get_mock_base_path() is not None and len(gr.get_mock_base_path().strip()) > 0:
+        mock_data_path = os.path.join(mock_data_path, gr.get_mock_base_path())
     all_mock_data = read_json_data(mock_data_path)
     if all_mock_data.get(case_id):
         log.info('[get_case_response_body] successfully get mockCaseBody '
