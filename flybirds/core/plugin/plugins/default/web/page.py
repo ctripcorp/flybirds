@@ -563,17 +563,20 @@ def handle_route(route):
                     f"url:{route.request.url}===== match request mock url:{mock_rule_request.get('key')} and mock key :{mock_rule_request.get('requestPathes')} mock case "
                     f":{mock_rule_request.get('value')}===================")
                 mock_body_request = get_case_response_body(mock_rule_request.get("value"))
+                mock_status = 200
                 if mock_body_request:
-                    if mock_body_request.get("flybirdsMockResponse") is not None:
+                    if mock_body_request.get("flybirdsMockResponse") is not None or mock_body_request.get(
+                            "status") is not None:
                         mock_body_request = mock_body_request.get("flybirdsMockResponse")
+                        mock_status = mock_body_request.get("status", 200)
                     if not isinstance(mock_body_request, str):
                         mock_body_request = json.dumps(mock_body_request)
                     if route.request.headers.get("content-type"):
-                        route.fulfill(status=200,
+                        route.fulfill(status=mock_status,
                                       content_type=route.request.headers.get("content-type"),
                                       body=mock_body_request)
                     else:
-                        route.fulfill(status=200,
+                        route.fulfill(status=mock_status,
                                       content_type="application/json",
                                       body=mock_body_request)
                     return
@@ -592,21 +595,23 @@ def handle_route(route):
                     f"url:{route.request.url}===== match mock key:{mock_rule.get('key')} mock case "
                     f":{mock_rule.get('value')}===================")
                 mock_body = get_case_response_body(mock_rule.get("value"))
+                mock_status = 200
                 if mock_body:
-                    if mock_body.get("flybirdsMockResponse") is not None:
+                    if mock_body.get("flybirdsMockResponse") is not None or mock_body.get("status") is not None:
+                        mock_status = mock_body.get("status", 200)
                         mock_body = mock_body.get("flybirdsMockResponse")
                     if not isinstance(mock_body, str):
                         mock_body = json.dumps(mock_body)
-                        route.fulfill(status=200,
+                        route.fulfill(status=mock_status,
                                       content_type="application/json;charset=UTF-8",
                                       body=mock_body)
                         return
                     if route.request.headers.get("content-type"):
-                        route.fulfill(status=200,
+                        route.fulfill(status=mock_status,
                                       content_type=route.request.headers.get("content-type"),
                                       body=mock_body)
                     else:
-                        route.fulfill(status=200,
+                        route.fulfill(status=mock_status,
                                       content_type="application/json",
                                       body=mock_body)
                     return
