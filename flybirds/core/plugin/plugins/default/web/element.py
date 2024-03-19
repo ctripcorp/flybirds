@@ -64,7 +64,7 @@ direct_dict_to = {
 html_escapes = {
     '&': '&amp;', # escape
     '<': '&lt;', # escape
-    '>': '&gt;', # To be confirmed
+    # '>': '&gt;', # To be confirmed
     # '"': '&quot;', # To be confirmed
     # "'": '&#39;' # html page.content not escape single quotes
 }
