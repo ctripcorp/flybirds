@@ -65,8 +65,8 @@ html_escapes = {
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
+    # '"': '&quot;',
+    # "'": '&#39;' // html page.content not escape single quotes
 }
 
 def escaped_text(param):
