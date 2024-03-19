@@ -62,11 +62,11 @@ direct_dict_to = {
 
 # Defines a mapping table for HTML escape characters
 html_escapes = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    # '"': '&quot;',
-    # "'": '&#39;' // html page.content not escape single quotes
+    '&': '&amp;', # escape
+    '<': '&lt;', # escape
+    '>': '&gt;', # To be confirmed
+    # '"': '&quot;', # To be confirmed
+    # "'": '&#39;' # html page.content not escape single quotes
 }
 
 def escaped_text(param):
