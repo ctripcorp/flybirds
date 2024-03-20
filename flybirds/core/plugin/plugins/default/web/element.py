@@ -71,7 +71,7 @@ html_escapes = {
 
 def escaped_text(param):
     # Use regular expressions to search for specific characters in a string and use mapping tables to replace them
-    escaped_string = re.sub('[&<>\"\']', lambda match: html_escapes[match.group(0)], param)
+    escaped_string = re.sub('[&<]', lambda match: html_escapes[match.group(0)], param)
     return escaped_string
 
 class Element:
