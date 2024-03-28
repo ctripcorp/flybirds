@@ -158,6 +158,13 @@ def page_not_requested(context, service=None):
     """
     g_Context.step.page_not_requested(context, service)
 
+@step("remove all service record")
+def clear_all_request_record(context):
+    """
+     remove listening and mock data binding for all services
+    """
+    g_Context.step.clear_all_request_record(context)
+
 
 @step(
     "compare service request [{service}] with xml file [{target_data_xml_path}]"

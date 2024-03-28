@@ -338,7 +338,9 @@ class Step:
     @staticmethod
     def clear_all_request_body(context):
         request_op.clear_interception_request_body()
-
+    @staticmethod
+    def clear_all_request_record(context):
+        request_op.clear_all_request_record()
     # -------------------------------------------------------------------------
     # request service listening
     # -------------------------------------------------------------------------
