@@ -226,6 +226,7 @@ step_language = {
             "验证服务[{service}]的请求参数[{target_json_path}]"
             "与[{expect_value}]一致"],
         "page not requested [{service}]": ["页面没有请求[{service}]"],
+        "remove all service record": ["移除所有请求记录"],
         "compare target element [{target_element}] with compared picture [{compared_picture_path}]": [
             "对比图片元素[{target_element}]和基准图片路径[{compared_picture_path}]"],
         "compare target element[{target_ele}] with compared text path of [{compared_text_path}]": [
