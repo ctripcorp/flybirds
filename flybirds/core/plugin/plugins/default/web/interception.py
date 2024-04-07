@@ -76,9 +76,9 @@ class Interception:
 
     @staticmethod
     def clear_all_request_record():
-        interception_request = gr.get_value('operate_record')
-        interception_request.clear()
-        gr.set_value('operate_record', interception_request)
+        operate_record = gr.get_value('operate_record')
+        operate_record.clear()
+        gr.set_value('operate_record', operate_record)
     # -------------------------------------------------------------------------
     # request service listening
     # -------------------------------------------------------------------------
