@@ -5,7 +5,7 @@ This module defines the steps related to the UI element.
 from behave import step
 
 from flybirds.core.global_context import GlobalContext as g_Context
-from flybirds.utils.dsl_helper import ele_wrap, VerifyStep
+from flybirds.utils.dsl_helper import ele_wrap, VerifyStep, RetryType
 
 
 @step("text[{selector}]property[{param2}]is {param3}")
@@ -272,6 +272,7 @@ def full_screen_swipe(context, param1=None, param2=None):
 @step("exist text[{selector}]")
 @VerifyStep()
 @ele_wrap
+@RetryType('timeout')
 def wait_text_exist(context, selector=None):
     """
     The specified text element string exists in the page
@@ -347,6 +348,7 @@ def wait_ocr_text_appear(context, selector=None):
 @step("not exist text[{selector}]")
 @VerifyStep()
 @ele_wrap
+@RetryType('timeout')
 def text_not_exist(context, selector=None):
     """
     The specified text element string does not exist in the page
@@ -409,6 +411,7 @@ def wait_ele_exit(context, selector=None):
 @step("not exist element[{selector}]")
 @VerifyStep()
 @ele_wrap
+@RetryType('timeout')
 def ele_not_exit(context, selector=None):
     """
     The specified selector element string does not exists in the page

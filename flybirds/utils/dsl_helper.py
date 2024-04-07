@@ -13,12 +13,27 @@ import flybirds.utils.flybirds_log as log
 
 # generate result_dic
 from flybirds.core.global_context import GlobalContext
+import time
 
 if six.PY2:
     # -- USE PYTHON3 BACKPORT: With unicode traceback support.
     import traceback2 as traceback
 else:
     import traceback
+
+import asyncio
+import nest_asyncio
+
+nest_asyncio.apply()
+tim_loop = asyncio.new_event_loop()
+
+
+async def sleep_t(t):
+    await asyncio.sleep(t)
+
+
+def sleep(sleep_time):
+    tim_loop.run_until_complete(sleep_t(sleep_time))
 
 
 def add_res_dic(dsl_params, functin_pattern, def_key):
@@ -248,5 +263,46 @@ class VerifyStep:
                                                GlobalContext.get_global_cache(
                                                    "verifyStepCount") + 1)
             return func(*args, **kwargs)
+
+        return wrapper
+
+
+class RetryType:
+    def __init__(self, *args, **kwargs):  # 类装饰器参数
+        self.retry = args[0]
+
+    def __call__(self, func):  # 被装饰函数
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if gr.get_platform() is not None \
+                    and gr.get_platform().lower() == "web":
+                self.retryTimeOut = gr.get_frame_config_value("retry_ele_timeout", 30)
+
+                self.waitTimeInterval = max(self.retryTimeOut // 30, 1)
+                self.retryTimes = max(self.retryTimeOut // self.waitTimeInterval, 1)
+                self.recordMaxRetryTimes = self.retryTimes
+                self.runSuccess = False
+                log.info(
+                    f'retry start retryTimeOut: {self.retryTimeOut}s, self.waitTimeInterval: {self.waitTimeInterval}s, maxRetryTimes: {self.recordMaxRetryTimes}')
+                while self.retryTimes > 0:
+                    try:
+                        func(*args, **kwargs)
+                        self.runSuccess = True
+                        if self.runSuccess == True:
+                            log.info(
+                                f'retry success, max retry times: {self.recordMaxRetryTimes},  retry times: {self.recordMaxRetryTimes - self.retryTimes}')
+                            break
+                    except Exception as e:
+                        self.retryTimes -= 1
+                        if self.retryTimes == 0:
+                            log.info(f'retry fail during {self.retryTimeOut}s, retry times: {self.recordMaxRetryTimes}')
+                            raise e
+                        else:
+                            log.info(
+                                f'retry sleep interval {self.waitTimeInterval}s，current retry times: {self.recordMaxRetryTimes - self.retryTimes}')
+                            sleep(self.waitTimeInterval)
+                            pass
+            else:
+                func(*args, **kwargs)
 
         return wrapper
