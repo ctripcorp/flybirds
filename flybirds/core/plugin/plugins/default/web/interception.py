@@ -232,7 +232,9 @@ class Interception:
 
         # Call the handle_diff() function to compare the differences between the actual request object
         # and the expected request object, and output the log
-        handle_diff(actual_request_obj, expect_request_obj, operation, target_data_path)
+        match_json = get_matched_json(expect_request_obj, actual_request_obj)
+        log.info(f'[request_compare] actualObj dict after match expectObj: {match_json}')
+        handle_diff(match_json, expect_request_obj, operation, target_data_path)
 
     @staticmethod
     def page_not_requested(operation):
@@ -750,11 +752,24 @@ def handle_ignore_node(service):
             exclude_paths.append(path.strip())
     return exclude_paths, exclude_regex_paths
 
-
+# Get json data according to refer_json
+def get_matched_json(refered_json, matched_json):
+    if isinstance(refered_json, dict):
+        matched = {}
+        for key in refered_json:
+            if key in matched_json:
+                matched[key] = get_matched_json(refered_json[key], matched_json[key])
+        return matched
+    elif isinstance(refered_json, list) and refered_json:
+        return [get_matched_json(refered_json[0], item) for item in matched_json if isinstance(item, dict) and set(refered_json[0].keys()) <= set(item.keys())]
+    else:
+        return matched_json
+    
 def handle_diff(actual_request_obj, expect_request_obj, operation,
                 target_file_name):
     exclude_paths, exclude_regex_paths = handle_ignore_node(operation)
     ignore_order = gr.get_web_info_value("ignore_order", False)
+
     # diffs with jsons
     diff = DeepDiff(actual_request_obj, expect_request_obj,
                     ignore_order=ignore_order, verbose_level=2,
