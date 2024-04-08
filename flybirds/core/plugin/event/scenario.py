@@ -113,6 +113,7 @@ def scenario_fail(context, scenario):
             GlobalContext.step.clear_all_request_body(context)
             GlobalContext.step.clear_all_request_mock(context)
             GlobalContext.step.remove_web_mock(context)
+            GlobalContext.step.clear_all_request_record(context)
         except:
             log.info("failed to remove mock and cache")
 
@@ -152,6 +153,7 @@ def scenario_success(context, scenario):
             GlobalContext.step.clear_all_request_body(context)
             GlobalContext.step.clear_all_request_mock(context)
             GlobalContext.step.remove_web_mock(context)
+            GlobalContext.step.clear_all_request_record(context)
         except:
             log.info("failed to remove mock and cache")
     launch_helper.app_start("scenario_success_page")
