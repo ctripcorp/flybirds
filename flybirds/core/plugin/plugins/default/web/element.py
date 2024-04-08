@@ -196,20 +196,22 @@ class Element:
 
     def ele_input_text(self, context, param_1, param_2):
         locator, timeout = self.get_ele_locator(param_1)
-        locator.click(timeout=timeout)
+        # locator.click(timeout=timeout)
         locator.fill(param_2, timeout=timeout)
         return self.page.wait_for_timeout(100)
 
     def clear_and_input(self, context, param_1, param_2):
         locator, timeout = self.get_ele_locator(param_1)
-        locator.click(timeout=timeout)
+        # Click input in the pop-up window, the pop-up will scroll， causing the case to fail
+        # Error message: wait for element to be visiable, enabled and stable
+        # locator.click(timeout=timeout)
         locator.fill('', timeout=timeout)
         locator.fill(param_2, timeout=timeout)
         return self.page.wait_for_timeout(100)
 
     def clear_input(self, context, param_1):
         locator, timeout = self.get_ele_locator(param_1)
-        locator.click(timeout=timeout)
+        # locator.click(timeout=timeout)
         locator.fill('', timeout=timeout)
         return self.page.wait_for_timeout(100)
 
