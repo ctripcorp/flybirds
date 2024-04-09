@@ -232,9 +232,9 @@ class Interception:
 
         # Call the handle_diff() function to compare the differences between the actual request object
         # and the expected request object, and output the log
-        match_json = get_matched_json(expect_request_obj, actual_request_obj)
-        log.info(f'[request_compare] actualObj dict after match expectObj: {match_json}')
-        handle_diff(match_json, expect_request_obj, operation, target_data_path)
+        # match_json = get_matched_json(expect_request_obj, actual_request_obj)
+        # log.info(f'[request_compare] actualObj dict after match expectObj: {match_json}')
+        handle_diff(actual_request_obj, expect_request_obj, operation, target_data_path)
 
     @staticmethod
     def page_not_requested(operation):
@@ -761,10 +761,33 @@ def get_matched_json(refered_json, matched_json):
                 matched[key] = get_matched_json(refered_json[key], matched_json[key])
         return matched
     elif isinstance(refered_json, list) and refered_json:
-        return [get_matched_json(refered_json[0], item) for item in matched_json if isinstance(item, dict) and set(refered_json[0].keys()) <= set(item.keys())]
+        if all(isinstance(subitem, list) for subitem in refered_json):
+            matched_items = []
+            for item in matched_json:
+                if isinstance(item, list) and all(isinstance(subitem, list) for subitem in item):
+                    matched_items.append(
+                        [get_matched_json(refered_json[i], item[i]) for i in range(min(len(refered_json), len(item)))])
+                elif isinstance(item, list):
+                    matched_items.append(get_matched_json(refered_json, item))
+                else:
+                    matched_items.append(item)
+            return matched_items
+        else:
+            matched_items = []
+            for ref_item in refered_json:
+                for item in matched_json:
+                    if isinstance(item, dict):
+                        matched_items.append(get_matched_json(ref_item, item))
+                    elif isinstance(item, list) and all(isinstance(subitem, list) for subitem in item):
+                        matched_items.append([get_matched_json(ref_item, subitem) for subitem in item])
+                    elif isinstance(item, list):
+                        matched_items.append(get_matched_json(refered_json, item))
+                    else:
+                        matched_items.append(item)
+            return matched_items
     else:
         return matched_json
-    
+
 def handle_diff(actual_request_obj, expect_request_obj, operation,
                 target_file_name):
     exclude_paths, exclude_regex_paths = handle_ignore_node(operation)
