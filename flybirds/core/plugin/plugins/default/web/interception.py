@@ -238,11 +238,50 @@ class Interception:
 
     @staticmethod
     def page_not_requested(operation):
-        request_info = get_server_request_opetate(operation)
-        if request_info:
-            message = f'[pageNotRequested] the request [{operation}] has been requested'
+        operation_list = operation.strip().split(',')
+        for operation in operation_list:
+            request_info = get_server_request_opetate(operation.strip())
+            if request_info:
+                message = f'[pageNotRequested] the request [{operation}] has been requested'
+                raise FlybirdsException(message)
+            else:
+                message = f'[pageNotRequested] the request [{operation}] has not been requested'
+                log.info(message)
+    @staticmethod
+    def page_requests_some_interfaces(operation):
+        operation_list = operation.strip().split(',')
+        for operation in operation_list:
+            request_info = get_server_request_opetate(operation.strip())
+            if request_info:
+                message = f'[page requests] the request [{operation}] has been requested'
+                log.info(message)
+            else:
+                message = f'[page requests] the request [{operation}] has not been requested'
+                raise FlybirdsException(message)
+    
+    @staticmethod
+    def page_wait_interface_request_finished(operation):
+        pattern = re.compile('.*\/%s(\?.*)?$' % operation)
+        log.info(f'pattern: {pattern}')
+        ele = gr.get_value("plugin_ele")
+        try:
+            page_render_timeout = gr.get_frame_config_value("page_render_timeout", 30)
+            # with ele.page.expect_response(pattern, timeout=float(page_render_timeout* 1000)) as response_info:
+            #     pass
+            with ele.page.expect_request_finished(lambda request: pattern.match(request.url)) as request_info:
+                pass
+            request = request_info.value
+            # response_code = response.status
+            if request:
+                log.info(f'[page wait request finished] request url: {request.url}, request postdata: {request.post_data}, request: {request}')
+            else:
+                message = f'[page wait request finished] the request [{operation}] has not been requested'
+                raise FlybirdsException(message)
+        except Exception as e:
+            message = f'[page wait request finished] the request [{operation}] has error: {e}'
+            log.error(message)
             raise FlybirdsException(message)
-
+    
     @staticmethod
     def request_query_string_compare(operation, target_data_path):
         # Define function request_query_string_compare with two parameters, operation and target_data_path
