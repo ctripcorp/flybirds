@@ -6,7 +6,7 @@ This module defines the steps related to the web network request.
 from behave import step
 
 from flybirds.core.global_context import GlobalContext as g_Context
-from flybirds.utils.dsl_helper import ele_wrap, VerifyStep
+from flybirds.utils.dsl_helper import ele_wrap, VerifyStep, RetryType
 
 
 @step("cache service request [{service}]")
@@ -132,6 +132,7 @@ def call_external_party_api(context, method, url, data, headers=None):
 )
 @VerifyStep()
 @ele_wrap
+@RetryType('timeout')
 def request_compare(context, service=None, target_data_path=None):
     """
     compare and verify the request's post body with the data of the target path
@@ -149,6 +150,7 @@ def request_compare(context, service=None, target_data_path=None):
 )
 @VerifyStep()
 @ele_wrap
+@RetryType('timeout')
 def page_not_requested(context, service=None):
     """
     compare and verify the request's post body with the data of the target path
@@ -157,6 +159,35 @@ def page_not_requested(context, service=None):
     :param service: service request name. (string or None).
     """
     g_Context.step.page_not_requested(context, service)
+
+@step(
+    "page requests some interfaces [{service}]"
+)
+@VerifyStep()
+@ele_wrap
+@RetryType('timeout')
+def page_requests_some_interfaces(context, service=None):
+    """
+    compare and verify the request's post body with the data of the target path
+
+    :param context: step context
+    :param service: service request name. (string or None).
+    """
+    g_Context.step.page_requests_some_interfaces(context, service)
+
+@step(
+    "wait interface [{service}] request finished"
+)
+@VerifyStep()
+@ele_wrap
+def page_wait_interface_request_finished(context, service=None):
+    """
+    compare and verify the request's post body with the data of the target path
+
+    :param context: step context
+    :param service: service request name. (string or None).
+    """
+    g_Context.step.page_wait_interface_request_finished(context, service)
 
 @step("remove all service record")
 def clear_all_request_record(context):
@@ -171,6 +202,7 @@ def clear_all_request_record(context):
 )
 @VerifyStep()
 @ele_wrap
+@RetryType('timeout')
 def request_compare(context, service=None, target_data_xml_path=None):
     """
     compare and verify the request's post body with the data of the target path
@@ -188,6 +220,7 @@ def request_compare(context, service=None, target_data_xml_path=None):
     "file [{target_data_path}]")
 @VerifyStep()
 @ele_wrap
+@RetryType('timeout')
 def request_query_str_compare(context, service=None, target_data_path=None):
     """
     compare and verify the post body of a non-json type request with the
@@ -206,6 +239,7 @@ def request_query_str_compare(context, service=None, target_data_path=None):
     "is [{expect_value}]")
 @VerifyStep()
 @ele_wrap
+@RetryType('timeout')
 def request_compare_value(context, service=None, target_json_path=None,
                           expect_value=None):
     """
