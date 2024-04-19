@@ -93,7 +93,6 @@ class Step:
         page = gr.get_value("plugin_page")
         page.page_go_forward(context)
 
-
     @classmethod
     def sleep(cls, context, param):
         page = gr.get_value("plugin_page")
@@ -184,6 +183,11 @@ class Step:
         ele.find_text(context, selector)
 
     @classmethod
+    def wait_page_text_exist(cls, context, selector):
+        ele = gr.get_value("plugin_ele")
+        ele.find_page_text(context, selector)
+
+    @classmethod
     def text_not_exist(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.find_no_text(context, selector)
@@ -271,6 +275,7 @@ class Step:
     def ele_attr_equal(cls, context, selector, param2, param3):
         ele = gr.get_value("plugin_ele")
         ele.is_ele_attr_equal(context, selector, param2, param3)
+
     @classmethod
     def ele_attr_container(cls, context, selector, param2, param3):
         ele = gr.get_value("plugin_ele")
@@ -295,7 +300,6 @@ class Step:
     def text_attr_not_container(cls, context, selector, param2, param3):
         ele = gr.get_value("plugin_ele")
         ele.is_text_attr_not_container(context, selector, param2, param3)
-
 
     @classmethod
     def find_child_from_parent(cls, context, p_selector, c_selector):
@@ -338,9 +342,11 @@ class Step:
     @staticmethod
     def clear_all_request_body(context):
         request_op.clear_interception_request_body()
+
     @staticmethod
     def clear_all_request_record(context):
         request_op.clear_all_request_record()
+
     # -------------------------------------------------------------------------
     # request service listening
     # -------------------------------------------------------------------------

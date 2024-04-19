@@ -126,10 +126,10 @@ step_language = {
         "element[{selector}]property[{param2}]is {param3}": [
             "元素[{selector}]的属性[{param2}]为{param3}"
         ],
-         "element[{selector}]property[{param2}]include {param3}": [
+        "element[{selector}]property[{param2}]include {param3}": [
             "元素[{selector}]的属性[{param2}]包含{param3}"
         ],
-         "element[{selector}]property[{param2}]not include {param3}": [
+        "element[{selector}]property[{param2}]not include {param3}": [
             "元素[{selector}]的属性[{param2}]不包含{param3}"
         ],
         "mouse hover[{selector}]": ["鼠标悬浮[{selector}]"],
@@ -145,8 +145,8 @@ step_language = {
         "in ocr[{selector}]input[{param2}]": ["在扫描文字[{selector}]中输入[{param2}]"],
         "clear [{selector}] and input[{param2}]": [
             "在[{selector}]中清空并输入[{param2}]"],
-         "clear input[{selector}]": [
-            "清空输入框[{selector}]"],    
+        "clear input[{selector}]": [
+            "清空输入框[{selector}]"],
         "element[{selector}]position not change in[{param2}]seconds": [
             "元素[{selector}]位置[{param2}]秒内未变动"
         ],
@@ -239,6 +239,7 @@ step_language = {
         "touch text[{selector}]": ["点触文本[{selector}]"],
         "click ele [{selector}] position[{x},{y}]": ["点击元素[{selector}]位置[{x},{y}]"],
         "open mock request service [{service}] match pathList [{path_list}] and bind mockCase[{mock_case_id}]": [
-            "开启服务[{service}]匹配请求报文路径[{path_list}]并绑定MockCase[{mock_case_id}]"]
+            "开启服务[{service}]匹配请求报文路径[{path_list}]并绑定MockCase[{mock_case_id}]"],
+        "exist page text[{selector}]": ["页面存在文案[{selector}]"]
     },
 }

@@ -15,6 +15,7 @@ from flybirds.utils import language_helper as lan
 from flybirds.utils.dsl_helper import handle_str, params_to_dic
 import re
 
+
 def direct_left(x, y, diff):
     to_x = x - diff
     to_y = y
@@ -45,7 +46,6 @@ def direct_default(x, y, diff):
     return to_x, to_y
 
 
-
 direct_dict = {
     'left': direct_left,
     'right': direct_right,
@@ -62,12 +62,13 @@ direct_dict_to = {
 
 # Defines a mapping table for HTML escape characters
 html_escapes = {
-    '&': '&amp;', # escape
-    '<': '&lt;', # escape
+    '&': '&amp;',  # escape
+    '<': '&lt;',  # escape
     # '>': '&gt;', # To be confirmed
     # '"': '&quot;', # To be confirmed
     # "'": '&#39;' # html page.content not escape single quotes
 }
+
 
 def escaped_text(param):
     # Use regular expressions to search for specific characters in a string and use mapping tables to replace them
@@ -75,6 +76,7 @@ def escaped_text(param):
     # < match <
     escaped_string = re.sub(r'(?<!\S)&(?!\S*;)|<', lambda match: html_escapes[match.group(0)], param)
     return escaped_string
+
 
 class Element:
     """Web Element Class"""
@@ -157,6 +159,20 @@ class Element:
                       f"page, but not actually find it"
             raise FlybirdVerifyException(message)
 
+    def find_page_text(self, context, param):
+        # param_temp = handle_str(param)
+        param_dict = params_to_dic(param)
+        selector_str = param_dict["selector"]
+        escaped_selector_str = escaped_text(selector_str)
+        log.info(f'find_text: [{selector_str}], escaped_text[{escaped_selector_str}]')
+        ele_find = self.page.get_by_text(escaped_selector_str)
+        if ele_find.count() is not None and ele_find.count() > 0:
+            log.info(f'find_text: [{selector_str}] is success!')
+        else:
+            message = f"expect to find the text [{selector_str}] in the " \
+                      f"page, but not actually find it"
+            raise FlybirdVerifyException(message)
+
     def find_no_text(self, context, param):
         # param_temp = handle_str(param)
         param_dict = params_to_dic(param)
@@ -215,7 +231,6 @@ class Element:
         locator.fill('', timeout=timeout)
         return self.page.wait_for_timeout(100)
 
-
     def ele_slide(self, context, param_1, param_2, param_3):
         locator, timeout = self.get_ele_locator(param_1)
 
@@ -223,7 +238,9 @@ class Element:
         language = g_Context.get_current_language()
         direct = lan.get_glb_key(param_2, language)
         if self.is_in_h5_mode(context):
-            result = locator.evaluate('(element) => ({ x: element.scrollLeft, y: element.scrollTop,scrollWidth: element.scrollWidth, scrollHeight: element.scrollHeight, clientWidth: element.clientWidth, clientHeight: element.clientHeight, })', timeout=timeout)
+            result = locator.evaluate(
+                '(element) => ({ x: element.scrollLeft, y: element.scrollTop,scrollWidth: element.scrollWidth, scrollHeight: element.scrollHeight, clientWidth: element.clientWidth, clientHeight: element.clientHeight, })',
+                timeout=timeout)
 
             log.info(f"element scrollinfo result: {result}")
             x = result['x']
@@ -257,7 +274,6 @@ class Element:
         result = locator.evaluate(
             '(element,object) =>{element&&(element.scrollTo({ top: object.top,left: object.left,behavior: "smooth"}));console.log({ top: object.top,left: object.left})}',
             timeout=timeout, arg={'top': param_top, 'left': param_left})
-
 
     def full_screen_slide(self, context, param_1, param_2):
         # get scroll direction
@@ -337,7 +353,6 @@ class Element:
                                      deal_method)
         verify_helper.attr_not_container(target_val, ele_attr)
 
-
     def is_text_attr_equal(self, context, text_selector, attr_name,
                            target_val):
         if 'text=' not in text_selector:
@@ -345,13 +360,13 @@ class Element:
         self.is_ele_attr_equal(context, text_selector, attr_name, target_val)
 
     def is_text_attr_container(self, context, text_selector, attr_name,
-                           target_val):
+                               target_val):
         if 'text=' not in text_selector:
             text_selector = "text=" + text_selector
         self.is_ele_attr_container(context, text_selector, attr_name, target_val)
 
     def is_text_attr_not_container(self, context, text_selector, attr_name,
-                           target_val):
+                                   target_val):
         if 'text=' not in text_selector:
             text_selector = "text=" + text_selector
         self.is_ele_attr_not_container(context, text_selector, attr_name, target_val)
