@@ -374,6 +374,14 @@ class Step:
         request_op.page_not_requested(operation)
 
     @staticmethod
+    def page_requests_some_interfaces(context, operation):
+        request_op.page_requests_some_interfaces(operation)
+
+    @staticmethod
+    def page_wait_interface_request_finished(context, operation):
+        request_op.page_wait_interface_request_finished(operation)
+
+    @staticmethod
     def request_query_str_compare_from_path(context, operation,
                                             target_data_path):
         request_op.request_query_string_compare(operation, target_data_path)
