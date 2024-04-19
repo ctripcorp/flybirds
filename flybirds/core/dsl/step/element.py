@@ -39,6 +39,7 @@ def text_attr_container(context, selector=None, param2=None, param3=None):
     """
     g_Context.step.text_attr_container(context, selector, param2, param3)
 
+
 @step("text[{selector}]property[{param2}]not include {param3}")
 @VerifyStep()
 @ele_wrap
@@ -69,6 +70,7 @@ def ele_attr_equal(context, selector=None, param2=None, param3=None):
     :param param3: expected Value
     """
     g_Context.step.ele_attr_equal(context, selector, param2, param3)
+
 
 @step("element[{selector}]property[{param2}]include {param3}")
 @VerifyStep()
@@ -243,6 +245,7 @@ def ele_swipe(context, selector=None, param2=None, param3=None):
     """
     g_Context.step.ele_swipe(context, selector, param2, param3)
 
+
 @step("[{selector}]slide to[{left},{top}]")
 @ele_wrap
 def ele_direction_swipe(context, selector=None, left=None, top=None):
@@ -280,6 +283,14 @@ def wait_text_exist(context, selector=None):
     :param selector: locator string for text element (or None).
     """
     g_Context.step.wait_text_exist(context, selector)
+
+
+@step("exist page text[{selector}]")
+@VerifyStep()
+@ele_wrap
+@RetryType('timeout')
+def wait_page_text_exist(context, selector=None):
+    g_Context.step.wait_page_text_exist(context, selector)
 
 
 @step("ocr exist text[{selector}]")
