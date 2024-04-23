@@ -3,6 +3,7 @@
 dsl helper
 """
 import base64
+import json
 import re
 from functools import wraps
 
@@ -12,6 +13,7 @@ import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 
 # generate result_dic
+from flybirds.core.exceptions import ErrorName
 from flybirds.core.global_context import GlobalContext
 import time
 
@@ -306,3 +308,56 @@ class RetryType:
                 func(*args, **kwargs)
 
         return wrapper
+
+
+class FlybirdsReportTagInfo:
+    # page , element,url,mock
+    group: str
+    # {"type":"path","value":"//div[@class='el-input__"}
+    # {"type":"attr","value":"el-input__inner"}
+    # {"type":"text","value":"el-input__inner"}
+    selectors: []
+    verify_type: str
+    verify_value: str
+    verify_function: str
+    url: str
+
+    def __init__(self, *args, **kwargs):  # 类装饰器参数
+        self.group = kwargs.get("group")
+        self.selectors = kwargs.get("selectors")
+        self.verify = kwargs.get("verify")
+        self.verify_function = kwargs.get("verify_function")
+        self.url = kwargs.get("check_url")
+
+    def __call__(self, func):  # 被装饰函数
+        try:
+            setattr(func, "reprot_config", json.dumps({"group": self.group,
+                                                       "selectors": self.selectors,
+                                                       "verify": self.verify, "verify_function": self.verify_function},
+                                                      ensure_ascii=False))
+        except Exception as e:
+            print(e)
+
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            FlybirdsReportTagInfo.set_context_config(func, args, kwargs)
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    @staticmethod
+    def set_context_config(func, args, kwargs):
+        try:
+            report_config = json.loads(getattr(func, "reprot_config"))
+            if report_config.get("group") is not None and report_config.get(
+                    "selectors") is not None and report_config.get("selectors").get(
+                "path") is not None:
+                if len(report_config.get("selectors").get("path")) > 0:
+                    for selecotor in report_config.get("selectors").get("path"):
+                        selecotor["value"] = kwargs.get(selecotor.get("value"))
+            context = args[0]
+            setattr(context, "flybirds_report_config", report_config)
+        except Exception as e:
+            print(e)
+
+

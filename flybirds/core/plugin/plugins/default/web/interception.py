@@ -20,7 +20,7 @@ from jsonpath_ng import parse as parse_path
 import xml.etree.ElementTree as et
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
-from flybirds.core.exceptions import FlybirdsException
+from flybirds.core.exceptions import FlybirdsException, ErrorName
 
 __open__ = ["Interception"]
 
@@ -65,7 +65,7 @@ class Interception:
         except Exception as e:
             message = f'[removeSomeInterceptionRequestBody]  ' \
                       f'has KeyError! error key: {str(e)}'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.MockClearError)
         gr.set_value('interceptionRequest', interception_request)
 
     @staticmethod
@@ -79,6 +79,7 @@ class Interception:
         operate_record = gr.get_value('operate_record')
         operate_record.clear()
         gr.set_value('operate_record', operate_record)
+
     # -------------------------------------------------------------------------
     # request service listening
     # -------------------------------------------------------------------------
@@ -93,7 +94,7 @@ class Interception:
         if len(service_list) != len(mock_case_id_list):
             message = f"serviceCount[{service_str}] not equal " \
                       f"mockCaseCount[{mock_case_id_str}]"
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, ErrorName.MockCountNotMatchError)
 
         interception_values = gr.get_value('interceptionValues')
         for i, service in enumerate(service_list):
@@ -112,7 +113,7 @@ class Interception:
         if len(service_list) != len(mock_case_id_list):
             message = f"serviceCount[{service_str}] not equal " \
                       f"mockCaseCount[{mock_case_id_str}]"
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.MockCountNotMatchError)
 
         interception_values = request_mock_key_value
         for i, service in enumerate(service_list):
@@ -161,7 +162,7 @@ class Interception:
         except Exception as e:
             message = f'[removeSomeInterceptionMock]  ' \
                       f'has KeyError! error key: {str(e)}'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.MockClearError)
         gr.set_value('interceptionValues', interception_values)
 
     @staticmethod
@@ -191,7 +192,7 @@ class Interception:
         # If actual_request_obj is None, an exception is thrown
         if actual_request_obj is None:
             message = f'[request_compare] not get listener data for [{operation}]'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.RequestNoneError)
 
         # Deserialize actual_request_obj into a Python object
         if actual_request_obj.startswith('<?xml') or actual_request_obj.startswith('<'):
@@ -201,7 +202,7 @@ class Interception:
                 actual_request_obj = xmltodict.parse(actual_request_obj)
             except ValueError:
                 message = f'[xml convert] format is wrong, data:' + actual_request_obj
-                raise FlybirdsException(message)
+                raise FlybirdsException(message, error_name=ErrorName.CompareXmlFormatError)
 
         else:
             try:
@@ -209,7 +210,7 @@ class Interception:
                 actual_request_obj = json.loads(actual_request_obj)
             except ValueError:
                 message = f'[json convert] format is wrong, data:' + actual_request_obj
-                raise FlybirdsException(message)
+                raise FlybirdsException(message, ErrorName.CompareJsonFormatError)
 
         log.info(f'[request_compare] actualObj dict:{actual_request_obj}')
         expect_request_obj = get_operate_actual_request_body(target_data_path)
@@ -219,7 +220,7 @@ class Interception:
         # If expect_request_obj is None, an exception is thrown
         if expect_request_obj is None:
             message = f'[request_compare] cannot get data form path [{target_data_path}]]'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.CompareMissExpectRequestError)
 
         # If the expect_request_obj is xml file, and contains a root node, remove the root node
         if 'root' in expect_request_obj:
@@ -243,10 +244,11 @@ class Interception:
             request_info = get_server_request_opetate(operation.strip())
             if request_info:
                 message = f'[pageNotRequested] the request [{operation}] has been requested'
-                raise FlybirdsException(message)
+                raise FlybirdsException(message, error_name=ErrorName.RequestFoundError)
             else:
                 message = f'[pageNotRequested] the request [{operation}] has not been requested'
                 log.info(message)
+
     @staticmethod
     def page_requests_some_interfaces(operation):
         operation_list = operation.strip().split(',')
@@ -257,8 +259,8 @@ class Interception:
                 log.info(message)
             else:
                 message = f'[page requests] the request [{operation}] has not been requested'
-                raise FlybirdsException(message)
-    
+                raise FlybirdsException(message, error_name=ErrorName.RequestNotFoundError)
+
     @staticmethod
     def page_wait_interface_request_finished(operation):
         pattern = re.compile('.*\/%s(\?.*)?$' % operation)
@@ -273,15 +275,16 @@ class Interception:
             request = request_info.value
             # response_code = response.status
             if request:
-                log.info(f'[page wait request finished] request url: {request.url}, request postdata: {request.post_data}, request: {request}')
+                log.info(
+                    f'[page wait request finished] request url: {request.url}, request postdata: {request.post_data}, request: {request}')
             else:
                 message = f'[page wait request finished] the request [{operation}] has not been requested'
-                raise FlybirdsException(message)
+                raise FlybirdsException(message, error_name=ErrorName.RequestNotFoundError)
         except Exception as e:
             message = f'[page wait request finished] the request [{operation}] has error: {e}'
             log.error(message)
-            raise FlybirdsException(message)
-    
+            raise FlybirdsException(message, error_name=ErrorName.RequestError)
+
     @staticmethod
     def request_query_string_compare(operation, target_data_path):
         # Define function request_query_string_compare with two parameters, operation and target_data_path
@@ -302,7 +305,7 @@ class Interception:
             # If actual_request_obj is None
             message = f'[requestQuerystringCompare] not get listener data ' \
                       f'for [{operation}]'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.CompareMissActualRequestError)
             # Raise an exception indicating that the listener data could not be retrieved
 
         # Check data format
@@ -312,14 +315,14 @@ class Interception:
                 actual_request_obj = xmltodict.parse(actual_request_obj)
             except ValueError:
                 message = f'[xml convert] format is wrong, data:' + actual_request_obj
-                raise FlybirdsException(message)
+                raise FlybirdsException(message, error_name=ErrorName.CompareXmlFormatError)
         else:
             try:
                 # If the format is json, parse the json.
                 actual_request_obj = parse_qs(actual_request_obj)
             except ValueError:
                 message = f'[json convert] format is wrong, data:' + actual_request_obj
-                raise FlybirdsException(message)
+                raise FlybirdsException(message, error_name=ErrorName.CompareJsonFormatError)
 
         file_path = os.path.join(os.getcwd(), target_data_path)
         # Get the path of the target data file and store it in file_path
@@ -338,7 +341,7 @@ class Interception:
 
             message = f'[requestQuerystringCompare] cannot get data form ' \
                       f'path [{target_data_path}]'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.CompareMissExpectRequestError)
             # Raise an exception indicating that data could not be retrieved from the specified path
 
         if expect_request_obj.startswith('<?xml') or expect_request_obj.startswith('<'):
@@ -347,7 +350,7 @@ class Interception:
                 expect_request_obj = xmltodict.parse(expect_request_obj)
             except ValueError:
                 message = f'[xml convert] format is wrong, data:' + expect_request_obj
-                raise FlybirdsException(message)
+                raise FlybirdsException(message, error_name=ErrorName.CompareXmlFormatError)
 
         else:
             try:
@@ -355,7 +358,7 @@ class Interception:
                 expect_request_obj = parse_qs(expect_request_obj)
             except ValueError:
                 message = f'[json convert] format is wrong, data:' + expect_request_obj
-                raise FlybirdsException(message)
+                raise FlybirdsException(message, error_name=ErrorName.CompareJsonFormatError)
 
         handle_diff(actual_request_obj, expect_request_obj, operation,
                     target_data_path)
@@ -376,7 +379,7 @@ class Interception:
         if data is None:
             message = f'[requestCompareValue] not get listener data for ' \
                       f'[{operation}]'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.CompareMissActualRequestError)
 
         # Check the data format.
         if data.startswith('<?xml') or data.startswith('<'):
@@ -393,7 +396,7 @@ class Interception:
 
             except ValueError:
                 message = f'[xml convert] format is wrong, data:' + data
-                raise FlybirdsException(message)
+                raise FlybirdsException(message, error_name=ErrorName.CompareXmlFormatError)
 
         else:
             try:
@@ -409,13 +412,13 @@ class Interception:
 
             except ValueError:
                 message = f'[json convert] format is wrong, data:' + data
-                raise FlybirdsException(message)
+                raise FlybirdsException(message, error_name=ErrorName.CompareJsonFormatError)
 
         # If the target data does not exist, raise an exception.
         if len(target_values) == 0:
             message = f'[requestCompareValue] cannot get the value from ' \
                       f'path [{target_path}] of [{operation}]'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.CompareMissExpectRequestError)
 
         # If the actual value is not equal to the expected value, raise an exception.
         if expect_value == "[@@空@@]" or expect_value == "@@空@@":
@@ -425,7 +428,7 @@ class Interception:
                       f'parameter [{target_path}] actual value:' \
                       f'[{target_values[0]}], but expect value:' \
                       f'[{expect_value}]'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.CompareNotEqualError)
 
     @staticmethod
     def compare_images(context, target_element, compared_picture_path, threshold=None):
@@ -576,7 +579,7 @@ class Interception:
 
             message = f'[requestQuerystringCompare] cannot get data form ' \
                       f'path [{compared_text_path}]'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, ErrorName.RequestNoneError)
             # Raise an exception indicating that data could not be retrieved from the specified path
 
         # Compare the text content of the two DOM elements
@@ -590,7 +593,7 @@ class Interception:
             message = f'The text of the two pages are different as' \
                       f' [{text1}]:' \
                       f' [{compared_text_path}] - [{text2}]:'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.CompareNotEqualError)
 
         return same, diff
 
@@ -607,7 +610,7 @@ class Interception:
         except ValueError:
             message = f'The content of data and headers is not json format: ' \
                       f' [{data}] - [{headers}]'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.RequestParamsError)
 
         # Set the content and headers to None if they are empty
         if len(datacontent) == 0:
@@ -626,7 +629,7 @@ class Interception:
         except ValueError:
             message = f'The contents post is invalid: ' \
                       f' [{url}] - [{data}] - [{headers}]:'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.RequestParamsError)
 
     @staticmethod
     def open_web_request_mock(service_str, mock_case_id_str, mock_key_list_str, request_mock_key_value: list):
@@ -644,12 +647,12 @@ class Interception:
         if len(service_list) != len(mock_case_id_list):
             message = f"serviceCount[{service_str}] not equal " \
                       f"mockCaseCount[{mock_case_id_str}]"
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.CompareNotEqualError)
 
         if len(service_list) != len(mock_path_list):
             message = f"serviceCount[{service_str}] not equal " \
                       f"pathCount[{mock_case_id_str}]"
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.MockCountNotMatchError)
 
         interception_values = request_mock_key_value
         for i, service in enumerate(service_list):
@@ -726,7 +729,7 @@ def get_operate_actual_request_body(target_data_path):
                 expect_request_obj = xmltodict.parse(expect_request_obj)
             except ValueError:
                 message = f'[xml convert] format is wrong, data:' + expect_request_obj
-                raise FlybirdsException(message)
+                raise FlybirdsException(message, error_name=ErrorName.CompareXmlFormatError)
 
         else:
             try:
@@ -734,11 +737,11 @@ def get_operate_actual_request_body(target_data_path):
                 expect_request_obj = file_helper.get_json_from_file_path(file_path)
             except ValueError:
                 message = f'[json convert] format is wrong, data:' + expect_request_obj
-                raise FlybirdsException(message)
+                raise FlybirdsException(message, error_name=ErrorName.CompareJsonFormatError)
 
     else:
         message = f'[request_compare] expect_request_obj not get file from [{file_path}]'
-        raise FlybirdsException(message)
+        raise FlybirdsException(message, error_name=ErrorName.CompareMissExpectRequestError)
     return expect_request_obj
 
 
@@ -791,6 +794,7 @@ def handle_ignore_node(service):
             exclude_paths.append(path.strip())
     return exclude_paths, exclude_regex_paths
 
+
 # Get json data according to refer_json
 def get_matched_json(refered_json, matched_json):
     if isinstance(refered_json, dict):
@@ -827,6 +831,7 @@ def get_matched_json(refered_json, matched_json):
     else:
         return matched_json
 
+
 def handle_diff(actual_request_obj, expect_request_obj, operation,
                 target_file_name):
     exclude_paths, exclude_regex_paths = handle_ignore_node(operation)
@@ -842,7 +847,7 @@ def handle_diff(actual_request_obj, expect_request_obj, operation,
         message = f'Difference when comparing service request ' \
                   f'[{operation}] with [{target_file_name}]. ' \
                   f'\n Difference node:\n {format_diff} \n'
-        raise FlybirdsException(message)
+        raise FlybirdsException(message, error_name=ErrorName.CompareNotEqualError)
     log.info(f'compare the service request [{operation}] with '
              f'[{target_file_name}], the result is the same.')
 

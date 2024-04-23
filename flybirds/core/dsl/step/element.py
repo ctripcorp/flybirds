@@ -4,11 +4,18 @@ This module defines the steps related to the UI element.
 """
 from behave import step
 
+from flybirds.core.exceptions import ErrorFlag
 from flybirds.core.global_context import GlobalContext as g_Context
-from flybirds.utils.dsl_helper import ele_wrap, VerifyStep, RetryType
+from flybirds.utils.dsl_helper import ele_wrap, VerifyStep, RetryType, FlybirdsReportTagInfo
 
 
+# {"type":"path","value":"//div[@class='el-input__"}
+# {"type":"attr","value":"el-input__inner"}
+# {"type":"text","value":"el-input__inner"}
 @step("text[{selector}]property[{param2}]is {param3}")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "文案元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
+                       verify={"type": ErrorFlag.equ, "value": "param3"}, verify_function="ele_verify_attr_error_parse")
 @VerifyStep()
 @ele_wrap
 def text_attr_equal(context, selector=None, param2=None, param3=None):
@@ -25,6 +32,10 @@ def text_attr_equal(context, selector=None, param2=None, param3=None):
 
 
 @step("text[{selector}]property[{param2}]include {param3}")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "文案元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
+                       verify={"type": ErrorFlag.contains, "value": "param3"},
+                       verify_function="ele_verify_attr_error_parse")
 @VerifyStep()
 @ele_wrap
 def text_attr_container(context, selector=None, param2=None, param3=None):
@@ -41,6 +52,10 @@ def text_attr_container(context, selector=None, param2=None, param3=None):
 
 
 @step("text[{selector}]property[{param2}]not include {param3}")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "文案元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
+                       verify={"type": ErrorFlag.not_contains, "value": "param3"},
+                       verify_function="ele_verify_attr_error_parse")
 @VerifyStep()
 @ele_wrap
 def text_attr_not_container(context, selector=None, param2=None, param3=None):
@@ -57,6 +72,9 @@ def text_attr_not_container(context, selector=None, param2=None, param3=None):
 
 
 @step("element[{selector}]property[{param2}]is {param3}")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
+                       verify={"type": ErrorFlag.equ, "value": "param3"}, verify_function="ele_verify_attr_error_parse")
 @VerifyStep()
 @ele_wrap
 def ele_attr_equal(context, selector=None, param2=None, param3=None):
@@ -73,6 +91,10 @@ def ele_attr_equal(context, selector=None, param2=None, param3=None):
 
 
 @step("element[{selector}]property[{param2}]include {param3}")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
+                       verify={"type": ErrorFlag.contains, "value": "param3"},
+                       verify_function="ele_verify_attr_error_parse")
 @VerifyStep()
 @ele_wrap
 def ele_attr_container(context, selector=None, param2=None, param3=None):
@@ -89,6 +111,10 @@ def ele_attr_container(context, selector=None, param2=None, param3=None):
 
 
 @step("element[{selector}]property[{param2}]not include {param3}")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
+                       verify={"type": ErrorFlag.not_contains, "value": "param3"},
+                       verify_function="ele_verify_attr_error_parse")
 @VerifyStep()
 @ele_wrap
 def ele_attr_not_container(context, selector=None, param2=None, param3=None):
@@ -273,6 +299,9 @@ def full_screen_swipe(context, param1=None, param2=None):
 
 
 @step("exist text[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "文案"}]},
+                       verify={"type": ErrorFlag.exist}, verify_function="ele_verify_error_parse")
 @VerifyStep()
 @ele_wrap
 @RetryType('timeout')
@@ -286,6 +315,9 @@ def wait_text_exist(context, selector=None):
 
 
 @step("exist page text[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "文案"}]},
+                       verify={"type": ErrorFlag.exist}, verify_function="ele_verify_error_parse")
 @VerifyStep()
 @ele_wrap
 @RetryType('timeout')
@@ -357,6 +389,9 @@ def wait_ocr_text_appear(context, selector=None):
 
 
 @step("not exist text[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "文案"}]},
+                       verify={"type": ErrorFlag.not_exist}, verify_function="ele_verify_error_parse")
 @VerifyStep()
 @ele_wrap
 @RetryType('timeout')
@@ -394,6 +429,10 @@ def wait_text_disappear(context, selector=None):
 
 
 @step("exist [{p_selector}] subNode [{c_selector}] element")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"},
+             {"type": "path", "value": "c_selector", "name": "子元素"}]},
+                       verify={"type": ErrorFlag.exist}, verify_function="ele_verify_error_parse")
 @VerifyStep()
 @ele_wrap
 def find_child_from_parent(context, p_selector=None, c_selector=None):
@@ -408,6 +447,9 @@ def find_child_from_parent(context, p_selector=None, c_selector=None):
 
 
 @step("exist[{selector}]element")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.exist, "name": "存在"}, verify_function="ele_verify_error_parse")
 @VerifyStep()
 @ele_wrap
 def wait_ele_exit(context, selector=None):
@@ -420,6 +462,9 @@ def wait_ele_exit(context, selector=None):
 
 
 @step("not exist element[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.not_exist, "name": "不存在"}, verify_function="ele_verify_error_parse")
 @VerifyStep()
 @ele_wrap
 @RetryType('timeout')
@@ -445,6 +490,10 @@ def wait_ele_disappear(context, selector=None):
 
 
 @step("the text of element[{selector}]is[{param2}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.text_equ, "value": "param2"},
+                       verify_function="ele_verify_text_error_parse")
 @VerifyStep()
 @ele_wrap
 def ele_text_equal(context, selector=None, param2=None):
@@ -458,6 +507,10 @@ def ele_text_equal(context, selector=None, param2=None):
 
 
 @step("the text of element[{selector}]include[{param2}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.text_contains, "value": "param2"},
+                       verify_function="ele_verify_text_error_parse")
 @VerifyStep()
 @ele_wrap
 def ele_text_container(context, selector=None, param2=None):
@@ -471,6 +524,10 @@ def ele_text_container(context, selector=None, param2=None):
 
 
 @step("the text of element[{selector}]not include[{param2}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.text_not_contains, "value": "param2"},
+                       verify_function="ele_verify_text_error_parse")
 @VerifyStep()
 @ele_wrap
 def ele_text_not_container(context, selector=None, param2=None):
@@ -496,6 +553,9 @@ def wait_ele_appear(context, selector=None):
 
 
 @step("existing element[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.exist}, verify_function="ele_verify_error_parse")
 @VerifyStep()
 @ele_wrap
 def exist_ele(context, selector=None):
@@ -507,7 +567,13 @@ def exist_ele(context, selector=None):
     g_Context.step.exist_ele(context, selector)
 
 
+# 在[{p_selector}]中向{param2}查找[{c_selector}]的元素
 @step("in[{p_selector}]from {param2} find[{c_selector}]element")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "p_selector", "name": "元素"},
+             {"type": "path", "value": "c_selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.exist, f"{ErrorFlag.fource}": "c_selector"},
+                       verify_function="ele_verify_text_error_parse")
 @VerifyStep()
 @ele_wrap
 def swipe_to_ele(context, p_selector=None, param2=None, c_selector=None):
@@ -523,6 +589,9 @@ def swipe_to_ele(context, p_selector=None, param2=None, c_selector=None):
 
 
 @step("from {param1} find[{selector}]element")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": "exist", "name": "存在"})
 @VerifyStep()
 @ele_wrap
 def full_screen_swipe_to_ele_aaa(context, param1=None, selector=None):
@@ -611,8 +680,13 @@ def ele_select(context, selector=None, param2=None):
     g_Context.step.ele_select(context, selector, param2)
 
 
+# [{p_selector}]的[{c_selector}]文案为[{param3}]
 @step(
     "the text of element [{p_selector}] subNode [{c_selector}] is [{param3}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "p_selector", "name": "元素"},
+             {"type": "path", "value": "c_selector", "name": "子元素"}]},
+                       verify={"type": ErrorFlag.equ, "value": "param3"}, verify_function="ele_verify_text_error_parse")
 @VerifyStep()
 @ele_wrap
 def find_text_from_parent(context, p_selector=None, c_selector=None,

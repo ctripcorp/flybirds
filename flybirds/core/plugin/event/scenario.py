@@ -221,6 +221,9 @@ class OnAfter:  # pylint: disable=too-few-public-methods
                 formatter = context._runner.formatters[0]
                 if formatter is not None and formatter.current_feature_element is not None:
                     formatter.current_feature_element["verifyCount"] = GlobalContext.get_global_cache("verifyStepCount")
+                    if GlobalContext.get_global_cache("stepErrorInfo") is not None:
+                        formatter.current_feature_element["stepErrorInfo"] = GlobalContext.get_global_cache(
+                            "stepErrorInfo")
             log.info('[scenario_OnAfter] start!')
             if scenario.status == "failed":
                 scenario_fail(context, scenario)
@@ -248,6 +251,28 @@ class OnAfter:  # pylint: disable=too-few-public-methods
             pass
 
 
+class OnAfterClean:
+    name = "OnAfterClean"
+    order = 10000
+
+    @staticmethod
+    def can(context, scenario):
+        return True
+
+    @staticmethod
+    def run(context, scenario):
+        """
+        exe scenario after
+        """
+        try:
+            GlobalContext.set_global_cache("stepErrorInfo", None)
+            GlobalContext.set_global_cache("flybirds_page_info", None)
+            GlobalContext.set_global_cache("stepErrorInfo", None)
+        except:
+            pass
+
+
 # add scenario event to global processor
 var = GlobalContext.join("before_scenario_processor", OnBefore, 1)
 var1 = GlobalContext.join("after_scenario_processor", OnAfter, 1)
+var3 = GlobalContext.join("after_scenario_processor", OnAfterClean, 1)

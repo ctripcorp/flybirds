@@ -11,7 +11,7 @@ from flybirds.core.plugin.plugins.default.step.record import \
     stop_screen_record
 from flybirds.core.plugin.plugins.default.web.interception import \
     Interception as request_op
-from flybirds.core.exceptions import FlybirdsException
+from flybirds.core.exceptions import FlybirdsException, ErrorName
 
 from flybirds.core.global_context import GlobalContext
 
@@ -73,7 +73,7 @@ class Step:
         # If the target page is not found, log an error message
         else:
             message = f'Url or title could not match any tab page in this browser.'
-            raise FlybirdsException(message)
+            raise FlybirdsException(message, error_name=ErrorName.PageNotFoundError)
 
         # Bring the target page to the front and return its URL
         target_url = target.url

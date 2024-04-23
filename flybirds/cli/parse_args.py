@@ -8,7 +8,7 @@ import os
 
 import flybirds.utils.flybirds_log as log
 import flybirds.utils.uuid_helper as uuid_helper
-from flybirds.core.exceptions import FlybirdVerifyException
+from flybirds.core.exceptions import FlybirdVerifyException, ErrorName
 from flybirds.core.tag_expression import TagExpression
 from flybirds.utils import file_helper
 
@@ -152,5 +152,5 @@ def has_user_tag_exist(arr):
         key = item.split("=", 1)[0]
         if key in new_arr:
             message = f"the tag [{key}] already exist,please chang other one."
-            raise FlybirdVerifyException(message)
+            raise FlybirdVerifyException(message, error_name=ErrorName.TagFountError)
         new_arr.append(item.split("=", 1)[0])

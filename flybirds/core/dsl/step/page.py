@@ -5,8 +5,9 @@ This module defines the steps related to the page.
 
 from behave import step
 
+from flybirds.core.exceptions import ErrorFlag
 from flybirds.core.global_context import GlobalContext as g_Context
-from flybirds.utils.dsl_helper import ele_wrap, VerifyStep
+from flybirds.utils.dsl_helper import ele_wrap, VerifyStep, FlybirdsReportTagInfo
 from flybirds.utils.dsl_helper import get_params
 
 
@@ -17,6 +18,8 @@ def execute_js_page(context, param=None):
 
 
 @step("go to url[{param}]")
+@FlybirdsReportTagInfo(group="url", selectors={
+    "path": [{"type": "url", "value": "param", "name": "url"}]}, verify_function="page_url_verify")
 @ele_wrap
 def jump_to_page(context, param=None):
     g_Context.step.jump_to_page(context, param)
@@ -61,6 +64,7 @@ def get_session_storage(context):
 @step("return to previous page")
 def return_pre_page(context):
     g_Context.step.return_pre_page(context)
+
 
 @step("browser forward")
 def page_go_forward(context):

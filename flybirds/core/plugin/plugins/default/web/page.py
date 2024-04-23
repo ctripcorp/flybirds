@@ -309,7 +309,6 @@ class Page:
         if "timeout" in param_dict.keys():
             self.page.goto(schema_url_value, timeout=float(param_dict["timeout"]) * 1000)
             return
-
         self.page.goto(schema_url_value)
 
     def set_web_page_size(self, context, width, height):

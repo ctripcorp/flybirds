@@ -2,7 +2,8 @@
 """
 when run step will trigger this event
 """
-
+from flybirds.core.exceptions import ele_error_parse, get_step_group, get_step_selector, set_error_info_cache, \
+    set_page_info
 from flybirds.core.global_context import GlobalContext
 from flybirds.utils import flybirds_log as log
 from flybirds.utils import launch_helper
@@ -110,9 +111,37 @@ class OnAfter:  # pylint: disable=too-few-public-methods
         exe after step
         """
         # hook extend by tester
+        set_page_info(context)
+        if step.status == "failed":
+            set_error_info_cache(context, step)
         after_step_extend = launch_helper.get_hook_file("after_step_extend")
         if after_step_extend is not None:
             after_step_extend(context, step)
+
+
+class OnAfterClean:  # pylint: disable=too-few-public-methods
+    """
+    after step
+    """
+
+    name = "OnAfterClean"
+    order = 10000
+
+    @staticmethod
+    def can(context, step):
+        return True
+
+    @staticmethod
+    def run(context, step):
+        """
+        exe after step
+        """
+        # hook extend by tester
+        try:
+            if hasattr(context, "flybirds_report_config"):
+                del context.flybirds_report_config
+        except:
+            pass
 
 
 # join step event to global processor
@@ -120,3 +149,4 @@ var = GlobalContext.join("before_step_processor", OnBefore, 1)
 var4 = GlobalContext.join("before_step_processor", OnUserBefore, 1)
 
 var1 = GlobalContext.join("after_step_processor", OnAfter, 1)
+var5 = GlobalContext.join("after_step_processor", OnAfterClean, 1)
