@@ -40,10 +40,10 @@ class Interception:
     # -------------------------------------------------------------------------
     @staticmethod
     def add_some_interception_request_body(service_str):
-        if service_str is None:
+        if service_str is None or service_str.strip() == '':
             log.error(
                 '[addSomeInterceptionRequestBody] param can not be none.')
-            return
+            raise FlybirdsException("request name cannot be none or empty", ErrorName.ServiceNameParamsNoneError)
         service_list = service_str.strip().split(',')
         interception_request = gr.get_value('interceptionRequest')
 
@@ -106,7 +106,8 @@ class Interception:
     def open_web_mock(service_str, mock_case_id_str, request_mock_key_value: list):
         if service_str is None or mock_case_id_str is None:
             log.error('[addSomeInterceptionMock] param can not be none. ')
-            return
+            raise FlybirdsException("cannot ad null service name as mock key",
+                                    error_name=ErrorName.ServiceNameParamsNoneError)
 
         service_list = service_str.strip().split(',')
         mock_case_id_list = mock_case_id_str.strip().split(',')
@@ -125,28 +126,32 @@ class Interception:
                             "max": 1,
                             "key": split_service[1].strip(),
                             "value": mock_case_id_list[i].strip(),
-                            "method": "reg"
+                            "method": "reg",
+                            "mockStep": gr.get_value("stepName", None)
                         })
                     elif split_service[0].strip() == "equ":
                         interception_values.append({
                             "max": 1,
                             "key": split_service[1].strip(),
                             "value": mock_case_id_list[i].strip(),
-                            "method": "equ"
+                            "method": "equ",
+                            "mockStep": gr.get_value("stepName", None)
                         })
                     else:
                         interception_values.append({
                             "max": 1,
                             "key": service.strip(),
                             "value": mock_case_id_list[i].strip(),
-                            "method": "contains"
+                            "method": "contains",
+                            "mockStep": gr.get_value("stepName", None)
                         })
                 else:
                     interception_values.append({
                         "max": 1,
                         "key": service.strip(),
                         "value": mock_case_id_list[i].strip(),
-                        "method": "contains"
+                        "method": "contains",
+                        "mockStep": gr.get_value("stepName", None)
                     })
 
     @staticmethod
@@ -680,7 +685,8 @@ class Interception:
                             "method": "reg",
                             "mockType": "request",
                             "requestPathes": mock_path_list[i].strip().split(','),
-                            "requestBody": mock_data.get("flybirdsMockRequest")
+                            "requestBody": mock_data.get("flybirdsMockRequest"),
+                            "mockStep": gr.get_value("stepName", None)
                         })
                     elif split_service[0].strip() == "equ":
                         interception_values.append({
@@ -690,7 +696,8 @@ class Interception:
                             "method": "equ",
                             "mockType": "request",
                             "requestPathes": mock_path_list[i].strip().split(','),
-                            "requestBody": mock_data.get("flybirdsMockRequest")
+                            "requestBody": mock_data.get("flybirdsMockRequest"),
+                            "mockStep": gr.get_value("stepName", None)
                         })
                     else:
                         interception_values.append({
@@ -700,7 +707,8 @@ class Interception:
                             "method": "contains",
                             "mockType": "request",
                             "requestPathes": mock_path_list[i].strip().split(','),
-                            "requestBody": mock_data.get("flybirdsMockRequest")
+                            "requestBody": mock_data.get("flybirdsMockRequest"),
+                            "mockStep": gr.get_value("stepName", None)
                         })
                 else:
                     interception_values.append({
@@ -710,7 +718,8 @@ class Interception:
                         "method": "contains",
                         "mockType": "request",
                         "requestPathes": mock_path_list[i].strip().split(','),
-                        "requestBody": mock_data.get("flybirdsMockRequest")
+                        "requestBody": mock_data.get("flybirdsMockRequest"),
+                        "mockStep": gr.get_value("stepName", None)
                     })
 
 

@@ -16,6 +16,7 @@ def step_init(context, step):
     """
     # adjust the order of the current steps for use in associated screenshots
     context.cur_step_index += 1
+    gr.set_value("stepName", step.name)
 
 
 class OnBefore:  # pylint: disable=too-few-public-methods
@@ -140,6 +141,7 @@ class OnAfterClean:  # pylint: disable=too-few-public-methods
         try:
             if hasattr(context, "flybirds_report_config"):
                 del context.flybirds_report_config
+                gr.set_value("stepName", None)
         except:
             pass
 

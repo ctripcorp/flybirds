@@ -42,6 +42,7 @@ class ErrorName(Enum):
     PageNotFoundError: str = "PageNotFoundError"
     UnknownError: str = "UnknownError"
     PageLoadError: str = "PageLoadError"
+    ServiceNameParamsNoneError: str = "ServiceNameParamsNoneError"
 
 
 error_map = {
@@ -262,6 +263,28 @@ class ErrorFlag:
     text_not_contains: str = "text_not_contains"
 
 
+class ActionType:
+    press: str = "press"
+    hover: str = "hover"
+    swipe: str = "swipe"
+    input: str = "input"
+    clear: str = "clear"
+    disappear: str = "disappear"
+    move: str = "move"
+    select: str = "select"
+    setPageSize: str = "setPageSize"
+    switchPage: str = "switchPage"
+    setCookie: str = "setCookie"
+    getCookie: str = "getCookie"
+    getStorage: str = "getStorage"
+    getSessionStorage: str = "getSessionStorage"
+    returnPrePage: str = "returnPrePage"
+    goForward: str = "goForward"
+    addRequestFilterKey: str = "addRequestFilterKey"
+    addMockKey: str = "addMockKey"
+    addCompareData: str = "addCompareData"
+
+
 error_flag_map = {
     f"{ErrorFlag.equ}": {"verify": "等于", "error": "不等于"}
     , f"{ErrorFlag.neq}": {"verify": "不等于", "error": "等于"}
@@ -277,10 +300,17 @@ error_flag_map = {
 }
 
 
+def get_error_msg(exception):
+    if hasattr(exception, "message"):
+        return exception.message
+    else:
+        return str(exception)
+
+
 def get_error_type(exception: Exception, selector, method, error_group="element") -> Dict:
     error_type = None
     for error in error_map.get(error_group):
-        if error in exception.message:
+        if error in get_error_msg(exception):
             error_type = error_map[error]
             break
     if method == "goto":
@@ -297,6 +327,44 @@ def get_error_type(exception: Exception, selector, method, error_group="element"
     })
 
 
+def ele_error_msg_parse(exception: Exception, config: Dict):
+    if exception.error_name == ErrorName.ElementNotFoundError:
+        return {"errorName": exception.flybirds_ele_error.get("errorName"),
+                "error": f"{exception.flybirds_ele_error.get('selector')} not find"}
+    elif exception.error_name == ErrorName.ElementNotVisibleError:
+        return {"errorName": exception.flybirds_ele_error.get("errorName"),
+                "error": f"{exception.flybirds_ele_error.get('selector')} not visible"}
+    elif exception.error_name == ErrorName.ElementCannotBeFilledError:
+        return {"errorName": exception.flybirds_ele_error.get("errorName"),
+                "error": f"{exception.flybirds_ele_error.get('selector')} cannot be filled"}
+    elif exception.error_name == ErrorName.InvalidSelectorError:
+        return {"errorName": exception.flybirds_ele_error.get("errorName"),
+                "error": f"{exception.flybirds_ele_error.get('selector')} is invalid"}
+    elif exception.error_name == ErrorName.MultiElementError:
+        return {"errorName": exception.flybirds_ele_error.get("errorName"),
+                "error": f"{exception.flybirds_ele_error.get('selector')} find multi elements"}
+    elif exception.error_name == ErrorName.PageLoadError:
+        return {"errorName": exception.flybirds_ele_error.get("errorName"),
+                "error": f"{exception.flybirds_ele_error.get('selector')} page load error"}
+
+    return common_error_parse(exception, config)
+
+
+def common_error_parse(exception: Exception, config: Dict):
+    error_msg = None
+    error_type = None
+    try:
+        error_type = exception.error_name
+        if error_type is None:
+            error_type = ErrorName.UnknownError
+        error_msg = get_error_msg(exception)
+
+    except:
+        error_type = ErrorName.UnknownError
+        error_msg = get_error_msg(exception)
+    return {"errorName": error_type, "error": error_msg}
+
+
 def ele_verify_error_parse(exception: Exception, config: Dict):
     error_msg = None
     error_type = None
@@ -307,7 +375,7 @@ def ele_verify_error_parse(exception: Exception, config: Dict):
         error_group = "element"
         if error_type is None:
             error_type = ErrorName.UnknownError
-            error_msg = exception.message
+            error_msg = get_error_msg(exception)
         else:
             verify_error = error_flag_map.get(verify.get("type")).get("error")
             for selector in selectors.get("path"):
@@ -317,7 +385,7 @@ def ele_verify_error_parse(exception: Exception, config: Dict):
             error_msg = f"{verify_error} {error_msg}"
     except:
         error_type = ErrorName.UnknownError
-        error_msg = exception.message
+        error_msg = get_error_msg(exception)
     return {"errorName": error_type, "error": error_msg}
 
 
@@ -328,11 +396,11 @@ def ele_verify_attr_error_parse(exception: Exception, config: Dict):
         error_type = exception.error_name
         if error_type is None:
             error_type = ErrorName.UnknownError
-        error_msg = exception.message
+        error_msg = get_error_msg(exception)
 
     except:
         error_type = ErrorName.UnknownError
-        error_msg = exception.message
+        error_msg = get_error_msg(exception)
     return {"errorName": error_type, "error": error_msg}
 
 
@@ -343,11 +411,11 @@ def ele_verify_text_error_parse(exception: Exception, config: Dict):
         error_type = exception.error_name
         if error_type is None:
             error_type = ErrorName.UnknownError
-        error_msg = exception.message
+        error_msg = get_error_msg(exception)
 
     except:
         error_type = ErrorName.UnknownError
-        error_msg = exception.message
+        error_msg = get_error_msg(exception)
     return {"errorName": error_type, "error": error_msg}
 
 
@@ -358,10 +426,10 @@ def page_url_verify(exception: Exception, config: Dict):
         error_type = exception.error_name
         if error_type is None:
             error_type = ErrorName.UnknownError
-        error_msg = exception.message
+        error_msg = get_error_msg(exception)
     except:
         error_type = ErrorName.UnknownError
-        error_msg = exception.message
+        error_msg = get_error_msg(exception)
     return {"errorName": error_type, "error": error_msg}
 
 
@@ -418,16 +486,21 @@ def ele_error_parse(context, step):
             config = context.flybirds_report_config
             if config is not None:
                 if config.get("group") == "url":
-                    return page_url_verify(exception, config)
+                    return ele_error_msg_parse(exception, config)
 
         if hasattr(exception, "flybirds_ele_error"):
-            return {"errorName": exception.flybirds_ele_error.get("errorName"), "error": exception.message}
+            if hasattr(exception,
+                       "error_name") and exception.error_name is not None and exception.flybirds_ele_error.get(
+                "selector") is not None:
+                return ele_error_msg_parse(exception, config)
+
+            return common_error_parse(exception, config)
         elif not hasattr(exception, "flybirds_ele_error") and hasattr(exception, "error_name"):
             return globals()[config.get("verify_function")](exception, config)
         else:
-            return {"errorName": ErrorName.UnknownError, "error": exception.message}
+            return {"errorName": ErrorName.UnknownError, "error": get_error_msg(exception)}
     except:
-        return {"errorName": ErrorName.UnknownError, "error": exception.message}
+        return {"errorName": ErrorName.UnknownError, "error": get_error_msg(exception)}
 
 
 def set_error_info_cache(context, step):
@@ -436,6 +509,11 @@ def set_error_info_cache(context, step):
         step_error_info = GlobalContext.get_global_cache("stepErrorInfo")
     else:
         step_error_info = {}
+
+    try:
+        step_error_info["stepDef"] = context._runner.step_registry.find_step_definition(step).string
+    except:
+        step_error_info["stepDef"] = step.name
 
     try:
         if GlobalContext.get_global_cache("flybirds_page_info") is not None:

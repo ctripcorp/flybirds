@@ -5,6 +5,7 @@ dsl helper
 import base64
 import json
 import re
+import uuid
 from functools import wraps
 
 import six
@@ -321,19 +322,25 @@ class FlybirdsReportTagInfo:
     verify_value: str
     verify_function: str
     url: str
+    action: str
 
-    def __init__(self, *args, **kwargs):  # 类装饰器参数
-        self.group = kwargs.get("group")
-        self.selectors = kwargs.get("selectors")
-        self.verify = kwargs.get("verify")
-        self.verify_function = kwargs.get("verify_function")
-        self.url = kwargs.get("check_url")
+    def __init__(self, *args, **kwargs):
+        try:  # 类装饰器参数
+            self.group = kwargs.get("group")
+            self.selectors = kwargs.get("selectors")
+            self.verify = kwargs.get("verify")
+            self.verify_function = kwargs.get("verify_function")
+            self.url = kwargs.get("check_url")
+            self.action = kwargs.get("action")
+        except Exception as e:
+            print(e)
 
     def __call__(self, func):  # 被装饰函数
         try:
             setattr(func, "reprot_config", json.dumps({"group": self.group,
                                                        "selectors": self.selectors,
-                                                       "verify": self.verify, "verify_function": self.verify_function},
+                                                       "verify": self.verify, "verify_function": self.verify_function,
+                                                       "action": self.action},
                                                       ensure_ascii=False))
         except Exception as e:
             print(e)
@@ -359,5 +366,3 @@ class FlybirdsReportTagInfo:
             setattr(context, "flybirds_report_config", report_config)
         except Exception as e:
             print(e)
-
-

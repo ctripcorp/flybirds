@@ -4,7 +4,7 @@ This module defines the steps related to the UI element.
 """
 from behave import step
 
-from flybirds.core.exceptions import ErrorFlag
+from flybirds.core.exceptions import ErrorFlag, ActionType
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.utils.dsl_helper import ele_wrap, VerifyStep, RetryType, FlybirdsReportTagInfo
 
@@ -131,6 +131,9 @@ def ele_attr_not_container(context, selector=None, param2=None, param3=None):
 
 
 @step("mouse hover[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
+                       action=ActionType.hover)
 @ele_wrap
 def hover_ele(context, selector=None):
     """
@@ -142,6 +145,9 @@ def hover_ele(context, selector=None):
 
 
 @step("click[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
+                       action=ActionType.press)
 @ele_wrap
 def click_ele(context, selector=None):
     """
@@ -153,6 +159,9 @@ def click_ele(context, selector=None):
 
 
 @step("click text[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "文本元素"}]}, verify_function="common_error_parse",
+                       action=ActionType.press)
 @ele_wrap
 def click_text(context, selector=None):
     """
@@ -209,6 +218,10 @@ def click_image(context, selector=None):
 
 
 @step("click position[{x},{y}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "point", "value": "x", "name": "x坐标"}, {"type": "point", "value": "y", "name": "y坐标"}]},
+                       verify_function="common_error_parse",
+                       action=ActionType.press)
 @ele_wrap
 def click_coordinates(context, x=None, y=None):
     """
@@ -221,6 +234,10 @@ def click_coordinates(context, x=None, y=None):
 
 
 @step("in[{selector}]input[{param2}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "path", "text": "param2", "name": "文本"}]},
+                       verify_function="common_error_parse",
+                       action=ActionType.input)
 @ele_wrap
 def ele_input(context, selector=None, param2=None):
     """
@@ -259,6 +276,12 @@ def position_not_change(context, selector=None, param2=None):
 
 
 @step("[{selector}]slide to {param2} distance[{param3}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"},
+             {"type": "direction", "value": "param2", "name": "方向"},
+             {"type": "distance", "value": "param3", "name": "距离"}]},
+                       verify_function="common_error_parse",
+                       action=ActionType.swipe)
 @ele_wrap
 def ele_swipe(context, selector=None, param2=None, param3=None):
     """
@@ -273,6 +296,10 @@ def ele_swipe(context, selector=None, param2=None, param3=None):
 
 
 @step("[{selector}]slide to[{left},{top}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "position", "value": "left", "name": "左"},
+             {"type": "position", "value": "top", "name": "上部"}]}, verify_function="common_error_parse",
+                       action=ActionType.swipe)
 @ele_wrap
 def ele_direction_swipe(context, selector=None, left=None, top=None):
     """
@@ -287,6 +314,10 @@ def ele_direction_swipe(context, selector=None, left=None, top=None):
 
 
 @step("slide to {param1} distance[{param2}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "direction", "value": "param1", "name": "方向"},
+             {"type": "distance", "value": "param2", "name": "距离"}]}, verify_function="common_error_parse",
+                       action=ActionType.swipe)
 @ele_wrap
 def full_screen_swipe(context, param1=None, param2=None):
     """
@@ -417,6 +448,9 @@ def ocr_text_not_exist(context, selector=None):
 
 
 @step("text[{selector}]disappear")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "文本"}]}, verify_function="common_error_parse",
+                       action=ActionType.disappear)
 @ele_wrap
 def wait_text_disappear(context, selector=None):
     """
@@ -478,6 +512,9 @@ def ele_not_exit(context, selector=None):
 
 
 @step("element[{selector}]disappear")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
+                       action=ActionType.disappear)
 @ele_wrap
 def wait_ele_disappear(context, selector=None):
     """
@@ -541,6 +578,9 @@ def ele_text_not_container(context, selector=None, param2=None):
 
 
 @step("page rendering complete appears element[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
+                       action=ActionType.disappear)
 @ele_wrap
 def wait_ele_appear(context, selector=None):
     """
@@ -634,6 +674,9 @@ def full_screen_swipe_to_img(context, param1=None, selector=None):
 
 
 @step("move element[{selector}]to view")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
+                       action=ActionType.move)
 @ele_wrap
 def scroll_ele_into_view(context, selector=None):
     """
@@ -646,6 +689,10 @@ def scroll_ele_into_view(context, selector=None):
 
 
 @step("clear [{selector}] and input[{param2}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "text", "value": "param2", "name": "文本"}]},
+                       verify_function="common_error_parse",
+                       action=ActionType.input)
 @ele_wrap
 def ele_clear_input(context, selector=None, param2=None):
     """
@@ -658,6 +705,10 @@ def ele_clear_input(context, selector=None, param2=None):
 
 
 @step("clear input[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify_function="common_error_parse",
+                       action=ActionType.clear)
 @ele_wrap
 def clear_input(context, selector=None):
     """
@@ -669,6 +720,10 @@ def clear_input(context, selector=None):
 
 
 @step("from [{selector}] select [{param2}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "value", "value": "param2", "name": "值"}]},
+                       verify_function="common_error_parse",
+                       action=ActionType.select)
 @ele_wrap
 def ele_select(context, selector=None, param2=None):
     """
@@ -715,6 +770,10 @@ def img_not_exist(context, param):
 
 
 @step("touch[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify_function="common_error_parse",
+                       action=ActionType.press)
 @ele_wrap
 def touch_ele(context, selector=None):
     """
@@ -726,6 +785,10 @@ def touch_ele(context, selector=None):
 
 
 @step("touch text[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "文案"}]},
+                       verify_function="common_error_parse",
+                       action=ActionType.press)
 @ele_wrap
 def touch_text(context, selector=None):
     """
@@ -737,6 +800,11 @@ def touch_text(context, selector=None):
 
 
 @step("click ele [{selector}] position[{x},{y}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "point", "value": "x", "name": "x坐标"},
+             {"type": "point", "value": "y", "name": "y坐标"}]},
+                       verify_function="common_error_parse",
+                       action=ActionType.press)
 @ele_wrap
 def click_ele_point(context, selector, x=None, y=None):
     """
