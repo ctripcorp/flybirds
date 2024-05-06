@@ -9,7 +9,7 @@ import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 import flybirds.utils.verify_helper as verify_helper
 from flybirds.core.exceptions import FlybirdVerifyException, \
-    FlybirdsVerifyEleException
+    FlybirdsVerifyEleException, ErrorName
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.utils import language_helper as lan
 from flybirds.utils.dsl_helper import handle_str, params_to_dic
@@ -93,7 +93,7 @@ class Element:
     def get_ele_locator(self, selector):
         if selector is None:
             message = f"[get_ele_locator] the param[{selector}] is None."
-            raise FlybirdsVerifyEleException(message=message)
+            raise FlybirdsVerifyEleException(message=message, error_name=ErrorName.InvalidArgumentError)
         param_temp = handle_str(selector)
         param_dict = params_to_dic(param_temp)
         selector_str = param_dict["selector"]
@@ -155,9 +155,9 @@ class Element:
         if escaped_selector_str in p_content:
             log.info(f'find_text: [{selector_str}] is success!')
         else:
-            message = f"expect to find the text [{selector_str}] in the " \
+            message = f"expect to find the [{selector_str}] text in the " \
                       f"page, but not actually find it"
-            raise FlybirdVerifyException(message)
+            raise FlybirdVerifyException(message, error_name=ErrorName.TextNotFoundError)
 
     def find_page_text(self, context, param):
         # param_temp = handle_str(param)
@@ -169,9 +169,9 @@ class Element:
         if ele_find.count() is not None and ele_find.count() > 0:
             log.info(f'find_text: [{selector_str}] is success!')
         else:
-            message = f"expect to find the text [{selector_str}] in the " \
+            message = f"expect to find the [{selector_str}] text in the " \
                       f"page, but not actually find it"
-            raise FlybirdVerifyException(message)
+            raise FlybirdVerifyException(message, error_name=ErrorName.TextNotFoundError)
 
     def find_no_text(self, context, param):
         # param_temp = handle_str(param)
@@ -181,9 +181,9 @@ class Element:
         log.info(f'find_text: [{selector_str}], escaped_text[{escaped_selector_str}]')
         p_content = self.page.content()
         if escaped_selector_str in p_content:
-            message = f"except text [{selector_str}] not exists in page, " \
+            message = f"except [{selector_str}] text not exists in page, " \
                       f"but actual has find it."
-            raise FlybirdVerifyException(message)
+            raise FlybirdVerifyException(message, error_name=ErrorName.TextFoundError)
 
     def ele_text_equal(self, context, param_1, param_2):
         e_text = self.get_ele_text(param_1)
@@ -201,9 +201,9 @@ class Element:
             ele_exists = False
 
         if ele_exists:
-            message = f"except element [{param}] not exists in page, " \
+            message = f"except [{param}] element not exists in page, " \
                       f"but actual has find it."
-            raise FlybirdVerifyException(message)
+            raise FlybirdVerifyException(message, error_name=ErrorName.ElementFoundError)
 
     def wait_for_ele(self, context, param):
         locator, timeout = self.get_ele_locator(param)

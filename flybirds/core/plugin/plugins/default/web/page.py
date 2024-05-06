@@ -309,7 +309,6 @@ class Page:
         if "timeout" in param_dict.keys():
             self.page.goto(schema_url_value, timeout=float(param_dict["timeout"]) * 1000)
             return
-
         self.page.goto(schema_url_value)
 
     def set_web_page_size(self, context, width, height):
@@ -558,6 +557,8 @@ def handle_route(route):
             if route.request.resource_type == 'xhr' or route.request.resource_type == 'fetch':
                 mock_rule_request = mock_rules_req_body(route.request.url, request_mock_request_key_value,
                                                         route.request.post_data_json)
+                if mock_rule_request is None and gr.get_value("mock_request_match_list") is not None:
+                    gr.get_value("mock_request_match_list").append(route.request.url)
             if mock_rule_request is not None:
                 log.info(
                     f"url:{route.request.url}===== match request mock url:{mock_rule_request.get('key')} and mock key :{mock_rule_request.get('requestPathes')} mock case "
@@ -590,6 +591,8 @@ def handle_route(route):
             mock_rule = None
             if route.request.resource_type == 'xhr' or route.request.resource_type == 'fetch':
                 mock_rule = mock_rules(route.request.url, request_mock_key_value)
+                if mock_rule is None and gr.get_value("mock_request_match_list") is not None:
+                    gr.get_value("mock_request_match_list").append(route.request.url)
             if mock_rule is not None:
                 log.info(
                     f"url:{route.request.url}===== match mock key:{mock_rule.get('key')} mock case "
@@ -615,6 +618,8 @@ def handle_route(route):
                                       content_type="application/json",
                                       body=mock_body)
                     return
+            else:
+                log.info(f"url:{route.request.url}===== no match request mock=========================================")
 
         except Exception as mock_error:
             log.info("find mock info error", mock_error)
@@ -645,7 +650,12 @@ def handle_route(route):
             route.fulfill(status=200,
                           content_type="application/json;charset=utf-8",
                           body=mock_body)
+        else:
+            if gr.get_value("mock_request_match_list") is not None:
+                gr.get_value("mock_request_match_list").append(route.request.url)
     else:
+        if gr.get_value("mock_request_match_list") is not None:
+            gr.get_value("mock_request_match_list").append(route.request.url)
         route.continue_()
 
 
