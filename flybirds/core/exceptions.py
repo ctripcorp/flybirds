@@ -43,6 +43,9 @@ class ErrorName(Enum):
     UnknownError: str = "UnknownError"
     PageLoadError: str = "PageLoadError"
     ServiceNameParamsNoneError: str = "ServiceNameParamsNoneError"
+    UrlNotFoundError: str = "UrlNotFoundError"
+    UrlNotMatchError: str = "UrlNotMatchError"
+    ParamIsNoneError: str = "ParamIsNoneError"
 
 
 error_map = {
