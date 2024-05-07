@@ -10,9 +10,11 @@ from json import JSONDecodeError
 
 from flybirds.utils import file_helper
 from flybirds.utils import flybirds_log as log
+import flybirds.core.global_resource as gr
+from flybirds.core.global_context import GlobalContext
+from flybirds.core.config_manage import PluginConfig
 
-
-def parse_json_data(report_dir, rerun_report_dir=None, is_parallel=False):
+def parse_json_data(context, report_dir, rerun_report_dir=None, is_parallel=False):
     """
     Parse the screenshot address in the behave json report,
     and use it when converting
@@ -20,10 +22,11 @@ def parse_json_data(report_dir, rerun_report_dir=None, is_parallel=False):
     """
     rerun_features = None
     not_aggregation = False
+    cur_platform = context['cur_platform']
 
     if rerun_report_dir is not None:
         # get the array of all rerun json under the rerun_report_dir
-        rerun_features = get_rerun_feature(rerun_report_dir, is_parallel)
+        rerun_features = get_rerun_feature(context, rerun_report_dir, is_parallel)
         log.info(
             "parse_json_data move_rerun_screen, report_dir_path: "
             f"{report_dir}, rerun_report_dir_path: {rerun_report_dir}"
@@ -59,6 +62,9 @@ def parse_json_data(report_dir, rerun_report_dir=None, is_parallel=False):
                                      "value": browser_name
                                      }
                                 ]
+                            if cur_platform is not None:
+                                feature["platform"]  = cur_platform.lower()
+
                             cur_features.append(feature)
                     cur_json.extend(cur_features)
 
@@ -129,13 +135,14 @@ def parse_feature(feature, rerun_report_dir):
         feature["elements"] = cur_scenarios
 
 
-def get_rerun_feature(report_dir, is_parallel):
+def get_rerun_feature(context, report_dir, is_parallel):
     """
     Get all the results of rerun after failure
     """
     if report_dir is None:
         return None
     result = []
+    cur_platform = context['cur_platform']
     try:
         for file_item in os.listdir(report_dir):
             if re.search(r"\.json", str(file_item)) is not None:
@@ -154,6 +161,9 @@ def get_rerun_feature(report_dir, is_parallel):
                                      "value": browser_name
                                      }
                                 ]
+                            if cur_platform is not None:
+                                feature["platform"] = cur_platform.lower()
+
                     if isinstance(report_json, list) and len(report_json) > 0:
                         result.extend(report_json)
                 except Exception:
