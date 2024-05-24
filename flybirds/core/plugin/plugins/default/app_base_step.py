@@ -18,6 +18,7 @@ from flybirds.core.plugin.plugins.default.step.input \
 from flybirds.core.plugin.plugins.default.step.position import (
     position_not_change
 )
+from flybirds.core.global_context import GlobalContext as g_Context
 
 
 class AppBaseStep:
@@ -110,9 +111,17 @@ class AppBaseStep:
         position_not_change(context, selector, param2)
 
     def start_screen_record_timeout(self, context, param):
+        if g_Context.get_global_cache("started_record") is not None and g_Context.get_global_cache(
+                "started_record") is True:
+            return
+        g_Context.set_global_cache("started_record", True)
         step_record.start_screen_record_timeout(context, param)
 
     def start_screen_record(self, context):
+        if g_Context.get_global_cache("started_record") is not None and g_Context.get_global_cache(
+                "started_record") is True:
+            return
+        g_Context.set_global_cache("started_record", True)
         step_record.start_screen_record(context)
 
     def stop_screen_record(self, context):

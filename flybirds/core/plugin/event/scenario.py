@@ -322,6 +322,7 @@ class OnAfterClean:
             GlobalContext.set_global_cache("flybirds_page_info", None)
             GlobalContext.set_global_cache("stepErrorInfo", None)
             gr.set_value("mock_request_match_list", None)
+            GlobalContext.set_global_cache("started_record", None)
         except:
             pass
 
