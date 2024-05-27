@@ -30,6 +30,7 @@ class GlobalContext:
     config_processor = []
     before_run_processor = []
     after_run_processor = []
+    after_run_processor01 = []
     before_feature_processor = []
     after_feature_processor = []
     before_scenario_processor = []
@@ -52,6 +53,7 @@ class GlobalContext:
     struct_ocr_result = []
     ocr_regional_result = []
     image_size = []
+    ignore_processor = []
 
     @classmethod
     def set_current_language(cls, l_g):
@@ -95,6 +97,11 @@ class GlobalContext:
             sort_key = operator.attrgetter("order")
             processors.sort(key=sort_key)
             for processor in processors:
+                if GlobalContext.ignore_processor is not None and len(GlobalContext.ignore_processor) > 0:
+                    if hasattr(processor, "name"):
+                        if processor.name is not None and processor.name in GlobalContext.ignore_processor:
+                            print(f"ignore processor: {processor.name}=============")
+                            continue
                 if hasattr(processor, "can"):
                     can_run = processor.can(*args)
                     if can_run is True:

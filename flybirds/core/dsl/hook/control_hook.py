@@ -28,6 +28,7 @@ def after_all(context):
     try:
         GlobalContext.process("after_run_processor", context)
     finally:
+        GlobalContext.process("after_run_processor01", context)
         if hasattr(GlobalContext, "del_global_cache"):
             GlobalContext.del_global_cache()
 
