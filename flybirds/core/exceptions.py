@@ -314,7 +314,7 @@ def get_error_type(exception: Exception, selector, method, error_group="element"
     error_type = None
     for error in error_map.get(error_group):
         if error in get_error_msg(exception):
-            error_type = error_map[error]
+            error_type = error_map["element"][error]
             break
     if method == "goto":
         error_type = ErrorName.PageLoadError
