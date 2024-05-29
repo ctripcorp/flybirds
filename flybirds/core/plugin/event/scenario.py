@@ -80,7 +80,8 @@ def scenario_fail(context, scenario):
     for step in scenario.all_steps:
         if step.name.strip().startswith(
                 lge.parse_glb_str("start record", scenario.feature.language)
-        ):
+        ) or (GlobalContext.get_global_cache("started_record") is not None and GlobalContext.get_global_cache(
+            "started_record") is True):
             need_copy_record += 1
         elif step.name.strip().startswith(
                 lge.parse_glb_str("stop record", scenario.feature.language)
