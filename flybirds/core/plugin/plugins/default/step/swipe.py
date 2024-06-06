@@ -2,11 +2,31 @@
 """
 Element swipe
 """
+from airtest.core.android.touch_methods.touch_proxy import AdbTouchImplementation, MinitouchImplementation
+
 import flybirds.core.global_resource as gr
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_swipe as ps
 import flybirds.utils.dsl_helper as dsl_helper
 import flybirds.utils.point_helper as point_helper
 import flybirds.core.global_resource as g_res
+
+import re
+import time
+
+import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap as findsnap
+import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_manage as pm
+import flybirds.utils.flybirds_log as log
+from airtest.core.android import Android
+from airtest.core.android.rotation import XYTransformer
+from airtest.core.api import text, time
+from airtest.core.android.touch_methods.base_touch import BaseTouch, DownEvent, SleepEvent, MoveEvent
+from airtest.utils.snippet import (on_method_ready)
+from behave import step
+from flybirds.core.dsl.step.element import click_ele
+from flybirds.core.exceptions import FlybirdsException, ErrorName, ErrorFlag, FlybirdNotFoundException
+from flybirds.core.global_context import GlobalContext
+from flybirds.utils import language_helper
+from flybirds.utils.dsl_helper import ele_wrap, VerifyStep, RetryType, FlybirdsReportTagInfo
 
 
 def ele_swipe(context, param1, param2, param3):
@@ -99,3 +119,325 @@ def full_screen_swipe(context, param1, param2):
         duration,
         ready_time,
     )
+
+
+class FlyBirdsEvent:
+
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def on_search(event_obj):
+        poco = gr.get_value("pocoInstance")
+        optional = {"timeout": 20}
+        selector = event_obj["selector"]
+        try:
+            search_poco_object = pm.create_poco_object_by_dsl(
+                poco, selector, optional
+            )
+            search_result = search_poco_object.exists()
+            if search_result:
+                log.info(f"Element found successfully: {selector}")
+                return True
+            log.info(f"Element not found: {selector}")
+            return False
+        except Exception:
+            return False
+
+    @staticmethod
+    def on_click(event_obj):
+
+        poco = gr.get_value("pocoInstance")
+        optional = {}
+        selector = event_obj["selector"]
+        try:
+            poco_object = pm.create_poco_object_by_dsl(
+                poco, selector, optional
+            )
+
+            search_result = poco_object.exists()
+
+            if search_result is False:
+                return False
+            poco_object.click()
+            log.info(f"Element found successfully and clicked: {selector}")
+            return True
+        except Exception:
+            return False
+
+    @staticmethod
+    def on_input(event_obj):
+        selector = event_obj["selector"]
+        input_str = event_obj["param"]
+        poco = gr.get_value("pocoInstance")
+        optional = {"timeout": 20}
+        try:
+            poco_object = pm.create_poco_object_by_dsl(
+                poco, selector, optional
+            )
+            if poco_object.exists() is False:
+                return False
+            poco_object.click()
+            text(input_str)
+            # GlobalContext.element.str_input(input_str)
+            log.info(f"find and input successfully {input_str}")
+            return True
+        except Exception:
+            return False
+
+
+# 新滑动方法，直接调用poco滑动
+def full_screen_swipe_new(context, param, selector):
+    screen_size = gr.get_device_size() or [1080, 1920]
+    # 起始参数放入全局缓存
+    event_obj = {
+        "context": context,
+        "selector": selector,
+        "direction": "down",
+        "action": FlyBirdsEvent.on_search}
+    tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(param, screen_size, 2)
+    # 每次移动距离
+    duration = 100
+    # 移动次数
+    steps = int(move_distance / duration)
+    gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
+                                                     event_obj=event_obj)
+
+
+# 滑动查找并点击
+def full_screen_swipe_click(context, selector):
+    screen_size = gr.get_device_size() or [1080, 1920]
+    duration = 100
+    try:
+        event_obj = {
+            "context": context, "selector": selector, "direction": "下",
+            "action": FlyBirdsEvent.on_click}
+        tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point("下", screen_size, 2)
+        steps = int(move_distance / duration)
+        gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
+                                                         event_obj=event_obj)
+    except:
+        event_obj = {
+            "context": context, "selector": selector, "direction": "上",
+            "action": FlyBirdsEvent.on_click}
+        tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point("上", screen_size, 5)
+        tuple_from_xy.append({"context": context, "selector": selector, "event": "click", "direction": "上",
+                              "action": FlyBirdsEvent.on_click})
+        steps = int(move_distance / duration)
+        gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
+                                                         event_obj=event_obj)
+
+
+# 滑动查找并点击
+def full_screen_swipe_input(context, selector, param):
+    screen_size = gr.get_device_size() or [1080, 1920]
+    duration = 100
+    try:
+        event_obj = {
+            "context": context, "selector": selector, "param": param, "direction": "下",
+            "action": FlyBirdsEvent.on_input}
+        tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point("下", screen_size, 2)
+        steps = int(move_distance / duration)
+        gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
+                                                         event_obj=event_obj)
+        log.info("向下滑动未找到输入框")
+    except:
+        log.info("向上滑动寻找输入框")
+        event_obj = {"context": context, "selector": selector, "event": "click", "direction": "上",
+                     "action": FlyBirdsEvent.on_input}
+        tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point("上", screen_size, 5)
+        steps = int(move_distance / duration)
+        log.info("向上滑动未找到输入框")
+        gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
+                                                         event_obj=event_obj)
+
+
+@on_method_ready('install_and_setup')
+def swipe(self, tuple_from_xy, tuple_to_xy, duration=0.8, steps=5, event_obj=None):
+    """
+    Perform swipe event.
+
+    Args:
+        tuple_from_xy: start point
+        tuple_to_xy: end point
+        duration: time interval for swipe duration, default is 0.8
+        steps: size of swipe step, default is 5
+        event_obj: event object
+
+    Returns:
+        None
+
+    """
+    # 兼容老的滑动逻辑
+    if event_obj is None:
+        origin_swipe(self, tuple_from_xy, tuple_to_xy, duration=duration, steps=steps)
+        return
+    swipe_events = [DownEvent(tuple_from_xy, pressure=50), SleepEvent(0.1)]
+    swipe_events += __swipe_move(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps)
+    # swipe_events.append(UpEvent())
+    self.perform(swipe_events, event_obj=event_obj)
+
+
+# 重新滑动事件方法
+def __swipe_move(tuple_from_xy, tuple_to_xy, duration=0.8, steps=5):
+    """
+    Return a sequence of swipe motion events (only MoveEvent)
+
+    minitouch protocol example::
+
+        d 0 0 0 50
+        c
+        m 0 20 0 50
+        c
+        u 0
+        c
+
+    Args:
+        tuple_from_xy: start point
+        tuple_to_xy: end point
+        duration: time interval for swipe duration, default is 0.8
+        steps: size of swipe step, default is 5
+
+    Returns:
+        [MoveEvent(from_x, from_y), ..., MoveEvent(to_x, to_y)]
+    """
+    from_x, from_y = tuple_from_xy
+    to_x, to_y = tuple_to_xy
+
+    ret = []
+    # interval = float(duration) / (steps + 1)
+
+    for i in range(1, steps):
+        ret.append(MoveEvent((from_x + (to_x - from_x) * i / steps,
+                              from_y + (to_y - from_y) * i / steps)))
+        ret.append(SleepEvent(0.5))
+    ret += [MoveEvent((to_x, to_y), pressure=50), SleepEvent(0.5)]
+    return ret
+
+
+# 根据motion_events进行滑动操作
+@on_method_ready('install_and_setup')
+def perform(self, motion_events, interval=0.01, event_obj=None):
+    """
+    Perform a sequence of motion events including: UpEvent, DownEvent, MoveEvent, SleepEvent
+
+    Args:
+        motion_events: a list of MotionEvent instances
+        interval: minimum interval between events
+
+    Returns:
+        None
+    """
+    # 兼容老的滑动逻辑
+    if event_obj is None:
+        origin_perform(self, motion_events)
+        return
+    search_result = False
+    poco_instance = gr.get_value("pocoInstance")
+    event_count = 0
+    for event in motion_events:
+        # 每循环10次事件查找下元素是否存在
+        if event_count % 10 == 0 and event_obj is not None:
+            search_result = event_obj["action"](event_obj)
+            if search_result:
+                break
+        if isinstance(event, SleepEvent):
+            time.sleep(event.seconds)
+        else:
+            cmd = event.getcmd(transform=self.transform_xy)
+            self.handle(cmd)
+            log.info("perform event: %s" % cmd)
+            time.sleep(interval)
+        event_count += 1
+
+    language = GlobalContext.get_current_language()
+    # 如果是点击或输入操作时要先下后上滑动查找,只有当direction为”上“时才算失败
+    if not search_result and "direction" in event_obj and event_obj["direction"] == language_helper.parse_glb_str("up",
+                                                                                                                  language):
+        message = "{} swipe not find {}".format(
+            event_obj["direction"], event_obj["selector"]
+        )
+        raise FlybirdNotFoundException(message, {})
+    else:
+        message = "swipe {} times，not find {}".format(
+            int(event_count / 5), event_obj["direction"]
+        )
+    if gr.get_frame_config_value("use_snap", False):
+        findsnap.fix_refresh_status(True)
+
+
+# 重写坐标转换方法，解决滑动时坐标转换问题
+def transform_xy(self, x, y):
+    """
+    Transform coordinates (x, y) according to the device display
+
+    Args:
+        x: coordinate x
+        y: coordinate y
+
+    Returns:
+        transformed coordinates (x, y)
+
+    """
+    return x, y
+
+
+def build_swipe_search_point(direction, screen_size, swipe_count=2):
+    """
+    build the start and end coordinate point of the sliding data
+    """
+    # get current language
+    language = GlobalContext.get_current_language()
+    direction = direction.strip()
+    pw, ph = screen_size
+    start_point = [0.5 * pw, 0.5 * ph]
+    end_point = [0.5 * pw, 0.5 * ph]
+    move_distance = 80
+    # 滑动距离默认为当前手机分辨率2个屏幕距离
+    if direction == language_helper.parse_glb_str("left", language):
+        start_point = [0.666 * pw, 0.5 * ph]
+        end_point = [0.666 * pw - pw * swipe_count, 0.5 * ph]
+        move_distance = pw * swipe_count
+    if direction == language_helper.parse_glb_str("right", language):
+        start_point = [0.333 * pw, 0.5 * ph]
+        end_point = [0.333 * pw + pw * swipe_count, 0.5 * ph]
+        move_distance = pw * swipe_count
+    if direction == language_helper.parse_glb_str("up", language):
+        start_point = [0.5 * pw, 0.666 * ph]
+        end_point = [0.5 * pw, 0.666 * ph + ph * swipe_count]
+        move_distance = ph * swipe_count
+    if direction == language_helper.parse_glb_str("down", language):
+        start_point = [0.5 * pw, 0.333 * ph]
+        end_point = [0.5 * pw, 0.333 * ph - ph * swipe_count]
+        move_distance = ph * swipe_count
+    # 设置默认触屏起始坐标
+    return start_point, end_point, move_distance
+
+
+def adb_swipe(self, p1, p2, duration=0.5, event_obj=None, *args, **kwargs):
+    duration *= 1000
+    self.base_touch.swipe(p1, p2, duration=duration, event_obj=event_obj)
+
+
+def min_swipe(self, p1, p2, duration=0.5, steps=5, fingers=1, event_obj=None):
+    p1 = self.ori_transformer(p1)
+    p2 = self.ori_transformer(p2)
+    if fingers == 1:
+        self.base_touch.swipe(p1, p2, duration=duration, steps=steps, event_obj=event_obj)
+    elif fingers == 2:
+        self.base_touch.two_finger_swipe(p1, p2, duration=duration, steps=steps, event_obj=event_obj)
+    else:
+        raise Exception("param fingers should be 1 or 2")
+
+
+# 兼容老版滑动方法
+origin_swipe = BaseTouch.swipe
+origin_perform = BaseTouch.perform
+origin_adb_touch_swipe = AdbTouchImplementation.swipe
+origin_adb_min_swipe = MinitouchImplementation.swipe
+
+# 重写poco滑动方法
+BaseTouch.swipe = swipe
+BaseTouch.perform = perform
+AdbTouchImplementation.swipe = adb_swipe
+MinitouchImplementation.swipe = min_swipe
