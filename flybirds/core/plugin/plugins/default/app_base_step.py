@@ -133,6 +133,15 @@ class AppBaseStep:
     def full_screen_swipe(self, context, param1, param2):
         step_swipe.full_screen_swipe(context, param1, param2)
 
+    def full_screen_swipe_new(self, context, param, selector):
+        step_swipe.full_screen_swipe_new(context, param, selector)
+
+    def full_screen_swipe_click(self, context, selector):
+        step_swipe.full_screen_swipe_click(context, selector)
+
+    def full_screen_swipe_input(self, context, selector, param):
+        step_swipe.full_screen_swipe_input(context, selector, param)
+
     def wait_text_exist(self, context, selector):
         step_verify.wait_text_exist(context, selector)
 
