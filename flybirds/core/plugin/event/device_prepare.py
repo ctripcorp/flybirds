@@ -2,9 +2,13 @@
 """
 device prepare
 """
+
+from airtest.core.helper import G
+
+import flybirds.core.config_manage as configs
+import flybirds.core.driver.device as device_manage
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
-import flybirds.core.driver.device as device_manage
 from flybirds.core.global_context import GlobalContext
 
 
@@ -52,6 +56,13 @@ class OnPrepare:
         """
         log.info("device prepare")
         OnPrepare.init_device(context)
+
+        frame_config = configs.get_config(None, "frame_info")
+        usePocoInput = frame_config.get("usePocoInput", True)
+        # if platform is android and not use poco input start yosemite ime
+        if gr.get_platform().lower() == "android" and not usePocoInput and G.DEVICE.yosemite_ime is not None:
+            G.DEVICE.yosemite_ime.start()
+            log.info("start yosemite ime successfully")
 
 
 class OnPCPrepare:

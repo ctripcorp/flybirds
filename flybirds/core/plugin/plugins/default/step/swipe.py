@@ -2,31 +2,22 @@
 """
 Element swipe
 """
+from airtest.core.android.touch_methods.base_touch import BaseTouch, DownEvent, SleepEvent, MoveEvent
 from airtest.core.android.touch_methods.touch_proxy import AdbTouchImplementation, MinitouchImplementation
+from airtest.core.api import text, time
+from airtest.utils.snippet import (on_method_ready)
 
-import flybirds.core.global_resource as gr
-import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_swipe as ps
-import flybirds.utils.dsl_helper as dsl_helper
-import flybirds.utils.point_helper as point_helper
 import flybirds.core.global_resource as g_res
-
-import re
-import time
-
+import flybirds.core.global_resource as gr
 import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap as findsnap
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_manage as pm
+import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_swipe as ps
+import flybirds.utils.dsl_helper as dsl_helper
 import flybirds.utils.flybirds_log as log
-from airtest.core.android import Android
-from airtest.core.android.rotation import XYTransformer
-from airtest.core.api import text, time
-from airtest.core.android.touch_methods.base_touch import BaseTouch, DownEvent, SleepEvent, MoveEvent
-from airtest.utils.snippet import (on_method_ready)
-from behave import step
-from flybirds.core.dsl.step.element import click_ele
-from flybirds.core.exceptions import FlybirdsException, ErrorName, ErrorFlag, FlybirdNotFoundException
+import flybirds.utils.point_helper as point_helper
+from flybirds.core.exceptions import FlybirdNotFoundException
 from flybirds.core.global_context import GlobalContext
 from flybirds.utils import language_helper
-from flybirds.utils.dsl_helper import ele_wrap, VerifyStep, RetryType, FlybirdsReportTagInfo
 
 
 def ele_swipe(context, param1, param2, param3):
@@ -154,10 +145,9 @@ class FlyBirdsEvent:
             poco_object = pm.create_poco_object_by_dsl(
                 poco, selector, optional
             )
-
             search_result = poco_object.exists()
-
             if search_result is False:
+                log.info(f"Element not found: {selector}")
                 return False
             poco_object.click()
             log.info(f"Element found successfully and clicked: {selector}")
@@ -176,6 +166,7 @@ class FlyBirdsEvent:
                 poco, selector, optional
             )
             if poco_object.exists() is False:
+                log.info(f"Element not found: {selector}")
                 return False
             poco_object.click()
             text(input_str)
@@ -186,7 +177,7 @@ class FlyBirdsEvent:
             return False
 
 
-# 新滑动方法，直接调用poco滑动
+# 新滑动方法滑动的同时检测元素是否存在
 def full_screen_swipe_new(context, param, selector):
     screen_size = gr.get_device_size() or [1080, 1920]
     # 起始参数放入全局缓存
@@ -195,7 +186,7 @@ def full_screen_swipe_new(context, param, selector):
         "selector": selector,
         "direction": "down",
         "action": FlyBirdsEvent.on_search}
-    tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(param, screen_size, 2)
+    tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(param, screen_size, 3)
     # 每次移动距离
     duration = 100
     # 移动次数
@@ -228,7 +219,7 @@ def full_screen_swipe_click(context, selector):
                                                          event_obj=event_obj)
 
 
-# 滑动查找并点击
+# 滑动查找并输入
 def full_screen_swipe_input(context, selector, param):
     screen_size = gr.get_device_size() or [1080, 1920]
     duration = 100
@@ -324,6 +315,7 @@ def perform(self, motion_events, interval=0.01, event_obj=None):
     Args:
         motion_events: a list of MotionEvent instances
         interval: minimum interval between events
+        event_obj: event object, such as on_search, on_click, on_input
 
     Returns:
         None
@@ -333,10 +325,9 @@ def perform(self, motion_events, interval=0.01, event_obj=None):
         origin_perform(self, motion_events)
         return
     search_result = False
-    poco_instance = gr.get_value("pocoInstance")
     event_count = 0
     for event in motion_events:
-        # 每循环10次事件查找下元素是否存在
+        # 每循环10次事件执行下action对应操作
         if event_count % 10 == 0 and event_obj is not None:
             search_result = event_obj["action"](event_obj)
             if search_result:
@@ -351,7 +342,7 @@ def perform(self, motion_events, interval=0.01, event_obj=None):
         event_count += 1
 
     language = GlobalContext.get_current_language()
-    # 如果是点击或输入操作时要先下后上滑动查找,只有当direction为”上“时才算失败
+    # 如果是点击或输入操作时要先下后上滑动查找,只有当direction为"上"时才算失败
     if not search_result and "direction" in event_obj and event_obj["direction"] == language_helper.parse_glb_str("up",
                                                                                                                   language):
         message = "{} swipe not find {}".format(
