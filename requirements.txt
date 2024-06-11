@@ -19,3 +19,4 @@ xmltodict==0.13.0
 requests==2.31.0
 pydantic==1.9.1
 baseImage>=2.1.1
+nest_asyncio~=1.5.9
