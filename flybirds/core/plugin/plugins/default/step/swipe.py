@@ -342,13 +342,19 @@ def perform(self, motion_events, interval=0.01, event_obj=None):
         event_count += 1
 
     language = GlobalContext.get_current_language()
+
+    message = "{} swipe not find {}".format(
+        event_obj["direction"], event_obj["selector"]
+    )
+    # 如果是查找操作, 且未找到元素, 则抛出异常
+    if search_result is False and event_obj is not None and event_obj["action"] == FlyBirdsEvent.on_search:
+        log.info("swipe find {}".format(event_obj["selector"]))
+        raise FlybirdNotFoundException(message, {event_obj["selector"]})
+
     # 如果是点击或输入操作时要先下后上滑动查找,只有当direction为"上"时才算失败
-    if not search_result and "direction" in event_obj and event_obj["direction"] == language_helper.parse_glb_str("up",
-                                                                                                                  language):
-        message = "{} swipe not find {}".format(
-            event_obj["direction"], event_obj["selector"]
-        )
-        raise FlybirdNotFoundException(message, {})
+    if (search_result is False and "direction" in event_obj
+            and event_obj["direction"] == language_helper.parse_glb_str("up", language)):
+        raise FlybirdNotFoundException(message, {event_obj["selector"]})
     else:
         message = "swipe {} times，not find {}".format(
             int(event_count / 5), event_obj["direction"]
