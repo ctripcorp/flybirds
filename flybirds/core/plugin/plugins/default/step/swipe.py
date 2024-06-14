@@ -166,12 +166,12 @@ class FlyBirdsEvent:
                 poco, selector, optional
             )
             if poco_object.exists() is False:
-                log.info(f"Element not found: {selector}")
+                log.info(f"Element not found when input {input_str} into : {selector}")
                 return False
             poco_object.click()
             text(input_str)
             # GlobalContext.element.str_input(input_str)
-            log.info(f"find and input successfully {input_str}")
+            log.info(f"{selector} input {input_str} successfully")
             return True
         except Exception:
             return False
@@ -184,7 +184,7 @@ def full_screen_swipe_new(context, param, selector):
     event_obj = {
         "context": context,
         "selector": selector,
-        "direction": "down",
+        "direction": param,
         "action": FlyBirdsEvent.on_search}
     tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(param, screen_size, 3)
     # 每次移动距离
@@ -196,51 +196,37 @@ def full_screen_swipe_new(context, param, selector):
 
 
 # 滑动查找并点击
-def full_screen_swipe_click(context, selector):
+def full_screen_swipe_click(context, selector, direction):
     screen_size = gr.get_device_size() or [1080, 1920]
     duration = 100
-    try:
-        event_obj = {
-            "context": context, "selector": selector, "direction": "下",
-            "action": FlyBirdsEvent.on_click}
-        tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point("下", screen_size, 2)
-        steps = int(move_distance / duration)
-        gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
-                                                         event_obj=event_obj)
-    except:
-        event_obj = {
-            "context": context, "selector": selector, "direction": "上",
-            "action": FlyBirdsEvent.on_click}
-        tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point("上", screen_size, 5)
-        tuple_from_xy.append({"context": context, "selector": selector, "event": "click", "direction": "上",
-                              "action": FlyBirdsEvent.on_click})
-        steps = int(move_distance / duration)
-        gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
-                                                         event_obj=event_obj)
+    event_obj = {
+        "context": context, "selector": selector, "direction": direction,
+        "action": FlyBirdsEvent.on_click}
+    swipe_pages = 2
+    if direction == "up":
+        swipe_pages = 4
+    tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(direction, screen_size, swipe_pages)
+    steps = int(move_distance / duration)
+    gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
+                                                     event_obj=event_obj)
+    log.info(f"swipe {direction} not found {selector} when click")
 
 
 # 滑动查找并输入
-def full_screen_swipe_input(context, selector, param):
+def full_screen_swipe_input(context, selector, param, direction):
     screen_size = gr.get_device_size() or [1080, 1920]
     duration = 100
-    try:
-        event_obj = {
-            "context": context, "selector": selector, "param": param, "direction": "下",
-            "action": FlyBirdsEvent.on_input}
-        tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point("下", screen_size, 2)
-        steps = int(move_distance / duration)
-        gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
-                                                         event_obj=event_obj)
-        log.info("向下滑动未找到输入框")
-    except:
-        log.info("向上滑动寻找输入框")
-        event_obj = {"context": context, "selector": selector, "event": "click", "direction": "上",
-                     "action": FlyBirdsEvent.on_input}
-        tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point("上", screen_size, 5)
-        steps = int(move_distance / duration)
-        log.info("向上滑动未找到输入框")
-        gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
-                                                         event_obj=event_obj)
+    event_obj = {
+        "context": context, "selector": selector, "param": param, "direction": duration,
+        "action": FlyBirdsEvent.on_input}
+    swipe_pages = 2
+    if direction == "up":
+        swipe_pages = 4
+    tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(direction, screen_size, swipe_pages)
+    steps = int(move_distance / duration)
+    gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
+                                                     event_obj=event_obj)
+    log.info(f"swipe {direction} not found {selector} when input {param}")
 
 
 @on_method_ready('install_and_setup')
@@ -337,28 +323,13 @@ def perform(self, motion_events, interval=0.01, event_obj=None):
         else:
             cmd = event.getcmd(transform=self.transform_xy)
             self.handle(cmd)
-            log.info("perform event: %s" % cmd)
             time.sleep(interval)
         event_count += 1
 
-    language = GlobalContext.get_current_language()
-
-    message = "{} swipe not find {}".format(
-        event_obj["direction"], event_obj["selector"]
-    )
-    # 如果是查找操作, 且未找到元素, 则抛出异常
-    if search_result is False and event_obj is not None and event_obj["action"] == FlyBirdsEvent.on_search:
-        log.info("swipe find {}".format(event_obj["selector"]))
+    if search_result is False:
+        message = "{} swipe not find {}".format(
+            event_obj["direction"], event_obj["selector"])
         raise FlybirdNotFoundException(message, {event_obj["selector"]})
-
-    # 如果是点击或输入操作时要先下后上滑动查找,只有当direction为"上"时才算失败
-    if (search_result is False and "direction" in event_obj
-            and event_obj["direction"] == language_helper.parse_glb_str("up", language)):
-        raise FlybirdNotFoundException(message, {event_obj["selector"]})
-    else:
-        message = "swipe {} times，not find {}".format(
-            int(event_count / 5), event_obj["direction"]
-        )
     if gr.get_frame_config_value("use_snap", False):
         findsnap.fix_refresh_status(True)
 
@@ -379,7 +350,7 @@ def transform_xy(self, x, y):
     return x, y
 
 
-def build_swipe_search_point(direction, screen_size, swipe_count=2):
+def build_swipe_search_point(direction, screen_size, swipe_pages=2):
     """
     build the start and end coordinate point of the sliding data
     """
@@ -391,22 +362,22 @@ def build_swipe_search_point(direction, screen_size, swipe_count=2):
     end_point = [0.5 * pw, 0.5 * ph]
     move_distance = 80
     # 滑动距离默认为当前手机分辨率2个屏幕距离
-    if direction == language_helper.parse_glb_str("left", language):
+    if direction == "left" or direction == language_helper.parse_glb_str("left", language):
         start_point = [0.666 * pw, 0.5 * ph]
-        end_point = [0.666 * pw - pw * swipe_count, 0.5 * ph]
-        move_distance = pw * swipe_count
-    if direction == language_helper.parse_glb_str("right", language):
+        end_point = [0.666 * pw - pw * swipe_pages, 0.5 * ph]
+        move_distance = pw * swipe_pages
+    if direction == "right" or direction == language_helper.parse_glb_str("right", language):
         start_point = [0.333 * pw, 0.5 * ph]
-        end_point = [0.333 * pw + pw * swipe_count, 0.5 * ph]
-        move_distance = pw * swipe_count
-    if direction == language_helper.parse_glb_str("up", language):
+        end_point = [0.333 * pw + pw * swipe_pages, 0.5 * ph]
+        move_distance = pw * swipe_pages
+    if direction == "up" or direction == language_helper.parse_glb_str("up", language):
         start_point = [0.5 * pw, 0.666 * ph]
-        end_point = [0.5 * pw, 0.666 * ph + ph * swipe_count]
-        move_distance = ph * swipe_count
-    if direction == language_helper.parse_glb_str("down", language):
+        end_point = [0.5 * pw, 0.666 * ph + ph * swipe_pages]
+        move_distance = ph * swipe_pages
+    if direction == "down" or direction == language_helper.parse_glb_str("down", language):
         start_point = [0.5 * pw, 0.333 * ph]
-        end_point = [0.5 * pw, 0.333 * ph - ph * swipe_count]
-        move_distance = ph * swipe_count
+        end_point = [0.5 * pw, 0.333 * ph - ph * swipe_pages]
+        move_distance = ph * swipe_pages
     # 设置默认触屏起始坐标
     return start_point, end_point, move_distance
 
