@@ -191,6 +191,7 @@ def full_screen_swipe_new(context, param, selector):
     duration = 100
     # 移动次数
     steps = int(move_distance / duration)
+    time.sleep(1)
     gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
                                                      event_obj=event_obj)
 
@@ -207,10 +208,10 @@ def full_screen_swipe_click(context, selector, direction):
         swipe_pages = 4
     tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(direction, screen_size, swipe_pages)
     steps = int(move_distance / duration)
+    time.sleep(1)
     gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
                                                      event_obj=event_obj)
-    log.info(f"swipe {direction} not found {selector} when click")
-
+    log.info(f"swipe {direction} to found {selector} then click")
 
 # 滑动查找并输入
 def full_screen_swipe_input(context, selector, param, direction):
@@ -224,9 +225,10 @@ def full_screen_swipe_input(context, selector, param, direction):
         swipe_pages = 4
     tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(direction, screen_size, swipe_pages)
     steps = int(move_distance / duration)
+    time.sleep(1)
     gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
                                                      event_obj=event_obj)
-    log.info(f"swipe {direction} not found {selector} when input {param}")
+    log.info(f"swipe {direction} to found {selector} then input {param}")
 
 
 @on_method_ready('install_and_setup')
@@ -371,12 +373,12 @@ def build_swipe_search_point(direction, screen_size, swipe_pages=2):
         end_point = [0.333 * pw + pw * swipe_pages, 0.5 * ph]
         move_distance = pw * swipe_pages
     if direction == "up" or direction == language_helper.parse_glb_str("up", language):
-        start_point = [0.5 * pw, 0.666 * ph]
-        end_point = [0.5 * pw, 0.666 * ph + ph * swipe_pages]
+        start_point = [5, 0.666 * ph]
+        end_point = [5, 0.666 * ph + ph * swipe_pages]
         move_distance = ph * swipe_pages
     if direction == "down" or direction == language_helper.parse_glb_str("down", language):
-        start_point = [0.5 * pw, 0.333 * ph]
-        end_point = [0.5 * pw, 0.333 * ph - ph * swipe_pages]
+        start_point = [5, 0.333 * ph]
+        end_point = [5, 0.333 * ph - ph * swipe_pages]
         move_distance = ph * swipe_pages
     # 设置默认触屏起始坐标
     return start_point, end_point, move_distance
