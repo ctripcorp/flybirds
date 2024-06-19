@@ -209,9 +209,10 @@ def full_screen_swipe_click(context, selector, direction):
     tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(direction, screen_size, swipe_pages)
     steps = int(move_distance / duration)
     time.sleep(1)
+    log.info(f"swipe {direction} to found {selector} then click")
     gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
                                                      event_obj=event_obj)
-    log.info(f"swipe {direction} to found {selector} then click")
+
 
 # 滑动查找并输入
 def full_screen_swipe_input(context, selector, param, direction):
@@ -226,9 +227,9 @@ def full_screen_swipe_input(context, selector, param, direction):
     tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(direction, screen_size, swipe_pages)
     steps = int(move_distance / duration)
     time.sleep(1)
+    log.info(f"swipe {direction} to found {selector} then input {param}")
     gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
                                                      event_obj=event_obj)
-    log.info(f"swipe {direction} to found {selector} then input {param}")
 
 
 @on_method_ready('install_and_setup')
