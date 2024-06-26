@@ -441,3 +441,13 @@ class Step:
             request_mock_key_value = []
             GlobalContext.set_global_cache("request_mock_request_key_value", request_mock_key_value)
         request_op.open_web_request_mock(service_str, mock_case_id_str, path_list, request_mock_key_value)
+
+    @staticmethod
+    def close_dialog(context):
+        ele = gr.get_value("plugin_ele")
+        ele.close_dialog(context)
+
+    @staticmethod
+    def accept_dialog(context):
+        ele = gr.get_value("plugin_ele")
+        ele.accept_dialog(context)

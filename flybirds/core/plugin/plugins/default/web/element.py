@@ -418,3 +418,9 @@ class Element:
             return True
         else:
             return False
+
+    def close_dialog(self, context):
+        gr.set_value("current_page_dialog_action", False)
+
+    def accept_dialog(self, context):
+        gr.set_value("current_page_dialog_action", True)

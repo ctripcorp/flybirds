@@ -64,7 +64,7 @@ class Page:
             context.on("request", handle_request)
         context.on("console", handle_page_error)
         context.on("page", handle_popup)
-
+        context.on("dialog", lambda dialog: handle_dialog(dialog))
         ele_wait_time = gr.get_frame_config_value("wait_ele_timeout", 30)
         page_render_timeout = gr.get_frame_config_value("page_render_timeout",
                                                         30)
@@ -750,3 +750,19 @@ def get_operation(parsed_uri, request_body=None):
         if operation is not None:
             return operation
     return parsed_uri.path.split('/')[-1]
+
+
+def handle_dialog(dialog):
+    try:
+        if gr.get_value("current_page_dialog_action", None) is True:
+            log.info("dialog accept action happened")
+            dialog.accept()
+        elif gr.get_value("current_page_dialog_action", None) is False:
+            log.info("dialog dismiss action happened")
+            dialog.dismiss()
+        else:
+            log.info("dialog default dialog action is dismiss")
+            dialog.dismiss()
+    except Exception as e:
+        log.info("dialog default dialog action is dismiss")
+        dialog.dismiss()

@@ -286,6 +286,7 @@ class ActionType:
     addRequestFilterKey: str = "addRequestFilterKey"
     addMockKey: str = "addMockKey"
     addCompareData: str = "addCompareData"
+    close_dialog: str = "close_dialog"
 
 
 error_flag_map = {

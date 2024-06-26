@@ -815,3 +815,31 @@ def click_ele_point(context, selector, x=None, y=None):
     :param y: Coordinate y-axis.
     """
     g_Context.step.click_ele_point(context, selector, int(float(x)), int(float(y)))
+
+
+@step("click[{selector}] and cancel dialog")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
+                       action=ActionType.press)
+@ele_wrap
+def close_dialog(context, selector):
+    """
+    Close the dialog box
+    :param context: step context
+    """
+    g_Context.step.close_dialog(context)
+    g_Context.step.click_ele(context, selector)
+
+
+@step("click[{selector}] and accept dialog")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
+                       action=ActionType.press)
+@ele_wrap
+def accept_dialog(context, selector):
+    """
+    Close the dialog box
+    :param context: step context
+    """
+    g_Context.step.accept_dialog(context)
+    g_Context.step.click_ele(context, selector)
