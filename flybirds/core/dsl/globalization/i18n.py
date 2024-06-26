@@ -242,6 +242,8 @@ step_language = {
         "click ele [{selector}] position[{x},{y}]": ["点击元素[{selector}]位置[{x},{y}]"],
         "open mock request service [{service}] match pathList [{path_list}] and bind mockCase[{mock_case_id}]": [
             "开启服务[{service}]匹配请求报文路径[{path_list}]并绑定MockCase[{mock_case_id}]"],
-        "exist page text[{selector}]": ["页面存在文案[{selector}]"]
+        "exist page text[{selector}]": ["页面存在文案[{selector}]"],
+        "click[{selector}] and accept dialog": ["点击[{selector}]并接受弹窗"],
+        "click[{selector}] and cancel dialog": ["点击[{selector}]并取消弹窗"],
     },
 }

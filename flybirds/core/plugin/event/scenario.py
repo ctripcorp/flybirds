@@ -26,6 +26,7 @@ def scenario_init(context, scenario):
     log.info('[scenario_init] start!')
     GlobalContext.set_global_cache("verifyStepCount", 0)
     gr.set_value("mock_request_match_list", [])
+    gr.set_value("current_page_dialog_action", None)
     scenario.description.append("initialization description_")
     # Initialize the sequence of steps to be executed
     # which is required for subsequent associated screenshots
