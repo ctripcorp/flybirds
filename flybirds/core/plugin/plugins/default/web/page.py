@@ -64,7 +64,7 @@ class Page:
             context.on("request", handle_request)
         context.on("console", handle_page_error)
         context.on("page", handle_popup)
-        context.on("dialog", lambda dialog: handle_dialog(dialog))
+        page.on("dialog", lambda dialog: handle_dialog(dialog))
         ele_wait_time = gr.get_frame_config_value("wait_ele_timeout", 30)
         page_render_timeout = gr.get_frame_config_value("page_render_timeout",
                                                         30)
