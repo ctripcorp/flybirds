@@ -221,6 +221,10 @@ class OnScreenRecordRelease:
         """
         try:
             screen_record = gr.get_value("screenRecord")
+            # 流量回放目前走技术中心HLS录屏，本地无视频文件生成不需要清理
+            if gr.get_value("hls_record") is True:
+                log.info("use ffmpeg record to hls so need to clear screen record")
+                return
             if screen_record is not None and hasattr(screen_record, "destroy"):
                 screen_record.destroy()
         except Exception as clear_error:

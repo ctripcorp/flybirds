@@ -408,6 +408,20 @@ def link_record(scenario, step_index):
         src_path = os.path.join(current_screen_dir, file_name)
         log.info(
             f'default screen_record [link_record] src_path: {src_path}')
+
+        # 流量回放目前走技术中心HLS录屏，不需要拷贝保存
+        if gr.get_value('hls_record') is True:
+            replay_address = g_context.get_global_cache("video_replay_addr")
+            data = (
+                'embeddingsTags, stepIndex={}, <video controls width="375">'
+                '<source src="{}" type="video/m3u8"></video>'.format(
+                    step_index, replay_address
+                )
+            )
+            scenario.description.append(data)
+            g_context.set_global_cache('current_record_path', replay_address)
+            return
+
         screen_record.copy_record(src_path)
         if gr.get_platform().lower() == "android":
             screen_record.crop_record(src_path)
