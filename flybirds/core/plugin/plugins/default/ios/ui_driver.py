@@ -34,5 +34,7 @@ class UIDriver:
     @staticmethod
     def close_driver():
         screen_record = gr.get_value("screenRecord")
+        if gr.get_value("hls_record") is True and gr.get_value("hls_token") is not None:
+            return
         if screen_record is not None and hasattr(screen_record, "destroy"):
             screen_record.destroy()
