@@ -570,8 +570,20 @@ def handle_route(route):
                             "status") is not None:
                         mock_body_request = mock_body_request.get("flybirdsMockResponse")
                         mock_status = mock_body_request.get("status", 200)
+
                     if not isinstance(mock_body_request, str):
                         mock_body_request = json.dumps(mock_body_request)
+
+                    if route.request.headers.get(
+                            'accept') is not None and 'text/event-stream' == route.request.headers.get(
+                        'accept'):
+                        route.fulfill(
+                            status=mock_status,
+                            content_type="text/event-stream;charset=UTF-8",
+                            headers=route.request.headers,
+                            body=bytes(mock_body_request, encoding="utf8"))
+                        return
+
                     if route.request.headers.get("content-type"):
                         route.fulfill(status=mock_status,
                                       content_type=route.request.headers.get("content-type"),
@@ -603,6 +615,17 @@ def handle_route(route):
                     if mock_body.get("flybirdsMockResponse") is not None or mock_body.get("status") is not None:
                         mock_status = mock_body.get("status", 200)
                         mock_body = mock_body.get("flybirdsMockResponse")
+
+                    if route.request.headers.get(
+                            'accept') is not None and 'text/event-stream' == route.request.headers.get(
+                        'accept'):
+                        route.fulfill(
+                            status=mock_status,
+                            content_type="text/event-stream;charset=UTF-8",
+                            headers=route.request.headers,
+                            body=bytes(mock_body, encoding="utf8"))
+                        return
+
                     if not isinstance(mock_body, str):
                         mock_body = json.dumps(mock_body)
                         route.fulfill(status=mock_status,
