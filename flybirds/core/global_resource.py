@@ -265,7 +265,7 @@ def get_web_info_value(key, def_value=None):
     return def_value
 
 
-def get_ele_locator(key):
+def get_ele_locator_by_all_ele_locator(key):
     """
     Get the configuration value of the element locator for the current
     runtime platform
@@ -274,13 +274,13 @@ def get_ele_locator(key):
         "configManage"].ele_locator_info.all_ele_locator
     if all_locators is None:
         log.warn("[get_ele_locator] cannot find ele_locator.json file")
-        return key
+        return None
     ele_locator = all_locators.get(key)
     if ele_locator is None:
         log.debug(
             f"the ele_locator.json has no element locator configuration "
             f"for [{key}]")
-        return key
+        return None
     if isinstance(ele_locator, str):
         return ele_locator
     platform = get_platform().lower()
@@ -289,6 +289,46 @@ def get_ele_locator(key):
             f"The [{key}] has no element locator configuration for the"
             f" [{platform}] platform in ele_locator.json")
     return ele_locator.get(platform)
+
+
+def get_ele_locator_by_spec_ele_locator(key):
+    spec_ele_locator = _global_dict[
+        "configManage"].ele_locator_info.spec_ele_locator
+    if spec_ele_locator is None:
+        log.warn("[get_ele_locator] cannot find spec_ele_locator config")
+        return None
+    ele_locator = spec_ele_locator.get(key)
+    if ele_locator is None:
+        log.debug(
+            f"the spec_ele_locator config has no element locator configuration "
+            f"for [{key}]")
+        return None
+    if isinstance(ele_locator, str):
+        return ele_locator
+    platform = get_platform().lower()
+    if ele_locator.get(platform) is None:
+        raise Exception(
+            f"The [{key}] has no element locator configuration for the"
+            f" [{platform}] platform in spec_ele_locator")
+    return ele_locator.get(platform)
+
+
+def get_ele_locator(key):
+    """
+    Get the configuration value of the element locator for the current
+    runtime platform
+    """
+    result = None
+    result = get_ele_locator_by_all_ele_locator(key)
+    if result is None:
+        result = get_ele_locator_by_spec_ele_locator(key)
+    if result is None and get_platform().lower() == "web" and \
+            get_web_info_value("ele_locator") is not None:
+        ele_rule = get_web_info_value("ele_locator")
+        result = f"[{ele_rule}'{key}']"
+    if result is None:
+        result = key
+    return result
 
 
 def get_service_ignore_nodes(service):
