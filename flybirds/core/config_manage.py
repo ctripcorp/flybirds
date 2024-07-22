@@ -133,7 +133,6 @@ class AppConfig:
                 "fingerDirectionSwitch",
                 app_config.get("fingerDirectionSwitch", None)
             )
-
             self.run_id = user_data.get("runId", None)
             self.build_id = user_data.get("buildId", None)
             self.pkg_version = user_data.get("pkgVersion", None)
@@ -251,6 +250,9 @@ class WebConfig:
 
         if web_info.get("defaultBrowserType") is not None:
             self.default_browser_type = web_info.get("defaultBrowserType", None)
+
+        if web_info.get("eleLocator") is not None:
+            self.ele_locator = web_info.get("eleLocator", None)
 
         headless = user_data.get("headless", headless)
         if isinstance(headless, str):
@@ -611,9 +613,11 @@ class RunConfig:
 class EleLocator:
     """
     element locator config
+    elementLocator/*.json (feature tag)>ele_locator.json > covert.json
     """
 
     def __init__(self):
+        self.spec_ele_locator = None
         ele_locator_path = os.path.join(
             os.getcwd(), "config", "ele_locator.json"
         )
