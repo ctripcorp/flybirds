@@ -180,7 +180,7 @@ class Interception:
     # compare service requests
     # -------------------------------------------------------------------------
     @staticmethod
-    def request_compare(operation, target_data_path):
+    def request_compare(operation, target_data_path, contains_key):
         # Call the get_server_request_body() function to get the server request information,
         # and return a dictionary object
         request_info = get_server_request_body(operation)
@@ -240,7 +240,7 @@ class Interception:
         # and the expected request object, and output the log
         # match_json = get_matched_json(expect_request_obj, actual_request_obj)
         # log.info(f'[request_compare] actualObj dict after match expectObj: {match_json}')
-        handle_diff(actual_request_obj, expect_request_obj, operation, target_data_path)
+        handle_diff(actual_request_obj, expect_request_obj, operation, target_data_path, contains_key)
 
     @staticmethod
     def page_not_requested(operation):
@@ -291,7 +291,7 @@ class Interception:
             raise FlybirdsException(message, error_name=ErrorName.RequestError)
 
     @staticmethod
-    def request_query_string_compare(operation, target_data_path):
+    def request_query_string_compare(operation, target_data_path, contains_key):
         # Define function request_query_string_compare with two parameters, operation and target_data_path
 
         request_info = get_server_request_body(operation)
@@ -366,7 +366,7 @@ class Interception:
                 raise FlybirdsException(message, error_name=ErrorName.CompareJsonFormatError)
 
         handle_diff(actual_request_obj, expect_request_obj, operation,
-                    target_data_path)
+                    target_data_path, contains_key)
         # Call the handle_diff function to compare the difference between the actual request object
         # and the expected request object, passing in the parameters operation and target_data_path.
 
@@ -842,7 +842,7 @@ def get_matched_json(refered_json, matched_json):
 
 
 def handle_diff(actual_request_obj, expect_request_obj, operation,
-                target_file_name):
+                target_file_name, contains_key):
     exclude_paths, exclude_regex_paths = handle_ignore_node(operation)
     ignore_order = gr.get_web_info_value("ignore_order", False)
 
