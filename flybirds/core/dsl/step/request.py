@@ -155,6 +155,26 @@ def request_compare(context, service=None, target_data_path=None):
     """
     g_Context.step.request_compare_from_path(context, service,
                                              target_data_path)
+@step(
+    "compare service request [{service}] with json file [{target_data_path}] with the exceptions removed"
+)
+@FlybirdsReportTagInfo(group="service",
+                       selectors={"path": [{"type": "name", "value": "service", "name": "请求url"},
+                                           {"type": "url", "value": "target_data_path", "name": "期望数据路径"}]},
+                       verify_function="common_error_parse")
+@VerifyStep()
+@ele_wrap
+@RetryType('timeout')
+def request_compare_with_exceptions_removed(context, service=None, target_data_path=None):
+    """
+    compare and verify the request's post body with the data of the target path
+
+    :param context: step context
+    :param service: service request name. (string or None).
+    :param target_data_path: path of target data to be compared
+    """
+    g_Context.step.request_compare_from_path_exceptions_removed(context, service,
+                                             target_data_path)
 
 
 @step(

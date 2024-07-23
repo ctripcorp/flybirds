@@ -367,8 +367,12 @@ class Step:
     # -------------------------------------------------------------------------
     @staticmethod
     def request_compare_from_path(context, operation, target_data_path):
-        request_op.request_compare(operation, target_data_path)
+        request_op.request_compare(operation, target_data_path, ['_removed', '_changed'])
 
+    @staticmethod
+    def request_compare_from_path_exceptions_removed(context, operation, target_data_path):
+        request_op.request_compare(operation, target_data_path, ['_removed', '_changed', '_add'])
+   
     @staticmethod
     def page_not_requested(context, operation):
         request_op.page_not_requested(operation)
