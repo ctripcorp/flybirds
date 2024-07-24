@@ -64,6 +64,7 @@ class Page:
             context.on("request", handle_request)
         context.on("console", handle_page_error)
         context.on("page", handle_popup)
+        context.on("response", handle_request_finished)
         page.on("dialog", lambda dialog: handle_dialog(dialog))
         ele_wait_time = gr.get_frame_config_value("wait_ele_timeout", 30)
         page_render_timeout = gr.get_frame_config_value("page_render_timeout",
@@ -382,10 +383,10 @@ def handle_page_error(msg):
 
 
 def handle_request(request):
+    network_key = uuid.uuid4()
+    network_key = f"{network_key}_{time.time_ns()}"
+    setattr(request, "network_key", network_key)
     if gr.get_value("network_collect") is not None:
-        network_key = uuid.uuid4()
-        network_key = f"{network_key}_{time.time_ns()}"
-        setattr(request, "network_key", network_key)
         gr.get_value("network_collect")[network_key] = {
             "key": network_key,
             "url": request.url,
@@ -400,17 +401,24 @@ def handle_request(request):
     except Exception as ex:
         log.info("try to get post data from request")
     operation = get_operation(parsed_uri, post_data)
+    response_name = get_response_name(parsed_uri, post_data)
     if operation is not None and len(operation.strip()) > 0:
         interception_request = gr.get_value('interceptionRequest')
         request_body = interception_request.get(operation)
         # 记录页面请求
         operate_record = gr.get_value('operate_record')
-        operate_record[operation] = {
+        request_info = {
             'method': request.method,
-            'postData': request.post_data,
+            'data': request.post_data,
             'url': request.url,
             'updateTimeStamp': int(round(time.time() * 1000))
         }
+        operate_record[operation] = request_info
+        if request.resource_type == 'xhr' or request.resource_type == 'fetch':
+            response_info = {}
+            operate_record[response_name] = response_info
+            gr.get_value('network_cache_map')[f"{operation}_{network_key}"] = {"request": request_info,
+                                                                               "response": response_info}
         gr.set_value("operate_record", operate_record)
         if request_body is not None:
             log.info(
@@ -775,6 +783,16 @@ def get_operation(parsed_uri, request_body=None):
     return parsed_uri.path.split('/')[-1]
 
 
+def get_response_name(parsed_uri, request_body=None):
+    operation_module = gr.get_value("projectScript").custom_operation
+    if operation_module is not None and hasattr(operation_module, "get_response_name"):
+        get_operation_customer = getattr(operation_module, "get_response_name")
+        operation = get_operation_customer(parsed_uri, request_body)
+        if operation is not None:
+            return operation
+    return parsed_uri.path.split('/')[-1] + "_" + "response"
+
+
 def handle_dialog(dialog):
     try:
         if gr.get_value("current_page_dialog_action", None) is True:
@@ -789,3 +807,22 @@ def handle_dialog(dialog):
     except Exception as e:
         log.info("dialog default dialog action is dismiss")
         dialog.dismiss()
+
+
+def handle_request_finished(response):
+    try:
+        if response.request.resource_type == 'xhr' or response.request.resource_type == 'fetch':
+            post_data = None
+            try:
+                post_data = response.request.post_data
+            except Exception as ex:
+                log.info("try to get post data from request", ex)
+            parsed_uri = urlparse(response.request.url)
+            operation = get_operation(parsed_uri, post_data)
+            response_body = response.text()
+            gr.get_value('network_cache_map')[f"{operation}_{response.request.network_key}"][
+                "response"]["data"] = response_body
+            gr.get_value('network_cache_map')[f"{operation}_{response.request.network_key}"]["response"][
+                "endTime"] = int(round(time.time() * 1000))
+    except Exception as e:
+        log.info("handle request finished failed", e)
