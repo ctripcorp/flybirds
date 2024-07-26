@@ -28,6 +28,8 @@ def scenario_init(context, scenario):
     gr.set_value("mock_request_match_list", [])
     gr.set_value("current_page_dialog_action", None)
     scenario.description.append("initialization description_")
+    gr.set_value('network_cache_map', {})
+    gr.set_value("operate_record", {})
     # Initialize the sequence of steps to be executed
     # which is required for subsequent associated screenshots
     context.cur_step_index = 0
