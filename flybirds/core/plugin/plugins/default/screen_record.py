@@ -301,6 +301,8 @@ class ScreenRecord:
         if self.use_airtest_record:
             if self.airtest_version_high:
                 if self.airtest_record_mode == 'ffmpeg':
+                    if gr.get_value("hls_record") is True:
+                        return
                     if self.output_ffmpeg_file is not None:
                         os.remove(self.output_ffmpeg_file)
                     return
