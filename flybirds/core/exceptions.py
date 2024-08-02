@@ -533,7 +533,10 @@ def set_error_info_cache(context, step):
         error = step.exc_traceback.tb_frame.f_locals.get("error")
         step_error_info["errorMsg"] = error_info.get("error")
         step_error_info["errorGroup"] = group
-        step_error_info["errorType"] = error_info.get("errorName").value
+        if isinstance(error_info.get("errorName"), str):
+            step_error_info["errorType"] = error_info.get("errorName").value
+        else:
+            step_error_info["errorType"] = error_info.get("errorName")
         step_error_info["selector"] = selector
         step_error_info["traceBack"] = error
 
