@@ -201,7 +201,9 @@ def full_screen_swipe_click(context, selector, direction):
     screen_size = gr.get_device_size() or [1080, 1920]
     duration = 100
     event_obj = {
-        "context": context, "selector": selector, "direction": direction,
+        "context": context,
+        "selector": selector,
+        "direction": direction,
         "action": FlyBirdsEvent.on_click}
     swipe_pages = 2
     if direction == "up":
@@ -219,7 +221,10 @@ def full_screen_swipe_input(context, selector, param, direction):
     screen_size = gr.get_device_size() or [1080, 1920]
     duration = 100
     event_obj = {
-        "context": context, "selector": selector, "param": param, "direction": duration,
+        "context": context,
+        "selector": selector,
+        "param": param,
+        "direction": duration,
         "action": FlyBirdsEvent.on_input}
     swipe_pages = 2
     if direction == "up":

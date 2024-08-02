@@ -34,8 +34,10 @@ class UIDriver:
             launch_params = None
             if gr.get_web_info_value("proxy", None) is not None:
                 launch_params = {"proxy": {"server": gr.get_web_info_value("proxy", None)}}
+                log.info(f"proxy server: {gr.get_web_info_value('proxy', None)}")
                 if gr.get_web_info_value("by_pass", None) is not None:
                     launch_params.get("proxy").__setitem__("bypass", gr.get_web_info_value("by_pass", None))
+                    log.info(f"proxy bypass: {gr.get_web_info_value('by_pass', None)}")
             if gr.get_value("optionsArgs") is not None:
                 if launch_params is None:
                     launch_params = {}
@@ -46,6 +48,7 @@ class UIDriver:
             if launch_params is not None:
                 browser = browser_type.launch(headless=headless,
                                               **launch_params)
+                log.info(f"Init browse launch_params : {launch_params}")
             else:
                 browser = browser_type.launch(headless=headless)
             log.info(f"Init browser success! browser_type:[{browser_type}]")
