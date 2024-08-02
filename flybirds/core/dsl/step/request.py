@@ -310,7 +310,30 @@ def request_compare_value(context, service=None, target_json_path=None,
     """
     g_Context.step.request_compare_value(context, service, target_json_path,
                                          expect_value)
+@step(
+    "service request [{service}] string request parameter [{target_json_path}] "
+    "includes [{expect_value}]")
+@FlybirdsReportTagInfo(group="service",
+                       selectors={"path": [{"type": "name", "value": "service", "name": "请求url"},
+                                           {"type": "url", "value": "target_json_path", "name": "期望json数据地址"},
+                                           {"type": "value", "value": "expect_value", "name": "期望值"}]},
+                       verify_function="common_error_parse")
+@VerifyStep()
+@ele_wrap
+@RetryType('timeout')
+def request_compare_includes_value(context, service=None, target_json_path=None,
+                          expect_value=None):
+    """
+    compare and verify the request parameter of the service request with
+     the expected value
 
+    :param context: step context
+    :param service: service request name. (string or None).
+    :param target_json_path: json path of request parameter
+    :param expect_value: expected value
+    """
+    g_Context.step.request_compare_includes_value(context, service, target_json_path,
+                                         expect_value)
 
 @step("open service [{service}] bind mockCase[{mock_case_id}]")
 @FlybirdsReportTagInfo(group="service",

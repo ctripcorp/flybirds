@@ -436,6 +436,78 @@ class Interception:
             raise FlybirdsException(message, error_name=ErrorName.CompareNotEqualError)
 
     @staticmethod
+    def request_compare_includes_value(operation, target_path, expect_value):
+        # # Call function get_server_request_body to get request_info
+        request_info = get_server_request_body(operation)
+
+        # Initialize data variable as None.
+        data = None
+        # Get postData data.
+        if request_info and request_info.get('postData'):
+            data = request_info.get('postData')
+        # If postData data is not found, raise an exception.
+        if data is None:
+            message = f'[requestCompareValue] not get listener data for ' \
+                      f'[{operation}]'
+            raise FlybirdsException(message, error_name=ErrorName.CompareMissActualRequestError)
+
+        # Check the data format.
+        if data.startswith('<?xml') or data.startswith('<'):
+            try:
+                # If the format is XML, parse the XML.
+                root = et.fromstring(data)
+
+                # Parse the XML path expression.
+                target_elements = root.findall(target_path)
+                # Get the target data from XML.
+                target_values = [elem.text for elem in target_elements]
+                # Print a log message.
+                log.info(f'[requestCompareValue] get xmlPathData: {target_values}')
+
+            except ValueError:
+                message = f'[xml convert] format is wrong, data:' + data
+                raise FlybirdsException(message, error_name=ErrorName.CompareXmlFormatError)
+
+        else:
+            try:
+                # If the format is not XML, it is assumed to be JSON. Parse the JSON.
+                # Parse the data into a dictionary.
+                json_data = json.loads(data)
+                # Parse the JSON path expression.
+                json_path_expr = parse_path(target_path)
+                # Get the target data from JSON.
+                target_values = [match.value for match in json_path_expr.find(json_data)]
+                # Print a log message.
+                log.info(f'[requestCompareValue] get jsonPathData: {target_values}')
+
+            except ValueError:
+                message = f'[json convert] format is wrong, data:' + data
+                raise FlybirdsException(message, error_name=ErrorName.CompareJsonFormatError)
+
+        # If the target data does not exist, raise an exception.
+        if len(target_values) == 0:
+            message = f'[requestCompareValue] cannot get the value from ' \
+                      f'path [{target_path}] of [{operation}]'
+            raise FlybirdsException(message, error_name=ErrorName.CompareMissExpectRequestError)
+
+        # If the actual value is not equal to the expected value, raise an exception.
+        if expect_value == "[@@空@@]" or expect_value == "@@空@@":
+            expect_value = ""
+        if expect_value in str(target_values[0]):
+            message = f'actual value includes expect value, service [{operation}] request ' \
+                      f'parameter [{target_path}] actual value:' \
+                      f'[{target_values[0]}], expect value:' \
+                      f'[{expect_value}]'
+            log.info(message)
+
+        else:
+            message = f'actual value not includes expect value, service [{operation}] request ' \
+                      f'parameter [{target_path}] actual value:' \
+                      f'[{target_values[0]}], expect value:' \
+                      f'[{expect_value}]'
+            raise FlybirdsException(message, error_name=ErrorName.CompareNotEqualError)
+
+    @staticmethod
     def compare_images(context, target_element, compared_picture_path, threshold=None):
 
         # default threshold value
