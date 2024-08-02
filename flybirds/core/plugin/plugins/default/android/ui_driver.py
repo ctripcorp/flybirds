@@ -3,6 +3,7 @@
 ui driver
 """
 import flybirds.core.global_resource as gr
+import flybirds.utils.flybirds_log as log
 from flybirds.core.plugin.plugins.default.ui_driver.poco.poco_manage import \
     poco_init
 from flybirds.core.plugin.plugins.default.ui_driver.paddleocr.ocr_manage import \
@@ -31,7 +32,10 @@ class UIDriver:
     @staticmethod
     def close_driver():
         screen_record = gr.get_value("screenRecord")
-        if gr.get_value("hls_record") is True and gr.get_value("hls_token") is not None:
-            return
+        try:
+            if screen_record is not None and hasattr(screen_record, "destroy"):
+                screen_record.destroy()
+        except Exception as e:
+            log.info(f"clear driver error :{e}")
         if screen_record is not None and hasattr(screen_record, "destroy"):
             screen_record.destroy()

@@ -201,7 +201,9 @@ def full_screen_swipe_click(context, selector, direction):
     screen_size = gr.get_device_size() or [1080, 1920]
     duration = 100
     event_obj = {
-        "context": context, "selector": selector, "direction": direction,
+        "context": context,
+        "selector": selector,
+        "direction": direction,
         "action": FlyBirdsEvent.on_click}
     swipe_pages = 2
     if direction == "up":
@@ -219,7 +221,10 @@ def full_screen_swipe_input(context, selector, param, direction):
     screen_size = gr.get_device_size() or [1080, 1920]
     duration = 100
     event_obj = {
-        "context": context, "selector": selector, "param": param, "direction": duration,
+        "context": context,
+        "selector": selector,
+        "param": param,
+        "direction": duration,
         "action": FlyBirdsEvent.on_input}
     swipe_pages = 2
     if direction == "up":
@@ -230,6 +235,56 @@ def full_screen_swipe_input(context, selector, param, direction):
     log.info(f"swipe {direction} to found {selector} then input {param}")
     gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
                                                      event_obj=event_obj)
+
+
+
+def build_swipe_param():
+    poco_instance = gr.get_value("pocoInstance")
+    param1_dict = dsl_helper.params_to_dic(param1)
+    selector_str = param1_dict["selector"]
+    optional = {}
+    if "path" in param1_dict.keys():
+        optional["path"] = param1_dict["path"]
+    elif "multiSelector" in param1_dict.keys():
+        optional["multiSelector"] = param1_dict["multiSelector"]
+    if "timeout" in param1_dict.keys():
+        optional["timeout"] = float(param1_dict["timeout"])
+    else:
+        optional["timeout"] = gr.get_frame_config_value("wait_ele_timeout", 10)
+
+    param3_dict = dsl_helper.params_to_dic(param3, "swipeNumber")
+
+    start_point = [0.5, 0.5]
+    if "startX" in param3_dict.keys():
+        start_point[0] = float(param3_dict["startX"])
+    if "startY" in param3_dict.keys():
+        start_point[1] = float(param3_dict["startY"])
+
+    screen_size = gr.get_device_size()
+    direction = param2.strip()
+    if g_res is None or not g_res.get_app_config_value("finger_direction_switch", False):
+        direction = point_helper.search_direction_switch(param2.strip())
+
+    distance = float(param3_dict["swipeNumber"])
+
+    duration = None
+    if gr.get_frame_config_value("use_swipe_duration", False):
+        duration = gr.get_frame_config_value("swipe_duration", 1)
+    if "duration" in param3_dict.keys():
+        duration = float(param3_dict["duration"])
+
+    ready_time = gr.get_frame_config_value("swipe_ready_time", 1)
+    if "readyTime" in param3_dict.keys():
+        ready_time = float(param3_dict["readyTime"])
+
+    event_obj = {
+        "context": context,
+        "selector": selector,
+        "param": param,
+        "direction": duration,
+        "action": FlyBirdsEvent.on_input}
+
+    return event_obj
 
 
 @on_method_ready('install_and_setup')

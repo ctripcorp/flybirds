@@ -301,10 +301,11 @@ class ScreenRecord:
         if self.use_airtest_record:
             if self.airtest_version_high:
                 if self.airtest_record_mode == 'ffmpeg':
-                    if gr.get_value("hls_record") is True:
-                        return
-                    if self.output_ffmpeg_file is not None:
-                        os.remove(self.output_ffmpeg_file)
+                    try:
+                        if self.output_ffmpeg_file is not None:
+                            os.remove(self.output_ffmpeg_file)
+                    except Exception as e:
+                        pass
                     return
                 elif self.airtest_record_mode == 'yosemite':
                     if self.dev.yosemite_recorder.recording_file is not None:
@@ -408,25 +409,21 @@ def link_record(scenario, step_index):
         )
         scenario.description.append(data)
         src_path = os.path.join(current_screen_dir, file_name)
+        gr.set_value("record_url", src_path)
         log.info(
             f'default screen_record [link_record] src_path: {src_path}')
 
-        # 流量回放目前走技术中心HLS录屏，不需要拷贝保存
-        if gr.get_value('hls_record') is True:
-            replay_address = g_context.get_global_cache("video_replay_addr")
-            data = (
-                'embeddingsTags, stepIndex={}, <video controls width="375">'
-                '<source src="{}" type="video/m3u8"></video>'.format(
-                    step_index, replay_address
+        try:
+            screen_record.copy_record(src_path)
+            if gr.get_platform().lower() == "android":
+                screen_record.crop_record(src_path)
+        except Exception as e:
+            log.error(
+                "Screen record copy error "
+                "innerError:{}".format(
+                    str(e)
                 )
             )
-            scenario.description.append(data)
-            g_context.set_global_cache('current_record_path', replay_address)
-            return
-
-        screen_record.copy_record(src_path)
-        if gr.get_platform().lower() == "android":
-            screen_record.crop_record(src_path)
 
         try:
             g_context.set_global_cache('current_record_path', src_path)
