@@ -534,9 +534,9 @@ def set_error_info_cache(context, step):
         step_error_info["errorMsg"] = error_info.get("error")
         step_error_info["errorGroup"] = group
         if isinstance(error_info.get("errorName"), str):
-            step_error_info["errorType"] = error_info.get("errorName").value
-        else:
             step_error_info["errorType"] = error_info.get("errorName")
+        else:
+            step_error_info["errorType"] = error_info.get("errorName").value
         step_error_info["selector"] = selector
         step_error_info["traceBack"] = error
 
