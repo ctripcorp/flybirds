@@ -6,12 +6,12 @@ from behave import step
 
 from flybirds.core.exceptions import ErrorFlag, ActionType
 from flybirds.core.global_context import GlobalContext as g_Context
+import flybirds.core.global_resource as gr
+from flybirds.utils import dsl_helper
 from flybirds.utils.dsl_helper import ele_wrap, VerifyStep, RetryType, FlybirdsReportTagInfo
 
 
-# {"type":"path","value":"//div[@class='el-input__"}
-# {"type":"attr","value":"el-input__inner"}
-# {"type":"text","value":"el-input__inner"}
+# 文案[{selector}]的属性[{param2}]为{param3}
 @step("text[{selector}]property[{param2}]is {param3}")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "文案元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
@@ -31,6 +31,7 @@ def text_attr_equal(context, selector=None, param2=None, param3=None):
     g_Context.step.text_attr_equal(context, selector, param2, param3)
 
 
+# 文案[{selector}]的属性[{param2}]包含{param3}
 @step("text[{selector}]property[{param2}]include {param3}")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "文案元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
@@ -51,6 +52,7 @@ def text_attr_container(context, selector=None, param2=None, param3=None):
     g_Context.step.text_attr_container(context, selector, param2, param3)
 
 
+# 文案[{selector}]的属性[{param2}]不包含{param3}
 @step("text[{selector}]property[{param2}]not include {param3}")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "文案元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
@@ -71,6 +73,7 @@ def text_attr_not_container(context, selector=None, param2=None, param3=None):
     g_Context.step.text_attr_not_container(context, selector, param2, param3)
 
 
+# 元素[{selector}]的属性[{param2}]为{param3}
 @step("element[{selector}]property[{param2}]is {param3}")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
@@ -90,6 +93,7 @@ def ele_attr_equal(context, selector=None, param2=None, param3=None):
     g_Context.step.ele_attr_equal(context, selector, param2, param3)
 
 
+# 元素[{selector}]的属性[{param2}]包含{param3}
 @step("element[{selector}]property[{param2}]include {param3}")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
@@ -110,6 +114,7 @@ def ele_attr_container(context, selector=None, param2=None, param3=None):
     g_Context.step.ele_attr_container(context, selector, param2, param3)
 
 
+# 元素[{selector}]的属性[{param2}]不包含{param3}
 @step("element[{selector}]property[{param2}]not include {param3}")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
@@ -130,6 +135,7 @@ def ele_attr_not_container(context, selector=None, param2=None, param3=None):
     g_Context.step.ele_attr_not_container(context, selector, param2, param3)
 
 
+# 鼠标悬浮[{selector}]
 @step("mouse hover[{selector}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
@@ -144,6 +150,7 @@ def hover_ele(context, selector=None):
     g_Context.step.hover_ele(context, selector)
 
 
+# 点击[{selector}]
 @step("click[{selector}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
@@ -155,9 +162,11 @@ def click_ele(context, selector=None):
     :param context: step context
     :param selector: locator string for selector element (or None).
     """
+
     g_Context.step.click_ele(context, selector)
 
 
+# 点击文案[{selector}]
 @step("click text[{selector}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "文本元素"}]}, verify_function="common_error_parse",
@@ -172,6 +181,7 @@ def click_text(context, selector=None):
     g_Context.step.click_text(context, selector)
 
 
+# 点击扫描文案[{selector}]
 @step("click ocr text[{selector}]")
 @ele_wrap
 def click_ocr_text(context, selector=None):
@@ -183,6 +193,7 @@ def click_ocr_text(context, selector=None):
     g_Context.step.click_ocr_text(context, selector)
 
 
+# 点击区域[{selector}]中扫描文案[{param2}]
 @step("click ocr regional[{selector}] text[{param2}]")
 @ele_wrap
 def click_ocr_regional_text(context, selector, param2):
@@ -195,6 +206,7 @@ def click_ocr_regional_text(context, selector, param2):
     g_Context.step.click_regional_ocr_text(context, selector, param2)
 
 
+# 点击区域[{selector}]
 @step("click ocr regional[{selector}]")
 @ele_wrap
 def click_regional_ocr(context, selector):
@@ -206,6 +218,7 @@ def click_regional_ocr(context, selector):
     g_Context.step.click_regional_ocr(context, selector)
 
 
+# 点击图片[{selector}]
 @step("click image[{selector}]")
 @ele_wrap
 def click_image(context, selector=None):
@@ -217,6 +230,7 @@ def click_image(context, selector=None):
     g_Context.step.click_image(context, selector)
 
 
+# 点击屏幕位置[{x},{y}]
 @step("click position[{x},{y}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "point", "value": "x", "name": "x坐标"}, {"type": "point", "value": "y", "name": "y坐标"}]},
@@ -233,6 +247,7 @@ def click_coordinates(context, x=None, y=None):
     g_Context.step.click_coordinates(context, x, y)
 
 
+# 在[{selector}]中输入[{param2}]
 @step("in[{selector}]input[{param2}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "path", "text": "param2", "name": "文本"}]},
@@ -249,6 +264,7 @@ def ele_input(context, selector=None, param2=None):
     g_Context.step.ele_input(context, selector, param2)
 
 
+# 在扫描文字[{selector}]中输入[{param2}]
 @step("in ocr[{selector}]input[{param2}]")
 @ele_wrap
 def ocr_text_input(context, selector=None, param2=None):
@@ -261,6 +277,7 @@ def ocr_text_input(context, selector=None, param2=None):
     g_Context.step.ocr_text_input(context, selector, param2)
 
 
+# 元素[{selector}]位置[{param2}]秒内未变动
 @step("element[{selector}]position not change in[{param2}]seconds")
 @VerifyStep()
 @ele_wrap
@@ -275,6 +292,7 @@ def position_not_change(context, selector=None, param2=None):
     g_Context.step.position_not_change(context, selector, param2)
 
 
+# [{selector}]向{param2}滑动[{param3}]
 @step("[{selector}]slide to {param2} distance[{param3}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"},
@@ -295,6 +313,7 @@ def ele_swipe(context, selector=None, param2=None, param3=None):
     g_Context.step.ele_swipe(context, selector, param2, param3)
 
 
+# [{selector}]滑动[{left},{top}]
 @step("[{selector}]slide to[{left},{top}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "position", "value": "left", "name": "左"},
@@ -313,6 +332,7 @@ def ele_direction_swipe(context, selector=None, left=None, top=None):
     g_Context.step.ele_swipe_to(context, selector, left, top)
 
 
+# 全屏向{param1}滑动[{param2}]", "向{param1}滑动[{param2}]
 @step("slide to {param1} distance[{param2}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "direction", "value": "param1", "name": "方向"},
@@ -326,9 +346,11 @@ def full_screen_swipe(context, param1=None, param2=None):
     :param param1: slide direction (top/bottom/left/right)
     :param param2: slide distance
     """
+
     g_Context.step.full_screen_swipe(context, param1, param2)
 
 
+# 存在[{selector}]的文案
 @step("exist text[{selector}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "文案"}]},
@@ -342,9 +364,16 @@ def wait_text_exist(context, selector=None):
     :param context: step context
     :param selector: locator string for text element (or None).
     """
-    g_Context.step.wait_text_exist(context, selector)
+    try:
+        gr.get_frame_config_value("wait_ele_timeout", 10)
+        g_Context.step.wait_text_exist(context, selector)
+    except Exception:
+        # use fuzzy match
+        selector = ".*" + selector + ".*" + ",fuzzyMatch = true"
+        g_Context.step.wait_text_exist(context, selector)
 
 
+# 页面存在文案[{selector}]
 @step("exist page text[{selector}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "文案"}]},
@@ -356,6 +385,7 @@ def wait_page_text_exist(context, selector=None):
     g_Context.step.wait_page_text_exist(context, selector)
 
 
+# 扫描存在[{selector}]的文案
 @step("ocr exist text[{selector}]")
 @VerifyStep()
 @ele_wrap
@@ -368,6 +398,7 @@ def ocr_text_exist(context, selector=None):
     g_Context.step.ocr_text_exist(context, selector)
 
 
+# 扫描区域[{selector}]中存在[{param2}]的文案
 @step("ocr regional[{selector}] exist text[{param2}]")
 @VerifyStep()
 @ele_wrap
@@ -381,6 +412,7 @@ def ocr_regional_text_exist(context, selector, param2):
     g_Context.step.ocr_regional_text_exist(context, selector, param2)
 
 
+# 扫描包含[{selector}]的文案
 @step("ocr contain text[{selector}]")
 @VerifyStep()
 @ele_wrap
@@ -393,6 +425,7 @@ def ocr_text_contain(context, selector=None):
     g_Context.step.ocr_text_contain(context, selector)
 
 
+# 扫描区域[{selector}]中包含[{param2}]的文案
 @step("ocr regional[{selector}] contain text[{param2}]")
 @VerifyStep()
 @ele_wrap
@@ -406,6 +439,7 @@ def ocr_regional_text_contain(context, selector, param2):
     g_Context.step.ocr_regional_text_contain(context, selector, param2)
 
 
+# 页面扫描完成出现文字[{selector}]
 @step("page ocr complete find text[{selector}]")
 @VerifyStep()
 @ele_wrap
@@ -419,6 +453,7 @@ def wait_ocr_text_appear(context, selector=None):
     g_Context.step.wait_ocr_text_appear(context, selector)
 
 
+# 不存在[{selector}]的文案
 @step("not exist text[{selector}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "文案"}]},
@@ -435,6 +470,7 @@ def text_not_exist(context, selector=None):
     g_Context.step.text_not_exist(context, selector)
 
 
+# 扫描不存在[{selector}]的文案
 @step("ocr not exist text[{selector}]")
 @VerifyStep()
 @ele_wrap
@@ -447,6 +483,7 @@ def ocr_text_not_exist(context, selector=None):
     g_Context.step.ocr_text_not_exist(context, selector)
 
 
+# 文案[{selector}]消失
 @step("text[{selector}]disappear")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "文本"}]}, verify_function="common_error_parse",
@@ -462,6 +499,7 @@ def wait_text_disappear(context, selector=None):
     g_Context.step.wait_text_disappear(context, selector)
 
 
+# 存在[{p_selector}]的[{c_selector}]的元素
 @step("exist [{p_selector}] subNode [{c_selector}] element")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"},
@@ -480,6 +518,7 @@ def find_child_from_parent(context, p_selector=None, c_selector=None):
     g_Context.step.find_child_from_parent(context, p_selector, c_selector)
 
 
+# 存在[{selector}]的元素
 @step("exist[{selector}]element")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]},
@@ -495,6 +534,7 @@ def wait_ele_exit(context, selector=None):
     g_Context.step.wait_ele_exit(context, selector)
 
 
+# 不存在[{selector}]的元素
 @step("not exist element[{selector}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]},
@@ -511,6 +551,7 @@ def ele_not_exit(context, selector=None):
     g_Context.step.ele_not_exit(context, selector)
 
 
+# 元素[{selector}]消失
 @step("element[{selector}]disappear")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
@@ -526,6 +567,7 @@ def wait_ele_disappear(context, selector=None):
     g_Context.step.wait_ele_disappear(context, selector)
 
 
+# [{selector}]的文案为[{param2}]
 @step("the text of element[{selector}]is[{param2}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]},
@@ -543,6 +585,7 @@ def ele_text_equal(context, selector=None, param2=None):
     g_Context.step.ele_text_equal(context, selector, param2)
 
 
+# [{selector}]的文案包含[{param2}]
 @step("the text of element[{selector}]include[{param2}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]},
@@ -560,6 +603,7 @@ def ele_text_container(context, selector=None, param2=None):
     g_Context.step.ele_text_container(context, selector, param2)
 
 
+# [{selector}]的文案不包含[{param2}]
 @step("the text of element[{selector}]not include[{param2}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]},
@@ -577,6 +621,7 @@ def ele_text_not_container(context, selector=None, param2=None):
     g_Context.step.ele_text_not_container(context, selector, param2)
 
 
+# 页面渲染完成出现元素[{selector}]
 @step("page rendering complete appears element[{selector}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
@@ -592,6 +637,7 @@ def wait_ele_appear(context, selector=None):
     g_Context.step.wait_ele_appear(context, selector)
 
 
+# 存在元素[{selector}]
 @step("existing element[{selector}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]},
@@ -628,6 +674,7 @@ def swipe_to_ele(context, p_selector=None, param2=None, c_selector=None):
     g_Context.step.swipe_to_ele(context, p_selector, param2, c_selector)
 
 
+# 向{param1}查找[{selector}]的元素
 @step("from {param1} find[{selector}]element")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]},
@@ -645,6 +692,7 @@ def full_screen_swipe_to_ele_aaa(context, param1=None, selector=None):
     g_Context.step.full_screen_swipe_to_ele_aaa(context, param1, selector)
 
 
+# 向{param1}扫描[{selector}]的文案
 @step("from {param1} find[{selector}]text")
 @VerifyStep()
 @ele_wrap
@@ -659,6 +707,7 @@ def full_screen_swipe_to_ocr_txt(context, param1=None, selector=None):
     g_Context.step.full_screen_swipe_to_ocr_txt(context, param1, selector)
 
 
+# 向{param1}查找[{selector}]的图像
 @step("from {param1} find[{selector}]image")
 @VerifyStep()
 @ele_wrap
@@ -673,6 +722,7 @@ def full_screen_swipe_to_img(context, param1=None, selector=None):
     g_Context.step.full_screen_swipe_to_img(context, param1, selector)
 
 
+# 移动元素[{selector}]至可视区域
 @step("move element[{selector}]to view")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
@@ -688,6 +738,7 @@ def scroll_ele_into_view(context, selector=None):
     g_Context.step.scroll_ele_into_view(context, selector)
 
 
+# 在[{selector}]中清空并输入[{param2}]
 @step("clear [{selector}] and input[{param2}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "text", "value": "param2", "name": "文本"}]},
@@ -704,6 +755,7 @@ def ele_clear_input(context, selector=None, param2=None):
     g_Context.step.ele_clear_input(context, selector, param2)
 
 
+# 清空输入框[{selector}]
 @step("clear input[{selector}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]},
@@ -719,6 +771,7 @@ def clear_input(context, selector=None):
     g_Context.step.clear_input(context, selector)
 
 
+# 在[{selector}]中选择[{param2}]
 @step("from [{selector}] select [{param2}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "value", "value": "param2", "name": "值"}]},
@@ -757,18 +810,21 @@ def find_text_from_parent(context, p_selector=None, c_selector=None,
                                          param3)
 
 
+# 存在图像[{param}]
 @step("exist image [{param}]")
 @VerifyStep()
 def img_exist(context, param):
     g_Context.step.img_exist(context, param)
 
 
+# 不存在图像[{param}]
 @step("not exist image [{param}]")
 @VerifyStep()
 def img_not_exist(context, param):
     g_Context.step.img_not_exist(context, param)
 
 
+# 点触[{selector}]
 @step("touch[{selector}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]},
@@ -784,6 +840,7 @@ def touch_ele(context, selector=None):
     g_Context.step.ele_touch(context, selector)
 
 
+# 点触文本[{selector}]
 @step("touch text[{selector}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "文案"}]},
@@ -799,6 +856,7 @@ def touch_text(context, selector=None):
     g_Context.step.touch_text(context, selector)
 
 
+# 点击元素[{selector}]位置[{x},{y}]
 @step("click ele [{selector}] position[{x},{y}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "point", "value": "x", "name": "x坐标"},
@@ -817,6 +875,7 @@ def click_ele_point(context, selector, x=None, y=None):
     g_Context.step.click_ele_point(context, selector, int(float(x)), int(float(y)))
 
 
+# 点击[{selector}]并取消弹窗
 @step("click[{selector}] and cancel dialog")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
@@ -831,6 +890,7 @@ def close_dialog(context, selector):
     g_Context.step.click_ele(context, selector)
 
 
+# 点击[{selector}]并接受弹窗
 @step("click[{selector}] and accept dialog")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
