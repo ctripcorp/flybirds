@@ -288,15 +288,9 @@ def wait_ocr_text_appear(context, param):
                 pass
             line_param = trim_param.replace("-", "")
             line_txt = txt.replace("-", "")
-            pattern = r'.*' + line_param + r'.*'  # fuzzy match
-            regex = re.compile(pattern)
-            matched = regex.search(line_txt)
-            if matched:
-                log.warn(f"[ocr txt contain line replace] param: {param} found in txt: {txt} with fuzzymatch:{pattern}")
+            if line_param in line_txt:
+                log.warn(f"[ocr txt contain line replace] param: {param} found in txt: {txt}")
                 return True
-            # if line_param in line_txt:
-            #     log.warn(f"[ocr txt contain line replace] param: {param} found in txt: {txt}")
-            #     return True
         if time.time() - start > 10:
             detect_start = time.time()
             poco_ele.detect_error(context)

@@ -124,15 +124,9 @@ def click_ocr_text(context, param):
                 fixed_txt = paddle_fix_txt([line[1][0]], True)
                 line_param = trim_param.replace("-", "")
                 line_txt = fixed_txt[0].replace("-", "")
-                pattern = r'.*' + line_param + r'.*'  # fuzzy match
-                regex = re.compile(pattern)
-                matched = regex.search(line_txt)
-                if matched:
-                    log.warn(f"[click ocr txt] click {param} found: {line[1][0]}")
+                if trim_param == fixed_txt[0] or line_param == line_txt:
+                    log.info(f"[click ocr txt] click txt found: {line[1][0]}")
                     flag = True
-                # if trim_param == fixed_txt[0] or line_param == line_txt:
-                #     log.info(f"[click ocr txt] click txt found: {line[1][0]}")
-                #     flag = True
             if flag is True:
                 box = line[0]
                 x = (box[0][0] + box[1][0]) / 2
