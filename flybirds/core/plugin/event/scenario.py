@@ -280,11 +280,7 @@ class OnAfter:  # pylint: disable=too-few-public-methods
                 if formatter is not None and formatter.current_feature_element is not None:
                     formatter.current_feature_element["verifyCount"] = GlobalContext.get_global_cache("verifyStepCount")
                     format_error(context, scenario, formatter)
-
-            log.info('[scenario_OnAfter] start!')
-            if scenario.status == "failed":
-                scenario_fail(context, scenario)
-            else:
+            if scenario.status != "failed":
                 scenario_success(context, scenario)
 
             cur_platform = GlobalContext.platform
@@ -306,6 +302,34 @@ class OnAfter:  # pylint: disable=too-few-public-methods
             GlobalContext.set_global_cache("current_record_path", None)
         except:
             pass
+
+
+class AfterScenarioFailScreenShoot:
+    """
+    scenario after event
+    """
+
+    name = "AfterScenarioFail"
+    order = 0
+
+    @staticmethod
+    def can(context, scenario):
+        if scenario.status == "failed":
+            return True
+        return False
+
+    @staticmethod
+    def run(context, scenario):
+        """
+        exe scenario after
+        """
+        try:
+            log.info('[scenario_OnAfter] start!')
+            if scenario.status == "failed":
+                scenario_fail(context, scenario)
+        except Exception as e:
+            traceback.print_exc()
+            log.info(f"failed to run scenario after, error: {str(e)}")
 
 
 class OnAfterClean:
@@ -335,3 +359,4 @@ class OnAfterClean:
 var = GlobalContext.join("before_scenario_processor", OnBefore, 1)
 var1 = GlobalContext.join("after_scenario_processor", OnAfter, 1)
 var3 = GlobalContext.join("after_scenario_processor", OnAfterClean, 1)
+var4 = GlobalContext.join("after_scenario_processor", AfterScenarioFailScreenShoot, 1)
