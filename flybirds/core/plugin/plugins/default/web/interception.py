@@ -915,6 +915,7 @@ def get_matched_json(refered_json, matched_json):
 
 def handle_diff(actual_request_obj, expect_request_obj, operation,
                 target_file_name, contains_key):
+    log.info('run in handle_diff')
     exclude_paths, exclude_regex_paths = handle_ignore_node(operation)
     ignore_order = gr.get_web_info_value("ignore_order", False)
 
