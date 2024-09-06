@@ -46,6 +46,9 @@ class ErrorName(Enum):
     UrlNotFoundError: str = "UrlNotFoundError"
     UrlNotMatchError: str = "UrlNotMatchError"
     ParamIsNoneError: str = "ParamIsNoneError"
+    PositionNotChangeException: str = "PositionNotChangeException"
+    PositionChangeException: str = "PositionChangeException"
+    FlybirdInputException: str = "FlybirdInputException"
 
 
 error_map = {
@@ -106,6 +109,23 @@ error_map = {
 }
 
 
+class FlybirdInputException(Exception):
+    """
+    not find flybirds
+    """
+    error_name = ErrorName.FlybirdInputException
+
+    def __init__(self, message, select_dic):
+        message = f"selectors={str(select_dic)} {message}"
+        if error is not None:
+            message = f"{message} innerErr:{error}"
+        super().__init__(message)
+        self.message = message
+
+    def __str__(self):
+        return str(self.message)
+
+
 class FlybirdNotFoundException(Exception):
     """
     not find flybirds
@@ -127,6 +147,7 @@ class PositionNotChangeException(Exception):
     """
     position not change
     """
+    error_name = ErrorName.PositionNotChangeException
 
     def __init__(self, message):
         super().__init__(message)
@@ -188,6 +209,7 @@ class FlybirdPositionChanging(Exception):
     """
     position changing
     """
+    error_name = ErrorName.PositionChangeException
 
     def __init__(self, message):
         super().__init__()

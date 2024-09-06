@@ -10,7 +10,7 @@ import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap \
     as find_snap
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_manage as pm
 import flybirds.utils.flybirds_log as log
-from flybirds.core.exceptions import FlybirdEleExistsException
+from flybirds.core.exceptions import FlybirdEleExistsException, ErrorName
 from flybirds.core.exceptions import FlybirdVerifyException
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.utils import language_helper as lan
@@ -78,7 +78,7 @@ def wait_exists(poco, selector_str, optional):
         message = "during {}s time, not find {} in page".format(
             optional["timeout"], selector_str
         )
-        raise FlybirdVerifyException(message)
+        raise FlybirdVerifyException(message, error_name=ErrorName.ElementNotFoundError)
 
 
 def not_exist(poco, selector_str, optional):
@@ -129,7 +129,7 @@ def wait_disappear(poco, selector_str, optional):
         message = "during {}s time, {} not disappear in page".format(
             optional["timeout"], selector_str
         )
-        raise FlybirdVerifyException(message)
+        raise FlybirdVerifyException(message, error_name=ErrorName.ElementFoundError)
 
 
 def detect_error(context):

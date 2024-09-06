@@ -6,7 +6,7 @@ import time
 
 import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap as findsnap
 import flybirds.utils.verify_helper as verify_helper
-from flybirds.core.exceptions import FlybirdVerifyException
+from flybirds.core.exceptions import FlybirdVerifyException, ErrorName
 
 
 def find_ele_by_snap(poco, config, optional):
@@ -48,7 +48,7 @@ def find_ele_by_snap(poco, config, optional):
         message = "during {}s time, not find {} in page".format(
             optional["timeout"], config
         )
-        raise FlybirdVerifyException(message)
+        raise FlybirdVerifyException(message, error_name=ErrorName.ElementNotFoundError)
 
 
 def verify_ele_by_snap(poco, config, optional):
@@ -79,8 +79,8 @@ def verify_ele_by_snap(poco, config, optional):
                 if not (find_result is None):
                     target_str = (
                         (find_result[0].get("payload").get("text") or "")
-                        .strip()
-                        .replace(u"\u200b", "")
+                            .strip()
+                            .replace(u"\u200b", "")
                     )
                     find_success = target_str == expect_str
                     if find_success:
