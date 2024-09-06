@@ -205,6 +205,25 @@ class Element:
                       f"but actual has find it."
             raise FlybirdVerifyException(message, error_name=ErrorName.ElementFoundError)
 
+    def ele_exist_value(self, context, selector, param):
+        locator, timeout = self.get_ele_locator(selector)
+        ele_value = locator.evaluate('(element) => { console.log("element.value");return element.value}',
+                                     timeout=timeout)
+        if ele_value is None or param.strip() != ele_value.strip():
+            message = f"expect the value of [{selector}] element is [{param}] " \
+                      f"but actual is [{ele_value}]"
+            raise FlybirdVerifyException(message, error_name=ErrorName.ElementFoundError)
+
+    def ele_contain_value(self, context, selector, param):
+        locator, timeout = self.get_ele_locator(selector)
+        ele_value = locator.evaluate('(element) => { console.log("element.value");return element.value}',
+                                     timeout=timeout)
+
+        if ele_value is None or param.strip() not in ele_value.strip():
+            message = f"expect the value of [{selector}] element is [{param}] " \
+                      f"but actual is [{ele_value}]"
+            raise FlybirdVerifyException(message, error_name=ErrorName.ElementFoundError)
+
     def wait_for_ele(self, context, param):
         locator, timeout = self.get_ele_locator(param)
         locator.wait_for(timeout=timeout, state='visible')

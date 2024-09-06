@@ -203,6 +203,16 @@ class Step:
         ele.ele_exist(context, selector)
 
     @classmethod
+    def ele_exist_value(cls, context, selector, param):
+        ele = gr.get_value("plugin_ele")
+        ele.ele_exist_value(context, selector, param)
+
+    @classmethod
+    def ele_contain_value(cls, context, selector, param):
+        ele = gr.get_value("plugin_ele")
+        ele.ele_contain_value(context, selector, param)
+
+    @classmethod
     def wait_ele_exit(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.ele_exist(context, selector)

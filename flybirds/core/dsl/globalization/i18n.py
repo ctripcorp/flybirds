@@ -249,6 +249,8 @@ step_language = {
         "open mock request service [{service}] match pathList [{path_list}] and bind mockCase[{mock_case_id}]": [
             "开启服务[{service}]匹配请求报文路径[{path_list}]并绑定MockCase[{mock_case_id}]"],
         "exist page text[{selector}]": ["页面存在文案[{selector}]"],
+        "the element[{selector}]value is[{param2}]": ["元素[{selector}]的value为[{param2}]"],
+        "the element[{selector}]value contains[{param2}]": ["元素[{selector}]的value包含[{param2}]"],
         "click[{selector}] and accept dialog": ["点击[{selector}]并接受弹窗"],
         "click[{selector}] and cancel dialog": ["点击[{selector}]并取消弹窗"],
     },

@@ -660,6 +660,43 @@ def exist_ele(context, selector=None):
     g_Context.step.exist_ele(context, selector)
 
 
+@step("the element[{selector}]value is[{param2}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.exist, "value": "param2"},
+                       verify_function="ele_verify_text_error_parse")
+@VerifyStep()
+@ele_wrap
+def ele_exist_value(context, selector=None, param2=None):
+    """
+    元素[{selector}]的值为[{param2}]
+    The specified selector element string exists in the page
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param param2: element value.
+    """
+    g_Context.step.ele_exist_value(context, selector, param2)
+    # g_Context.step.exist_ele(context, selector)
+
+
+@step("the element[{selector}]value contains[{param2}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.text_contains, "value": "param2"},
+                       verify_function="ele_verify_text_error_parse")
+@VerifyStep()
+@ele_wrap
+def ele_contain_value(context, selector=None, param2=None):
+    """
+    元素[{selector}]的值包含[{param2}]
+    The specified selector element string exists in the page
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param param2: element value.
+    """
+    g_Context.step.ele_contain_value(context, selector, param2)
+
+
 @step("in[{p_selector}]from {param2} find[{c_selector}]element")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "p_selector", "name": "元素"},
