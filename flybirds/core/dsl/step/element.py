@@ -6,20 +6,21 @@ from behave import step
 
 from flybirds.core.exceptions import ErrorFlag, ActionType
 from flybirds.core.global_context import GlobalContext as g_Context
+import flybirds.core.global_resource as gr
+from flybirds.utils import dsl_helper
 from flybirds.utils.dsl_helper import ele_wrap, VerifyStep, RetryType, FlybirdsReportTagInfo
 
 
-# {"type":"path","value":"//div[@class='el-input__"}
-# {"type":"attr","value":"el-input__inner"}
-# {"type":"text","value":"el-input__inner"}
 @step("text[{selector}]property[{param2}]is {param3}")
 @FlybirdsReportTagInfo(group="element", selectors={
-    "path": [{"type": "path", "value": "selector", "name": "文案元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
+    "path": [{"type": "path", "value": "selector", "name": "文案元素"},
+             {"type": "attr", "value": "param2", "name": "属性"}]},
                        verify={"type": ErrorFlag.equ, "value": "param3"}, verify_function="ele_verify_attr_error_parse")
 @VerifyStep()
 @ele_wrap
 def text_attr_equal(context, selector=None, param2=None, param3=None):
     """
+    文案[{selector}]的属性[{param2}]为{param3}
     Check if the value of the attribute param2 of the text element param1 in
      the page is param3
 
@@ -33,13 +34,15 @@ def text_attr_equal(context, selector=None, param2=None, param3=None):
 
 @step("text[{selector}]property[{param2}]include {param3}")
 @FlybirdsReportTagInfo(group="element", selectors={
-    "path": [{"type": "path", "value": "selector", "name": "文案元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
+    "path": [{"type": "path", "value": "selector", "name": "文案元素"},
+             {"type": "attr", "value": "param2", "name": "属性"}]},
                        verify={"type": ErrorFlag.contains, "value": "param3"},
                        verify_function="ele_verify_attr_error_parse")
 @VerifyStep()
 @ele_wrap
 def text_attr_container(context, selector=None, param2=None, param3=None):
     """
+    文案[{selector}]的属性[{param2}]包含{param3}
     Check if the value of the attribute param2 of the text element param1 in
      the page is param3
 
@@ -53,13 +56,15 @@ def text_attr_container(context, selector=None, param2=None, param3=None):
 
 @step("text[{selector}]property[{param2}]not include {param3}")
 @FlybirdsReportTagInfo(group="element", selectors={
-    "path": [{"type": "path", "value": "selector", "name": "文案元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
+    "path": [{"type": "path", "value": "selector", "name": "文案元素"},
+             {"type": "attr", "value": "param2", "name": "属性"}]},
                        verify={"type": ErrorFlag.not_contains, "value": "param3"},
                        verify_function="ele_verify_attr_error_parse")
 @VerifyStep()
 @ele_wrap
 def text_attr_not_container(context, selector=None, param2=None, param3=None):
     """
+    案[{selector}]的属性[{param2}]不包含{param3}
     Check if the value of the attribute param2 of the text element param1 in
      the page is param3
 
@@ -73,12 +78,14 @@ def text_attr_not_container(context, selector=None, param2=None, param3=None):
 
 @step("element[{selector}]property[{param2}]is {param3}")
 @FlybirdsReportTagInfo(group="element", selectors={
-    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
+    "path": [{"type": "path", "value": "selector", "name": "元素"},
+             {"type": "attr", "value": "param2", "name": "属性"}]},
                        verify={"type": ErrorFlag.equ, "value": "param3"}, verify_function="ele_verify_attr_error_parse")
 @VerifyStep()
 @ele_wrap
 def ele_attr_equal(context, selector=None, param2=None, param3=None):
     """
+    元素[{selector}]的属性[{param2}]为{param3}
     Check if the value of the attribute param2 of the selector element param1
      in the page is param3
 
@@ -92,13 +99,15 @@ def ele_attr_equal(context, selector=None, param2=None, param3=None):
 
 @step("element[{selector}]property[{param2}]include {param3}")
 @FlybirdsReportTagInfo(group="element", selectors={
-    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
+    "path": [{"type": "path", "value": "selector", "name": "元素"},
+             {"type": "attr", "value": "param2", "name": "属性"}]},
                        verify={"type": ErrorFlag.contains, "value": "param3"},
                        verify_function="ele_verify_attr_error_parse")
 @VerifyStep()
 @ele_wrap
 def ele_attr_container(context, selector=None, param2=None, param3=None):
     """
+    元素[{selector}]的属性[{param2}]包含{param3}
     Check if the value of the attribute param2 of the selector element param1
      in the page is param3
 
@@ -112,13 +121,15 @@ def ele_attr_container(context, selector=None, param2=None, param3=None):
 
 @step("element[{selector}]property[{param2}]not include {param3}")
 @FlybirdsReportTagInfo(group="element", selectors={
-    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "attr", "value": "param2", "name": "属性"}]},
+    "path": [{"type": "path", "value": "selector", "name": "元素"},
+             {"type": "attr", "value": "param2", "name": "属性"}]},
                        verify={"type": ErrorFlag.not_contains, "value": "param3"},
                        verify_function="ele_verify_attr_error_parse")
 @VerifyStep()
 @ele_wrap
 def ele_attr_not_container(context, selector=None, param2=None, param3=None):
     """
+    元素[{selector}]的属性[{param2}]不包含{param3}
     Check if the value of the attribute param2 of the selector element param1
      in the page is param3
 
@@ -137,7 +148,9 @@ def ele_attr_not_container(context, selector=None, param2=None, param3=None):
 @ele_wrap
 def hover_ele(context, selector=None):
     """
+    鼠标悬浮[{selector}]
     Hover on the selector element
+    
     :param context: step context
     :param selector: locator string for selector element (or None).
     """
@@ -151,10 +164,12 @@ def hover_ele(context, selector=None):
 @ele_wrap
 def click_ele(context, selector=None):
     """
+    点击[{selector}]
     Click on the selector element
     :param context: step context
     :param selector: locator string for selector element (or None).
     """
+
     g_Context.step.click_ele(context, selector)
 
 
@@ -165,6 +180,7 @@ def click_ele(context, selector=None):
 @ele_wrap
 def click_text(context, selector=None):
     """
+    点击文案[{selector}]
     Click on the text element
     :param context: step context
     :param selector: locator string for text element (or None).
@@ -176,6 +192,7 @@ def click_text(context, selector=None):
 @ele_wrap
 def click_ocr_text(context, selector=None):
     """
+    点击扫描文案[{selector}]
     Click on the ocr text element
     :param context: step context
     :param selector: locator string for text element (or None).
@@ -187,6 +204,7 @@ def click_ocr_text(context, selector=None):
 @ele_wrap
 def click_ocr_regional_text(context, selector, param2):
     """
+    点击区域[{selector}]中扫描文案[{param2}]
     Click on the ocr text element
     :param context: step context
     :param selector: locator string for text element (or None).
@@ -199,6 +217,7 @@ def click_ocr_regional_text(context, selector, param2):
 @ele_wrap
 def click_regional_ocr(context, selector):
     """
+    点击区域[{selector}]
     Click on the ocr text element
     :param context: step context
     :param selector: locator string for text element (or None).
@@ -210,6 +229,7 @@ def click_regional_ocr(context, selector):
 @ele_wrap
 def click_image(context, selector=None):
     """
+    点击图片[{selector}]
     Click on the image
     :param context: step context
     :param selector: locator string for text element (or None).
@@ -225,6 +245,7 @@ def click_image(context, selector=None):
 @ele_wrap
 def click_coordinates(context, x=None, y=None):
     """
+    点击屏幕位置[{x},{y}]
     Click on the screen coordinates
     :param context: step context
     :param x: Coordinate x-axis
@@ -235,12 +256,14 @@ def click_coordinates(context, x=None, y=None):
 
 @step("in[{selector}]input[{param2}]")
 @FlybirdsReportTagInfo(group="element", selectors={
-    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "path", "text": "param2", "name": "文本"}]},
+    "path": [{"type": "path", "value": "selector", "name": "元素"},
+             {"type": "path", "text": "param2", "name": "文本"}]},
                        verify_function="common_error_parse",
                        action=ActionType.input)
 @ele_wrap
 def ele_input(context, selector=None, param2=None):
     """
+    在[{selector}]中输入[{param2}]
     Enter the value param2 in the selector element param1
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -253,6 +276,7 @@ def ele_input(context, selector=None, param2=None):
 @ele_wrap
 def ocr_text_input(context, selector=None, param2=None):
     """
+    在扫描文字[{selector}]中输入[{param2}]
     Enter the value param2 in the selector element param1
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -266,6 +290,7 @@ def ocr_text_input(context, selector=None, param2=None):
 @ele_wrap
 def position_not_change(context, selector=None, param2=None):
     """
+    元素[{selector}]位置[{param2}]秒内未变动
     Check that the position of the selector element param1 has not changed
     within param2 seconds
     :param context: step context
@@ -285,6 +310,7 @@ def position_not_change(context, selector=None, param2=None):
 @ele_wrap
 def ele_swipe(context, selector=None, param2=None, param3=None):
     """
+    [{selector}]向{param2}滑动[{param3}]
     Selector element param1 slides in the specified direction param2 and
     slides the specified distance param3
     :param context: step context
@@ -303,6 +329,7 @@ def ele_swipe(context, selector=None, param2=None, param3=None):
 @ele_wrap
 def ele_direction_swipe(context, selector=None, left=None, top=None):
     """
+    [{selector}]滑动[{left},{top}]
     Selector element param1 slides in the specified direction param2 and
     slides the specified distance param3
     :param context: step context
@@ -321,11 +348,13 @@ def ele_direction_swipe(context, selector=None, left=None, top=None):
 @ele_wrap
 def full_screen_swipe(context, param1=None, param2=None):
     """
+    全屏向{param1}滑动[{param2}]", "向{param1}滑动[{param2}]
     Slide the full screen in the specified direction for the specified distance
     :param context: step context
     :param param1: slide direction (top/bottom/left/right)
     :param param2: slide distance
     """
+
     g_Context.step.full_screen_swipe(context, param1, param2)
 
 
@@ -338,6 +367,7 @@ def full_screen_swipe(context, param1=None, param2=None):
 @RetryType('timeout')
 def wait_text_exist(context, selector=None):
     """
+    存在[{selector}]的文案
     The specified text element string exists in the page
     :param context: step context
     :param selector: locator string for text element (or None).
@@ -353,6 +383,12 @@ def wait_text_exist(context, selector=None):
 @ele_wrap
 @RetryType('timeout')
 def wait_page_text_exist(context, selector=None):
+    """
+    页面存在文案[{selector}]
+    The specified text element string exists in the page
+    :param context: step context
+    :param selector: locator string for text element (or None).
+    """
     g_Context.step.wait_page_text_exist(context, selector)
 
 
@@ -361,6 +397,7 @@ def wait_page_text_exist(context, selector=None):
 @ele_wrap
 def ocr_text_exist(context, selector=None):
     """
+    扫描存在[{selector}]的文案
     The specified text element string exists in the page
     :param context: step context
     :param selector: locator string for text element (or None).
@@ -373,6 +410,7 @@ def ocr_text_exist(context, selector=None):
 @ele_wrap
 def ocr_regional_text_exist(context, selector, param2):
     """
+    扫描区域[{selector}]中存在[{param2}]的文案
     The specified text element string exists in the page
     :param context: step context
     :param selector: locator string for text element (or None).
@@ -386,6 +424,7 @@ def ocr_regional_text_exist(context, selector, param2):
 @ele_wrap
 def ocr_text_contain(context, selector=None):
     """
+    扫描包含[{selector}]的文案
     The specified text element string exists in the page
     :param context: step context
     :param selector: locator string for text element (or None).
@@ -398,6 +437,7 @@ def ocr_text_contain(context, selector=None):
 @ele_wrap
 def ocr_regional_text_contain(context, selector, param2):
     """
+    扫描区域[{selector}]中包含[{param2}]的文案
     The specified text element string exists in the page
     :param context: step context
     :param selector: locator string for text element (or None).
@@ -411,6 +451,7 @@ def ocr_regional_text_contain(context, selector, param2):
 @ele_wrap
 def wait_ocr_text_appear(context, selector=None):
     """
+    页面扫描完成出现文字[{selector}]
     Wait for the page to finish rendering and the selector element param1
      to appear
     :param context: step context
@@ -428,6 +469,7 @@ def wait_ocr_text_appear(context, selector=None):
 @RetryType('timeout')
 def text_not_exist(context, selector=None):
     """
+    不存在[{selector}]的文案
     The specified text element string does not exist in the page
     :param context: step context
     :param selector: locator string for text element (or None).
@@ -440,6 +482,7 @@ def text_not_exist(context, selector=None):
 @ele_wrap
 def ocr_text_not_exist(context, selector=None):
     """
+    扫描不存在[{selector}]的文案
     The specified text string does not exist in the page
     :param context: step context
     :param selector: locator string for text element (or None).
@@ -454,6 +497,7 @@ def ocr_text_not_exist(context, selector=None):
 @ele_wrap
 def wait_text_disappear(context, selector=None):
     """
+    文案[{selector}]消失
     The specified text element string disappears from the page within
      a specified period of time
     :param context: step context
@@ -471,6 +515,7 @@ def wait_text_disappear(context, selector=None):
 @ele_wrap
 def find_child_from_parent(context, p_selector=None, c_selector=None):
     """
+    存在[{p_selector}]的[{c_selector}]的元素
     The specified child selector element of the specified parent selector
     element exists in the page.
     :param context: step context
@@ -488,6 +533,7 @@ def find_child_from_parent(context, p_selector=None, c_selector=None):
 @ele_wrap
 def wait_ele_exit(context, selector=None):
     """
+    存在[{selector}]的元素
     The specified selector element string exists in the page
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -504,6 +550,7 @@ def wait_ele_exit(context, selector=None):
 @RetryType('timeout')
 def ele_not_exit(context, selector=None):
     """
+    不存在[{selector}]的元素
     The specified selector element string does not exists in the page
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -518,6 +565,7 @@ def ele_not_exit(context, selector=None):
 @ele_wrap
 def wait_ele_disappear(context, selector=None):
     """
+    元素[{selector}]消失
     The specified selector element string disappears from the page within
      a specified period of time
     :param context: step context
@@ -535,6 +583,7 @@ def wait_ele_disappear(context, selector=None):
 @ele_wrap
 def ele_text_equal(context, selector=None, param2=None):
     """
+    [{selector}]的文案为[{param2}]
     Check if the value of the text of the selector element param1 is param2
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -552,6 +601,7 @@ def ele_text_equal(context, selector=None, param2=None):
 @ele_wrap
 def ele_text_container(context, selector=None, param2=None):
     """
+    [{selector}]的文案包含[{param2}]
    Check if the value of the text of the selector element param1 include param2
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -569,6 +619,7 @@ def ele_text_container(context, selector=None, param2=None):
 @ele_wrap
 def ele_text_not_container(context, selector=None, param2=None):
     """
+    [{selector}]的文案不包含[{param2}]
    Check if the value of the text of the selector element param1 include param2
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -584,6 +635,7 @@ def ele_text_not_container(context, selector=None, param2=None):
 @ele_wrap
 def wait_ele_appear(context, selector=None):
     """
+    页面渲染完成出现元素[{selector}]
     Wait for the page to finish rendering and the selector element param1
      to appear
     :param context: step context
@@ -600,6 +652,7 @@ def wait_ele_appear(context, selector=None):
 @ele_wrap
 def exist_ele(context, selector=None):
     """
+    存在元素[{selector}]
     The specified selector element string exists in the page
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -607,7 +660,6 @@ def exist_ele(context, selector=None):
     g_Context.step.exist_ele(context, selector)
 
 
-# 在[{p_selector}]中向{param2}查找[{c_selector}]的元素
 @step("in[{p_selector}]from {param2} find[{c_selector}]element")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "p_selector", "name": "元素"},
@@ -618,6 +670,7 @@ def exist_ele(context, selector=None):
 @ele_wrap
 def swipe_to_ele(context, p_selector=None, param2=None, c_selector=None):
     """
+    在[{p_selector}]中向{param2}查找[{c_selector}]的元素
     Within the specified selector element Slide in the specified direction
      to find the selector element
     :param context: step context
@@ -636,6 +689,7 @@ def swipe_to_ele(context, p_selector=None, param2=None, c_selector=None):
 @ele_wrap
 def full_screen_swipe_to_ele_aaa(context, param1=None, selector=None):
     """
+    向{param1}查找[{selector}]的元素
     Full screen swipe in the specified direction to find the specified
      selector element
      :param context: step context
@@ -650,6 +704,7 @@ def full_screen_swipe_to_ele_aaa(context, param1=None, selector=None):
 @ele_wrap
 def full_screen_swipe_to_ocr_txt(context, param1=None, selector=None):
     """
+    向{param1}扫描[{selector}]的文案
     Full screen swipe in the specified direction to find the specified
      selector element
      :param context: step context
@@ -664,6 +719,7 @@ def full_screen_swipe_to_ocr_txt(context, param1=None, selector=None):
 @ele_wrap
 def full_screen_swipe_to_img(context, param1=None, selector=None):
     """
+    向{param1}查找[{selector}]的图像
     Full screen swipe in the specified direction to find the specified
      selector element
      :param context: step context
@@ -680,6 +736,7 @@ def full_screen_swipe_to_img(context, param1=None, selector=None):
 @ele_wrap
 def scroll_ele_into_view(context, selector=None):
     """
+    移动元素[{selector}]至可视区域
     Full screen swipe in the specified direction to find the specified
      selector element
      :param context: step context
@@ -690,12 +747,14 @@ def scroll_ele_into_view(context, selector=None):
 
 @step("clear [{selector}] and input[{param2}]")
 @FlybirdsReportTagInfo(group="element", selectors={
-    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "text", "value": "param2", "name": "文本"}]},
+    "path": [{"type": "path", "value": "selector", "name": "元素"},
+             {"type": "text", "value": "param2", "name": "文本"}]},
                        verify_function="common_error_parse",
                        action=ActionType.input)
 @ele_wrap
 def ele_clear_input(context, selector=None, param2=None):
     """
+    在[{selector}]中清空并输入[{param2}]
     Empty the selector element param1 and enter the value param2
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -712,6 +771,7 @@ def ele_clear_input(context, selector=None, param2=None):
 @ele_wrap
 def clear_input(context, selector=None):
     """
+    清空输入框[{selector}]
     Empty the selector element param1 and enter the value param2
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -721,12 +781,14 @@ def clear_input(context, selector=None):
 
 @step("from [{selector}] select [{param2}]")
 @FlybirdsReportTagInfo(group="element", selectors={
-    "path": [{"type": "path", "value": "selector", "name": "元素"}, {"type": "value", "value": "param2", "name": "值"}]},
+    "path": [{"type": "path", "value": "selector", "name": "元素"},
+             {"type": "value", "value": "param2", "name": "值"}]},
                        verify_function="common_error_parse",
                        action=ActionType.select)
 @ele_wrap
 def ele_select(context, selector=None, param2=None):
     """
+    在[{selector}]中选择[{param2}]
     Select the value param2 from the dropdown box element param1
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -735,7 +797,6 @@ def ele_select(context, selector=None, param2=None):
     g_Context.step.ele_select(context, selector, param2)
 
 
-# [{p_selector}]的[{c_selector}]文案为[{param3}]
 @step(
     "the text of element [{p_selector}] subNode [{c_selector}] is [{param3}]")
 @FlybirdsReportTagInfo(group="element", selectors={
@@ -747,6 +808,7 @@ def ele_select(context, selector=None, param2=None):
 def find_text_from_parent(context, p_selector=None, c_selector=None,
                           param3=None):
     """
+    [{p_selector}]的[{c_selector}]文案为[{param3}]
     check the text of the child element in the parent element is param3
     :param context: step context
     :param p_selector: locator string for parent selector element (or None).
@@ -760,12 +822,24 @@ def find_text_from_parent(context, p_selector=None, c_selector=None,
 @step("exist image [{param}]")
 @VerifyStep()
 def img_exist(context, param):
+    """
+    存在图像[{param}]
+    Check image exist
+    :param context: step context
+    :param param: image url
+    """
     g_Context.step.img_exist(context, param)
 
 
 @step("not exist image [{param}]")
 @VerifyStep()
 def img_not_exist(context, param):
+    """
+     不存在图像[{param}]
+    Check image not exist
+    :param context: step context
+    :param param: image url
+    """
     g_Context.step.img_not_exist(context, param)
 
 
@@ -777,6 +851,7 @@ def img_not_exist(context, param):
 @ele_wrap
 def touch_ele(context, selector=None):
     """
+    点触[{selector}]
     Click on the selector element
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -792,6 +867,7 @@ def touch_ele(context, selector=None):
 @ele_wrap
 def touch_text(context, selector=None):
     """
+    点触文本[{selector}]
     Click on the selector element
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -808,6 +884,7 @@ def touch_text(context, selector=None):
 @ele_wrap
 def click_ele_point(context, selector, x=None, y=None):
     """
+    点击元素[{selector}]位置[{x},{y}]
     Click on the screen coordinates
     :param context: step context
     :param selector: locator string for selector element (or None)
@@ -824,6 +901,7 @@ def click_ele_point(context, selector, x=None, y=None):
 @ele_wrap
 def close_dialog(context, selector):
     """
+    点击[{selector}]并取消弹窗
     Close the dialog box
     :param context: step context
     """
@@ -838,6 +916,7 @@ def close_dialog(context, selector):
 @ele_wrap
 def accept_dialog(context, selector):
     """
+    点击[{selector}]并接受弹窗
     Close the dialog box
     :param context: step context
     """
