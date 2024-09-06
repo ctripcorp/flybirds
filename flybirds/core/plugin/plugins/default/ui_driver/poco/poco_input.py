@@ -28,8 +28,13 @@ def air_bdd_input(
     try:
         poco_object.set_text(input_str)
     except Exception as input_error:
-        log.info(f"air_bdd_input has error:{str(input_error)}")
-        poco_object.click()
-        text(input_str)
+        try:
+            log.info(f"air_bdd_input has error:{str(input_error)}")
+            poco_object.click()
+            text(input_str)
+        except Exception as input_error:
+            log.error(f"air_bdd_input has error:{str(input_error)}")
+            raise input_error
+
     if not (after_input_wait is None):
         time.sleep(after_input_wait)
