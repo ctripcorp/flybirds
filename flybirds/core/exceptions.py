@@ -49,6 +49,7 @@ class ErrorName(Enum):
     PositionNotChangeException: str = "PositionNotChangeException"
     PositionChangeException: str = "PositionChangeException"
     FlybirdInputException: str = "FlybirdInputException"
+    LLmCheckPageUIError: str = "LLmCheckPageUIError"
 
 
 error_map = {
@@ -200,6 +201,34 @@ class FlybirdVerifyException(Exception):
         self.error_name = error_name
         self.expect = expect
         self.actual = actual
+
+    def __str__(self):
+        return str(self.message)
+
+
+class FlybirdCheckPageUIException(Exception):
+    """
+    check page UI error
+    """
+    error_name = ErrorName.LLmCheckPageUIError
+
+    def __init__(self, message):
+        super().__init__()
+        self.message = message
+
+    def __str__(self):
+        return str(self.message)
+
+
+class FlybirdNetworkTimeOutException(Exception):
+    """
+    check page UI error
+    """
+    error_name = ErrorName.LLmCheckPageUIError
+
+    def __init__(self, message):
+        super().__init__()
+        self.message = message
 
     def __str__(self):
         return str(self.message)
