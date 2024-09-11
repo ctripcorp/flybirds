@@ -417,8 +417,8 @@ def handle_request(request):
         if request.resource_type == 'xhr' or request.resource_type == 'fetch':
             response_info = {}
             operate_record[response_name] = response_info
-            gr.get_value('network_cache_map')[f"{operation}_{network_key}"] = {"request": request_info,
-                                                                               "response": response_info}
+            gr.get_value('network_cache_map', {})[f"{operation}_{network_key}"] = {"request": request_info,
+                                                                                   "response": response_info}
         gr.set_value("operate_record", operate_record)
         if request_body is not None:
             log.info(
@@ -820,9 +820,9 @@ def handle_request_finished(response):
             parsed_uri = urlparse(response.request.url)
             operation = get_operation(parsed_uri, post_data)
             response_body = response.text()
-            gr.get_value('network_cache_map')[f"{operation}_{response.request.network_key}"][
+            gr.get_value('network_cache_map', {})[f"{operation}_{response.request.network_key}"][
                 "response"]["data"] = response_body
-            gr.get_value('network_cache_map')[f"{operation}_{response.request.network_key}"]["response"][
+            gr.get_value('network_cache_map', {})[f"{operation}_{response.request.network_key}"]["response"][
                 "endTime"] = int(round(time.time() * 1000))
     except Exception as e:
         log.info("handle request finished failed", e)
