@@ -62,7 +62,7 @@ class Page:
                 page.route("**/*", handle_route)
             # request listening events
             context.on("request", handle_request)
-        context.on("console", handle_page_error)
+        # context.on("console", handle_page_error)
         context.on("page", handle_popup)
         context.on("response", handle_request_finished)
         page.on("dialog", lambda dialog: handle_dialog(dialog))
