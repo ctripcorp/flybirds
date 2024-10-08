@@ -663,13 +663,13 @@ def exist_ele(context, selector=None):
 @step("the element[{selector}]value is[{param2}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]},
-                       verify={"type": ErrorFlag.exist, "value": "param2"},
+                       verify={"type": ErrorFlag.text_equ, "value": "param2"},
                        verify_function="ele_verify_text_error_parse")
 @VerifyStep()
 @ele_wrap
 def ele_exist_value(context, selector=None, param2=None):
     """
-    元素[{selector}]的值为[{param2}]
+    元素[{selector}]的value为[{param2}]
     The specified selector element string exists in the page
     :param context: step context
     :param selector: locator string for selector element (or None).
@@ -688,13 +688,175 @@ def ele_exist_value(context, selector=None, param2=None):
 @ele_wrap
 def ele_contain_value(context, selector=None, param2=None):
     """
-    元素[{selector}]的值包含[{param2}]
+    元素[{selector}]的value包含[{param2}]
     The specified selector element string exists in the page
     :param context: step context
     :param selector: locator string for selector element (or None).
     :param param2: element value.
     """
     g_Context.step.ele_contain_value(context, selector, param2)
+
+
+@step("the element[{selector}]value not contains[{param2}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.text_not_contains, "value": "param2"},
+                       verify_function="ele_verify_text_error_parse")
+@VerifyStep()
+@ele_wrap
+def ele_not_contain_value(context, selector=None, param2=None):
+    """
+    元素[{selector}]的value不包含[{param2}]
+    The specified selector element string exists in the page
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param param2: element value.
+    """
+    g_Context.step.ele_not_contain_value(context, selector, param2)
+
+
+@step("witch contain [{param1}] element [{selector}] value is[{param2}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "text", "value": "param1", "name": "文本"},
+             {"type": "attr", "value": "param2", "name": "属性"},
+             {"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.text_equ, "value": "param2"},
+                       verify_function="ele_verify_text_error_parse")
+@VerifyStep()
+@ele_wrap
+def ele_contain_param_value(context, param1=None, selector=None, param2=None):
+    """
+    参数含有[{param1}]的元素[{selector}]的文案为[{param2}]
+    The specified selector element string exists in the page
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param param1: element value.
+    :param param2: element value.
+    """
+    g_Context.step.ele_contain_param_value(context, param1, selector, param2)
+
+
+@step("witch contain [{param1}] element [{selector}] value contain [{param2}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "text", "value": "param1", "name": "文本"},
+             {"type": "attr", "value": "param2", "name": "属性"},
+             {"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.text_contains, "value": "param2"},
+                       verify_function="ele_verify_text_error_parse")
+@VerifyStep()
+@ele_wrap
+def ele_contain_param_contain_value(context, param1=None, selector=None, param2=None):
+    """
+    参数含有[{param1}]的元素[{selector}]的文案包含[{param2}]
+    The specified selector element string exists in the page
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param param1: element value.
+    :param param2: element value.
+    """
+    g_Context.step.ele_contain_param_contain_value(context, param1, selector, param2)
+
+
+@step("contain [{param}] by [{selector}] exist")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.exist, "value": "param"},
+                       verify_function="ele_verify_text_error_parse")
+@VerifyStep()
+@ele_wrap
+def ele_contain_param_exist(context, param=None, selector=None):
+    """
+    存在包含参数[{param}]的元素[{selector}]
+    The specified selector element string exists in the page
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param param: element value.
+    """
+    g_Context.step.ele_contain_param_exist(context, param, selector)
+
+
+@step("contain [{param}] by [{selector}] not exist")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.not_exist, "value": "param"},
+                       verify_function="ele_verify_text_error_parse")
+@VerifyStep()
+@ele_wrap
+def ele_contain_param_not_exist(context, param=None, selector=None):
+    """
+    不存在包含参数[{param}]的元素[{selector}]
+    The specified selector element string exists in the page
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param param: element value.
+    """
+    g_Context.step.ele_contain_param_not_exist(context, param, selector)
+
+
+@step("the [{param}] contained by the element [{selector}] has attribute [{attr_name}] with value [{attr_value}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "text", "value": "param", "name": "文本"},
+             {"type": "path", "value": "selector", "name": "元素"},
+             {"type": "attr", "value": "attr_name", "name": "属性"}]},
+                       verify={"type": ErrorFlag.text_equ, "value": "attr_value"},
+                       verify_function="ele_verify_text_error_parse")
+@VerifyStep()
+@ele_wrap
+def ele_contain_param_attr_exist(context, param=None, selector=None, attr_name=None, attr_value=None):
+    """
+    包含参数[{param}]的元素[{selector}]的属性[{attr_name}]值为[{attr_value}]
+    The specified selector element string exists in the page
+    :param context: step context
+    :param param: element value.
+    :param selector: locator string for selector element (or None).
+    :param attr_name: attribute name
+    :param attr_value: attribute value
+    """
+    g_Context.step.ele_contain_param_attr_exist(context, param, selector, attr_name, attr_value)
+
+
+@step("the [{param}] contained by the element [{selector}] has attribute [{attr_name}] contain value [{attr_value}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "text", "value": "param", "name": "文本"},
+             {"type": "path", "value": "selector", "name": "元素"},
+             {"type": "attr", "value": "attr_name", "name": "属性"}]},
+                       verify={"type": ErrorFlag.text_contains, "value": "attr_value"},
+                       verify_function="ele_verify_text_error_parse")
+@VerifyStep()
+@ele_wrap
+def ele_contain_param_attr_contain(context, param=None, selector=None, attr_name=None, attr_value=None):
+    """
+    包含参数[{param}]的元素[{selector}]的属性[{attr_name}]值包含[{attr_value}]
+    The specified selector element string exists in the page
+    :param context: step context
+    :param param: element value.
+    :param selector: locator string for selector element (or None).
+    :param attr_name: attribute name
+    :param attr_value: attribute value
+    """
+    g_Context.step.ele_contain_param_attr_contain(context, param, selector, attr_name, attr_value)
+
+
+@step("the [{param}] contained by the element [{selector}] has attribute [{attr_name}] not contain value [{attr_value}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "text", "value": "param", "name": "文本"},
+             {"type": "path", "value": "selector", "name": "元素"},
+             {"type": "attr", "value": "attr_name", "name": "属性"}]},
+                       verify={"type": ErrorFlag.text_not_contains, "value": "attr_value"},
+                       verify_function="ele_verify_text_error_parse")
+@VerifyStep()
+@ele_wrap
+def ele_contain_param_attr_not_contain(context, param=None, selector=None, attr_name=None, attr_value=None):
+    """
+    包含参数[{param}]的元素[{selector}]的属性[{attr_name}]值不包含[{attr_value}]
+    The specified selector element string exists in the page
+    :param context: step context
+    :param param: element value.
+    :param selector: locator string for selector element (or None).
+    :param attr_name: attribute name
+    :param attr_value: attribute value
+    """
+    g_Context.step.ele_contain_param_attr_not_contain(context, param, selector, attr_name, attr_value)
 
 
 @step("in[{p_selector}]from {param2} find[{c_selector}]element")

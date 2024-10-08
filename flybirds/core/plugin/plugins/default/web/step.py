@@ -213,6 +213,70 @@ class Step:
         ele.ele_contain_value(context, selector, param)
 
     @classmethod
+    def ele_not_contain_value(cls, context, selector, param):
+        ele = gr.get_value("plugin_ele")
+        ele.ele_not_contain_value(context, selector, param)
+
+    @classmethod
+    def ele_contain_param_value(cls, context, param1, selector, param2):
+        params = param1.split(',')
+        for param in params:
+            selector = selector.replace('{}', param, 1)
+        ele = gr.get_value("plugin_ele")
+        ele.ele_text_equal(context, selector, param2)
+
+    @classmethod
+    def ele_contain_param_contain_value(cls, context, param1, selector, param2):
+        params = param1.split(',')
+        for param in params:
+            selector = selector.replace('{}', param, 1)
+        ele = gr.get_value("plugin_ele")
+        ele.ele_text_include(context, selector, param2)
+
+    @classmethod
+    def ele_contain_param_exist(cls, context, param1, selector):
+        params = param1.split(',')
+        for param in params:
+            selector = selector.replace('{}', param, 1)
+        ele = gr.get_value("plugin_ele")
+        ele.ele_exist(context, selector)
+
+    @classmethod
+    def ele_contain_param_not_exist(cls, context, param1, selector):
+        params = param1.split(',')
+        for param in params:
+            selector = selector.replace('{}', param, 1)
+        ele = gr.get_value("plugin_ele")
+        ele.ele_not_exist(context, selector)
+
+    @classmethod
+    def ele_contain_param_attr_exist(cls, context, param, selector, attr_name, attr_value):
+        params = param.split(',')
+        for param in params:
+            selector = selector.replace('{}', param, 1)
+        ele = gr.get_value("plugin_ele")
+        ele_attr = ele.get_ele_attr(selector, attr_name)
+        ele.ele_text_equal(context, ele_attr, attr_value)
+
+    @classmethod
+    def ele_contain_param_attr_contain(cls, context, param, selector, attr_name, attr_value):
+        params = param.split(',')
+        for param in params:
+            selector = selector.replace('{}', param, 1)
+        ele = gr.get_value("plugin_ele")
+        # ele_attr = ele.get_ele_attr(selector, attr_name)
+        ele.is_text_attr_container(context, selector, attr_name, attr_value)
+
+    @classmethod
+    def ele_contain_param_attr_not_contain(cls, context, param, selector, attr_name, attr_value):
+        params = param.split(',')
+        for param in params:
+            selector = selector.replace('{}', param, 1)
+        ele = gr.get_value("plugin_ele")
+        # ele_attr = ele.get_ele_attr(selector, attr_name)
+        ele.is_text_attr_not_container(context, selector, attr_name, attr_value)
+
+    @classmethod
     def wait_ele_exit(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.ele_exist(context, selector)
