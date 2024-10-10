@@ -112,7 +112,10 @@ class Element:
         if e_text is None or e_text.strip() == '':
             e_text = locator.get_attribute('value')
             if e_text is None or e_text.strip() == '':
-                e_text = ""
+                e_text = locator.evaluate('(element) => { console.log("element.value");return element.value}',
+                                          timeout=timeout)
+                if e_text is None or e_text.strip() == '':
+                    e_text = ""
         return e_text
 
     def ele_hover(self, context, param):
@@ -144,6 +147,9 @@ class Element:
     def ele_text_not_include(self, context, param_1, param_2):
         e_text = self.get_ele_text(param_1)
         verify_helper.text_not_container(param_2, e_text)
+
+    # def ele_contain_param_attr_include(self, context, param_1, param_2):
+    #     verify_helper.text_container(param_1, param_2)
 
     def find_text(self, context, param):
         # param_temp = handle_str(param)
@@ -209,20 +215,19 @@ class Element:
         locator, timeout = self.get_ele_locator(selector)
         ele_value = locator.evaluate('(element) => { console.log("element.value");return element.value}',
                                      timeout=timeout)
-        if ele_value is None or param.strip() != ele_value.strip():
-            message = f"expect the value of [{selector}] element is [{param}] " \
-                      f"but actual is [{ele_value}]"
-            raise FlybirdVerifyException(message, error_name=ErrorName.ElementFoundError)
+        verify_helper.text_equal(param, ele_value)
 
     def ele_contain_value(self, context, selector, param):
         locator, timeout = self.get_ele_locator(selector)
         ele_value = locator.evaluate('(element) => { console.log("element.value");return element.value}',
                                      timeout=timeout)
+        verify_helper.text_container(param, ele_value)
 
-        if ele_value is None or param.strip() not in ele_value.strip():
-            message = f"expect the value of [{selector}] element is [{param}] " \
-                      f"but actual is [{ele_value}]"
-            raise FlybirdVerifyException(message, error_name=ErrorName.ElementFoundError)
+    def ele_not_contain_value(self, context, selector, param):
+        locator, timeout = self.get_ele_locator(selector)
+        ele_value = locator.evaluate('(element) => { console.log("element.value");return element.value}',
+                                     timeout=timeout)
+        verify_helper.text_not_container(param, ele_value)
 
     def wait_for_ele(self, context, param):
         locator, timeout = self.get_ele_locator(param)

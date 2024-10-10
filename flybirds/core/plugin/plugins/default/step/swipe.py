@@ -2,7 +2,7 @@
 """
 Element swipe
 """
-from airtest.core.android.touch_methods.base_touch import BaseTouch, DownEvent, SleepEvent, MoveEvent
+from airtest.core.android.touch_methods.base_touch import BaseTouch, DownEvent, SleepEvent, MoveEvent, UpEvent
 from airtest.core.android.touch_methods.touch_proxy import AdbTouchImplementation, MinitouchImplementation
 from airtest.core.api import text, time
 from airtest.utils.snippet import (on_method_ready)
@@ -422,6 +422,7 @@ def build_swipe_search_point(direction, screen_size, selector_dict, swipe_pages=
         end_point = [start_x * pw, start_y * ph - ph * swipe_pages]
         move_distance = ph * swipe_pages
     # 设置默认触屏起始坐标
+    log.info("start_point: %s, end_point: %s, move_distance: %s" % (start_point, end_point, move_distance))
     return start_point, end_point, move_distance
 
 

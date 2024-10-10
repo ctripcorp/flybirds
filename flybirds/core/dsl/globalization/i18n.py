@@ -216,7 +216,8 @@ step_language = {
             "验证服务请求[{service}]与[{target_data_path}]一致",
             "验证服务请求[{service}]与json路径[{target_data_path}]一致"],
         "compare service request [{service}] with json file "
-        "[{target_data_path}] with the exceptions removed": ["验证服务请求[{service}]与json路径[{target_data_path}]去除除外项后完全一致"],
+        "[{target_data_path}] with the exceptions removed": [
+            "验证服务请求[{service}]与json路径[{target_data_path}]去除除外项后完全一致"],
         "compare service request [{service}] with xml file "
         "[{target_data_xml_path}]": [
             "验证服务请求[{service}]与xml路径[{target_data_xml_path}]一致"],
@@ -251,6 +252,20 @@ step_language = {
         "exist page text[{selector}]": ["页面存在文案[{selector}]"],
         "the element[{selector}]value is[{param2}]": ["元素[{selector}]的value为[{param2}]"],
         "the element[{selector}]value contains[{param2}]": ["元素[{selector}]的value包含[{param2}]"],
+        "the element[{selector}]value not contains[{param2}]": ["元素[{selector}]的value不包含[{param2}]"],
+        "witch contain [{param1}] element [{selector}] value is[{param2}]": ["参数含有[{param1}]的元素[{selector}]的文案为[{"
+                                                                             "param2}]"],
+        "witch contain [{param1}] element [{selector}] value contain [{param2}]": ["参数含有[{param1}]的元素[{"
+                                                                                   "selector}]的文案包含[{param2}]"],
+        "contain [{param}] by [{selector}] exist": ["存在包含参数[{param}]的元素[{selector}]"],
+        "contain [{param}] by [{selector}] not exist": ["不存在包含参数[{param}]的元素[{selector}]"],
+        "the [{param}] contained by the element [{selector}] has attribute [{attr_name}] with value [{attr_value}]":
+            ["包含参数[{param}]的元素[{selector}]的属性[{attr_name}]值为[{attr_value}]"],
+        "the [{param}] contained by the element [{selector}] has attribute [{attr_name}] contain value [{attr_value}]":
+            ["包含参数[{param}]的元素[{selector}]的属性[{attr_name}]值包含[{attr_value}]"],
+        "the [{param}] contained by the element [{selector}] has attribute [{attr_name}] not contain value [{"
+        "attr_value}]":
+            ["包含参数[{param}]的元素[{selector}]的属性[{attr_name}]值不包含[{attr_value}]"],
         "click[{selector}] and accept dialog": ["点击[{selector}]并接受弹窗"],
         "click[{selector}] and cancel dialog": ["点击[{selector}]并取消弹窗"],
     },
