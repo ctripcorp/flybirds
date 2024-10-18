@@ -41,6 +41,13 @@ def sleep(sleep_time):
 
 def add_res_dic(dsl_params, functin_pattern, def_key):
     result_dic = {}
+    # 替换 @@空@@ 为空格
+    if dsl_params is not None and "@@空格@@" in dsl_params:
+        dsl_params = re.sub(r'@@空格@@', ' ', dsl_params)
+    # 替换 @#@换行#符号@#@ 为换行符
+    if dsl_params is not None and "@#@换行#符号@#@" in dsl_params:
+        dsl_params = re.sub(r'@#@换行#符号@#@', '\n', dsl_params)
+
     match_obj = re.match(functin_pattern, dsl_params)
     if match_obj is not None:
         """
@@ -90,9 +97,16 @@ def params_to_dic(dsl_params, def_key="selector"):
     subsequent processes
     """
     result_dic = {}
-    functin_pattern = re.compile(r"([\S\s]+),\s*([a-zA-Z0-9_]+)\s*=\s*(\S+)")
+    function_pattern = re.compile(r"([\S\s]+),\s*([a-zA-Z0-9_]+)\s*=\s*(\S+)")
     if isinstance(dsl_params, str):
-        result_dic = add_res_dic(dsl_params, functin_pattern, def_key)
+        result_dic = add_res_dic(dsl_params, function_pattern, def_key)
+    selector = result_dic.get("selector")
+    # 替换 @@空@@ 为空格
+    if selector is not None and "@@空格@@" in selector:
+        result_dic["selector"] = re.sub(r'@@空格@@', ' ', selector)
+    # 替换 @#@换行#符号@#@ 为换行符
+    if selector is not None and "@#@换行#符号@#@" in selector:
+        result_dic["selector"] = re.sub(r'@#@换行#符号@#@', '\n', selector)
     log.info("result_dic: {}".format(result_dic))
     return result_dic
 

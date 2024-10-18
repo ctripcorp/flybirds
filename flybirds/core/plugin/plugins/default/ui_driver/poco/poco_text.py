@@ -25,7 +25,7 @@ def get_ele_text_replace_space(
     if ele_str is None:
         ele_str = poco_object.attr('label')
     handled_ele_str = re.sub(pattern, "", ele_str.replace(u"\u200b", ""))
-    if not (deal_method_name is None):
+    if deal_method_name is not None:
         deal_method = getattr(params_deal_module, deal_method_name)
         handled_ele_str = deal_method(handled_ele_str)
         handled_ele_str = re.sub(pattern, "", handled_ele_str)
@@ -47,7 +47,7 @@ def get_ele_text(
     if ele_str is None:
         ele_str = poco_object.attr('label')
     ele_str = ele_str.replace(u"\u200b", "")
-    if not (deal_method_name is None):
+    if deal_method_name is not None:
         deal_method = getattr(params_deal_module, deal_method_name)
         ele_str = deal_method(ele_str)
     return ele_str
