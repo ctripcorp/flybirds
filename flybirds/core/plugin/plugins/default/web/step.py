@@ -255,8 +255,7 @@ class Step:
         for param in params:
             selector = selector.replace('{}', param, 1)
         ele = gr.get_value("plugin_ele")
-        ele_attr = ele.get_ele_attr(selector, attr_name)
-        ele.ele_text_equal(context, ele_attr, attr_value)
+        ele.is_ele_attr_equal(context, selector, attr_name, attr_value)
 
     @classmethod
     def ele_contain_param_attr_contain(cls, context, param, selector, attr_name, attr_value):
