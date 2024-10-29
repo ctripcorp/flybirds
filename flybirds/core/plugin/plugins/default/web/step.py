@@ -263,8 +263,7 @@ class Step:
         for param in params:
             selector = selector.replace('{}', param, 1)
         ele = gr.get_value("plugin_ele")
-        # ele_attr = ele.get_ele_attr(selector, attr_name)
-        ele.is_text_attr_container(context, selector, attr_name, attr_value)
+        ele.is_ele_attr_container(context, selector, attr_name, attr_value)
 
     @classmethod
     def ele_contain_param_attr_not_contain(cls, context, param, selector, attr_name, attr_value):
@@ -272,8 +271,7 @@ class Step:
         for param in params:
             selector = selector.replace('{}', param, 1)
         ele = gr.get_value("plugin_ele")
-        # ele_attr = ele.get_ele_attr(selector, attr_name)
-        ele.is_text_attr_not_container(context, selector, attr_name, attr_value)
+        ele.is_ele_attr_not_container(context, selector, attr_name, attr_value)
 
     @classmethod
     def wait_ele_exit(cls, context, selector):

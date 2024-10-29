@@ -188,7 +188,7 @@ def full_screen_swipe_new(context, param, selector):
         "selector": selector,
         "direction": param,
         "action": FlyBirdsEvent.on_search}
-    tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(param, screen_size, selector_dict, 3)
+    tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(param, screen_size, selector_dict, 2)
     # 每次移动距离
     duration = 100
     # 移动次数
@@ -212,7 +212,7 @@ def full_screen_swipe_click(context, selector, direction):
         "action": FlyBirdsEvent.on_click}
     swipe_pages = 2
     if direction == "up":
-        swipe_pages = 4
+        swipe_pages = 3
     tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(direction, screen_size, selector_dict,
                                                                          swipe_pages)
     steps = int(move_distance / duration)
@@ -236,7 +236,7 @@ def full_screen_swipe_input(context, selector, param, direction):
         "action": FlyBirdsEvent.on_input}
     swipe_pages = 2
     if direction == "up":
-        swipe_pages = 4
+        swipe_pages = 3
     tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(direction, screen_size, selector_dict,
                                                                          swipe_pages)
     steps = int(move_distance / duration)

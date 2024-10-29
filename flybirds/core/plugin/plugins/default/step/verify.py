@@ -487,3 +487,7 @@ def ocr_regional_txt_contain(context, param1, param2):
     else:
         message = "[ocr txt contain] ocr result is null"
         raise FlybirdVerifyException(message)
+
+
+def request_compare_includes_value_app(context, service_name, target_json_path, expect_value):
+    pass

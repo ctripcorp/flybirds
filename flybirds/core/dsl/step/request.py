@@ -155,6 +155,8 @@ def request_compare(context, service=None, target_data_path=None):
     """
     g_Context.step.request_compare_from_path(context, service,
                                              target_data_path)
+
+
 @step(
     "compare service request [{service}] with json file [{target_data_path}] with the exceptions removed"
 )
@@ -174,7 +176,7 @@ def request_compare_with_exceptions_removed(context, service=None, target_data_p
     :param target_data_path: path of target data to be compared
     """
     g_Context.step.request_compare_from_path_exceptions_removed(context, service,
-                                             target_data_path)
+                                                                target_data_path)
 
 
 @step(
@@ -246,7 +248,8 @@ def clear_all_request_record(context):
 )
 @FlybirdsReportTagInfo(group="service",
                        selectors={"path": [{"type": "name", "value": "service", "name": "请求url"},
-                                           {"type": "url", "value": "target_data_xml_path", "name": "期望xml数据地址"}]},
+                                           {"type": "url", "value": "target_data_xml_path",
+                                            "name": "期望xml数据地址"}]},
                        verify_function="common_error_parse")
 @VerifyStep()
 @ele_wrap
@@ -310,6 +313,8 @@ def request_compare_value(context, service=None, target_json_path=None,
     """
     g_Context.step.request_compare_value(context, service, target_json_path,
                                          expect_value)
+
+
 @step(
     "service request [{service}] string request parameter [{target_json_path}] "
     "includes [{expect_value}]")
@@ -322,7 +327,7 @@ def request_compare_value(context, service=None, target_json_path=None,
 @ele_wrap
 @RetryType('timeout')
 def request_compare_includes_value(context, service=None, target_json_path=None,
-                          expect_value=None):
+                                   expect_value=None):
     """
     compare and verify the request parameter of the service request with
      the expected value
@@ -333,7 +338,8 @@ def request_compare_includes_value(context, service=None, target_json_path=None,
     :param expect_value: expected value
     """
     g_Context.step.request_compare_includes_value(context, service, target_json_path,
-                                         expect_value)
+                                                  expect_value)
+
 
 @step("open service [{service}] bind mockCase[{mock_case_id}]")
 @FlybirdsReportTagInfo(group="service",
