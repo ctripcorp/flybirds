@@ -38,6 +38,10 @@ class AppBaseStep:
     def img_not_exist(self, context, param):
         step_verify.img_not_exist(context, param)
 
+    def click_ele_point(self, context, selector, x, y):
+        # step_click.click_ele(context, selector)
+        step_click.click_ele_position(context, selector, x, y)
+
     def connect_device(self, context, param):
         step_app.connect_device(context, param)
 
@@ -99,7 +103,8 @@ class AppBaseStep:
         step_adjust.swipe_to_ele(context, p_selector, param2, c_selector, True)
 
     def full_screen_swipe_to_ele_aaa(self, context, param1, selector):
-        step_adjust.full_screen_swipe_to_ele_aaa(context, param1, selector)
+        # step_adjust.full_screen_swipe_to_ele_aaa(context, param1, selector)
+        step_swipe.full_screen_swipe_new(context, param1, selector)
 
     def full_screen_swipe_to_ocr_txt(self, context, param1, selector):
         step_adjust.full_screen_swipe_to_ocr_txt(context, param1, selector)
@@ -198,3 +203,6 @@ class AppBaseStep:
 
     def app_logout(self, context):
         app_logout(context)
+
+    def request_compare_includes_value(self, context, service_name, target_json_path, expect_value):
+        step_verify.request_compare_includes_value_app(context, service_name, target_json_path, expect_value)

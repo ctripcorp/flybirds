@@ -110,6 +110,17 @@ def click_coordinates(context, x, y):
         find_snap.fix_refresh_status(True)
 
 
+def click_ele_position(context, selector, x, y):
+    pass
+    # poco_instance = gr.get_value("pocoInstance")
+    # screen_size = gr.get_device_size()
+    # x_coordinate = float(x) / screen_size[0]
+    # y_coordinate = float(y) / screen_size[1]
+    # poco_instance.click([x_coordinate, y_coordinate])
+    # if gr.get_frame_config_value("use_snap", False):
+    #     find_snap.fix_refresh_status(True)
+
+
 def click_ocr_text(context, param):
     flag = False
     param_dict = dsl_helper.params_to_dic(param)
