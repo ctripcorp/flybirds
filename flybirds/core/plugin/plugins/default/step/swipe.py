@@ -407,7 +407,7 @@ def build_swipe_search_point(direction, screen_size, selector_dict, swipe_pages=
         move_distance = pw * swipe_pages
     if direction == "up" or direction == language_helper.parse_glb_str("up", language):
         if start_x is None:
-            start_x = 5 / pw
+            start_x = 200 / pw
         if start_y is None:
             start_y = 0.333
         start_point = [start_x * pw, start_y * ph]
@@ -415,7 +415,7 @@ def build_swipe_search_point(direction, screen_size, selector_dict, swipe_pages=
         move_distance = ph * swipe_pages
     if direction == "down" or direction == language_helper.parse_glb_str("down", language):
         if start_x is None:
-            start_x = 5 / pw
+            start_x = 200 / pw
         if start_y is None:
             start_y = 0.666
         start_point = [start_x * pw, start_y * ph]
