@@ -2,6 +2,8 @@
 """
 Element swipe
 """
+import re
+
 from airtest.core.android.touch_methods.base_touch import BaseTouch, DownEvent, SleepEvent, MoveEvent, UpEvent
 from airtest.core.android.touch_methods.touch_proxy import AdbTouchImplementation, MinitouchImplementation
 from airtest.core.api import text, time
@@ -177,24 +179,42 @@ class FlyBirdsEvent:
             return False
 
 
+def handle_str(un_handle_str):
+    res = re.match(r"([\S\s]+),\s*[0-9_]+\s*", un_handle_str)
+    if res is not None:
+        return res.group(1)
+    else:
+        return un_handle_str
+
+
 # 新滑动方法滑动的同时检测元素是否存在
-def full_screen_swipe_new(context, param, selector):
+def full_screen_swipe_new(context, direction, selector):
     screen_size = gr.get_device_size() or [1080, 1920]
-    selector_dict = dsl_helper.params_to_dic(selector)
-    selector = selector_dict["selector"]
+    handled_selector_temp = handle_str(selector)
+    selector_dict = dsl_helper.params_to_dic(handled_selector_temp)
+    selector = selector_dict.get("selector")
+    if selector_dict.get("distance") is not None and int(selector_dict.get("distance")) > 1:
+        distance = int(selector_dict.get("distance"))
+    else:
+        distance = 6000
+    # search_optional = {}
+    # if "path" in selector_dict.keys():
+    #     search_optional["path"] = selector_dict["path"]
+    # elif "multiSelector" in selector_dict.keys():
+    #     search_optional["multiSelector"] = selector_dict["multiSelector"]
     # 起始参数放入全局缓存
     event_obj = {
         "context": context,
         "selector": selector,
-        "direction": param,
+        "direction": direction,
         "action": FlyBirdsEvent.on_search}
-    tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(param, screen_size, selector_dict, 2)
+    tuple_from_xy, tuple_to_xy = build_swipe_search_point(direction, screen_size, selector_dict, 6000)
     # 每次移动距离
     duration = 100
     # 移动次数
-    steps = int(move_distance / duration)
+    steps = int(distance / duration)
     time.sleep(1)
-    log.info(f"swipe {param} to found {selector} then click")
+    log.info(f"swipe {direction} to found {selector} then click")
     gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
                                                      event_obj=event_obj)
 
@@ -202,20 +222,21 @@ def full_screen_swipe_new(context, param, selector):
 # 滑动查找并点击
 def full_screen_swipe_click(context, selector, direction):
     screen_size = gr.get_device_size() or [1080, 1920]
-    selector_dict = dsl_helper.params_to_dic(selector)
-    selector = selector_dict["selector"]
+    handled_selector_temp = handle_str(selector)
+    selector_dict = dsl_helper.params_to_dic(handled_selector_temp)
+    selector = selector_dict.get("selector")
     duration = 100
+    if selector_dict.get("distance") is not None and int(selector_dict.get("distance")) > 1:
+        distance = int(selector_dict.get("distance"))
+    else:
+        distance = 6000
     event_obj = {
         "context": context,
         "selector": selector,
         "direction": direction,
         "action": FlyBirdsEvent.on_click}
-    swipe_pages = 2
-    if direction == "up":
-        swipe_pages = 3
-    tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(direction, screen_size, selector_dict,
-                                                                         swipe_pages)
-    steps = int(move_distance / duration)
+    tuple_from_xy, tuple_to_xy = build_swipe_search_point(direction, screen_size, selector_dict, distance)
+    steps = int(distance / duration)
     time.sleep(1)
     log.info(f"swipe {direction} to found {selector} then click")
     gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
@@ -225,21 +246,22 @@ def full_screen_swipe_click(context, selector, direction):
 # 滑动查找并输入
 def full_screen_swipe_input(context, selector, param, direction):
     screen_size = gr.get_device_size() or [1080, 1920]
-    selector_dict = dsl_helper.params_to_dic(selector)
-    selector = selector_dict["selector"]
+    handled_selector_temp = handle_str(selector)
+    selector_dict = dsl_helper.params_to_dic(handled_selector_temp)
+    selector = selector_dict.get("selector")
+    if selector_dict.get("distance") is not None and int(selector_dict.get("distance")) > 1:
+        distance = int(selector_dict.get("distance"))
+    else:
+        distance = 6000
     duration = 100
     event_obj = {
         "context": context,
         "selector": selector,
         "param": param,
-        "direction": duration,
+        "direction": direction,
         "action": FlyBirdsEvent.on_input}
-    swipe_pages = 2
-    if direction == "up":
-        swipe_pages = 3
-    tuple_from_xy, tuple_to_xy, move_distance = build_swipe_search_point(direction, screen_size, selector_dict,
-                                                                         swipe_pages)
-    steps = int(move_distance / duration)
+    tuple_from_xy, tuple_to_xy = build_swipe_search_point(direction, screen_size, selector_dict, distance)
+    steps = int(distance / duration)
     time.sleep(1)
     log.info(f"swipe {direction} to found {selector} then input {param}")
     gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
@@ -367,12 +389,18 @@ def transform_xy(self, x, y):
     return x, y
 
 
-def build_swipe_search_point(direction, screen_size, selector_dict, swipe_pages=2):
+def build_swipe_search_point(direction, screen_size, selector_dict, move_distance=6000):
     """
     build the start and end coordinate point of the sliding data
     """
     start_x = None
     start_y = None
+    # get current language
+    language = GlobalContext.get_current_language()
+    direction = direction.strip()
+    pw, ph = screen_size
+    start_point = [0.5 * pw, 0.5 * ph]
+    end_point = [0.5 * pw, 0.5 * ph]
     if "startX" in selector_dict.keys():
         start_x = float(selector_dict["startX"])
         if start_x > 1:
@@ -381,13 +409,6 @@ def build_swipe_search_point(direction, screen_size, selector_dict, swipe_pages=
         start_y = float(selector_dict["startY"])
         if start_y > 1:
             start_y = start_y / screen_size[1]
-    # get current language
-    language = GlobalContext.get_current_language()
-    direction = direction.strip()
-    pw, ph = screen_size
-    start_point = [0.5 * pw, 0.5 * ph]
-    end_point = [0.5 * pw, 0.5 * ph]
-    move_distance = 80
     # 滑动距离默认为当前手机分辨率2个屏幕距离
     if direction == "left" or direction == language_helper.parse_glb_str("left", language):
         if start_x is None:
@@ -395,35 +416,31 @@ def build_swipe_search_point(direction, screen_size, selector_dict, swipe_pages=
         if start_y is None:
             start_y = 0.5
         start_point = [start_x * pw, start_y * ph]
-        end_point = [start_x * pw - pw * swipe_pages, start_y * ph]
-        move_distance = pw * swipe_pages
+        end_point = [start_x * pw - move_distance, start_y * ph]
     if direction == "right" or direction == language_helper.parse_glb_str("right", language):
         if start_x is None:
             start_x = 0.333
         if start_y is None:
             start_y = 0.5
         start_point = [start_x * pw, start_y * ph]
-        end_point = [start_x * pw + pw * swipe_pages, start_y * ph]
-        move_distance = pw * swipe_pages
+        end_point = [start_x * pw + move_distance, start_y * ph]
     if direction == "up" or direction == language_helper.parse_glb_str("up", language):
         if start_x is None:
             start_x = 200 / pw
         if start_y is None:
             start_y = 0.333
         start_point = [start_x * pw, start_y * ph]
-        end_point = [start_x * pw, start_y * ph + ph * swipe_pages]
-        move_distance = ph * swipe_pages
+        end_point = [start_x * pw, start_y * ph + move_distance]
     if direction == "down" or direction == language_helper.parse_glb_str("down", language):
         if start_x is None:
             start_x = 200 / pw
         if start_y is None:
             start_y = 0.666
         start_point = [start_x * pw, start_y * ph]
-        end_point = [start_x * pw, start_y * ph - ph * swipe_pages]
-        move_distance = ph * swipe_pages
+        end_point = [start_x * pw, start_y * ph - move_distance]
     # 设置默认触屏起始坐标
     log.info("start_point: %s, end_point: %s, move_distance: %s" % (start_point, end_point, move_distance))
-    return start_point, end_point, move_distance
+    return start_point, end_point
 
 
 def adb_swipe(self, p1, p2, duration=0.5, event_obj=None, *args, **kwargs):
