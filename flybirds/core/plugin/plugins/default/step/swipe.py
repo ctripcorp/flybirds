@@ -193,7 +193,7 @@ def full_screen_swipe_new(context, direction, selector):
     handled_selector_temp = handle_str(selector)
     selector_dict = dsl_helper.params_to_dic(handled_selector_temp)
     selector = selector_dict.get("selector")
-    if selector_dict.get("distance") is not None and int(selector_dict.get("distance")) > 1:
+    if selector_dict.get("distance") is not None and float(selector_dict.get("distance")) > 1:
         distance = int(selector_dict.get("distance"))
     else:
         distance = 6000
@@ -208,7 +208,7 @@ def full_screen_swipe_new(context, direction, selector):
         "selector": selector,
         "direction": direction,
         "action": FlyBirdsEvent.on_search}
-    tuple_from_xy, tuple_to_xy = build_swipe_search_point(direction, screen_size, selector_dict, 6000)
+    tuple_from_xy, tuple_to_xy = build_swipe_search_point(direction, screen_size, selector_dict, distance)
     # 每次移动距离
     duration = 100
     # 移动次数
@@ -226,7 +226,7 @@ def full_screen_swipe_click(context, selector, direction):
     selector_dict = dsl_helper.params_to_dic(handled_selector_temp)
     selector = selector_dict.get("selector")
     duration = 100
-    if selector_dict.get("distance") is not None and int(selector_dict.get("distance")) > 1:
+    if selector_dict.get("distance") is not None and float(selector_dict.get("distance")) > 1:
         distance = int(selector_dict.get("distance"))
     else:
         distance = 6000
@@ -249,7 +249,7 @@ def full_screen_swipe_input(context, selector, param, direction):
     handled_selector_temp = handle_str(selector)
     selector_dict = dsl_helper.params_to_dic(handled_selector_temp)
     selector = selector_dict.get("selector")
-    if selector_dict.get("distance") is not None and int(selector_dict.get("distance")) > 1:
+    if selector_dict.get("distance") is not None and float(selector_dict.get("distance")) > 1:
         distance = int(selector_dict.get("distance"))
     else:
         distance = 6000
@@ -429,14 +429,14 @@ def build_swipe_search_point(direction, screen_size, selector_dict, move_distanc
         end_point = [start_x * pw + move_distance, start_y * ph]
     if direction == "up" or direction == language_helper.parse_glb_str("up", language):
         if start_x is None:
-            start_x = 200 / pw
+            start_x = 0.5
         if start_y is None:
             start_y = 0.333
         start_point = [start_x * pw, start_y * ph]
         end_point = [start_x * pw, start_y * ph + move_distance]
     if direction == "down" or direction == language_helper.parse_glb_str("down", language):
         if start_x is None:
-            start_x = 200 / pw
+            start_x = 0.5
         if start_y is None:
             start_y = 0.666
         start_point = [start_x * pw, start_y * ph]
