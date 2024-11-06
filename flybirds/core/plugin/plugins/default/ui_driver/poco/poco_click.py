@@ -2,6 +2,8 @@
 """
 Poco element click
 """
+import flybirds.utils.flybirds_log as log
+
 import flybirds.core.global_resource as gr
 import flybirds.core.plugin.plugins.default.ui_driver.poco.findsnap as findsnap
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_ele as poco_ele
@@ -48,7 +50,10 @@ def air_bdd_click(
             poco, verify_dsl_str, verify_optional
         )
         o_text = verify_poco_object.get_text()
-
+    if poco_object.exists():
+        log.info("click element:{}".format(select_dsl_str))
+    else:
+        log.info("element:{} not exists".format(select_dsl_str))
     poco_object.click()
     if gr.get_frame_config_value("use_snap", False):
         # findsnap.refresh_snap()
