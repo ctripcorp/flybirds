@@ -356,10 +356,10 @@ def perform(self, motion_events, interval=0.01, event_obj=None):
         if event_count % 10 == 0 and event_obj is not None:
             search_result = event_obj["action"](event_obj)
             if search_result and event_count != 0:
-                cmd = event.getcmd(transform=self.transform_xy)
-                self.handle(cmd)
-                time.sleep(0.5)
-                log.info("find the element success")
+                # cmd = event.getcmd(transform=self.transform_xy)
+                # self.handle(cmd)
+                # time.sleep(0.5)
+                # log.info("find the element success")
                 break
         if isinstance(event, SleepEvent):
             time.sleep(event.seconds)
