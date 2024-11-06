@@ -333,7 +333,7 @@ def __swipe_move(tuple_from_xy, tuple_to_xy, duration=0.8, steps=5):
 
 # 根据motion_events进行滑动操作
 @on_method_ready('install_and_setup')
-def perform(self, motion_events, interval=0.01, event_obj=None):
+def perform(self, motion_events, interval=0.1, event_obj=None):
     """
     Perform a sequence of motion events including: UpEvent, DownEvent, MoveEvent, SleepEvent
 
@@ -356,6 +356,10 @@ def perform(self, motion_events, interval=0.01, event_obj=None):
         if event_count % 10 == 0 and event_obj is not None:
             search_result = event_obj["action"](event_obj)
             if search_result and event_count != 0:
+                cmd = event.getcmd(transform=self.transform_xy)
+                self.handle(cmd)
+                time.sleep(0.5)
+                log.info("find the element success")
                 break
         if isinstance(event, SleepEvent):
             time.sleep(event.seconds)
