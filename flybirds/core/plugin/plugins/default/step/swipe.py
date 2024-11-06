@@ -358,7 +358,7 @@ def perform(self, motion_events, interval=0.01, event_obj=None):
             if search_result and event_count != 0:
                 cmd = event.getcmd(transform=self.transform_xy)
                 self.handle(cmd)
-                time.sleep(0.2)
+                time.sleep(0.5)
                 log.info("find the element success")
                 break
         if isinstance(event, SleepEvent):
