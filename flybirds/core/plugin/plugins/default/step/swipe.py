@@ -333,7 +333,7 @@ def __swipe_move(tuple_from_xy, tuple_to_xy, duration=0.8, steps=5):
 
 # 根据motion_events进行滑动操作
 @on_method_ready('install_and_setup')
-def perform(self, motion_events, interval=0.1, event_obj=None):
+def perform(self, motion_events, interval=0.05, event_obj=None):
     """
     Perform a sequence of motion events including: UpEvent, DownEvent, MoveEvent, SleepEvent
 
