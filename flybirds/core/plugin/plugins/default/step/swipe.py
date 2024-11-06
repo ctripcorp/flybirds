@@ -353,10 +353,12 @@ def perform(self, motion_events, interval=0.02, event_obj=None):
     event_count = 0
     for event in motion_events:
         # 每循环10次事件执行下action对应操作
+
         if event_count % 10 == 0 and event_obj is not None:
             search_result = event_obj["action"](event_obj)
             if search_result:
                 break
+
         if isinstance(event, SleepEvent):
             time.sleep(event.seconds)
         else:
