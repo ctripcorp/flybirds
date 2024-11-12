@@ -5,6 +5,7 @@ Snapshots API
 import re
 
 from flybirds.core.global_context import GlobalContext as g_context
+import flybirds.core.global_resource as gr
 
 __SOURCE__ = None
 __IS_NEED_REFRESH__ = False
@@ -47,7 +48,8 @@ def refresh_snap():
     """
     Take screenshot
     """
-    poco = g_context.element.ui_driver_init()
+    # poco = g_context.element.ui_driver_init()
+    poco = gr.get_value("pocoInstance")
     frozen_poco = poco.freeze()
     global __SOURCE__
     __SOURCE__ = frozen_poco.agent.hierarchy.dump()
