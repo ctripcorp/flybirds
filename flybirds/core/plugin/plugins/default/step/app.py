@@ -47,6 +47,11 @@ def restart_app(context):
     g_Context.app.wake_app(package_name, wait_time)
 
 
+def return_home(context):
+    log.info("ios press home button")
+    g_Context.app.return_home()
+
+
 def stop_app(context):
     package_name = gr.get_app_package_name()
     g_Context.app.shut_app(package_name)
