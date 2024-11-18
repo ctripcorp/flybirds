@@ -2,7 +2,7 @@
 android app core api implement
 """
 
-from airtest.core.api import (time, start_app, stop_app, install, uninstall)
+from airtest.core.api import (time, start_app, stop_app, install, uninstall, home)
 
 __open__ = ["App"]
 
@@ -56,3 +56,9 @@ class App:
         uninstall(package_name)
         if not (wait_time is None):
             time.sleep(wait_time)
+
+    def return_home(self):
+        """
+        press home button
+        """
+        home()

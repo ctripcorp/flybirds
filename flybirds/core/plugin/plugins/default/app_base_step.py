@@ -51,6 +51,9 @@ class AppBaseStep:
     def restart_app(self, context):
         step_app.restart_app(context)
 
+    def press_home(self, context):
+        step_app.return_home(context)
+
     def stop_app(self, context):
         step_app.stop_app(context)
 

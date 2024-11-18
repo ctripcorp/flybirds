@@ -3,7 +3,7 @@
 ios app core api implement
 """
 
-from airtest.core.api import (time, start_app, stop_app)
+from airtest.core.api import (time, start_app, stop_app, home)
 
 __open__ = ["App"]
 
@@ -26,6 +26,12 @@ class App:
         stop the target application on device
         """
         stop_app(package_name)
+
+    def return_home(self):
+        """
+        press home button
+        """
+        home()
 
     def install_app(self, package_path, wait_time=None):
         raise NotImplementedError

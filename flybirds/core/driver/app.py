@@ -29,6 +29,13 @@ def shut_app(package_name):
     g_context.app.shut_app(package_name)
 
 
+def press_home():
+    """
+    press home button
+    """
+    g_context.app.return_home()
+
+
 def install_app(package_path, wait_time=None):
     """
     Install application on device
