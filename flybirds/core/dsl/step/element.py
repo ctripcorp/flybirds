@@ -815,6 +815,27 @@ def ele_contain_param_attr_exist(context, param=None, selector=None, attr_name=N
     g_Context.step.ele_contain_param_attr_exist(context, param, selector, attr_name, attr_value)
 
 
+@step("the [{param}] contained by the element [{selector}] element value is [{attr_value}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "text", "value": "param", "name": "文本"},
+             {"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": ErrorFlag.text_equ, "value": "attr_value"},
+                       verify_function="ele_verify_text_error_parse")
+@VerifyStep()
+@ele_wrap
+def ele_contain_param_attr_exist(context, param=None, selector=None, attr_value=None):
+    """
+    包含参数[{param}]的元素[{selector}]的value为[{attr_value}]
+    The specified selector element string exists in the page
+    :param context: step context
+    :param param: element value.
+    :param selector: locator string for selector element (or None).
+    :param attr_name: attribute name
+    :param attr_value: attribute value
+    """
+    g_Context.step.ele_with_param_value_equal(context, param, selector, attr_value)
+
+
 @step("the [{param}] contained by the element [{selector}] has attribute [{attr_name}] contain value [{attr_value}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "text", "value": "param", "name": "文本"},
@@ -942,6 +963,22 @@ def scroll_ele_into_view(context, selector=None):
     :param selector: locator string for selector element (or None).
     """
     g_Context.step.scroll_ele_into_view(context, selector)
+
+
+@step("upload image to element[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
+                       action=ActionType.upload)
+@ele_wrap
+def scroll_ele_into_view(context, selector=None):
+    """
+    移动元素[{selector}]至可视区域
+    Full screen swipe in the specified direction to find the specified
+     selector element
+     :param context: step context
+    :param selector: locator string for selector element (or None).
+    """
+    g_Context.step.upload_image_to_ele(context, selector)
 
 
 @step("clear [{selector}] and input[{param2}]")

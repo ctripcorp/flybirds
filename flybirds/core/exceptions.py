@@ -326,6 +326,7 @@ class ActionType:
     disappear: str = "disappear"
     move: str = "move"
     select: str = "select"
+    upload: str = "upload"
     setPageSize: str = "setPageSize"
     switchPage: str = "switchPage"
     setCookie: str = "setCookie"

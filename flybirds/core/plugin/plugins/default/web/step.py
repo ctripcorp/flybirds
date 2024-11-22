@@ -226,6 +226,14 @@ class Step:
         ele.ele_text_equal(context, selector, param2)
 
     @classmethod
+    def ele_with_param_value_equal(cls, context, param, selector, attr_value):
+        params = param.split(',')
+        for param in params:
+            selector = selector.replace('{}', param, 1)
+        ele = gr.get_value("plugin_ele")
+        ele.ele_with_param_value_equal_attr(context, selector, attr_value)
+
+    @classmethod
     def ele_contain_param_contain_value(cls, context, param1, selector, param2):
         params = param1.split(',')
         for param in params:
@@ -341,6 +349,14 @@ class Step:
         """
         ele = gr.get_value("plugin_ele")
         ele.find_full_screen_slide(context, None, selector)
+
+    @classmethod
+    def upload_image_to_ele(cls, context, selector):
+        """
+        from {param1} find[{param2}]element
+        """
+        ele = gr.get_value("plugin_ele")
+        ele.upload_image(context, selector)
 
     @classmethod
     def ele_attr_equal(cls, context, selector, param2, param3):
