@@ -266,7 +266,10 @@ step_language = {
         "the [{param}] contained by the element [{selector}] has attribute [{attr_name}] not contain value [{"
         "attr_value}]":
             ["包含参数[{param}]的元素[{selector}]的属性[{attr_name}]值不包含[{attr_value}]"],
+        "the [{param}] contained by the element [{selector}] element value is [{attr_value}]":
+            ["包含参数[{param}]的元素[{selector}]的value为[{attr_value}]"],
         "click[{selector}] and accept dialog": ["点击[{selector}]并接受弹窗"],
         "click[{selector}] and cancel dialog": ["点击[{selector}]并取消弹窗"],
+        "upload image to element[{selector}]": ["上传图片到元素[{selector}]"]
     },
 }

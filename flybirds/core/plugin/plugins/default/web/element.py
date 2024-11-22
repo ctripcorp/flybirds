@@ -11,6 +11,7 @@ import flybirds.utils.verify_helper as verify_helper
 from flybirds.core.exceptions import FlybirdVerifyException, \
     FlybirdsVerifyEleException, ErrorName
 from flybirds.core.global_context import GlobalContext as g_Context
+from flybirds.core.plugin.plugins.default.screen import BaseScreen
 from flybirds.utils import language_helper as lan
 from flybirds.utils.dsl_helper import handle_str, params_to_dic
 import re
@@ -229,6 +230,12 @@ class Element:
                                      timeout=timeout)
         verify_helper.text_not_container(param, ele_value)
 
+    def ele_with_param_value_equal_attr(self, context, selector, attr_value):
+        locator, timeout = self.get_ele_locator(selector)
+        ele_value = locator.evaluate('(element) => { console.log("element.value");return element.value}',
+                                     timeout=timeout)
+        verify_helper.text_equal(attr_value, ele_value)
+
     def wait_for_ele(self, context, param):
         locator, timeout = self.get_ele_locator(param)
         locator.wait_for(timeout=timeout, state='visible')
@@ -325,6 +332,24 @@ class Element:
     def find_full_screen_slide(self, context, param1, param2):
         locator, timeout = self.get_ele_locator(param2)
         locator.scroll_into_view_if_needed(timeout=timeout)
+
+    def upload_image(self, context, param2):
+        locator, timeout = self.get_ele_locator(param2)
+        try:
+            page = gr.get_value("plugin_ele").page
+            with page.expect_file_chooser() as fc_info:
+                try:
+                    # click the upload button to trigger the file chooser
+                    locator.click(timeout=2000)
+                except Exception as e:
+                    log.info(e)
+            step_index = context.cur_step_index - 1
+            img_path = BaseScreen.screen_link_to_behave(context.scenario, step_index, "screen_")
+            file_chooser = fc_info.value
+            file_chooser.set_files(img_path)
+        except Exception as e:
+            log.info(e)
+            raise FlybirdsVerifyEleException(message="upload image failed", error_name=ErrorName.ElementNotFoundError)
 
     def get_ele_attr(self, selector, attr_name, params_deal_module=None,
                      deal_method=None):
