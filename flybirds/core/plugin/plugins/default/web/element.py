@@ -130,7 +130,7 @@ class Element:
 
     def ele_click(self, context, param):
         locator, timeout = self.get_ele_locator(param)
-        if "force=true" or "force=True" in param:
+        if "force=true" in param or "force=True" in param:
             locator.click(force=True, timeout=timeout)
         else:
             locator.click(timeout=timeout)
