@@ -42,6 +42,7 @@ def parse_json_data(context, report_dir, rerun_report_dir=None, is_parallel=Fals
             # noinspection PyBroadException
             try:
                 file_path = os.path.join(report_dir, file_item)
+                log.info(f"parse_json_data file_item: {file_item} and report_dir: {file_path}")
                 report_json = file_helper.get_json_from_file_path(file_path)
                 if isinstance(report_json, list):
                     cur_json = []
@@ -50,6 +51,7 @@ def parse_json_data(context, report_dir, rerun_report_dir=None, is_parallel=Fals
                         report_json.extend(rerun_features)
                         not_aggregation = False
                     for feature in report_json:
+                        log.info(f"report_json contain feature: {feature}")
                         parse_feature(feature, rerun_report_dir)
                         if (
                                 isinstance(feature.get("elements"), list)
