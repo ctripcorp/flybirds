@@ -130,6 +130,8 @@ class Element:
 
     def ele_click(self, context, param):
         locator, timeout = self.get_ele_locator(param)
+        if "scrollIntoViewIfNeeded=true" or "scrollIntoViewIfNeeded=True" in param:
+            locator.scroll_into_view_if_needed(timeout=timeout)
         if "force=true" in param or "force=True" in param:
             locator.click(force=True, timeout=timeout)
         else:
@@ -452,6 +454,10 @@ class Element:
 
     def ele_touch(self, context, param):
         locator, timeout = self.get_ele_locator(param)
+        if "scrollIntoViewIfNeeded=true" or "scrollIntoViewIfNeeded=True" in param:
+            locator.scroll_into_view_if_needed(timeout=timeout)
+        if "force=true" in param or "force=True" in param:
+            locator.click(force=True, timeout=timeout)
         locator.tap(timeout=timeout)
 
     def touch_text(self, context, param):
