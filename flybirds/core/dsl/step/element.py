@@ -972,7 +972,7 @@ def scroll_ele_into_view(context, selector=None):
 @ele_wrap
 def scroll_ele_into_view(context, selector=None):
     """
-    上次图片至元素[{selector}]
+    上传图片至元素[{selector}]
     Full screen swipe in the specified direction to find the specified
      selector element
      :param context: step context
