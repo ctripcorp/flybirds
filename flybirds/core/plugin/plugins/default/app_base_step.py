@@ -66,6 +66,9 @@ class AppBaseStep:
     def click_ele(self, context, selector):
         step_click.click_ele(context, selector)
 
+    def click_exist_param(self, context, selector):
+        step_click.click_exist_param(context, selector)
+
     def click_text(self, context, selector):
         step_click.click_text(context, selector)
 

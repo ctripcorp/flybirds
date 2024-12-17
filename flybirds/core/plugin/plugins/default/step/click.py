@@ -11,6 +11,7 @@ from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.core.plugin.plugins.default.step.verify import paddle_fix_txt, ocr_txt_exist, ocr_regional_txt_exist
 from flybirds.core.plugin.plugins.default.step.common import img_verify
 import flybirds.utils.flybirds_log as log
+import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_manage as pm
 
 
 def click_ele(context, param):
@@ -56,6 +57,24 @@ def click_ele(context, param):
         verify_optional,
         verify_action,
     )
+
+
+def click_exist_param(context, selector):
+    param_dict = dsl_helper.params_to_dic(selector)
+    selector_str = param_dict["selector"]
+    optional = {}
+    if "timeout" in param_dict.keys():
+        optional["timeout"] = float(param_dict["timeout"])
+    try:
+        poco = gr.get_value("pocoInstance")
+        search_poco_object_ele = pm.create_poco_object_by_dsl(poco, selector_str, optional)
+        search_result = search_poco_object_ele.exists()
+        log.info("app update alert element exist:", search_result)
+        if search_result:
+            search_poco_object_ele.click()
+            log.info("click action success:", search_result)
+    except Exception:
+        log.info("[click exist param] click exist param error !")
 
 
 def click_text(context, param):

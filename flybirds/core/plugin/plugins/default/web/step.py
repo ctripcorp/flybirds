@@ -158,6 +158,11 @@ class Step:
         ele.ele_click(context, selector)
 
     @classmethod
+    def click_exist_param(cls, context, selector):
+        ele = gr.get_value("plugin_ele")
+        ele.click_exist_param_web(context, selector)
+
+    @classmethod
     def click_text(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.click_text(context, selector)
