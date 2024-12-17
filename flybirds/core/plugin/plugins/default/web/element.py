@@ -99,6 +99,12 @@ class Element:
         param_dict = params_to_dic(param_temp)
         selector_str = param_dict["selector"]
 
+        if "dealMethod" in param_dict.keys():
+            deal_method = param_dict["dealMethod"]
+            params_deal_module = gr.get_value("projectScript").params_deal
+            deal_params = getattr(params_deal_module, deal_method)
+            selector_str = deal_params(selector_str)
+
         if "timeout" in param_dict.keys():
             timeout = param_dict["timeout"]
         else:
@@ -136,6 +142,19 @@ class Element:
             locator.click(force=True, timeout=timeout)
         else:
             locator.click(timeout=timeout)
+
+    def click_exist_param_web(self, context, param):
+        locator, timeout = self.get_ele_locator(param)
+        try:
+            locator.element_handle(timeout=timeout)
+            if "scrollIntoViewIfNeeded=true" or "scrollIntoViewIfNeeded=True" in param:
+                locator.scroll_into_view_if_needed(timeout=timeout)
+            if "force=true" in param or "force=True" in param:
+                locator.click(force=True, timeout=timeout)
+            else:
+                locator.click(timeout=timeout)
+        except Exception as e:
+            log.info(f'click_exist_param_web error: {e}')
 
     def click_text(self, context, param):
         if 'text=' not in param:
@@ -248,8 +267,13 @@ class Element:
 
     def ele_input_text(self, context, param_1, param_2):
         locator, timeout = self.get_ele_locator(param_1)
-        # locator.click(timeout=timeout)
+        # makesure enter can be input
+        if "\\n" in param_2:
+            param_2 = param_2.replace("\\n", "\n")
         locator.fill(param_2, timeout=timeout)
+        # Remove focus from the element using the mouse
+        if "blur=true" in param_1 or "blur=True" in param_1:
+            locator.blur()
         return self.page.wait_for_timeout(100)
 
     def clear_and_input(self, context, param_1, param_2):

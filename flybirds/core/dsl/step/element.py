@@ -6,8 +6,6 @@ from behave import step
 
 from flybirds.core.exceptions import ErrorFlag, ActionType
 from flybirds.core.global_context import GlobalContext as g_Context
-import flybirds.core.global_resource as gr
-from flybirds.utils import dsl_helper
 from flybirds.utils.dsl_helper import ele_wrap, VerifyStep, RetryType, FlybirdsReportTagInfo
 
 
@@ -64,7 +62,7 @@ def text_attr_container(context, selector=None, param2=None, param3=None):
 @ele_wrap
 def text_attr_not_container(context, selector=None, param2=None, param3=None):
     """
-    案[{selector}]的属性[{param2}]不包含{param3}
+    文案[{selector}]的属性[{param2}]不包含{param3}
     Check if the value of the attribute param2 of the text element param1 in
      the page is param3
 
@@ -171,6 +169,24 @@ def click_ele(context, selector=None):
     """
 
     g_Context.step.click_ele(context, selector)
+
+
+@step("if [{selector}] exist then click")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify_function="common_error_parse",
+                       action=ActionType.press)
+@ele_wrap
+def click_param_if_ele_exist(context, selector=None):
+    """
+    如果[{selector}]存在则点击该元素
+    Click on the selector element
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param param: locator string for selector element (or None).
+    """
+
+    g_Context.step.click_exist_param(context, selector)
 
 
 @step("click text[{selector}]")
