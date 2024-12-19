@@ -17,7 +17,7 @@ import flybirds.utils.verify_helper as verify_helper
 from flybirds.core.plugin.plugins.default.web.interception import \
     get_case_response_body
 from flybirds.utils import dsl_helper
-from flybirds.utils.dsl_helper import is_number
+from flybirds.utils.dsl_helper import is_number, params_to_dic, handle_str
 from flybirds.utils import file_helper
 from flybirds.core.exceptions import FlybirdsException
 import urllib.parse
@@ -337,6 +337,22 @@ class Page:
             target_url = schema_url
         verify_helper.text_equal(target_url, cur_url)
 
+    def add_header(self, context, name, value):
+        param_temp = handle_str(value)
+        param_dict = params_to_dic(param_temp)
+        selector_str = param_dict["selector"]
+
+        if "dealMethod" in param_dict.keys():
+            deal_method = param_dict["dealMethod"]
+            params_deal_module = gr.get_value("projectScript").params_deal
+            deal_params = getattr(params_deal_module, deal_method)
+            value = deal_params(selector_str)
+
+        headers = GlobalContext.get_global_cache("user_header")
+        headers.add(name, value)
+        self.page.set_extra_http_headers(headers)
+        log.info(f'add header: {headers}')
+
     @staticmethod
     def add_cookies(name, value, url):
         if GlobalContext.get_global_cache("step_cookies") is None:
@@ -357,12 +373,51 @@ class Page:
         log.info(f"get cookie success: {cookies}")
         return cookies
 
-    @staticmethod
+    def add_local_storage(self, context, name, value):
+        param_temp = handle_str(value)
+        param_dict = params_to_dic(param_temp)
+        selector_str = param_dict["selector"]
+
+        if "dealMethod" in param_dict.keys():
+            deal_method = param_dict["dealMethod"]
+            params_deal_module = gr.get_value("projectScript").params_deal
+            deal_params = getattr(params_deal_module, deal_method)
+            value = deal_params(selector_str)
+
+        local_storage = [{'key': name, 'value': value}]
+        self.page.add_init_script("""(storage => {
+                                if(window && window.localStorage){
+                                      for (const [index, item] of Object.entries(storage)) {
+                                           window.localStorage.setItem(item["key"], item["value"])
+                                      }
+                                   }
+                                })(""" + str(json.dumps(local_storage, ensure_ascii=False)) + ")")
+
     def get_local_storage(context):
         context = gr.get_value("browser_context")
         local_storage = context.storage_state()
         log.info(f"get local storage success: {local_storage['origins']}")
         return local_storage['origins']
+
+    def add_session_storage(self, context, name, value):
+        param_temp = handle_str(value)
+        param_dict = params_to_dic(param_temp)
+        selector_str = param_dict["selector"]
+
+        if "dealMethod" in param_dict.keys():
+            deal_method = param_dict["dealMethod"]
+            params_deal_module = gr.get_value("projectScript").params_deal
+            deal_params = getattr(params_deal_module, deal_method)
+            value = deal_params(selector_str)
+
+        session_storage = [{'key': name, 'value': value}]
+        self.page.add_init_script("""(storage => {
+                                 if(window && window.sessionStorage){
+                                      for (const [index, item] of Object.entries(storage)) {
+                                            window.sessionStorage.setItem(item["key"], item["value"])
+                                        }
+                                      }
+                                 })(""" + str(json.dumps(session_storage, ensure_ascii=False)) + ")")
 
     def get_session_storage(self, context):
         session_storage = self.page.evaluate("() => JSON.stringify(sessionStorage)")

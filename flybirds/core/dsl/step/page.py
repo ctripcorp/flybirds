@@ -52,6 +52,33 @@ def add_cookie(context, name, value, url):
     g_Context.step.add_cookies(context, name, value, url)
 
 
+@step("set header [{name}] value[{value}]")
+@FlybirdsReportTagInfo(group="header", selectors={
+    "path": [{"type": "key", "value": "name", "name": "key"}, {"type": "value", "value": "value", "name": "value"}]},
+                       verify_function="common_error_parse", action=ActionType.setHeader)
+@ele_wrap
+def add_header(context, name, value):
+    g_Context.step.add_header(context, name, value)
+
+
+@step("set sessionStorage name[{name}] value[{value}]")
+@FlybirdsReportTagInfo(group="sessionStorage", selectors={
+    "path": [{"type": "key", "value": "name", "name": "key"}, {"type": "value", "value": "value", "name": "value"}]},
+                       verify_function="common_error_parse", action=ActionType.setSessionStorage)
+@ele_wrap
+def add_session_storage(context, name, value):
+    g_Context.step.add_session_storage(context, name, value)
+
+
+@step("set localStorage name[{name}] value[{value}]")
+@FlybirdsReportTagInfo(group="localStorage", selectors={
+    "path": [{"type": "key", "value": "name", "name": "key"}, {"type": "value", "value": "value", "name": "value"}]},
+                       verify_function="common_error_parse", action=ActionType.setLocalStorage)
+@ele_wrap
+def add_local_storage(context, name, value):
+    g_Context.step.add_local_storage(context, name, value)
+
+
 @step("get cookie")
 @FlybirdsReportTagInfo(group="cookie", selectors={"path": []}, verify_function="common_error_parse",
                        action=ActionType.getCookie)
