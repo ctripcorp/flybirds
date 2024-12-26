@@ -349,6 +349,10 @@ class Page:
             value = deal_params(selector_str)
 
         headers = GlobalContext.get_global_cache("user_header")
+        if headers is None:
+            headers = {name: value}
+        else:
+            headers[name] = value
         headers.add(name, value)
         self.page.set_extra_http_headers(headers)
         log.info(f'add header: {headers}')
