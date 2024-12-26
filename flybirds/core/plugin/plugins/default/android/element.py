@@ -30,6 +30,5 @@ class Element(BaseElement):
                 return poco
             except Exception as e:
                 attempts -= 1
-                time.sleep(1)
-                if attempts == 0:
-                    raise RuntimeError("Failed to initialize AndroidUiautomationPoco after 3 attempts") from e
+                time.sleep(2)
+                log.info(f"Failed to initialize AndroidUiautomationPoco, retrying 3 times: {e}")

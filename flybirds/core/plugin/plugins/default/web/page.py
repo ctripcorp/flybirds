@@ -310,7 +310,12 @@ class Page:
         if "timeout" in param_dict.keys():
             self.page.goto(schema_url_value, timeout=float(param_dict["timeout"]) * 1000)
             return
-        self.page.goto(schema_url_value)
+        try:
+            self.page.goto(schema_url_value)
+        except Exception as e:
+            log.error(f'page goto error{e},try again')
+            self.page.goto(schema_url_value)
+
 
     def set_web_page_size(self, context, width, height):
         self.page.set_viewport_size({"width": int(width), "height": int(height)})
@@ -349,6 +354,10 @@ class Page:
             value = deal_params(selector_str)
 
         headers = GlobalContext.get_global_cache("user_header")
+        if headers is None:
+            headers = {name: value}
+        else:
+            headers[name] = value
         headers.add(name, value)
         self.page.set_extra_http_headers(headers)
         log.info(f'add header: {headers}')

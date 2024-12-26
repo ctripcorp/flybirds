@@ -9,6 +9,7 @@ import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 from flybirds.core.driver import ui_driver
 from flybirds.core.global_context import GlobalContext
+from flybirds.core.plugin.event.device_prepare import OnPrepare
 from flybirds.utils import launch_helper
 
 
@@ -44,15 +45,19 @@ class OnBefore:  # pylint: disable=too-few-public-methods
             GlobalContext.ui_driver_instance = poco_instance
             log.info("poco object initialization completed")
 
-            # get device screen size
-            context.config_manage.device_info.screen_size = (
-                ui_driver.air_bdd_screen_size(poco_instance)
-            )
-            log.info(
-                f"device {context.config_manage.device_info.device_id} "
-                f"get device"
-                f" screen size {context.config_manage.device_info.screen_size}"
-            )
+            try:
+                # get device screen size
+                context.config_manage.device_info.screen_size = (
+                    ui_driver.air_bdd_screen_size(poco_instance)
+                )
+                log.info(
+                    f"device {context.config_manage.device_info.device_id} "
+                    f"get device"
+                    f" screen size {context.config_manage.device_info.screen_size}"
+                )
+            except Exception as e:
+                log.info(f"get device screen size error: {str(e)}")
+                OnPrepare.init_device(context)
         else:
             log.info(
                 f"initialization device not obtained:{device_id} or platform"
