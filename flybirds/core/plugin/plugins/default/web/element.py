@@ -478,7 +478,7 @@ class Element:
 
     def ele_touch(self, context, param):
         locator, timeout = self.get_ele_locator(param)
-        if "scrollIntoViewIfNeeded=true" or "scrollIntoViewIfNeeded=True" in param:
+        if "scrollIntoViewIfNeeded=true" in param or "scrollIntoViewIfNeeded=True" in param:
             locator.scroll_into_view_if_needed(timeout=timeout)
         if "force=true" in param or "force=True" in param:
             locator.click(force=True, timeout=timeout)

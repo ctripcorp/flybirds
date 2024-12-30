@@ -41,11 +41,6 @@ def sleep(sleep_time):
 
 def add_res_dic(dsl_params, functin_pattern, def_key):
     result_dic = {}
-    if dsl_params is not None and "@@空格@@" in dsl_params:
-        dsl_params = re.sub(r'@@空格@@', ' ', dsl_params)
-    if dsl_params is not None and "@#@换行#符号@#@" in dsl_params:
-        dsl_params = re.sub(r'@#@换行#符号@#@', '\n', dsl_params)
-
     match_obj = re.match(functin_pattern, dsl_params)
     if match_obj is not None:
         """
