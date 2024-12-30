@@ -352,13 +352,13 @@ class Page:
             params_deal_module = gr.get_value("projectScript").params_deal
             deal_params = getattr(params_deal_module, deal_method)
             value = deal_params(selector_str)
-
-        headers = GlobalContext.get_global_cache("user_header")
+        headers = {}
+        if GlobalContext.get_global_cache("user_header") is not None:
+            headers = GlobalContext.get_global_cache("user_header")
         if headers is None:
             headers = {name: value}
         else:
             headers[name] = value
-        headers.add(name, value)
         self.page.set_extra_http_headers(headers)
         log.info(f'add header: {headers}')
 
