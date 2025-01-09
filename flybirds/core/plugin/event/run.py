@@ -194,10 +194,12 @@ class OnAppUserLoginBeforeAll:  # pylint: disable=too-few-public-methods
         """
         try:
             log.info("user before all")
+            need_login = gr.get_flow_behave_value("before_run_login", False)
+            log.info("before_run_login:{}".format(need_login))
             launch_helper.login()
-            # startup method selection
-            launch_helper.app_start("before_run_page")
-
+            if need_login:
+                # startup method selection
+                launch_helper.app_start("before_run_page")
         except Exception as init_error:
             log.info("global initialization error", traceback.format_exc())
             raise init_error
