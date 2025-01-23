@@ -50,6 +50,7 @@ class OnBefore:  # pylint: disable=too-few-public-methods
                 context.config_manage.device_info.screen_size = (
                     ui_driver.air_bdd_screen_size(poco_instance)
                 )
+                gr.set_value("current_screen_size", context.config_manage.device_info.screen_size)
                 log.info(
                     f"device {context.config_manage.device_info.device_id} "
                     f"get device"

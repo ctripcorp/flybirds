@@ -22,13 +22,10 @@ class Element(BaseElement):
         """
         from poco.drivers.android.uiautomation import AndroidUiautomationPoco
 
-        attempts = 3
-        while attempts > 0:
-            try:
-                poco = AndroidUiautomationPoco(use_airtest_input=True, screenshot_each_action=False)
-                log.info("AndroidUiautomationPoco init success")
-                return poco
-            except Exception as e:
-                attempts -= 1
-                time.sleep(2)
-                log.info(f"Failed to initialize AndroidUiautomationPoco, retrying 3 times: {e}")
+        try:
+            poco = AndroidUiautomationPoco(use_airtest_input=True, screenshot_each_action=False)
+            log.info("AndroidUiautomationPoco init success")
+            return poco
+        except Exception as e:
+            # raise Exception(f"Failed to initialize AndroidUiautomationPoco {e}")
+            log.error(f"Failed to initialize AndroidUiautomationPoco {e}")

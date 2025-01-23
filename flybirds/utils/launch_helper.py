@@ -49,7 +49,7 @@ def app_start(page_name):
     if not (package_name is None or page_value is None or device_id is None):
         if "restartApp" == page_value:
             app.shut_app(package_name)
-            wait_time = gr.get_frame_config_value("app_start_time", 6)
+            wait_time = gr.get_frame_config_value("app_start_time", 8)
             app.wake_app(package_name, wait_time)
             log.info("complete restartApp and sleep {}".format(wait_time))
         elif "startApp" == page_value:

@@ -121,9 +121,13 @@ def click_text(context, param):
 
 def click_coordinates(context, x, y):
     poco_instance = gr.get_value("pocoInstance")
-    screen_size = gr.get_device_size()
-    x_coordinate = float(x) / screen_size[0]
-    y_coordinate = float(y) / screen_size[1]
+    if x < 1 and y < 1:
+        x_coordinate = float(x)
+        y_coordinate = float(y)
+    else:
+        screen_size = gr.get_device_size()
+        x_coordinate = float(x) / screen_size[0]
+        y_coordinate = float(y) / screen_size[1]
     poco_instance.click([x_coordinate, y_coordinate])
     if gr.get_frame_config_value("use_snap", False):
         find_snap.fix_refresh_status(True)
