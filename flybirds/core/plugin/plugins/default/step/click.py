@@ -121,7 +121,7 @@ def click_text(context, param):
 
 def click_coordinates(context, x, y):
     poco_instance = gr.get_value("pocoInstance")
-    if x < 1 and y < 1:
+    if float(x) < 1 and float(y) < 1:
         x_coordinate = float(x)
         y_coordinate = float(y)
     else:
