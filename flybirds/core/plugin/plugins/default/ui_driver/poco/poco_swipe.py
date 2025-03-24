@@ -218,6 +218,7 @@ def air_bdd_percent_point_swipe(poco, start_point, end_point, duration=None):
     :param duration:
     :return:
     """
+    log.info("swipe from {} to {} and duration {}".format(start_point, end_point, duration))
     if duration is None:
         poco.swipe(start_point, end_point)
     else:

@@ -214,7 +214,7 @@ def full_screen_swipe_new(context, direction, selector):
     # 移动次数
     steps = int(distance / duration)
     time.sleep(1)
-    log.info(f"swipe {direction} to found {selector} then click")
+    log.info(f"swipe {direction} to found {selector}")
     gr.get_value("deviceInstance").touch_proxy.swipe(tuple_from_xy, tuple_to_xy, duration=duration, steps=steps,
                                                      event_obj=event_obj)
 
