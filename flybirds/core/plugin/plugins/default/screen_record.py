@@ -90,8 +90,16 @@ class ScreenRecord:
         cmd = "{} -s {} shell screenrecord --help".format(airtest_adb_path,
                                                           device_id)
         proc = cmd_helper.create_sub_process(cmd)
-        proc.communicate(timeout=10)
-        proc_code = proc.poll()
+        try:
+            proc.communicate(timeout=10)
+            proc_code = proc.poll()
+        except Exception as e:
+            log.error(
+                "Screen record support {} not end in 10 seconds, innerError:{}".format(
+                    cmd, str(e)
+                )
+            )
+            proc_code = 1
 
         if int(proc_code) == 0:
             self.support = True

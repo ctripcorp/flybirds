@@ -268,10 +268,10 @@ class Element:
     def ele_input_text(self, context, param_1, param_2):
         locator, timeout = self.get_ele_locator(param_1)
         # makesure enter can be input
-        if "\\n" in param_2:
+        if param_2 is not None and "\\n" in param_2:
             param_2 = param_2.replace("\\n", "\n")
         locator.fill(param_2, timeout=timeout)
-        # Remove focus from the element using the mouse
+        # Remove focus from the element
         if "blur=true" in param_1 or "blur=True" in param_1:
             locator.blur()
         return self.page.wait_for_timeout(100)
@@ -482,6 +482,7 @@ class Element:
             locator.scroll_into_view_if_needed(timeout=timeout)
         if "force=true" in param or "force=True" in param:
             locator.click(force=True, timeout=timeout)
+            return
         locator.tap(timeout=timeout)
 
     def touch_text(self, context, param):
