@@ -75,6 +75,7 @@ class Page:
 
     @staticmethod
     def new_browser_context(dic=None):
+        log.info("new_browser_context")
         browser = gr.get_value('browser')
         operation_module = gr.get_value("projectScript").custom_operation
 
@@ -103,17 +104,45 @@ class Page:
 
         if gr.get_web_info_value("by_pass", None) is not None:
             launch_params.get("proxy").__setitem__("bypass", gr.get_web_info_value("by_pass", None))
-            if optional_config is not None:
-                launch_config = {
-                    **launch_config,
-                    "proxy": launch_params.get("proxy"),
-                    **optional_config
-                }
+            log.info(f"this is by pass: {gr.get_web_info_value('by_pass', None)}")
+            case_name = GlobalContext.get_global_cache('caseName')
+            log.info(f"this is case name: {case_name}")
+            if gr.get_web_info_value("browserExit") is True:
+                if case_name is None:
+                    case_name = f"case_{time.strftime('%Y%m%d%H%M%S')}"
+                log.info(f"browserExit record har: {case_name}")
+                userdata = GlobalContext.get_global_cache("userdata")
+                screen_shot_dir = userdata.get("screenShotDir")
+                case_name = case_name + ".har"
+                har_path = os.path.join(screen_shot_dir, case_name)
+                GlobalContext.set_global_cache('export_har_path', har_path)
+                print(f"this is har path: {har_path}")
+                if optional_config is not None:
+                    launch_config = {
+                        **launch_config,
+                        "proxy": launch_params.get("proxy"),
+                        "record_har_path": har_path,
+                        **optional_config
+                    }
+                else:
+                    launch_config = {
+                        **launch_config,
+                        "record_har_path": har_path,
+                        "proxy": launch_params.get("proxy")
+                    }
             else:
-                launch_config = {
-                    **launch_config,
-                    "proxy": launch_params.get("proxy")
-                }
+                if optional_config is not None:
+                    launch_config = {
+                        **launch_config,
+                        "proxy": launch_params.get("proxy"),
+                        **optional_config
+                    }
+                else:
+                    launch_config = {
+                        **launch_config,
+                        "proxy": launch_params.get("proxy")
+                    }
+
         elif optional_config is not None:
             launch_config = {
                 **launch_config,

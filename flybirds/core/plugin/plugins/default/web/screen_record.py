@@ -2,11 +2,43 @@
 """
 web screen record
 """
+import json
+import os
+
+from flybirds.core.global_context import GlobalContext
 
 import flybirds.core.global_resource as gr
 import flybirds.utils.flybirds_log as log
 
 __open__ = ["ScreenRecordInfo"]
+
+
+def read_har_file(file_path):
+    with open(file_path, "r", encoding='utf-8') as file:
+        har_data = json.load(file)
+    return har_data
+
+
+def filter_non_200_requests(har_data):
+    non_200_requests = []
+    for entry in har_data['log']['entries']:
+        response_status = entry['response']['status']
+        if response_status != 200:
+            non_200_requests.append(entry)
+    return non_200_requests
+
+
+def save_to_new_har_file(original_har_data, non_200_requests, output_file_path):
+    new_har_data = {
+        "log": {
+            "version": original_har_data['log']['version'],
+            "creator": original_har_data['log']['creator'],
+            "pages": original_har_data['log'].get('pages', []),  # 如果存在pages字段则保留
+            "entries": non_200_requests
+        }
+    }
+    with open(output_file_path, "w", encoding='utf-8') as file:
+        json.dump(new_har_data, file, indent=4)
 
 
 class ScreenRecordInfo:
@@ -33,6 +65,23 @@ class ScreenRecordInfo:
             page_obj.page.close()
         else:
             page_obj.context.close()
+            log.info("[web stop_record] close browser")
+            try:
+                har_path = GlobalContext.get_global_cache('export_har_path')
+                if har_path is not None and os.path.isfile(har_path):
+                    har_data = read_har_file(har_path)
+                    non_200_requests = filter_non_200_requests(har_data)
+                    if GlobalContext.get_global_cache("stepErrorInfo") is not None:
+                        step_error_info = GlobalContext.get_global_cache("stepErrorInfo")
+                    else:
+                        step_error_info = {}
+                    step_error_info["export_bad_request"] = non_200_requests
+                    log.info(f'[web stop_record] export_bad_request')
+                    save_to_new_har_file(har_data, non_200_requests, har_path)
+                else:
+                    log.error('[web stop_record] har_path is None')
+            except Exception as e:
+                log.error(f'[web stop_record] close browser has error! Error msg is: {str(e)}')
 
     @staticmethod
     def copy_record(src_path):
