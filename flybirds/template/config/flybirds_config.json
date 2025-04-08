@@ -26,7 +26,9 @@
     "deviceScaleFactor": null,
     "hasTouch": null,
     "geolocation": null,
-    "permissions": null
+    "permissions": null,
+    "browserExitAfterCase": true,
+    "exportWebTrace": false
   },
   "flow_behave": {
     "beforeRunPage": "None",

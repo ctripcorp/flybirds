@@ -59,7 +59,13 @@ class ScreenRecordInfo:
         page_obj = gr.get_value("plugin_page")
         if page_obj is None or (not hasattr(page_obj, 'context')):
             log.error('[web stop_record] get page object has error!')
-
+        try:
+            export_web_trace_path = GlobalContext.get_global_cache('export_web_trace_path')
+            if page_obj.context.tracing is not None and export_web_trace_path:
+                log.info(f'[web stop_record] export_web_trace_path: {export_web_trace_path}')
+                page_obj.context.tracing.stop(path=export_web_trace_path)
+        except Exception as e:
+            log.error(f'[web stop_record] get tracing has error! Error msg is: {str(e)}')
         if gr.get_web_info_value("browserExit") is not None and \
                 gr.get_web_info_value("browserExit") is False:
             page_obj.page.close()
