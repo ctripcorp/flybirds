@@ -219,6 +219,8 @@ class WebConfig:
             abort_domain_list = web_info.get("abortDomainList")
         if web_info.get("browserExitAfterCase") is not None:
             self.browserExit = web_info.get("browserExitAfterCase", True)
+        if web_info.get("exportWebTrace") is not None:
+            self.exportWebTrace = web_info.get("exportWebTrace", True)
         if web_info.get("emulatedDevice") is not None:
             self.emulated_device = web_info.get("emulatedDevice", None)
 
