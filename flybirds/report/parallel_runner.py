@@ -120,9 +120,9 @@ def execute_parallel_feature(feature, behave_cmd, feature_path, browser_type):
     try:
         if status == 'Failed':
             if error is not None:
-                log.info("exe error", error)
+                log.info("exe error:{error}")
             if output is not None:
-                log.info("exe error", output)
+                log.info("exe error output: {output}")
     except:
         log.info("get log error")
     return status

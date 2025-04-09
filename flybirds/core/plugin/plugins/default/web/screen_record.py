@@ -77,11 +77,6 @@ class ScreenRecordInfo:
                 if har_path is not None and os.path.isfile(har_path):
                     har_data = read_har_file(har_path)
                     non_200_requests = filter_non_200_requests(har_data)
-                    if GlobalContext.get_global_cache("stepErrorInfo") is not None:
-                        step_error_info = GlobalContext.get_global_cache("stepErrorInfo")
-                    else:
-                        step_error_info = {}
-                    step_error_info["export_bad_request"] = non_200_requests
                     log.info(f'[web stop_record] export_bad_request')
                     save_to_new_har_file(har_data, non_200_requests, har_path)
                 else:
