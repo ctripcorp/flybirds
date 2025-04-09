@@ -102,15 +102,13 @@ class Page:
         if gr.get_value("debug", False):
             launch_config["record_video_dir"] = None
 
-        # case_name = GlobalContext.get_global_cache('caseName')
-        # if case_name is None:
         file_name = f"case_file_{time.strftime('%Y%m%d%H%M%S')}"
         userdata = GlobalContext.get_global_cache("userdata")
         screen_shot_dir = userdata.get("screenShotDir")
         har_path = os.path.join(screen_shot_dir, file_name + ".har")
         trace_path = os.path.join(screen_shot_dir, file_name + "trace.zip")
 
-        if gr.get_web_info_value("browserExit") is True:
+        if gr.get_web_info_value("browserExit") is True and gr.get_web_info_value("exportWebTrace") is True:
             GlobalContext.set_global_cache('export_har_path', har_path)
             launch_config["record_har_path"] = har_path
             log.info(f"record har path: {har_path}")
