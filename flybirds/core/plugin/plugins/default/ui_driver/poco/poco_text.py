@@ -7,6 +7,7 @@ import time
 
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_ele as poco_ele
 import flybirds.core.plugin.plugins.default.ui_driver.poco.poco_manage as pm
+from flybirds.core.exceptions import FlybirdVerifyException, ErrorName
 
 
 def get_ele_text_replace_space(
@@ -22,8 +23,11 @@ def get_ele_text_replace_space(
         poco, selector_str, optional
     )
     ele_str = poco_object.get_text()
-    if ele_str is None:
+    if ele_str is None and poco_object.attr('label') is not None:
         ele_str = poco_object.attr('label')
+    else:
+        raise FlybirdVerifyException(f"selector:{selector_str} not found",
+                                     error_name=ErrorName.ElementNotFoundError)
     handled_ele_str = re.sub(pattern, "", ele_str.replace(u"\u200b", ""))
     if deal_method_name is not None:
         deal_method = getattr(params_deal_module, deal_method_name)
@@ -44,8 +48,11 @@ def get_ele_text(
         poco, selector_str, optional
     )
     ele_str = poco_object.get_text()
-    if ele_str is None:
+    if ele_str is None and poco_object.attr('label') is not None:
         ele_str = poco_object.attr('label')
+    else:
+        raise FlybirdVerifyException(f"selector:{selector_str} not found",
+                                     error_name=ErrorName.ElementNotFoundError)
     ele_str = ele_str.replace(u"\u200b", "")
     if deal_method_name is not None:
         deal_method = getattr(params_deal_module, deal_method_name)
