@@ -481,7 +481,8 @@ def handle_request(request):
     try:
         post_data = request.post_data
     except Exception as ex:
-        log.info("try to get post data from request")
+        log.error(f"try to get post data from request failed {ex}")
+        return
     operation = get_operation(parsed_uri, post_data)
     response_name = get_response_name(parsed_uri, post_data)
     if operation is not None and len(operation.strip()) > 0:
