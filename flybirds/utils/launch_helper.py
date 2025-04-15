@@ -61,6 +61,7 @@ def app_start(page_name):
                 app.shut_app(package_name)
                 log.info("stop app before running")
             elif "backupPage" == page_value:
+                log.info("press home button")
                 ake.key_event("4")
     except Exception as e:
         log.error("app_start error:{}".format(e))
