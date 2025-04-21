@@ -78,7 +78,7 @@ def scenario_fail(context, scenario):
         f"scenario:{scenario.name} failed to run"
     )
     need_copy_record = 0
-
+    gr.set_value("scenario_status", False)
     # the scene fails to output a log and take a screenshot
     for step in scenario.all_steps:
         if step.name.strip().startswith(
@@ -148,6 +148,7 @@ def scenario_success(context, scenario):
     on_scenario_success = launch_helper.get_hook_file(
         "on_scenario_success"
     )
+    gr.set_value("scenario_status", True)
     if on_scenario_success is not None:
         on_scenario_success(context, scenario)
     if context.scenario_screen_record:

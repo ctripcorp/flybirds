@@ -84,6 +84,22 @@ class Step:
         page.page = target
 
     @classmethod
+    def switch_to_latest_page(cls, context):
+        # Get the current page from global registry
+        page = gr.get_value("plugin_page")
+
+        # Get latestPage from the current page's context
+        pages = page.context.pages
+
+        page_count = len(pages)
+        latest_page = pages[page_count - 1]
+
+        latest_page.bring_to_front()
+        ele = gr.get_value("plugin_ele")
+        ele.page = latest_page
+        page.page = latest_page
+
+    @classmethod
     def return_pre_page(cls, context):
         page = gr.get_value("plugin_page")
         page.return_pre_page(context)

@@ -4,6 +4,7 @@
 # @File : page.py
 # @desc : web page implement
 import json
+import random
 import time
 import os
 import re
@@ -102,7 +103,8 @@ class Page:
         if gr.get_value("debug", False):
             launch_config["record_video_dir"] = None
 
-        file_name = f"case_file_{time.strftime('%Y%m%d%H%M%S')}"
+        exec_id = random.randint(100000, 999999)
+        file_name = f"case_file_{time.strftime('%Y%m%d%H%M%S')}_{exec_id}"
         userdata = GlobalContext.get_global_cache("userdata")
         screen_shot_dir = userdata.get("screenShotDir")
         har_path = os.path.join(screen_shot_dir, file_name + ".har")

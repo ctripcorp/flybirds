@@ -201,6 +201,7 @@ step_language = {
         "current page is [{param}]": ["当前页面是[{param}]"],
         "current page is not last page": ["当前页面已不是上一个指定页面"],
         "switch to target page title[{title}] url[{url}]": ["切换目标页面标题[{title}]链接[{url}]"],
+        "switch to latest page": ["切换至最新打开的页面"],
         "from [{selector}] select [{param2}]": ["在[{selector}]中选择[{param2}]"],
         "exist [{p_selector}] subNode [{c_selector}] element": [
             "存在[{p_selector}]的[{c_selector}]的元素"],
