@@ -62,6 +62,7 @@ class ScreenRecordInfo:
         if page_obj is None or (not hasattr(page_obj, 'context')):
             log.error('[web stop_record] get page object has error!')
         try:
+            # if case failed, export web trace
             export_web_trace_path = GlobalContext.get_global_cache('export_web_trace_path')
             if page_obj.context.tracing is not None and export_web_trace_path and scenario_status is not True:
                 log.info(f'[web stop_record] export_web_trace_path: {export_web_trace_path}')

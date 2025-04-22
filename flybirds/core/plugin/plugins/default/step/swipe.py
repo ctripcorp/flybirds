@@ -134,7 +134,8 @@ class FlyBirdsEvent:
                 return True
             log.info(f"Element not found: {selector}")
             return False
-        except Exception:
+        except Exception as e:
+            log.info(f"Element not found: {selector}, error: {e}")
             return False
 
     @staticmethod
@@ -149,12 +150,25 @@ class FlyBirdsEvent:
             )
             search_result = poco_object.exists()
             if search_result is False:
-                log.info(f"Element not found: {selector}")
-                return False
+                # find selector in poco domtree
+                if "element=" in selector:
+                    data = poco.agent.hierarchy.dump()
+                    result = find_payload_with_resource_id(data, selector)
+                    if result is None:
+                        log.info(f"Element not found: {selector}")
+                        return False
+                    else:
+                        x, y = result.get("pos")
+                        poco.click([x, y])
+                        log.info(f"Element found successfully and clicked: {selector}")
+                        return True
+                else:
+                    return False
             poco_object.click()
             log.info(f"Element found successfully and clicked: {selector}")
             return True
-        except Exception:
+        except Exception as e:
+            log.info(f"Element not found: {selector}, error: {e}")
             return False
 
     @staticmethod
@@ -175,7 +189,8 @@ class FlyBirdsEvent:
             # GlobalContext.element.str_input(input_str)
             log.info(f"{selector} input {input_str} successfully")
             return True
-        except Exception:
+        except Exception as e:
+            log.info(f"Element not found when input {input_str} into : {selector}, error: {e}")
             return False
 
 
@@ -185,6 +200,26 @@ def handle_str(un_handle_str):
         return res.group(1)
     else:
         return un_handle_str
+
+
+def find_payload_with_resource_id(data, target_resource_id):
+    if "=" in target_resource_id:
+        target_resource_id = target_resource_id.split("=")[1]
+    if isinstance(data, dict):
+        if data.get("payload", {}).get("name") == target_resource_id:
+            return data["payload"]
+        if data.get("payload", {}).get("text") == target_resource_id:
+            return data["payload"]
+        for key, value in data.items():
+            result = find_payload_with_resource_id(value, target_resource_id)
+            if result:
+                return result
+    elif isinstance(data, list):
+        for item in data:
+            result = find_payload_with_resource_id(item, target_resource_id)
+            if result:
+                return result
+    return None
 
 
 # 新滑动方法滑动的同时检测元素是否存在
