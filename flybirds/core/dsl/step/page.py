@@ -43,6 +43,12 @@ def switch_target_page(context, title, url):
     g_Context.step.switch_target_page(context, title, url)
 
 
+@step("switch to latest page")
+@ele_wrap
+def switch_target_page(context):
+    g_Context.step.switch_to_latest_page(context)
+
+
 @step("set cookie name[{name}] value[{value}] url[{url}]")
 @FlybirdsReportTagInfo(group="cookie", selectors={
     "path": [{"type": "key", "value": "name", "name": "key"}, {"type": "value", "value": "value", "name": "value"}]},

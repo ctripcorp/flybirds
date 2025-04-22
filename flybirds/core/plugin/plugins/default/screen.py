@@ -91,15 +91,31 @@ class BaseScreen:
 
             src_path = "../screenshot/{}/{}".format(feature_name, file_name)
             log.debug("[screen_link_to_behave] src_path: {}".format(src_path))
-            data = (
-                'embeddingsTags, stepIndex={}, <image class ="screenshot"'
-                ' width="375" src="{}" />'.format(step_index, src_path)
-            )
+
+            if tag == "fail_":
+                if gr.get_value("fail_image_id") is None:
+                    gr.set_value("fail_image_id", uuid_helper.create_short_uuid() + str(int(round(1000))))
+                fail_image_id = gr.get_value("fail_image_id")
+                log.info("[screen_link_to_behave] fail_image_id: {}".format(fail_image_id))
+                print("fail_image_id data start")
+                data = (
+                    'embeddingsTags, stepIndex={}, <image id={} class ="screenshot"'
+                    ' width="375" , src="{}" />'.format(step_index, fail_image_id, src_path, )
+                )
+                print("fail_image_id data: {}".format(data))
+            else:
+                print("image_id data start")
+                data = (
+                    'embeddingsTags, stepIndex={}, <image class ="screenshot"'
+                    ' width="375" src="{}" />'.format(step_index, src_path)
+                )
+                print("image_id data: {}".format(data))
+
             if link is True:
                 scenario.description.append(data)
             screen_path = os.path.join(current_screen_dir, file_name)
             g_Context.screen.screen_shot(screen_path)
-
+            print("testtttttttttttt: {}".format(screen_path))
             if tag == "fail_" and len(g_Context.ocr_result) >= 1:
                 from paddleocr.tools.infer.utility import draw_boxes
                 ocr = g_Context.ocr_driver_instance

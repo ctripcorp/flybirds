@@ -57,11 +57,14 @@ class ScreenRecordInfo:
     def stop_record():
         log.info("[web stop_record] start")
         page_obj = gr.get_value("plugin_page")
+        scenario_status = gr.get_value("scenario_status", True)
+        log.info(f'[web stop_record] scenario_status: {scenario_status}')
         if page_obj is None or (not hasattr(page_obj, 'context')):
             log.error('[web stop_record] get page object has error!')
         try:
+            # if case failed, export web trace
             export_web_trace_path = GlobalContext.get_global_cache('export_web_trace_path')
-            if page_obj.context.tracing is not None and export_web_trace_path:
+            if page_obj.context.tracing is not None and export_web_trace_path and scenario_status is not True:
                 log.info(f'[web stop_record] export_web_trace_path: {export_web_trace_path}')
                 page_obj.context.tracing.stop(path=export_web_trace_path)
         except Exception as e:
@@ -74,6 +77,10 @@ class ScreenRecordInfo:
             log.info("[web stop_record] close browser")
             try:
                 har_path = GlobalContext.get_global_cache('export_har_path')
+                if scenario_status is True and har_path is not None and os.path.isfile(har_path):
+                    os.remove(har_path)
+                    log.info(f'[web stop_record] remove har_path: {har_path}')
+                    return
                 if har_path is not None and os.path.isfile(har_path):
                     har_data = read_har_file(har_path)
                     non_200_requests = filter_non_200_requests(har_data)

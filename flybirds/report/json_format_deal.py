@@ -107,7 +107,10 @@ def parse_feature(feature, rerun_report_dir):
                         step_index = int(
                             split_array[1].strip().split("=", 1)[1].strip()
                         )
+
                         data = split_array[2].strip()
+                        if len(split_array) >= 4 and "id=" in split_array[2]:
+                            data = data + " " + split_array[3].strip()
                         if (
                                 isinstance(scenario["steps"], list)
                                 and len(scenario["steps"]) > step_index
