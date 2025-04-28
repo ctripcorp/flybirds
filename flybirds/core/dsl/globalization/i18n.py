@@ -233,10 +233,15 @@ step_language = {
         "is [{expect_value}]": [
             "验证服务[{service}]的请求参数[{target_json_path}]"
             "与[{expect_value}]一致"],
+        "service request [{service}] request parameter [{target_json_path}] is none": [
+            "验证服务[{service}]的请求参数[{target_json_path}]为空"],
         "service request [{service}] string request parameter [{target_json_path}] "
         "includes [{expect_value}]": [
             "验证服务[{service}]的字符串请求参数[{target_json_path}]"
             "包含[{expect_value}]"],
+        "service request [{service}] string request parameter [{target_json_path}] not includes [{expect_value}]": [
+            "验证服务[{service}]的字符串请求参数[{target_json_path}]"
+            "不包含[{expect_value}]"],
         "page not requested [{service}]": ["页面没有请求[{service}]"],
         "page requests some interfaces [{service}]": ["页面请求了接口[{service}]"],
         "wait interface [{service}] request finished": ["等待接口[{service}]请求结束"],
