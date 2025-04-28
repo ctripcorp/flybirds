@@ -209,6 +209,3 @@ class AppBaseStep:
 
     def app_logout(self, context):
         app_logout(context)
-
-    def request_compare_includes_value(self, context, service_name, target_json_path, expect_value):
-        step_verify.request_compare_includes_value_app(context, service_name, target_json_path, expect_value)

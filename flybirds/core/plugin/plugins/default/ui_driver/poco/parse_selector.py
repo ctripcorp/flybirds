@@ -24,7 +24,8 @@ def create_multi_selector(multi_str, default="name"):
         if "=" in item:
             item_split = item.split("=", 1)
             key = item_split[0].strip()
-            result[key] = item_split[1].strip()
+            result[key] = item_split[1]
+            # result[key] = item_split[1].strip()
         else:
             result[default] = item.strip()
     return result
@@ -39,7 +40,8 @@ def create_single_selector(single_str, default="name"):
     if "=" in single_str:
         single_split = single_str.split("=", 1)
         key = single_split[0].strip()
-        result[key] = single_split[1].strip()
+        result[key] = single_split[1]
+        # result[key] = single_split[1].strip()
     else:
         result[default] = single_str.strip()
     return result

@@ -518,11 +518,23 @@ class Step:
                               expect_value):
         request_op.request_compare_value(operation, target_json_path,
                                          expect_value)
+
+    @staticmethod
+    def request_compare_value_is_none(context, operation, target_json_path):
+        request_op.request_compare_value_is_none(operation, target_json_path,)
+
     @staticmethod
     def request_compare_includes_value(context, operation, target_json_path,
-                              expect_value):
+                                       expect_value):
         request_op.request_compare_includes_value(operation, target_json_path,
-                                         expect_value)
+                                                  expect_value)
+
+    @staticmethod
+    def request_compare_not_includes_value(context, operation, target_json_path,
+                                           expect_not_contain_value):
+        request_op.request_compare_not_includes_value(operation, target_json_path,
+                                                      expect_not_contain_value)
+
     @staticmethod
     def picture_compare_from_path(context, target_element, compared_picture_path):
         request_op.compare_images(context, target_element, compared_picture_path)

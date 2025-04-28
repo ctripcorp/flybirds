@@ -139,7 +139,7 @@ class Page:
 
         if gr.get_web_info_value("exportWebTrace") is True:
             GlobalContext.set_global_cache('export_web_trace_path', trace_path)
-            context.tracing.start(screenshots=True, snapshots=True)
+            # context.tracing.start(screenshots=True, snapshots=True)
             log.info(f"record trace path: {trace_path}")
         # add user custom cookies into browser context
         user_cookie = GlobalContext.get_global_cache("cookies")
