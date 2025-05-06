@@ -43,6 +43,8 @@ def app_start(page_name):
 
     device_id = gr.get_device_id()
     package_name = gr.get_app_package_name()
+    if gr.get_value("packageName") is not None:
+        package_name = gr.get_value("packageName")
     log.info("device_id:{},".format(device_id))
     log.info("page_name:{},".format(page_name))
     log.info("package_name:{}".format(package_name))
