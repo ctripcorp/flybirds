@@ -221,6 +221,8 @@ class WebConfig:
             self.browserExit = web_info.get("browserExitAfterCase", True)
         if web_info.get("exportWebTrace") is not None:
             self.exportWebTrace = web_info.get("exportWebTrace", True)
+        if web_info.get("pageLoadTimeout") is not None:
+            self.pageLoadTimeout = web_info.get("pageLoadTimeout", 60)
         if web_info.get("emulatedDevice") is not None:
             self.emulated_device = web_info.get("emulatedDevice", None)
 

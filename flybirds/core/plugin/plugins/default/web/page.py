@@ -326,7 +326,9 @@ class Page:
         param_dict = dsl_helper.params_to_dic(param, "urlKey")
         url_key = param_dict["urlKey"]
         schema_url_value = gr.get_page_schema_url(url_key)
-
+        if gr.get_web_info_value("pageLoadTimeout") is not None:
+            self.page.goto(schema_url_value, timeout=float(gr.get_web_info_value("pageLoadTimeout") * 1000))
+            return
         if "timeout" in param_dict.keys():
             self.page.goto(schema_url_value, timeout=float(param_dict["timeout"]) * 1000)
             return

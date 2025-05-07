@@ -28,7 +28,8 @@
     "geolocation": null,
     "permissions": null,
     "browserExitAfterCase": true,
-    "exportWebTrace": false
+    "exportWebTrace": false,
+    "pageLoadTimeout": 60
   },
   "flow_behave": {
     "beforeRunPage": "None",
