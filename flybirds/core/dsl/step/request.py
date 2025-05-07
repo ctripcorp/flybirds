@@ -361,8 +361,7 @@ def request_compare_includes_value(context, service=None, target_json_path=None,
 
 
 @step(
-    "service request [{service}] string request parameter [{target_json_path}] "
-    "includes [{expect_value}]")
+    "service request [{service}] string request parameter [{target_json_path}] not includes [{expect_value}]")
 @FlybirdsReportTagInfo(group="service",
                        selectors={"path": [{"type": "name", "value": "service", "name": "请求url"},
                                            {"type": "url", "value": "target_json_path", "name": "期望json数据地址"},
