@@ -703,6 +703,10 @@ def handle_route(route):
                     f"url:{route.request.url}===== match mock key:{mock_rule.get('key')} mock case "
                     f":{mock_rule.get('value')}===================")
                 mock_body = get_case_response_body(mock_rule.get("value"))
+                if mock_rule.get('key') == "ubtChecking":
+                    request_body = mock_body.get('flybirdsMockRequest')
+                    current_page_id = request_body.get("pageId")
+                    gr.set_value("current_page_id", current_page_id)
                 mock_status = 200
                 if mock_body:
                     if mock_body.get("flybirdsMockResponse") is not None or mock_body.get("status") is not None:
