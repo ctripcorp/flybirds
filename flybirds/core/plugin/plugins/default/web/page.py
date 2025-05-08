@@ -306,6 +306,15 @@ class Page:
         operation_module = gr.get_value("projectScript").custom_operation
         page_url = None
         user_header = GlobalContext.get_global_cache("user_header")
+
+        try:
+            if gr.get_web_info_value("exportWebTrace") is True:
+                export_web_trace_path = GlobalContext.get_global_cache('export_web_trace_path')
+                self.page.context.tracing.start(screenshots=True, snapshots=True)
+                log.info(f"flybirds exportWebTrace: {export_web_trace_path}")
+        except Exception as e:
+            log.error(f"start web trace error: {e}")
+
         if user_header:
             self.page.set_extra_http_headers(user_header)
             log.info(f'user_header: {user_header}')
