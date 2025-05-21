@@ -160,6 +160,9 @@ step_language = {
         "[{selector}]slide to[{left},{top}]": [
             "[{selector}]滑动[{left},{top}]",
         ],
+        "move toward {param} to find[{selector}]": [
+            "向{param}滑动并查找[{selector}]元素",
+        ],
         "slide to {param1} distance[{param2}]": ["全屏向{param1}滑动[{param2}]", "向{param1}滑动[{param2}]"],
         "exist text[{selector}]": ["存在[{selector}]的文案"],
         "ocr exist text[{selector}]": ["扫描存在[{selector}]的文案"],

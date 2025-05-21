@@ -374,6 +374,23 @@ def full_screen_swipe(context, param1=None, param2=None):
     g_Context.step.full_screen_swipe(context, param1, param2)
 
 
+@step("move toward {param} to find[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]},
+                       verify={"type": "exist", "name": "存在"})
+@ele_wrap
+def full_screen_swipe_to_ele_new(context, param=None, selector=None):
+    """
+    向{param}滑动并查找[{selector}]元素
+    Full screen swipe in the specified direction to find the specified
+    selector element
+    :param context: step context
+    :param param: slide direction (up/down/left/right)
+    :param selector: locator string for selector element (or None).
+    """
+    g_Context.step.full_screen_swipe_new(context, param, selector)
+
+
 @step("exist text[{selector}]")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "文案"}]},
@@ -648,6 +665,7 @@ def ele_text_not_container(context, selector=None, param2=None):
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
                        action=ActionType.disappear)
+@VerifyStep()
 @ele_wrap
 def wait_ele_appear(context, selector=None):
     """
