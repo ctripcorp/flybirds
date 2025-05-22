@@ -173,9 +173,6 @@ class Element:
         e_text = self.get_ele_text(param_1)
         verify_helper.text_not_container(param_2, e_text)
 
-    # def ele_contain_param_attr_include(self, context, param_1, param_2):
-    #     verify_helper.text_container(param_1, param_2)
-
     def find_text(self, context, param):
         # param_temp = handle_str(param)
         param_dict = params_to_dic(param)
@@ -186,6 +183,11 @@ class Element:
         if escaped_selector_str in p_content:
             log.info(f'find_text: [{selector_str}] is success!')
         else:
+            pattern = r"data-testid='([^']*)'"
+            match = re.search(pattern, escaped_selector_str)
+            if match and match.group(1) in p_content:
+                log.info(f'find_text: [{selector_str}] is success!')
+                return
             message = f"expect to find the [{selector_str}] text in the " \
                       f"page, but not actually find it"
             raise FlybirdVerifyException(message, error_name=ErrorName.TextNotFoundError)
@@ -336,6 +338,16 @@ class Element:
             timeout=timeout, arg={'top': param_top, 'left': param_left})
 
     def full_screen_slide(self, context, param_1, param_2):
+        # get scroll direction
+        language = g_Context.get_current_language()
+        direct = lan.get_glb_key(param_1, language)
+
+        fun = direct_dict.get(direct, direct_default)
+        to_x, to_y = fun(0, 0, float(param_2))
+
+        self.page.evaluate(f"window.scrollBy({to_x}, {to_y})")
+
+    def full_screen_swipe_web(self, context, param_1, param_2):
         # get scroll direction
         language = g_Context.get_current_language()
         direct = lan.get_glb_key(param_1, language)

@@ -222,7 +222,6 @@ def find_payload_with_resource_id(data, target_resource_id):
     return None
 
 
-# 新滑动方法滑动的同时检测元素是否存在
 def full_screen_swipe_new(context, direction, selector):
     screen_size = gr.get_device_size() or [1080, 1920]
     handled_selector_temp = handle_str(selector)
@@ -232,21 +231,13 @@ def full_screen_swipe_new(context, direction, selector):
         distance = int(selector_dict.get("distance"))
     else:
         distance = 6000
-    # search_optional = {}
-    # if "path" in selector_dict.keys():
-    #     search_optional["path"] = selector_dict["path"]
-    # elif "multiSelector" in selector_dict.keys():
-    #     search_optional["multiSelector"] = selector_dict["multiSelector"]
-    # 起始参数放入全局缓存
     event_obj = {
         "context": context,
         "selector": selector,
         "direction": direction,
         "action": FlyBirdsEvent.on_search}
     tuple_from_xy, tuple_to_xy = build_swipe_search_point(direction, screen_size, selector_dict, distance)
-    # 每次移动距离
     duration = 100
-    # 移动次数
     steps = int(distance / duration)
     time.sleep(1)
     log.info(f"swipe {direction} to found {selector}")
@@ -254,7 +245,6 @@ def full_screen_swipe_new(context, direction, selector):
                                                      event_obj=event_obj)
 
 
-# 滑动查找并点击
 def full_screen_swipe_click(context, selector, direction):
     screen_size = gr.get_device_size() or [1080, 1920]
     handled_selector_temp = handle_str(selector)
@@ -278,7 +268,6 @@ def full_screen_swipe_click(context, selector, direction):
                                                      event_obj=event_obj)
 
 
-# 滑动查找并输入
 def full_screen_swipe_input(context, selector, param, direction):
     screen_size = gr.get_device_size() or [1080, 1920]
     handled_selector_temp = handle_str(selector)
@@ -319,8 +308,8 @@ def swipe(self, tuple_from_xy, tuple_to_xy, duration=0.8, steps=5, event_obj=Non
         None
 
     """
-    # 兼容老的滑动逻辑
     if event_obj is None:
+        # use airtest origin swipe method
         origin_swipe(self, tuple_from_xy, tuple_to_xy, duration=duration, steps=steps)
         return
     swipe_events = [DownEvent(tuple_from_xy, pressure=50), SleepEvent(0.1)]
@@ -366,7 +355,6 @@ def __swipe_move(tuple_from_xy, tuple_to_xy, duration=0.8, steps=5):
     return ret
 
 
-# 根据motion_events进行滑动操作
 @on_method_ready('install_and_setup')
 def perform(self, motion_events, interval=0.02, event_obj=None):
     """
@@ -380,15 +368,13 @@ def perform(self, motion_events, interval=0.02, event_obj=None):
     Returns:
         None
     """
-    # 兼容老的滑动逻辑
+    # use airtest origin swipe method
     if event_obj is None:
         origin_perform(self, motion_events)
         return
     search_result = False
     event_count = 0
     for event in motion_events:
-        # 每循环10次事件执行下action对应操作
-
         if event_count % 10 == 0 and event_obj is not None:
             search_result = event_obj["action"](event_obj)
             if search_result:
@@ -410,7 +396,6 @@ def perform(self, motion_events, interval=0.02, event_obj=None):
         findsnap.fix_refresh_status(True)
 
 
-# 重写坐标转换方法，解决滑动时坐标转换问题
 def transform_xy(self, x, y):
     """
     Transform coordinates (x, y) according to the device display
@@ -446,7 +431,6 @@ def build_swipe_search_point(direction, screen_size, selector_dict, move_distanc
         start_y = float(selector_dict["startY"])
         if start_y > 1:
             start_y = start_y / screen_size[1]
-    # 滑动距离默认为当前手机分辨率2个屏幕距离
     if direction == "left" or direction == language_helper.parse_glb_str("left", language):
         if start_x is None:
             start_x = 0.666
@@ -475,7 +459,7 @@ def build_swipe_search_point(direction, screen_size, selector_dict, move_distanc
             start_y = 0.666
         start_point = [start_x * pw, start_y * ph]
         end_point = [start_x * pw, start_y * ph - move_distance]
-    # 设置默认触屏起始坐标
+    # setting default start point
     log.info("start_point: %s, end_point: %s, move_distance: %s" % (start_point, end_point, move_distance))
     return start_point, end_point
 
@@ -496,13 +480,12 @@ def min_swipe(self, p1, p2, duration=0.5, steps=5, fingers=1, event_obj=None):
         raise Exception("param fingers should be 1 or 2")
 
 
-# 兼容老版滑动方法
 origin_swipe = BaseTouch.swipe
 origin_perform = BaseTouch.perform
 origin_adb_touch_swipe = AdbTouchImplementation.swipe
 origin_adb_min_swipe = MinitouchImplementation.swipe
 
-# 重写poco滑动方法
+# override the swipe method
 BaseTouch.swipe = swipe
 BaseTouch.perform = perform
 AdbTouchImplementation.swipe = adb_swipe
