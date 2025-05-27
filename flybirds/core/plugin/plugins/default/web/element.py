@@ -272,7 +272,10 @@ class Element:
         # makesure enter can be input
         if param_2 is not None and "\\n" in param_2:
             param_2 = param_2.replace("\\n", "\n")
-        locator.fill(param_2, timeout=timeout)
+        if "type=true" in param_1 or "type=True" in param_1:
+            locator.type(param_2, timeout=timeout)
+        else:
+            locator.fill(param_2, timeout=timeout)
         # Remove focus from the element
         if "blur=true" in param_1 or "blur=True" in param_1:
             locator.blur()
@@ -283,14 +286,21 @@ class Element:
         # Click input in the pop-up window, the pop-up will scroll， causing the case to fail
         # Error message: wait for element to be visiable, enabled and stable
         # locator.click(timeout=timeout)
-        locator.fill('', timeout=timeout)
-        locator.fill(param_2, timeout=timeout)
+        if "type=true" in param_1 or "type=True" in param_1:
+            locator.type('', timeout=timeout)
+            locator.type(param_2, timeout=timeout)
+        else:
+            locator.fill('', timeout=timeout)
+            locator.fill(param_2, timeout=timeout)
         return self.page.wait_for_timeout(100)
 
     def clear_input(self, context, param_1):
         locator, timeout = self.get_ele_locator(param_1)
         # locator.click(timeout=timeout)
-        locator.fill('', timeout=timeout)
+        if "type=true" in param_1 or "type=True" in param_1:
+            locator.type('', timeout=timeout)
+        else:
+            locator.fill('', timeout=timeout)
         return self.page.wait_for_timeout(100)
 
     def ele_slide(self, context, param_1, param_2, param_3):

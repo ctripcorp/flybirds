@@ -710,9 +710,10 @@ def handle_route(route):
                 if mock_rule is None and gr.get_value("mock_request_match_list") is not None:
                     gr.get_value("mock_request_match_list").append(route.request.url)
             if mock_rule is not None:
-                log.info(
-                    f"url:{route.request.url}===== match mock key:{mock_rule.get('key')} mock case "
-                    f":{mock_rule.get('value')}===================")
+                if gr.get_value("debug", False) is False:
+                    log.info(
+                        f"url:{route.request.url}===== match mock key:{mock_rule.get('key')} mock case "
+                        f"{mock_rule.get('value')}===================")
                 mock_body = get_case_response_body(mock_rule.get("value"))
                 if mock_rule.get('key') == "ubtChecking":
                     request_body = mock_body.get('flybirdsMockRequest')
@@ -750,7 +751,8 @@ def handle_route(route):
                                       body=mock_body)
                     return
             else:
-                log.info(f"url:{route.request.url}===== no match request mock=========================================")
+                if gr.get_value("debug", False) is False:
+                    log.info(f"url:{route.request.url}===== no match request mock==================================")
 
         except Exception as mock_error:
             log.info("find mock info error", mock_error)
