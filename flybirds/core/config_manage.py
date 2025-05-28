@@ -222,7 +222,7 @@ class WebConfig:
         if web_info.get("exportWebTrace") is not None:
             self.exportWebTrace = web_info.get("exportWebTrace", True)
         if web_info.get("pageLoadTimeout") is not None:
-            self.pageLoadTimeout = web_info.get("pageLoadTimeout", 60)
+            self.pageLoadTimeout = web_info.get("pageLoadTimeout", None)
         if web_info.get("emulatedDevice") is not None:
             self.emulated_device = web_info.get("emulatedDevice", None)
 
@@ -323,6 +323,8 @@ class FlowBehave:
                 "maxRetryCount",
                 return_value(flow_config.get("maxRetryCount", 1), 1)
             )
+            self.ai_generate_assert = return_value(flow_config.get("aiGenerateAssert", False),
+                                                   False)
         if not hasattr(self, "before_run_page"):
             self.before_run_page = user_data.get("beforeRunPage", "restartApp")
         if not hasattr(self, "scenario_fail_page"):
