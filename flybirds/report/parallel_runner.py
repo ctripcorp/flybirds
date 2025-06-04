@@ -136,6 +136,7 @@ def dry_run_parsed_cmd(cmd: str) -> str:
     """
     p = Popen(cmd, stdout=PIPE, shell=True)
     out, err = p.communicate()
+    log.info(f'cmd str: {cmd}, output: {out}, error: {err}')
 
     return json.loads(out.decode('utf-8-sig'))
 
