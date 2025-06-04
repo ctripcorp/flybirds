@@ -110,6 +110,9 @@ class Element:
         else:
             timeout = gr.get_frame_config_value("wait_ele_timeout", 30)
 
+        if "get_by_role" in param_dict.keys():
+            name = param_dict["name"]
+            return self.page.get_by_role(selector_str, name=name), float(timeout) * 1000
         ele_locator = self.page.locator(selector_str)
         return ele_locator, float(timeout) * 1000
 
@@ -224,6 +227,27 @@ class Element:
 
     def ele_exist(self, context, param):
         locator, timeout = self.get_ele_locator(param)
+        if "get_by_role" in param:
+            param_temp = handle_str(param)
+            param_dict = params_to_dic(param_temp)
+            selector_str = param_dict["selector"]
+            name = param_dict["name"]
+            aria = param_dict["aria"]
+            assert_ele = param_dict["assert"]
+            if aria is not None and assert_ele is not None:
+                if locator.get_attribute(aria) == assert_ele:
+                    log.info(f"element aria {aria} exists and name is {name}")
+                    return
+                else:
+                    message = f"expect [{selector_str}] element with aria " \
+                              f"{aria} exists in page, but actual not find it."
+                    raise FlybirdVerifyException(message, error_name=ErrorName.ElementNotFoundError)
+            if locator.get_attribute('role') == selector_str:
+                log.info(f"element role {selector_str} exists and name is {name}")
+                return
+            message = f"expect [{selector_str}] element with role " \
+                      f"{name} exists in page, but actual not find it."
+            raise FlybirdVerifyException(message, error_name=ErrorName.ElementNotFoundError)
         locator.element_handle(timeout=timeout)
 
     def ele_not_exist(self, context, param):

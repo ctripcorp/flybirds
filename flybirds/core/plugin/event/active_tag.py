@@ -133,6 +133,7 @@ class OnBeforeScenario:
             f'{scenario.effective_tags}')
         active_tag_matcher = gr.get_value("active_tag_matcher")
         # -- NOTE: scenario.effective_tags := scenario.tags + feature.tags
+        gr.set_value("effective_tags", scenario.effective_tags)
         if active_tag_matcher.should_exclude_with(scenario.effective_tags):
             scenario.skip(reason=active_tag_matcher.exclude_reason)
 
