@@ -18,6 +18,9 @@ def text_equal(o_text, t_text):
     if o_text == "[@@空@@]" or o_text == "@@空@@":
         o_text = ""
 
+    if o_text == "[@@空格@@]" or o_text == "@@空格@@":
+        o_text = " "
+
     # 正则替换前后空格
     # 定义正则表达式和替换函数
     pattern = re.compile(r'@@空,\s*(\d+)@@')

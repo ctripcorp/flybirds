@@ -165,9 +165,14 @@ def ele_text_equal(context, param1, param2):
         params_deal_module = gr.get_value("projectScript").params_deal
     target_str = param2_dict["tText"]
     handled_target_str = re.sub(pattern, "", target_str.replace(u"\u200b", ""))
+    # handled_selector_str = re.sub(
+    #     pattern, "", selector_str.replace(u"\u200b", "")
+    # )
+    # delete
     handled_selector_str = re.sub(
-        pattern, "", selector_str.replace(u"\u200b", "")
+        r'^\u200b+', '', selector_str.replace(u"\u200b", "")
     )
+    handled_selector_str = re.sub(r'\u200b+$', '', handled_selector_str)
     if not (deal_method is None):
         deal_method_fun = getattr(params_deal_module, deal_method)
         handled_target_str = deal_method_fun(handled_target_str)
