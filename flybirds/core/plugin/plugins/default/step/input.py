@@ -11,6 +11,8 @@ from airtest.core.android.adb import *
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.core.plugin.plugins.default.step.click import click_ocr_text
 
+airtest_adb_path = ADB.builtin_adb_path()
+
 
 def ele_input(context, param1, param2):
     poco_instance = gr.get_value("pocoInstance")
@@ -49,6 +51,8 @@ def ele_input(context, param1, param2):
             poco_instance, selector_str, optional, None, None, None
         )
         g_Context.element.str_input(input_str, after_input_wait)
+        # hide keyboard
+    dsl_helper.hide_keyboard()
 
 
 def ocr_text_input(context, param1, param2):
@@ -58,6 +62,7 @@ def ocr_text_input(context, param1, param2):
         time.sleep(after_input_wait)
         keyboard_clear(context)
         g_Context.element.str_input(param2, after_input_wait)
+        dsl_helper.hide_keyboard()
     except Exception:
         raise Exception("[ocr_text_input] ocr input text error!")
 
