@@ -16,6 +16,7 @@ import flybirds.utils.flybirds_log as log
 # generate result_dic
 from flybirds.core.exceptions import ErrorName
 from flybirds.core.global_context import GlobalContext
+import flybirds.core.driver.device as device
 import time
 
 if six.PY2:
@@ -37,6 +38,14 @@ async def sleep_t(t):
 
 def sleep(sleep_time):
     tim_loop.run_until_complete(sleep_t(sleep_time))
+
+
+def hide_keyboard():
+    try:
+        cmd = "input keyevent 111"
+        device.use_shell(cmd)
+    except Exception as e:
+        log.info("hide keyboard error: {}".format(e))
 
 
 def add_res_dic(dsl_params, functin_pattern, def_key):

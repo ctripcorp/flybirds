@@ -186,6 +186,8 @@ class FlyBirdsEvent:
                 return False
             poco_object.click()
             text(input_str)
+            # hide keyboard
+            dsl_helper.hide_keyboard()
             # GlobalContext.element.str_input(input_str)
             log.info(f"{selector} input {input_str} successfully")
             return True

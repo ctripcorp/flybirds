@@ -2,6 +2,7 @@
 """
 Poco element apis
 """
+import json
 import time
 import os
 
@@ -74,7 +75,13 @@ def wait_exists(poco, selector_str, optional):
             time.sleep(current_wait_second - 3)
         timeout -= current_wait_second
         current_wait_second += 1
-    if not find_success:
+    if not find_success and "text=" in selector_str:
+        poco_instance = gr.get_value("pocoInstance")
+        poco_tree = poco_instance.agent.hierarchy.dump()
+        poco_tree_uft8 = decode_unicode_in_json(poco_tree)
+        if selector_str in poco_tree_uft8:
+            log.info(f"poco tree contains selector_str: {selector_str}")
+            return
         message = "during {}s time, not find {} in page".format(
             optional["timeout"], selector_str
         )
@@ -183,3 +190,19 @@ def detect_error(context):
             log.info("detect_error: {}, layer_errors_exists: true"
                      .format(break_str))
             return False
+
+
+def decode_unicode_in_json(poco_tree):
+
+    def decode_unicode(poco_tree):
+        if isinstance(poco_tree, dict):
+            return {k: decode_unicode(v) for k, v in poco_tree.items()}
+        elif isinstance(poco_tree, list):
+            return [decode_unicode(item) for item in poco_tree]
+        elif isinstance(poco_tree, str):
+            poco_tree.encode('unicode-escape').decode('unicode-escape')
+            return poco_tree.encode('raw_unicode_escape').decode('unicode-escape')
+        else:
+            return poco_tree
+    decoded_obj = decode_unicode(poco_tree)
+    return json.dumps(decoded_obj, ensure_ascii=False)
