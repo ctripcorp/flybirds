@@ -186,10 +186,11 @@ class Element:
         if escaped_selector_str in p_content:
             log.info(f'find_text: [{selector_str}] is success!')
         else:
-            pattern = r"data-testid='([^']*)'"
-            match = re.search(pattern, escaped_selector_str)
+            # If the selector is in the format [*='text']
+            pattern = r"\[.*?='([^']+)'\]"
+            match = re.search(pattern, selector_str)
             if match and match.group(1) in p_content:
-                log.info(f'find_text: [{selector_str}] is success!')
+                log.info(f'find_text: [{match.group(1)}] is success!')
                 return
             message = f"expect to find the [{selector_str}] text in the " \
                       f"page, but not actually find it"
