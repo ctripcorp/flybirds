@@ -76,12 +76,15 @@ def wait_exists(poco, selector_str, optional):
         timeout -= current_wait_second
         current_wait_second += 1
     if not find_success and "text=" in selector_str:
+        selector_str = selector_str.replace("text=", "")
         poco_instance = gr.get_value("pocoInstance")
         poco_tree = poco_instance.agent.hierarchy.dump()
         poco_tree_uft8 = decode_unicode_in_json(poco_tree)
         if selector_str in poco_tree_uft8:
             log.info(f"poco tree contains selector_str: {selector_str}")
             return
+        else:
+            log.info(f"poco tree not contains selector_str: {selector_str}")
         message = "during {}s time, not find {} in page".format(
             optional["timeout"], selector_str
         )
