@@ -52,7 +52,7 @@ def ele_input(context, param1, param2):
         )
         g_Context.element.str_input(input_str, after_input_wait)
         # hide keyboard
-    dsl_helper.hide_keyboard()
+    # dsl_helper.hide_keyboard()
 
 
 def ocr_text_input(context, param1, param2):
