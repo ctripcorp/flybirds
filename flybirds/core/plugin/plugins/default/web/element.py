@@ -110,6 +110,14 @@ class Element:
         else:
             timeout = gr.get_frame_config_value("wait_ele_timeout", 30)
 
+        if "text" in selector and ("testid" or "data-testid" in selector):
+            # pattern = r"\[(?:data-)?testid='([^']+)'\]"
+            pattern = r"='([^']+)'"
+            match = re.search(pattern, selector_str)
+            if match and match.group(1):
+                selector_str = "text=" + match.group(1)
+                log.info(f'current selector: {selector_str}')
+
         if "get_by_role" in param_dict.keys():
             name = param_dict["name"]
             return self.page.get_by_role(selector_str, name=name), float(timeout) * 1000
