@@ -181,7 +181,7 @@ class Element:
         param_dict = params_to_dic(param)
         selector_str = param_dict["selector"]
         escaped_selector_str = escaped_text(selector_str)
-        log.info(f'find_text: [{selector_str}], escaped_text[{escaped_selector_str}]')
+        log.info(f'find text: [{selector_str}], escaped text[{escaped_selector_str}]')
         p_content = self.page.content()
         if escaped_selector_str in p_content:
             log.info(f'find_text: [{selector_str}] is success!')
@@ -193,9 +193,10 @@ class Element:
                 if match and match.group(1) in p_content:
                     log.info(f'find_text: [{match.group(1)}] is success!')
                     return
-        message = f"expect to find the [{selector_str}] text in the " \
-                  f"page, but not actually find it"
-        raise FlybirdVerifyException(message, error_name=ErrorName.TextNotFoundError)
+        else:
+            message = f"expect to find the [{selector_str}] text in the " \
+                      f"page, but not actually find it"
+            raise FlybirdVerifyException(message, error_name=ErrorName.TextNotFoundError)
 
     def find_page_text(self, context, param):
         # param_temp = handle_str(param)
