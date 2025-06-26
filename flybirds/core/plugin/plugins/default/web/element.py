@@ -116,7 +116,7 @@ class Element:
             match = re.search(pattern, selector_str)
             if match and match.group(1):
                 selector_str = "text=" + match.group(1)
-                log.info(f'current selector: {selector_str}')
+        log.info(f'current selector: {selector_str}')
 
         if "get_by_role" in param_dict.keys():
             name = param_dict["name"]
