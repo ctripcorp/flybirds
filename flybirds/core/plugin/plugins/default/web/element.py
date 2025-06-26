@@ -185,16 +185,17 @@ class Element:
         p_content = self.page.content()
         if escaped_selector_str in p_content:
             log.info(f'find_text: [{selector_str}] is success!')
-        else:
-            # If the selector is in the format [*='text']
-            pattern = r"\[.*?='([^']+)'\]"
-            match = re.search(pattern, selector_str)
-            if match and match.group(1) in p_content:
-                log.info(f'find_text: [{match.group(1)}] is success!')
-                return
-            message = f"expect to find the [{selector_str}] text in the " \
-                      f"page, but not actually find it"
-            raise FlybirdVerifyException(message, error_name=ErrorName.TextNotFoundError)
+        elif "testid" in selector_str or "data-testid" in selector_str:
+                pattern = r"='([^']+)'"
+                # If the selector is in the format [*='text']
+                match = re.search(pattern, selector_str)
+                log.info(f'find_text: match={match}, selector_str={selector_str}')
+                if match and match.group(1) in p_content:
+                    log.info(f'find_text: [{match.group(1)}] is success!')
+                    return
+        message = f"expect to find the [{selector_str}] text in the " \
+                  f"page, but not actually find it"
+        raise FlybirdVerifyException(message, error_name=ErrorName.TextNotFoundError)
 
     def find_page_text(self, context, param):
         # param_temp = handle_str(param)
