@@ -170,6 +170,7 @@ class Element:
     def click_text(self, context, param):
         if 'text=' not in param:
             param = "text=" + param
+        log.info(f"get locator by {param}")
         locator, timeout = self.get_ele_locator(param)
         locator.click(timeout=timeout)
 
