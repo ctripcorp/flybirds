@@ -110,6 +110,22 @@ class Element:
         else:
             timeout = gr.get_frame_config_value("wait_ele_timeout", 30)
 
+        if "text=" in selector and ("testid" or "data-testid" in selector):
+            # pattern = r"\[(?:data-)?testid='([^']+)'\]"
+            pattern = r"='([^']+)'"
+            match = re.search(pattern, selector_str)
+            if match and match.group(1):
+                if "text=" in match.group(1):
+                    selector_str = match.group(1)
+                else:
+                    selector_str = "text=" + match.group(1)
+
+        if "nth" in param_dict.keys():
+            nth_child = param_dict["nth"]
+            selector_str = f"{selector_str}>> nth={nth_child}"
+
+        log.info(f'current selector_str: {selector_str}')
+
         if "get_by_role" in param_dict.keys():
             name = param_dict["name"]
             return self.page.get_by_role(selector_str, name=name), float(timeout) * 1000
@@ -162,6 +178,7 @@ class Element:
     def click_text(self, context, param):
         if 'text=' not in param:
             param = "text=" + param
+        log.info(f"get locator by {param}")
         locator, timeout = self.get_ele_locator(param)
         locator.click(timeout=timeout)
 
@@ -181,17 +198,19 @@ class Element:
         param_dict = params_to_dic(param)
         selector_str = param_dict["selector"]
         escaped_selector_str = escaped_text(selector_str)
-        log.info(f'find_text: [{selector_str}], escaped_text[{escaped_selector_str}]')
+        log.info(f'find text: [{selector_str}], escaped text[{escaped_selector_str}]')
         p_content = self.page.content()
         if escaped_selector_str in p_content:
             log.info(f'find_text: [{selector_str}] is success!')
-        else:
+        elif "testid" in selector_str or "data-testid" in selector_str:
+            pattern = r"='([^']+)'"
             # If the selector is in the format [*='text']
-            pattern = r"\[.*?='([^']+)'\]"
             match = re.search(pattern, selector_str)
+            log.info(f'find_text: match={match}, selector_str={selector_str}')
             if match and match.group(1) in p_content:
                 log.info(f'find_text: [{match.group(1)}] is success!')
                 return
+        else:
             message = f"expect to find the [{selector_str}] text in the " \
                       f"page, but not actually find it"
             raise FlybirdVerifyException(message, error_name=ErrorName.TextNotFoundError)
