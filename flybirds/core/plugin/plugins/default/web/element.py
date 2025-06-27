@@ -110,12 +110,17 @@ class Element:
         else:
             timeout = gr.get_frame_config_value("wait_ele_timeout", 30)
 
-        if "text" in selector and ("testid" or "data-testid" in selector):
+        if "text=" in selector and ("testid" or "data-testid" in selector):
             # pattern = r"\[(?:data-)?testid='([^']+)'\]"
             pattern = r"='([^']+)'"
             match = re.search(pattern, selector_str)
             if match and match.group(1):
                 selector_str = "text=" + match.group(1)
+
+        if "nth" in param_dict.keys():
+            nth_child = param_dict["nth"]
+            selector_str = f"{selector_str}>> nth={nth_child}"
+
         log.info(f'current selector: {selector_str}')
 
         if "get_by_role" in param_dict.keys():
@@ -195,13 +200,13 @@ class Element:
         if escaped_selector_str in p_content:
             log.info(f'find_text: [{selector_str}] is success!')
         elif "testid" in selector_str or "data-testid" in selector_str:
-                pattern = r"='([^']+)'"
-                # If the selector is in the format [*='text']
-                match = re.search(pattern, selector_str)
-                log.info(f'find_text: match={match}, selector_str={selector_str}')
-                if match and match.group(1) in p_content:
-                    log.info(f'find_text: [{match.group(1)}] is success!')
-                    return
+            pattern = r"='([^']+)'"
+            # If the selector is in the format [*='text']
+            match = re.search(pattern, selector_str)
+            log.info(f'find_text: match={match}, selector_str={selector_str}')
+            if match and match.group(1) in p_content:
+                log.info(f'find_text: [{match.group(1)}] is success!')
+                return
         else:
             message = f"expect to find the [{selector_str}] text in the " \
                       f"page, but not actually find it"
