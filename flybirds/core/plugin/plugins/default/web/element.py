@@ -115,7 +115,10 @@ class Element:
             pattern = r"='([^']+)'"
             match = re.search(pattern, selector_str)
             if match and match.group(1):
-                selector_str = "text=" + match.group(1)
+                if "text=" in match.group(1):
+                    selector_str = match.group(1)
+                else:
+                    selector_str = "text=" + match.group(1)
 
         if "nth" in param_dict.keys():
             nth_child = param_dict["nth"]
