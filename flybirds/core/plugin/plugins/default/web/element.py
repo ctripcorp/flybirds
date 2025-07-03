@@ -89,7 +89,6 @@ class Element:
         page_obj = gr.get_value("plugin_page")
         if page_obj is None or (not hasattr(page_obj, 'page')):
             log.error('[web Element init] get page object has error!')
-            raise FlybirdsVerifyEleException(message="Failed to get page object", error_name=ErrorName.InvalidArgumentError)
         self.page = page_obj.page
 
     def get_ele_locator(self, selector):
