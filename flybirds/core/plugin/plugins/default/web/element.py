@@ -12,7 +12,7 @@ from flybirds.core.exceptions import FlybirdVerifyException, \
     FlybirdsVerifyEleException, ErrorName
 from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.core.plugin.plugins.default.screen import BaseScreen
-from flybirds.utils import language_helper as lan
+from flybirds.utils import language_helper as lan, dsl_helper
 from flybirds.utils.dsl_helper import handle_str, params_to_dic
 import re
 
@@ -162,6 +162,15 @@ class Element:
         else:
             locator.click(timeout=timeout)
 
+    def double_click_ele(self, context, param):
+        locator, timeout = self.get_ele_locator(param)
+        if "scrollIntoViewIfNeeded=true" in param or "scrollIntoViewIfNeeded=True" in param:
+            locator.scroll_into_view_if_needed(timeout=timeout)
+        if "force=true" in param or "force=True" in param:
+            locator.dblclick(force=True, timeout=timeout)
+        else:
+            locator.dblclick(timeout=timeout)
+
     def click_exist_param_web(self, context, param):
         locator, timeout = self.get_ele_locator(param)
         try:
@@ -180,7 +189,10 @@ class Element:
             param = "text=" + param
         log.info(f"get locator by {param}")
         locator, timeout = self.get_ele_locator(param)
-        locator.click(timeout=timeout)
+        if "no_wait_after=true" in param.lower():
+            locator.click(timeout=timeout, no_wait_after=True)
+        else:
+            locator.click(timeout=timeout)
 
     def click_coordinates(self, context, x, y):
         self.page.mouse.click(float(x), float(y))

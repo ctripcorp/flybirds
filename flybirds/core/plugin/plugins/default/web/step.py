@@ -92,12 +92,13 @@ class Step:
         pages = page.context.pages
 
         page_count = len(pages)
-        latest_page = pages[page_count - 1]
-
-        latest_page.bring_to_front()
-        ele = gr.get_value("plugin_ele")
-        ele.page = latest_page
-        page.page = latest_page
+        if len(pages) > 1:
+            latest_page = pages[page_count - 1]
+            latest_page.bring_to_front()
+            ele = gr.get_value("plugin_ele")
+            ele.page = latest_page
+            page.page = latest_page
+        GlobalContext.set_global_cache("test_replay", False)
 
     @classmethod
     def return_pre_page(cls, context):
@@ -187,6 +188,11 @@ class Step:
     def click_ele(cls, context, selector):
         ele = gr.get_value("plugin_ele")
         ele.ele_click(context, selector)
+
+    @classmethod
+    def double_click_ele(cls, context, selector):
+        ele = gr.get_value("plugin_ele")
+        ele.double_click_ele(context, selector)
 
     @classmethod
     def click_exist_param(cls, context, selector):

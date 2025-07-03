@@ -137,6 +137,7 @@ step_language = {
         ],
         "mouse hover[{selector}]": ["鼠标悬浮[{selector}]"],
         "click[{selector}]": ["点击[{selector}]"],
+        "double click[{selector}]": ["双击[{selector}]"],
         "click text[{selector}]": ["点击文案[{selector}]"],
         "click ocr text[{selector}]": ["点击扫描文案[{selector}]"],
         "click ocr regional[{selector}] text[{param2}]": ["点击区域[{selector}]中扫描文案[{param2}]"],

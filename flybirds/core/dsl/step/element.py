@@ -171,6 +171,22 @@ def click_ele(context, selector=None):
     g_Context.step.click_ele(context, selector)
 
 
+@step("double click[{selector}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"}]}, verify_function="common_error_parse",
+                       action=ActionType.press)
+@ele_wrap
+def double_click_ele(context, selector=None):
+    """
+    双击[{selector}]
+    Click on the selector element
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    """
+
+    g_Context.step.double_click_ele(context, selector)
+
+
 @step("if [{selector}] exist then click")
 @FlybirdsReportTagInfo(group="element", selectors={
     "path": [{"type": "path", "value": "selector", "name": "元素"}]},
