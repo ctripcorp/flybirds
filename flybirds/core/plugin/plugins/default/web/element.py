@@ -408,6 +408,7 @@ class Element:
         if "," in param_2:
             params = param_2.split(",")
             param_2 = params[0]
+        log.info(f"full_screen_slide param_2: {param_2}, params: {param_2}")
         language = g_Context.get_current_language()
         direct = lan.get_glb_key(param_1, language)
 
