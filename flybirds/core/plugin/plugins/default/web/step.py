@@ -98,7 +98,7 @@ class Step:
             ele = gr.get_value("plugin_ele")
             ele.page = latest_page
             page.page = latest_page
-        GlobalContext.set_global_cache("test_replay", False)
+        GlobalContext.set_global_cache("switch_web_page", False)
 
     @classmethod
     def return_pre_page(cls, context):
@@ -506,7 +506,7 @@ class Step:
     @staticmethod
     def request_compare_from_path_exceptions_removed(context, operation, target_data_path):
         request_op.request_compare(operation, target_data_path, ['_removed', '_changed', '_add'])
-   
+
     @staticmethod
     def page_not_requested(context, operation):
         request_op.page_not_requested(operation)
