@@ -405,16 +405,10 @@ class Element:
 
     def full_screen_slide(self, context, param_1, param_2):
         # get scroll direction
-        language = g_Context.get_current_language()
-        direct = lan.get_glb_key(param_1, language)
-
-        fun = direct_dict.get(direct, direct_default)
-        to_x, to_y = fun(0, 0, float(param_2))
-
-        self.page.evaluate(f"window.scrollBy({to_x}, {to_y})")
-
-    def full_screen_swipe_web(self, context, param_1, param_2):
-        # get scroll direction
+        if "," in param_2:
+            params = param_2.split(",")
+            param_2 = params[0]
+        log.info(f"full_screen_slide param_2: {param_2}, params: {param_2}")
         language = g_Context.get_current_language()
         direct = lan.get_glb_key(param_1, language)
 
