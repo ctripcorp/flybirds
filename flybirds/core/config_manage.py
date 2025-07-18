@@ -368,6 +368,10 @@ class FrameConfig:
                 "waitEleTimeout",
                 return_value(frame_config.get("waitEleTimeout", 10), 10)
             )
+            self.wait_ele_not_exist_timeout = user_data.get(
+                "waitEleNotExistTimeout",
+                return_value(frame_config.get("waitEleNotExistTimeout", 10), 10)
+            )
             self.retry_ele_timeout = user_data.get(
                 "retryEleTimeout",
                 return_value(frame_config.get("retryEleTimeout", 10), 10)
@@ -478,6 +482,8 @@ class FrameConfig:
     def set_frame_info_attrs(self, user_data):
         if not hasattr(self, "wait_ele_timeout"):
             self.wait_ele_timeout = user_data.get("waitEleTimeout", 10)
+        if not hasattr(self, "wait_ele_not_exist_timeout"):
+            self.wait_ele_not_exist_timeout = user_data.get("waitEleNotExistTimeout", 5)
         if not hasattr(self, "retry_ele_timeout"):
             self.retry_ele_timeout = user_data.get("retryEleTimeout", 30)
         if not hasattr(self, "wait_ele_disappear"):
