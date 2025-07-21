@@ -108,7 +108,7 @@ class Element:
         if "timeout" in param_dict.keys():
             timeout = param_dict["timeout"]
         else:
-            timeout = gr.get_frame_config_value("wait_ele_not_exist_timeout", 5)
+            timeout = gr.get_frame_config_value("wait_ele_timeout", 30)
 
         if "text=" in selector and ("testid" or "data-testid" in selector):
             # pattern = r"\[(?:data-)?testid='([^']+)'\]"
@@ -284,6 +284,9 @@ class Element:
 
     def ele_not_exist(self, context, param):
         try:
+            timeout = gr.get_frame_config_value("wait_ele_not_exist_timeout", 5)
+            if "timeout" not in param:
+                param = param + f",timeout={timeout}"
             self.ele_exist(context, param)
             ele_exists = True
         except Exception:
@@ -320,6 +323,9 @@ class Element:
 
     def wait_for_ele(self, context, param):
         locator, timeout = self.get_ele_locator(param)
+        gr.get_frame_config_value(
+            "page_render_timeout", 10
+        )
         locator.wait_for(timeout=timeout, state='visible')
         return locator, timeout
 
