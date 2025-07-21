@@ -108,7 +108,7 @@ class Element:
         if "timeout" in param_dict.keys():
             timeout = param_dict["timeout"]
         else:
-            timeout = gr.get_frame_config_value("wait_ele_timeout", 30)
+            timeout = gr.get_frame_config_value("wait_ele_not_exist_timeout", 5)
 
         if "text=" in selector and ("testid" or "data-testid" in selector):
             # pattern = r"\[(?:data-)?testid='([^']+)'\]"

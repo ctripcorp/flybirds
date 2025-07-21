@@ -76,7 +76,7 @@ def multiplication(browser_type, context, features):
     cur_browser_type = str(base64.b64encode(browser_type.encode('utf-8')),
                            'utf-8')
     behave_cmd = behave_cmd + f'  -D cur_browser={cur_browser_type}'
-    log.info(f'cmd str: {behave_cmd}')
+    log.info(f'multiplication cmd str: {behave_cmd}')
 
     pool = Pool(processes) if len(features) >= processes else Pool(
         len(features))
@@ -102,7 +102,7 @@ def execute_parallel_feature(feature, behave_cmd, feature_path, browser_type):
     file_name = report_name(feature, browser_type)
     cmd = behave_cmd.replace(feature_path, feature, 1).replace('report.json',
                                                                file_name, 1)
-    log.info(f'cmd str: {cmd}')
+    log.info(f'execute cmd str: {cmd}')
 
     p = Popen(cmd, stdout=PIPE, shell=True)
     code = p.wait()
