@@ -137,14 +137,14 @@ class Interception:
                             "method": "equ",
                             "mockStep": gr.get_value("stepName", None)
                         })
-                    elif split_service[0].strip() == "mult_mock":
-                        interception_values.append({
-                            "max": 99,
-                            "key": split_service[1].strip(),
-                            "value": mock_case_id_list[i].strip(),
-                            "method": "contains",
-                            "mockStep": gr.get_value("stepName", None)
-                        })
+                    # elif split_service[0].strip() == "mult_mock":
+                    #     interception_values.append({
+                    #         "max": 99,
+                    #         "key": split_service[1].strip(),
+                    #         "value": mock_case_id_list[i].strip(),
+                    #         "method": "contains",
+                    #         "mockStep": gr.get_value("stepName", None)
+                    #     })
                     else:
                         interception_values.append({
                             "max": 1,
@@ -730,17 +730,17 @@ class Interception:
                             "requestBody": mock_data.get("flybirdsMockRequest"),
                             "mockStep": gr.get_value("stepName", None)
                         })
-                    elif split_service[0].strip() == "mult_mock":
-                        interception_values.append({
-                            "max": 99,
-                            "key": split_service[1].strip(),
-                            "value": mock_case_id_list[i].strip(),
-                            "method": "contains",
-                            "mockType": "request",
-                            "requestPathes": mock_path_list[i].strip().split(','),
-                            "requestBody": mock_data.get("flybirdsMockRequest"),
-                            "mockStep": gr.get_value("stepName", None)
-                        })
+                    # elif split_service[0].strip() == "mult_mock":
+                    #     interception_values.append({
+                    #         "max": 99,
+                    #         "key": split_service[1].strip(),
+                    #         "value": mock_case_id_list[i].strip(),
+                    #         "method": "contains",
+                    #         "mockType": "request",
+                    #         "requestPathes": mock_path_list[i].strip().split(','),
+                    #         "requestBody": mock_data.get("flybirdsMockRequest"),
+                    #         "mockStep": gr.get_value("stepName", None)
+                    #     })
                     else:
                         interception_values.append({
                             "max": 1,

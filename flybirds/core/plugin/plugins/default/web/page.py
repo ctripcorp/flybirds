@@ -564,9 +564,6 @@ def mock_rules(url: str, request_mock_key_value: list):
                         match_mock_key = mock_rule
                         mock_rule["max"] = mock_rule.get("max") - 1
                         break
-    if match_mock_key is not None:
-        log.info(f"match_mock_key is: {match_mock_key}"
-                 f"mock url is {url}")
     return match_mock_key
 
 

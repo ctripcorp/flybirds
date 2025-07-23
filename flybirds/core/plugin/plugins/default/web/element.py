@@ -323,9 +323,6 @@ class Element:
 
     def wait_for_ele(self, context, param):
         locator, timeout = self.get_ele_locator(param)
-        gr.get_frame_config_value(
-            "page_render_timeout", 10
-        )
         locator.wait_for(timeout=timeout, state='visible')
         return locator, timeout
 
