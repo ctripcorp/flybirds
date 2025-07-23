@@ -124,7 +124,7 @@ class Element:
             nth_child = param_dict["nth"]
             selector_str = f"{selector_str}>> nth={nth_child}"
 
-        log.info(f'current selector_str: {selector_str}')
+        log.info(f'current selector_str: {selector_str} and timeout: {timeout}')
 
         if "get_by_role" in param_dict.keys():
             name = param_dict["name"]

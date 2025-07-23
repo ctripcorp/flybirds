@@ -402,7 +402,7 @@ class Page:
             user_cookie = [{'name': name, 'value': value, "url": url}]
             context = gr.get_value("browser_context")
             context.add_cookies(cookies=user_cookie)
-            log.info(f"set cookie success: {context.cookies()}")
+            log.info(f"set cookie success")
         else:
             log.info(f"set cookie fail, please check param")
 
@@ -565,8 +565,8 @@ def mock_rules(url: str, request_mock_key_value: list):
                         mock_rule["max"] = mock_rule.get("max") - 1
                         break
     if match_mock_key is not None:
-        print(f"match_mock_key is: {match_mock_key}"
-              f"mock url is {url}")
+        log.info(f"match_mock_key is: {match_mock_key}"
+                 f"mock url is {url}")
     return match_mock_key
 
 
