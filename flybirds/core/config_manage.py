@@ -476,6 +476,10 @@ class FrameConfig:
                 "ocr_det_limit_side_len",
                 return_value(frame_config.get("ocr_det_limit_side_len", 960), 960)
             )
+            self.exclusive_selector = user_data.get(
+                "exclusiveSelector",
+                return_value(frame_config.get("exclusiveSelector", ""), "")
+            )
         self.set_frame_info_attrs(user_data)
         self.set_other_attrs(user_data)
 

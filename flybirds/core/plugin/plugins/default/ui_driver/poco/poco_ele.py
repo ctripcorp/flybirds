@@ -29,6 +29,8 @@ def wait_exists(poco, selector_str, optional):
         context = optional["context"]
     current_wait_second = 1
     find_success = False
+    max_timeout = timeout*1.5
+    current_time = time.time()
     while timeout > 0:
         create_success = False
         try:
@@ -41,8 +43,8 @@ def wait_exists(poco, selector_str, optional):
                 search_time = 3
             ele_exists = poco_target.exists()
             log.info(
-                "wait_exists: {}, ele_exists: {}, timeout: {}".format(
-                    selector_str, ele_exists, timeout
+                "wait_exists: {}, ele_exists: {}, timeout: {}, current_wait_second:{}".format(
+                    selector_str, ele_exists, timeout, current_wait_second
                 )
             )
 
@@ -60,6 +62,7 @@ def wait_exists(poco, selector_str, optional):
             break
         except Exception:
             if not create_success:
+                log.info(f"time sleep current_wait_second {current_wait_second}")
                 time.sleep(current_wait_second)
         if current_wait_second == 3:
             # modal error detection
@@ -71,13 +74,22 @@ def wait_exists(poco, selector_str, optional):
             except Exception:
                 log.info("detect_error exception")
             time.sleep(1)
+            log.info(f"time sleep 1")
         if current_wait_second > 3:
             time.sleep(current_wait_second - 3)
+            log.info(f"time sleep current_wait_second -3: {current_wait_second - 3}")
         timeout -= current_wait_second
         current_wait_second += 1
+        if max_timeout < (time.time() - current_time):
+            log.info(f"search {selector_str} timeout: {time.time() - current_time}")
+            break
+
     if not find_success:
-        if "text=" in selector_str:
-            selector_str = selector_str.replace("text=", "")
+        if "text=" in selector_str or "textMatches=" in selector_str:
+            if "text=" in selector_str:
+                selector_str = selector_str.replace("text=", "")
+            else:
+                selector_str = selector_str.replace("textMatches=", "")
             poco_instance = gr.get_value("pocoInstance")
             poco_tree = poco_instance.agent.hierarchy.dump()
             poco_tree_uft8 = decode_unicode_in_json(poco_tree)
