@@ -402,7 +402,7 @@ class Page:
             user_cookie = [{'name': name, 'value': value, "url": url}]
             context = gr.get_value("browser_context")
             context.add_cookies(cookies=user_cookie)
-            log.info(f"set cookie success: {context.cookies()}")
+            log.info(f"set cookie success")
         else:
             log.info(f"set cookie fail, please check param")
 

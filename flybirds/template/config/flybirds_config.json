@@ -65,7 +65,8 @@
     "airtestRecordMode": "ffmpeg",
     "ocr_det_limit_type": "max",
     "ocr_det_limit_side_len": 960,
-    "use_Detect_Error": false
+    "use_Detect_Error": false,
+    "exclusiveSelector": ""
   },
   "report": {},
   "log": {}

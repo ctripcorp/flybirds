@@ -108,7 +108,7 @@ class Element:
         if "timeout" in param_dict.keys():
             timeout = param_dict["timeout"]
         else:
-            timeout = gr.get_frame_config_value("wait_ele_not_exist_timeout", 5)
+            timeout = gr.get_frame_config_value("wait_ele_timeout", 30)
 
         if "text=" in selector and ("testid" or "data-testid" in selector):
             # pattern = r"\[(?:data-)?testid='([^']+)'\]"
@@ -124,7 +124,7 @@ class Element:
             nth_child = param_dict["nth"]
             selector_str = f"{selector_str}>> nth={nth_child}"
 
-        log.info(f'current selector_str: {selector_str}')
+        log.info(f'current selector_str: {selector_str} and timeout: {timeout}')
 
         if "get_by_role" in param_dict.keys():
             name = param_dict["name"]
@@ -284,6 +284,9 @@ class Element:
 
     def ele_not_exist(self, context, param):
         try:
+            timeout = gr.get_frame_config_value("wait_ele_not_exist_timeout", 5)
+            if "timeout" not in param:
+                param = param + f",timeout={timeout}"
             self.ele_exist(context, param)
             ele_exists = True
         except Exception:

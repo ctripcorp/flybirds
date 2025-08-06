@@ -115,7 +115,6 @@ class BaseScreen:
                 scenario.description.append(data)
             screen_path = os.path.join(current_screen_dir, file_name)
             g_Context.screen.screen_shot(screen_path)
-            print("screen path: {}".format(screen_path))
             if tag == "fail_" and len(g_Context.ocr_result) >= 1:
                 from paddleocr.tools.infer.utility import draw_boxes
                 ocr = g_Context.ocr_driver_instance
