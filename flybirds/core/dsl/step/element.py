@@ -199,10 +199,28 @@ def click_param_if_ele_exist(context, selector=None):
     Click on the selector element
     :param context: step context
     :param selector: locator string for selector element (or None).
-    :param param: locator string for selector element (or None).
     """
 
     g_Context.step.click_exist_param(context, selector)
+
+
+@step("if exist [{selector}] then click [{param1}]")
+@FlybirdsReportTagInfo(group="element", selectors={
+    "path": [{"type": "path", "value": "selector", "name": "元素"},
+             {"type": "path", "text": "param1", "name": "元素"}]},
+                       verify_function="common_error_parse",
+                       action=ActionType.press)
+@ele_wrap
+def click_param_if_ele_exist(context, selector=None, param1=None):
+    """
+    如果存在[{selector}]则点击[{param1}]
+    Click on the selector element
+    :param context: step context
+    :param selector: locator string for selector element (or None).
+    :param1 param1: locator string for selector element (or None).
+    """
+
+    g_Context.step.click_if_exist_selector(context, selector, param1)
 
 
 @step("click text[{selector}]")

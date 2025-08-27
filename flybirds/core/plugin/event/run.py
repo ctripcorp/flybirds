@@ -228,6 +228,7 @@ class OnScreenRecordRelease:
         close connector
         """
         try:
+            log.info("release screen record")
             screen_record = gr.get_value("screenRecord")
             if screen_record is not None and hasattr(screen_record, "destroy"):
                 screen_record.destroy()

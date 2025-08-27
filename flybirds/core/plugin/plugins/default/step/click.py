@@ -77,6 +77,31 @@ def click_exist_param(context, selector):
         log.info("[click exist param] click exist param error !")
 
 
+def click_param_if_exist_selector(context, selector, param1):
+    param_dict = dsl_helper.params_to_dic(selector)
+    selector_str = param_dict["selector"]
+    optional = {}
+    if "timeout" in param_dict.keys():
+        optional["timeout"] = float(param_dict["timeout"])
+    try:
+        poco = gr.get_value("pocoInstance")
+        search_poco_object_ele = pm.create_poco_object_by_dsl(poco, selector_str, optional)
+        search_result = search_poco_object_ele.exists()
+        log.info(f"{selector} element exist: {search_result}")
+        if search_result:
+            param_dict = dsl_helper.params_to_dic(param1)
+            param_str = param_dict["selector"]
+            search_poco_object_param = pm.create_poco_object_by_dsl(poco, param_str, optional)
+            search_param_result = search_poco_object_param.exists()
+            if search_param_result:
+                search_poco_object_param.click()
+            else:
+                log.info(f"{param1} not exist:", search_result)
+            log.info("click action success:", search_result)
+    except Exception:
+        log.info("[click exist param] click exist param error !")
+
+
 def click_text(context, param):
     param_dict = dsl_helper.params_to_dic(param)
     poco_instance = gr.get_value("pocoInstance")

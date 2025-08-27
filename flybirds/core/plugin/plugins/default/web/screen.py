@@ -17,7 +17,7 @@ class Screen(BaseScreen):
     name = "web_screen"
 
     @staticmethod
-    def screen_shot(path):
+    def screen_shot(path, file_name):
         try:
             log.info(f"[web screen_shot] screen shot start. path is:{path}")
             page_obj = gr.get_value("plugin_page")

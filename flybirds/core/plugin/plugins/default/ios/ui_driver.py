@@ -36,6 +36,7 @@ class UIDriver:
     def close_driver():
         screen_record = gr.get_value("screenRecord")
         try:
+            log.info("close screen record")
             if screen_record is not None and hasattr(screen_record, "destroy"):
                 screen_record.destroy()
         except Exception as e:

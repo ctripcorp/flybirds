@@ -145,6 +145,7 @@ step_language = {
         "click image[{selector}]": ["点击图像[{selector}]"],
         "click position[{x},{y}]": ["点击屏幕位置[{x},{y}]"],
         "if [{selector}] exist then click": ["如果[{selector}]存在则点击该元素"],
+        "if exist [{selector}] then click [{param1}]": ["如果存在[{selector}]则点击[{param1}]"],
         "set web page with width[{width}] and height[{height}]": ["设置浏览器宽度[{width}]和高度[{height}]"],
         "in[{selector}]input[{param2}]": ["在[{selector}]中输入[{param2}]"],
         "in ocr[{selector}]input[{param2}]": ["在扫描文字[{selector}]中输入[{param2}]"],
