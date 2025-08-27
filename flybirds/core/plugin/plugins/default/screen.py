@@ -6,6 +6,7 @@ import os
 import time
 import traceback
 from operator import itemgetter
+from airtest.core.android.adb import ADB
 from flybirds.utils.image import draw_ocr
 from baseImage import Image, Rect
 from base64 import b64decode
@@ -19,12 +20,15 @@ from flybirds.core.global_context import GlobalContext as g_Context
 from flybirds.core.plugin.plugins.default.ios_snapshot import get_screen
 from flybirds.core.exceptions import FlybirdsException
 from PIL import Image as Img
+from flybirds.core.driver.device import use_shell
+
+airtest_adb_path = ADB.builtin_adb_path()
 
 
 class BaseScreen:
 
     @staticmethod
-    def screen_shot(path):
+    def screen_shot(path, file_name):
         """
         Take a screenshot and save
         """
@@ -44,8 +48,21 @@ class BaseScreen:
 
             open(path, "wb").write(b64decode(b64img))
         except Exception as e:
+            try:
+                if cur_platform.strip().lower() == "android":
+                    # device_id = gr.get_device_id()
+                    img_save_path = "/sdcard/" + file_name
+                    cmd = " screencap -p {}".format(img_save_path)
+                    use_shell(cmd)
+                    cmd = " pull {} {}".format(img_save_path, path)
+                    use_shell(cmd)
+            except Exception as e:
+                log.error(
+                    "adb screenshot failed path: {}, error: {}".format(path, str(e)),
+                    traceback.format_exc(),
+                )
             log.warn(
-                "Screenshot failed path: {}, error: {}".format(path, str(e)),
+                "poco screenshot failed path: {}, error: {}".format(path, str(e)),
                 traceback.format_exc(),
             )
         log.debug("[screen_shot] screen shot end!")
@@ -114,7 +131,7 @@ class BaseScreen:
             if link is True:
                 scenario.description.append(data)
             screen_path = os.path.join(current_screen_dir, file_name)
-            g_Context.screen.screen_shot(screen_path)
+            g_Context.screen.screen_shot(screen_path, file_name)
             if tag == "fail_" and len(g_Context.ocr_result) >= 1:
                 from paddleocr.tools.infer.utility import draw_boxes
                 ocr = g_Context.ocr_driver_instance

@@ -184,6 +184,20 @@ class Element:
         except Exception as e:
             log.info(f'click_exist_param_web error: {e}')
 
+    def click_param_if_exist_selector_web(self, context, param, param1):
+        try:
+            self.ele_exist(context, param)
+            locator, timeout = self.get_ele_locator(param1)
+            locator.element_handle(timeout=timeout)
+            if "scrollIntoViewIfNeeded=true" in param or "scrollIntoViewIfNeeded=True" in param:
+                locator.scroll_into_view_if_needed(timeout=timeout)
+            if "force=true" in param or "force=True" in param:
+                locator.click(force=True, timeout=timeout)
+            else:
+                locator.click(timeout=timeout)
+        except Exception as e:
+            log.info(f'click_exist_param_web error: {e}')
+
     def click_text(self, context, param):
         if 'text=' not in param:
             param = "text=" + param
@@ -199,6 +213,8 @@ class Element:
 
     def ele_text_include(self, context, param_1, param_2):
         e_text = self.get_ele_text(param_1)
+        if 'exclusive_space=true' in param_1.lower():
+            e_text = "".join(e_text.split())
         verify_helper.text_container(param_2, e_text)
 
     def ele_text_not_include(self, context, param_1, param_2):
@@ -307,6 +323,8 @@ class Element:
         locator, timeout = self.get_ele_locator(selector)
         ele_value = locator.evaluate('(element) => { console.log("element.value");return element.value}',
                                      timeout=timeout)
+        if 'exclusive_space=true' in selector.lower():
+            ele_value = "".join(ele_value.split())
         verify_helper.text_container(param, ele_value)
 
     def ele_not_contain_value(self, context, selector, param):

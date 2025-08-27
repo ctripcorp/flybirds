@@ -69,6 +69,9 @@ class AppBaseStep:
     def click_exist_param(self, context, selector):
         step_click.click_exist_param(context, selector)
 
+    def click_if_exist_selector(self, context, selector, param1):
+        step_click.click_param_if_exist_selector(context, selector, param1)
+
     def click_text(self, context, selector):
         step_click.click_text(context, selector)
 
